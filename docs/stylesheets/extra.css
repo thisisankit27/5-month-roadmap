@@ -1,0 +1,31 @@
+:root {
+    --md-accent-fg-color: #2BFF88;
+    --md-accent-fg-color--transparent: rgba(43, 255, 136, .15);
+}
+
+.md-typeset a {
+    color: #2BFF88;
+}
+
+.md-typeset a:hover {
+    color: #7DFFB5;
+}
+
+::selection {
+    background: #2BFF88;
+    color: black;
+}
+
+.md-button {
+    border-color: #2BFF88;
+}
+
+.md-button:hover {
+    background: #2BFF88;
+    color: black;
+}
+
+mark {
+    background: #2BFF88;
+    color: black;
+}
