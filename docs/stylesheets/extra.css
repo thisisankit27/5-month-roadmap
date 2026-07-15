@@ -29,3 +29,7 @@ mark {
     background: #2BFF88;
     color: black;
 }
+
+.md-footer {
+    border-top: 1px solid rgba(43, 255, 136, .15);
+}

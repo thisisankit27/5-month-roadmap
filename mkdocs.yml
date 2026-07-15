@@ -1,6 +1,6 @@
 site_name: Vibe Through Code Archive
 site_description: Public engineering notes on AI, Backend, System Design and Building in Public.
-site_url: https://thisisankit27.github.io/5-month-roadmap/
+site_url: https://archive.vibethroughcode.com
 repo_url: https://github.com/thisisankit27/5-month-roadmap
 repo_name: GitHub
 edit_uri: edit/master/docs/
@@ -42,6 +42,8 @@ theme:
     - content.code.annotate
     - search.highlight
     - search.suggest
+
+  custom_dir: overrides
 
 plugins:
   - search
