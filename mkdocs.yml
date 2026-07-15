@@ -1,0 +1,16 @@
+site_name: 5 Month Roadmap
+site_description: My AI Engineering Journey
+site_url: https://thisisankit27.github.io/5-month-roadmap/
+
+theme:
+  name: material
+
+plugins:
+  - search
+  - awesome-pages
+
+markdown_extensions:
+  - admonition
+  - tables
+  - toc:
+      permalink: true
