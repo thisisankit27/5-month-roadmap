@@ -10,7 +10,7 @@ edit_uri: edit/master/docs/
 
 theme:
   name: material
-  logo: assets/logo.jpg
+  logo: assets/logo.png
   favicon: assets/favicon.ico
 
   font:
