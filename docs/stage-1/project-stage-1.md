@@ -29,9 +29,9 @@ The goal isn't just to build an AI application—it's to document the engineerin
 
 #### Progress
 
-- [ ] PR-01 — Project Bootstrap
-- [ ] PR-02 — PDF Upload & Loading
-- [ ] PR-03 — Chunking Engine
+- [x] PR-01 — Project Bootstrap
+- [x] PR-02 — PDF Upload & Loading
+- [x] PR-03 — Chunking Engine
 - [ ] PR-04 — Embedding Pipeline
 - [ ] PR-05 — FAISS Vector Store
 - [ ] PR-06 — Basic Question Answering

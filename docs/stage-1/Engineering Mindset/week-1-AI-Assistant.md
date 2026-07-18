@@ -491,7 +491,7 @@ The best software is not the one that works today.
 
 The best software is the one that is easiest to change tomorrow.
 
-## Homework Discussion — Designing an Extensible Loader Architecture
+## PR-2 Discussion — Designing an Extensible Loader Architecture
 
 > These answers are based on engineering principles such as **SOLID**, **Separation of Concerns**, and **Open/Closed Principle**, rather than simply making the code "work."
 
@@ -899,3 +899,1425 @@ The goal of good architecture is **not** to reduce the amount of code.
 The goal is to reduce the amount of **existing code that must change** when requirements evolve.
 
 The easiest code to maintain is the code you don't have to touch.
+
+## PR-3 Discussion - Chunking Engine
+
+!!! note
+    > These notes capture the engineering discussions, design decisions, interview answers, and architectural reasoning behind the Chunking Engine implementation.
+
+---
+
+### Project Pipeline Evolution
+
+#### PR-2
+
+```text
+PDF
+    │
+    ▼
+Loader
+    │
+    ▼
+List<Document>
+```
+
+---
+
+#### PR-3
+
+```text
+PDF
+    │
+    ▼
+Loader
+    │
+    ▼
+List<Document>
+    │
+    ▼
+Chunking Engine
+    │
+    ▼
+List<Document> (Chunks)
+```
+
+Notice something important:
+
+The pipeline grows. We **never modify app.py**. Instead, `ingestion.py` orchestrates additional stages over time.
+
+---
+
+### Should app.py know about Chunking?
+
+No. `app.py` should remain completely unaware of the internal pipeline.
+
+Instead it should simply call
+
+```python
+documents = ingest_documents(uploaded_files)
+```
+
+Today
+
+```text
+Load
+```
+
+Tomorrow
+
+```text
+Load
+↓
+
+Chunk
+```
+
+Later
+
+```text
+Load
+↓
+
+Chunk
+↓
+
+Embed
+```
+
+Eventually
+
+```text
+Load
+↓
+
+Chunk
+↓
+
+Embed
+↓
+
+Vector Store
+```
+
+The caller never changes. This is one of the biggest responsibilities of an orchestration layer.
+
+---
+
+### Why have an Ingestion Pipeline?
+
+Think of it as a workflow orchestrator.
+
+```text
+app.py
+
+↓
+
+"I have files."
+
+↓
+
+ingestion.py
+
+↓
+
+"I know exactly how to process them."
+```
+
+The orchestration layer coordinates all stages while keeping the UI completely decoupled from implementation details.
+
+---
+
+### Should we use Strategy Pattern for Chunking?
+
+#### Initial Thought
+
+We considered creating
+
+```text
+Splitter (Abstract)
+
+        ▲
+
+RecursiveSplitter
+```
+
+so different splitting algorithms could be swapped without affecting the rest of the application.
+
+Possible future strategies
+
+- RecursiveCharacterTextSplitter
+- MarkdownHeaderTextSplitter
+- PythonCodeTextSplitter
+- HTMLHeaderTextSplitter
+- SemanticChunker
+
+All share the same goal:
+
+```text
+List<Document>
+
+↓
+
+Chunks
+```
+
+Only the algorithm changes. This is the Strategy Pattern.
+
+---
+
+#### Why NOT use Strategy today?
+
+Current project supports only
+
+```text
+RecursiveCharacterTextSplitter
+```
+
+There is no runtime decision. Adding an abstraction now would increase complexity without solving an existing problem.
+
+Instead we follow
+
+> Design for extension.
+> Implement for today's requirements.
+
+Current implementation
+
+```text
+splitter.py
+
+↓
+
+split_documents(documents)
+```
+
+Later, if multiple chunking algorithms are supported, refactor to Strategy Pattern.
+
+---
+
+#### Factory vs Strategy
+
+Factory answers
+
+> Which object should I create?
+
+Example
+
+```text
+UploadedFile
+
+↓
+
+LoaderFactory
+
+↓
+
+PdfLoader
+```
+
+Strategy answers
+
+> Which algorithm should I execute?
+
+Example
+
+```text
+Documents
+
+↓
+
+Chunk Strategy
+
+↓
+
+Recursive Splitter
+```
+
+Factory creates objects.
+Strategy chooses algorithms.
+
+---
+
+### Why RecursiveCharacterTextSplitter?
+
+Many developers think it simply splits by character count. It actually tries to preserve semantic boundaries.
+
+Order of separators
+
+```text
+Paragraph (\n\n)
+
+↓
+
+Line (\n)
+
+↓
+
+Space (" ")
+
+↓
+
+Character
+```
+
+Only when larger boundaries fail does it move to smaller ones. Therefore it minimizes broken sentences and incomplete thoughts.
+
+---
+
+### Why not split by Pages?
+
+Initially page splitting appears attractive because pages usually contain related information. However pages are presentation boundaries, not semantic boundaries.
+
+Example
+
+```text
+Page 17
+
+Spring Boot provides dependency...
+
+-------------------------
+
+Page 18
+
+...Injection and IoC...
+```
+
+Now one logical concept spans two pages.
+
+Retrieval quality decreases.
+
+Similarly
+
+- One page may contain many unrelated topics.
+- One topic may span multiple pages.
+
+Therefore page boundaries should not define chunk boundaries.
+
+---
+
+### Why Chunk at all?
+
+Embedding the entire document creates a single semantic representation.
+
+Problems
+
+- Retrieval becomes coarse.
+- Embedding represents an "average meaning" of the document.
+- Context window may overflow.
+- Entire document must be sent to the LLM.
+- Higher token cost.
+- Lower answer precision.
+
+Chunking solves this.
+
+Instead of retrieving
+
+```text
+Entire Book
+```
+
+RAG retrieves only
+
+```text
+Relevant Sections
+```
+
+This produces
+
+- Smaller prompts
+- Lower token usage
+- Better retrieval precision
+- More focused answers
+
+---
+
+### Why Overlap?
+
+Imagine
+
+```text
+Chunk 1
+
+Spring Boot provides dependency
+
+-----------------------------
+
+Chunk 2
+
+injection, allowing loose coupling...
+```
+
+The concept
+
+```text
+dependency injection
+```
+
+has been split. Similarity search may fail.
+
+Overlap duplicates a small portion of adjacent chunks.
+
+Example
+
+```text
+Chunk 1
+
+...dependency injection
+
+Chunk 2
+
+dependency injection allows...
+```
+
+Now either chunk contains sufficient context. Overlap preserves semantic continuity across chunk boundaries.
+
+---
+
+### How should Chunk Size be chosen?
+
+There is no universally correct value. Chunk size depends on several tradeoffs.
+
+#### LLM Context Window
+
+Smaller chunks reduce prompt size.
+
+---
+
+#### Embedding Model
+
+Different embedding models capture semantic meaning differently. Some perform better with shorter chunks. Others preserve context better with larger chunks.
+
+---
+
+#### Retrieval Precision
+
+Large chunks
+
+- More context
+- Less precise retrieval
+
+Small chunks
+
+- Better retrieval precision
+- Risk of insufficient context
+
+---
+
+#### Token Cost
+
+Large chunks
+
+- Higher token usage
+
+Small chunks
+
+- Lower prompt cost
+
+---
+
+#### Nature of Documents
+
+Different document types require different chunking strategies.
+
+Examples
+
+##### Python Code
+
+Split after
+
+- classes
+- methods
+- functions
+
+Not inside methods.
+
+---
+
+##### Markdown
+
+Split after
+
+- headings
+- sections
+
+---
+
+##### HTML
+
+Split after
+
+- DOM sections
+- headers
+
+---
+
+##### Plain Text
+
+RecursiveCharacterTextSplitter is generally suitable.
+
+---
+
+### Metadata after Chunking
+
+Before chunking
+
+```python
+Document(
+    page_content="...",
+    metadata={
+        "source": "...",
+        "page": 5
+    }
+)
+```
+
+After chunking
+
+```python
+Document(
+    page_content="Smaller chunk...",
+    metadata={
+        "source": "...",
+        "page": 5
+    }
+)
+```
+
+The **Document type does not change**. Only `page_content` becomes smaller. Metadata is inherited.
+
+---
+
+### Can Metadata become richer?
+
+Yes. Additional metadata may be introduced.
+
+Example
+
+```json
+{
+  "source": "spring.pdf",
+  "page": 5,
+  "chunk": 3,
+  "section": "Dependency Injection",
+  "language": "en"
+}
+```
+
+This enables
+
+- filtering
+- tracing
+- debugging
+- citation
+- advanced retrieval
+
+---
+
+### Important Design Principle
+
+Throughout the pipeline we continue passing
+
+```python
+Document
+```
+
+Objects. 
+
+Only the contents evolve.
+
+```text
+Document
+
+↓
+
+Loaded Document
+
+↓
+
+Chunked Document
+
+↓
+
+Embedded Document
+
+↓
+
+Stored Vector
+```
+
+The type remains consistent. This greatly simplifies downstream pipeline stages.
+
+---
+
+### Interview Questions
+
+#### Why RecursiveCharacterTextSplitter?
+
+It attempts to preserve semantic boundaries by recursively trying progressively smaller separators before finally splitting by character count. This creates more meaningful chunks than fixed-size character splitting.
+
+---
+
+#### Why overlap?
+
+Overlap ensures important context near chunk boundaries is duplicated into adjacent chunks, preventing semantic information from being lost during retrieval.
+
+---
+
+#### How do you choose chunk size?
+
+Chunk size is a tradeoff between retrieval precision, context preservation, embedding quality, LLM context window, token cost, and the structure of the underlying documents.
+
+!!! success "Note"
+    There is no universally optimal value.
+
+---
+
+### Biggest Takeaway
+
+A production RAG pipeline is not about LangChain APIs. It is about information flowing through multiple well-separated stages.
+
+```text
+Upload
+
+↓
+
+Load
+
+↓
+
+Chunk
+
+↓
+
+Embed
+
+↓
+
+Store
+
+↓
+
+Retrieve
+
+↓
+
+Generate
+```
+
+Each stage should have a single responsibility and expose a stable interface to the next stage.
+
+### Design Patterns in our RAG Project (PR-3)
+
+> These notes capture the engineering decisions behind introducing the **Strategy Pattern** and **Flyweight Pattern** while building our RAG ingestion pipeline.
+
+The goal is **not** to memorize design patterns. The goal is to understand **why** they naturally emerge while solving software engineering problems.
+
+---
+
+#### Project Evolution
+
+##### PR-1
+
+```text
+User
+
+↓
+
+UI
+```
+
+---
+
+##### PR-2
+
+```text
+User
+
+↓
+
+Upload
+
+↓
+
+Loader Factory
+
+↓
+
+PdfLoader
+
+↓
+
+Documents
+```
+
+Introduced:
+
+- Factory Pattern
+- Polymorphism
+- Abstract Classes
+
+---
+
+##### PR-3
+
+```text
+User
+
+↓
+
+Upload
+
+↓
+
+Loader
+
+↓
+
+Documents
+
+↓
+
+Chunk Service
+
+↓
+
+Chunk Strategy
+
+↓
+
+Chunks
+```
+
+Introduced:
+
+- Strategy Pattern
+- Flyweight Pattern
+- Better Separation of Concerns
+
+---
+
+#### Why did we need Strategy Pattern?
+
+Initially our project only supported PDFs.
+
+```text
+PDF
+
+↓
+
+RecursiveCharacterTextSplitter
+```
+
+Everything seemed simple.
+
+---
+
+Then requirements changed.
+
+The application should support
+
+```text
+PDF
+
+Markdown
+
+Python
+
+HTML
+
+TXT
+```
+
+Question:
+
+Should every file use
+
+```text
+RecursiveCharacterTextSplitter
+```
+
+?
+
+Answer:
+
+No.
+
+Different document types require different chunking algorithms.
+
+Examples
+
+| Document Type | Preferred Chunking |
+|---------------|--------------------|
+| PDF | RecursiveCharacterTextSplitter |
+| Markdown | MarkdownHeaderTextSplitter |
+| Python | PythonCodeTextSplitter |
+| HTML | HTMLHeaderTextSplitter |
+
+The **behavior varies**. This is exactly what Strategy Pattern solves.
+
+---
+
+#### Strategy Pattern
+
+Instead of writing
+
+```python
+if extension == ".pdf":
+    ...
+
+elif extension == ".py":
+    ...
+
+elif extension == ".md":
+    ...
+```
+
+throughout the project, we encapsulate each algorithm inside its own class.
+
+```text
+                 Strategy (Abstract)
+
+                        ▲
+
+      ┌─────────────────┼─────────────────┐
+
+      │                 │                 │
+
+      ▼                 ▼                 ▼
+
+RecursiveStrategy  PythonStrategy  MarkdownStrategy
+```
+
+Every strategy exposes exactly the same interface.
+
+```python
+chunk(document)
+```
+
+The caller never knows which implementation is executed.
+
+---
+
+#### Why is this better?
+
+Without Strategy
+
+```text
+Chunk Service
+
+↓
+
+if PDF
+
+↓
+
+Recursive
+
+↓
+
+else if Python
+
+↓
+
+Python Splitter
+
+↓
+
+else if Markdown
+```
+
+Every new algorithm modifies existing code.
+
+---
+
+With Strategy
+
+```text
+Chunk Service
+
+↓
+
+Strategy Factory
+
+↓
+
+Correct Strategy
+
+↓
+
+chunk(document)
+```
+
+The Chunk Service never changes.
+
+---
+
+#### Factory vs Strategy
+
+This project uses **both**. They solve different problems.
+
+---
+
+##### Factory
+
+Question:
+
+> Which object should I create?
+
+Example
+
+```text
+Uploaded File
+
+↓
+
+LoaderFactory
+
+↓
+
+PdfLoader
+```
+
+Factory is responsible for object creation.
+
+---
+
+##### Strategy
+
+Question:
+
+> Which algorithm should execute?
+
+Example
+
+```text
+Document
+
+↓
+
+StrategyFactory
+
+↓
+
+RecursiveChunkStrategy
+
+↓
+
+chunk(document)
+```
+
+Strategy is responsible for behavior.
+
+---
+
+#### They work together
+
+Our architecture
+
+```text
+Chunk Service
+
+↓
+
+Strategy Factory
+
+↓
+
+Strategy
+
+↓
+
+LangChain
+```
+
+The factory chooses the appropriate strategy.
+The strategy executes the algorithm.
+
+---
+
+#### Chunk Service
+
+Responsibility
+
+- Iterate over Documents
+- Ask Factory for appropriate strategy
+- Aggregate chunks
+
+It should **never**
+
+- know chunking algorithms
+- perform splitting
+- inspect file types
+
+Its only job is orchestration.
+
+---
+
+#### Strategy Factory
+
+Responsibility
+
+Given
+
+```python
+Document
+```
+
+Return
+
+```python
+Correct Chunk Strategy
+```
+
+Example
+
+```text
+.pdf
+
+↓
+
+RecursiveChunkStrategy
+
+----------------------
+
+.py
+
+↓
+
+PythonChunkStrategy
+
+----------------------
+
+.md
+
+↓
+
+RecursiveChunkStrategy
+```
+
+Notice
+
+Multiple document types may reuse the same strategy. The factory chooses algorithms, not document types.
+
+---
+
+#### Why choose strategy per Document?
+
+Suppose user uploads
+
+```text
+resume.pdf
+
+main.py
+
+README.md
+```
+
+Every document requires a different chunking algorithm.
+
+Therefore
+
+```text
+ChunkService
+
+↓
+
+for each Document
+
+↓
+
+StrategyFactory
+
+↓
+
+Correct Strategy
+```
+
+If we selected strategy only once,
+
+mixed uploads would become impossible.
+
+---
+
+#### Why use split_documents() instead of split_text()?
+
+Initially
+
+```python
+split_text(document.page_content)
+```
+
+was considered.
+
+Problem
+
+Metadata would be lost.
+
+Instead
+
+```python
+split_documents([document])
+```
+
+returns
+
+```python
+List[Document]
+```
+
+Each chunk inherits
+
+```python
+metadata
+```
+
+Example
+
+Before
+
+```python
+Document(
+    page_content="...",
+    metadata={
+        "source":"spring.pdf",
+        "page":7
+    }
+)
+```
+
+After chunking
+
+```python
+Document(
+    page_content="Smaller chunk",
+    metadata={
+        "source":"spring.pdf",
+        "page":7
+    }
+)
+```
+
+Metadata survives automatically.
+
+---
+
+#### Flyweight Pattern
+
+After Strategy was implemented,
+
+we noticed
+
+```python
+StrategyFactory.create(document)
+```
+
+created
+
+```python
+RecursiveChunkStrategy()
+```
+
+for every document.
+
+Example
+
+```text
+Document 1
+
+↓
+
+RecursiveChunkStrategy()
+
+Document 2
+
+↓
+
+RecursiveChunkStrategy()
+
+Document 3
+
+↓
+
+RecursiveChunkStrategy()
+```
+
+This is unnecessary. The strategy stores no state.
+
+---
+
+#### Flyweight Solution
+
+The Factory owns reusable strategy instances.
+
+```text
+StrategyFactory
+
+│
+
+├── RecursiveChunkStrategy
+
+├── PythonChunkStrategy
+
+└── MarkdownChunkStrategy
+```
+
+Whenever requested
+
+```text
+PDF
+
+↓
+
+same RecursiveChunkStrategy object
+```
+
+Multiple documents share *one* strategy object.
+
+---
+
+#### Why Flyweight works
+
+Our Strategy stores no mutable state.
+
+```python
+chunk(document)
+```
+
+instead of
+
+```python
+self.document
+```
+
+Therefore
+
+the same object can safely process
+
+```text
+PDF A
+
+↓
+
+PDF B
+
+↓
+
+PDF C
+```
+
+---
+
+#### When would Flyweight NOT work?
+
+Suppose Strategy stores
+
+```python
+self.chunk_size = 500
+```
+
+and another request changes it to
+
+```python
+1000
+```
+
+Now, all users share the same mutable object. Unexpected behaviour appears. Flyweight requires shared objects to remain effectively immutable or stateless.
+
+---
+
+#### Why we still implemented Flyweight
+
+Production?
+Probably unnecessary. Creating one Strategy object is extremely cheap.
+
+However, this project is primarily for learning.
+Implementing Flyweight helped understand
+- object sharing
+- stateless services
+- object lifecycle
+- memory optimisation patterns
+
+---
+
+#### Future Improvement
+
+Currently
+
+```text
+.pdf
+
+↓
+
+Recursive Strategy
+```
+
+is hardcoded.
+
+Future
+
+```yaml
+chunking:
+
+  pdf: recursive
+
+  md: recursive
+
+  py: python
+
+  html: html
+```
+
+The Factory could read configuration instead of hardcoding mappings. No source code changes required.
+
+---
+
+### Design Principles Learned
+
+#### Single Responsibility Principle
+
+Chunk Service orchestrates.
+Strategy chunks.
+Factory creates strategies.
+Every class has one reason to change.
+
+---
+
+#### Open/Closed Principle
+
+Adding
+
+```text
+SemanticChunkStrategy
+```
+
+requires
+
+- creating one new class
+- modifying only the Factory
+
+Existing strategies remain untouched.
+
+---
+
+#### Dependency Inversion
+
+Chunk Service depends on
+
+```python
+Strategy
+```
+
+not
+
+```python
+RecursiveChunkStrategy
+```
+
+Concrete implementations remain hidden.
+
+---
+
+### Final Architecture
+
+```text
+                 Upload
+
+                    │
+
+                    ▼
+
+          Loader Factory
+
+                    │
+
+                    ▼
+
+               Documents
+
+                    │
+
+                    ▼
+
+             Chunk Service
+
+                    │
+
+                    ▼
+
+          Strategy Factory
+
+                    │
+
+      ┌─────────────┴─────────────┐
+
+      ▼                           ▼
+
+RecursiveChunkStrategy    PythonChunkStrategy
+
+      │                           │
+
+      └─────────────┬─────────────┘
+
+                    ▼
+
+             LangChain Splitters
+
+                    ▼
+
+                 Chunks
+```
+
+---
+
+### Biggest Takeaways
+
+- Factory creates objects.
+- Strategy encapsulates algorithms.
+- Flyweight reuses stateless objects.
+- Services orchestrate workflows.
+- The pipeline continues carrying `Document` objects.
+- Metadata should never be discarded.
+- Choose the strategy at the **smallest unit where behaviour varies**.
+- Design patterns are not interview topics—they naturally emerge while solving engineering problems.
+
+---
+
+### Interview Questions
+
+#### Why did you introduce Strategy Pattern?
+
+Different document types require different chunking algorithms. Strategy encapsulates each algorithm behind a common interface, allowing the Chunk Service to remain independent of implementation details.
+
+---
+
+#### Why use a Factory with Strategy?
+
+The Factory selects the appropriate strategy based on document metadata. The Strategy performs the chunking algorithm. Factory chooses **which object**, Strategy defines **what behaviour**.
+
+---
+
+#### Why process one Document at a time?
+
+Different uploaded documents may require different chunking strategies. Selecting the strategy per Document allows mixed uploads (PDF, Markdown, Python) to be handled correctly.
+
+---
+
+#### Why use split_documents()?
+
+It preserves LangChain `Document` objects along with metadata, enabling traceability, filtering, and downstream retrieval.
+
+---
+
+#### Why implement Flyweight?
+
+Chunking strategies are stateless. Reusing a single strategy instance avoids unnecessary object creation and demonstrates efficient object sharing, although the optimization is primarily educational in this project.
+
+---
+
+#### Biggest Engineering Lesson
+
+Design patterns should never be introduced because they are famous. They should emerge naturally when solving real software engineering problems.
+
+In this project:
+- Factory solved object creation.
+- Strategy solved algorithm variation.
+- Flyweight solved object reuse.
