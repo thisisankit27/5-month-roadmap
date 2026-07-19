@@ -2313,7 +2313,7 @@ Chunking strategies are stateless. Reusing a single strategy instance avoids unn
 
 ---
 
-#### Biggest Engineering Lesson
+### Biggest Engineering Lesson
 
 Design patterns should never be introduced because they are famous. They should emerge naturally when solving real software engineering problems.
 
@@ -2321,3 +2321,821 @@ In this project:
 - Factory solved object creation.
 - Strategy solved algorithm variation.
 - Flyweight solved object reuse.
+
+## PR-4 Discussion — Embedding Pipeline & Designing for PR-5
+
+> These notes capture the engineering decisions behind designing the Embedding Pipeline and how it naturally connects to the upcoming Vector Database layer.
+
+The objective is **not** simply generating embeddings. The objective is understanding **how responsibilities are distributed across services** in a scalable RAG architecture.
+
+---
+
+### Current Architecture
+
+After PR-3, the pipeline looks like:
+
+```text
+Upload
+
+↓
+
+Loader Factory
+
+↓
+
+Documents
+
+↓
+
+Chunk Service
+
+↓
+
+Chunks (List<Document>)
+```
+
+PR-4 extends it to:
+
+```text
+Upload
+
+↓
+
+Loader Factory
+
+↓
+
+Documents
+
+↓
+
+Chunk Service
+
+↓
+
+Chunks
+
+↓
+
+Embedding Service
+
+↓
+
+Embeddings
+```
+
+Notice that we still haven't introduced the Vector Database. Embeddings exist **before** they are stored.
+
+---
+
+### Why EmbeddingService?
+
+Question:
+
+Should `ingestion.py` directly call the embedding model?
+
+Example
+
+```python
+embedding_model.embed_documents(...)
+```
+
+Answer
+
+No.
+
+`ingestion.py` is an orchestration layer. It should coordinate the workflow but never know implementation details.
+
+Its responsibility is simply
+
+```text
+Load
+
+↓
+
+Chunk
+
+↓
+
+Embed
+
+↓
+
+Store
+
+↓
+
+Retrieve
+```
+
+This keeps the application extensible and follows the Single Responsibility Principle.
+
+---
+
+### Responsibility of EmbeddingService
+
+EmbeddingService is responsible for
+
+- selecting the embedding model
+- generating embeddings
+- batching requests (future)
+- measuring embedding performance
+- hiding LangChain implementation details
+
+It should **not**
+
+- know about Vector Databases
+- know about FAISS
+- know about retrieval
+- know about UI
+
+Its only job is
+
+```text
+Text
+
+↓
+
+Vectors
+```
+
+---
+
+### Should Strategy Pattern be used?
+
+Initially the answer seems yes because embedding models can vary.
+
+Examples
+
+```text
+BAAI/bge-small-en-v1.5
+
+↓
+
+384 dimensions
+
+-------------------------
+
+OpenAI text-embedding-3-small
+
+↓
+
+1536 dimensions
+
+-------------------------
+
+Nomic Embed
+
+↓
+
+768 dimensions
+```
+
+Different models.
+Different dimensions.
+Different retrieval quality.
+
+However
+
+today, our application supports exactly one model.
+
+Introducing Strategy now would create unnecessary abstraction.
+
+!!!success "Engineering lesson"
+    > Design for extension.
+    >
+    > Implement for today's requirements.
+
+Therefore
+
+PR-4 intentionally keeps
+
+```text
+Embedding Service
+
+↓
+
+Embedding Model
+```
+
+without introducing Strategy.
+
+---
+
+### When Strategy becomes useful
+
+Suppose
+
+Premium users
+
+↓
+
+OpenAI Embeddings
+
+Free users
+
+↓
+
+HuggingFace Embeddings
+
+Now
+
+behavior varies.
+
+At this point, Strategy Pattern naturally emerges.
+
+The variation is
+
+```text
+User Tier
+```
+
+not
+
+```text
+Document Type
+```
+
+This is a key architectural insight. Always identify **what actually varies** before introducing Strategy.
+
+---
+
+### Why Factory is unnecessary here
+
+During loading, different document types required different loader objects.
+
+Factory solved
+
+```text
+Which object should I create?
+```
+
+During embedding, every document is already represented as
+
+```python
+Document
+```
+
+No object creation decision exists.
+
+Therefore
+
+Factory provides little value here.
+
+---
+
+### Service Contract
+
+Question
+
+What should EmbeddingService accept?
+
+Answer
+
+```python
+List[Document]
+```
+
+Question
+
+What should it return?
+
+EmbeddingService returns only
+
+```python
+List[List[float]]
+```
+
+Its responsibility ends once vectors are produced.
+
+---
+
+### Why not return Vector Objects?
+
+Suppose EmbeddingService returned
+
+```python
+EmbeddingResult
+
+{
+
+document,
+
+chunk,
+
+metadata,
+
+embedding
+
+}
+```
+
+Question
+
+Who actually needs this structure?
+
+Answer
+
+Only the Vector Database.
+
+Therefore
+
+EmbeddingService would be performing work that belongs elsewhere.
+
+This violates proper responsibility allocation.
+
+---
+
+### Service Responsibilities
+
+ChunkService
+
+Input
+
+```python
+List[Document]
+```
+
+Output
+
+```python
+List[Document]
+```
+
+EmbeddingService
+
+Input
+
+```python
+List[Document]
+```
+
+Output
+
+```python
+List[List[float]]
+```
+
+VectorStore
+
+Input
+
+```python
+documents,
+embeddings
+```
+
+Output
+
+*Storage*
+
+Every service owns exactly one transformation.
+
+---
+
+### Relationship between Documents and Embeddings
+
+Question
+
+If EmbeddingService returns only vectors, how does the application know which embedding belongs to which Document?
+
+Answer
+
+Ordering.
+
+Example
+
+Documents
+
+```text
+Chunk1
+
+Chunk2
+
+Chunk3
+```
+
+Embeddings
+
+```text
+Vector1
+
+Vector2
+
+Vector3
+```
+
+Both lists preserve the same order.
+
+Therefore
+
+```text
+Chunk2
+
+↓
+
+Vector2
+```
+
+The relationship is naturally maintained.
+
+---
+
+### Where should mapping occur?
+
+One proposal was introducing
+
+```python
+EmbeddingResult
+```
+
+to combine
+
+- Document
+- Metadata
+- Chunk
+- Embedding
+
+Although reasonable, only one component actually requires this information.
+
+The Vector Database.
+
+Therefore, the mapping responsibility belongs to
+
+```text
+VectorStore
+```
+
+rather than EmbeddingService.
+
+---
+
+### Why VectorStore should perform mapping
+
+VectorStore receives
+
+```python
+documents
+```
+
+and
+
+```python
+embeddings
+```
+
+Example
+
+```python
+store(
+    documents,
+    embeddings
+)
+```
+
+Internally
+
+```python
+for document, embedding in zip(
+    documents,
+    embeddings
+):
+```
+
+Store them together. This keeps EmbeddingService completely independent of storage implementation.
+
+---
+
+#### Why use zip()?
+
+Python provides
+
+```python
+zip()
+```
+
+which iterates over two collections simultaneously.
+
+Example
+
+```python
+for document, embedding in zip(documents, embeddings):
+```
+
+Each embedding automatically corresponds to its respective Document. No intermediate DTO is required.
+
+---
+
+### Why doesn't EmbeddingService know FAISS?
+
+EmbeddingService should not know
+
+- FAISS
+- Chroma
+- Pinecone
+- Qdrant
+
+It simply converts
+
+```text
+Chunk
+
+↓
+
+Vector
+```
+
+Storage concerns belong exclusively to the Vector Database layer.
+
+---
+
+### Does the Vector Database determine dimensions?
+
+Embedding models determine vector dimensionality.
+
+Examples
+
+```text
+BAAI
+
+↓
+
+384
+
+------------------
+
+OpenAI
+
+↓
+
+1536
+
+------------------
+
+Nomic
+
+↓
+
+768
+```
+
+The Vector Database simply validates that every inserted vector has the expected dimension. It does not choose it.
+
+!!!alert "Rule"
+    > One Vector Database index should contain vectors generated by a single embedding model (or models with the same output dimensionality and representation).
+
+---
+
+### Why don't we directly embed PDFs?
+
+Embedding models operate on `text` not `binary document` formats.
+
+Therefore, the pipeline becomes
+
+```text
+PDF
+
+↓
+
+Loader
+
+↓
+
+Text
+
+↓
+
+Chunking
+
+↓
+
+Embeddings
+```
+
+Chunking is essential because embedding an entire document would
+
+- produce generic embeddings
+- reduce retrieval precision
+- increase token usage
+- waste context window
+- reduce answer quality
+
+Instead, only semantically relevant chunks are retrieved during RAG.
+
+---
+
+### Future Pipeline (PR-5)
+
+After EmbeddingService
+
+the architecture becomes
+
+```text
+Chunks
+
+↓
+
+Embedding Service
+
+↓
+
+Embeddings
+
+↓
+
+Vector Store
+
+↓
+
+Similarity Search
+
+↓
+
+Retrieved Chunks
+
+↓
+
+LLM
+```
+
+Notice, EmbeddingService finishes before retrieval begins.
+
+---
+
+### Information Expert Principle
+
+A major design discussion occurred around who should combine Documents and Embeddings.
+
+Conclusion: The component that owns storage should combine them.
+
+This follows the GRASP principle Information Expert.
+
+Give responsibility to the component that possesses the required knowledge.
+
+---
+
+### Final Architecture
+
+```text
+Upload
+
+↓
+
+Loader Factory
+
+↓
+
+Documents
+
+↓
+
+Chunk Service
+
+↓
+
+Chunks
+
+↓
+
+Embedding Service
+
+↓
+
+Embeddings
+
+↓
+
+Vector Store
+
+↓
+
+Retriever
+
+↓
+
+LLM
+```
+
+---
+
+### Design Principles Learned
+
+#### Single Responsibility
+
+Each service performs one transformation.
+
+---
+
+#### Separation of Concerns
+
+Embedding generation remains independent from storage.
+
+---
+
+#### Open/Closed Principle
+
+New embedding models can later be introduced without changing orchestration.
+
+---
+
+#### Information Expert (GRASP)
+
+Responsibilities belong to the component that owns the required knowledge.
+
+---
+
+### Future Improvements
+
+When multiple embedding providers are supported
+
+introduce
+
+```text
+Embedding Strategy
+```
+
+Example
+
+```text
+Embedding Service
+
+↓
+
+Embedding Strategy
+
+↓
+
+OpenAI Strategy
+
+↓
+
+HuggingFace Strategy
+
+↓
+
+Nomic Strategy
+```
+
+Only then does Strategy become justified.
+
+---
+
+### Interview Questions
+
+#### Why introduce EmbeddingService?
+
+To isolate embedding logic from orchestration, making the application extensible while hiding implementation details.
+
+---
+
+#### Why doesn't ingestion.py directly call LangChain?
+
+Because ingestion is responsible only for coordinating pipeline stages, not implementing them.
+
+---
+
+#### Why not use Strategy immediately?
+
+Only one embedding model currently exists. Strategy should be introduced when multiple interchangeable algorithms exist.
+
+---
+
+#### Why not return Vector Objects?
+
+EmbeddingService should only transform text into vectors.
+
+Storage structures belong to the Vector Database.
+
+---
+
+#### Why preserve ordering?
+
+The nth embedding always corresponds to the nth Document. The Vector Database can combine them using
+
+```python
+zip(documents, embeddings)
+```
+
+without additional mapping objects.
+
+---
+
+#### Why shouldn't EmbeddingService know FAISS?
+
+Embedding generation and storage are independent responsibilities. This keeps the architecture modular and allows swapping Vector Databases without changing embedding logic.
+
+---
+
+### Biggest Engineering Lesson
+
+During this PR we realized that software architecture is not about creating more classes.
+
+It is about giving every component exactly one responsibility.
+
+The cleanest architecture often emerges by asking
+
+> **"Who actually owns this responsibility?"**
+
+instead of
+
+> **"Where can I put this code?"**
