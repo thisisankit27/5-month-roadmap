@@ -1,0 +1,6267 @@
+{
+  "documentCount": 8,
+  "totalDistinctWords": 1565,
+  "totalWordUses": 8736,
+  "words": [
+    {
+      "word": "the",
+      "count": 334
+    },
+    {
+      "word": "is",
+      "count": 167
+    },
+    {
+      "word": "a",
+      "count": 110
+    },
+    {
+      "word": "to",
+      "count": 108
+    },
+    {
+      "word": "of",
+      "count": 101
+    },
+    {
+      "word": "vector",
+      "count": 95
+    },
+    {
+      "word": "and",
+      "count": 82
+    },
+    {
+      "word": "retrieval",
+      "count": 77
+    },
+    {
+      "word": "search",
+      "count": 67
+    },
+    {
+      "word": "embedding",
+      "count": 66
+    },
+    {
+      "word": "why",
+      "count": 64
+    },
+    {
+      "word": "for",
+      "count": 63
+    },
+    {
+      "word": "should",
+      "count": 62
+    },
+    {
+      "word": "this",
+      "count": 59
+    },
+    {
+      "word": "answer",
+      "count": 58
+    },
+    {
+      "word": "it",
+      "count": 58
+    },
+    {
+      "word": "metadata",
+      "count": 57
+    },
+    {
+      "word": "example",
+      "count": 56
+    },
+    {
+      "word": "strategy",
+      "count": 56
+    },
+    {
+      "word": "only",
+      "count": 55
+    },
+    {
+      "word": "document",
+      "count": 53
+    },
+    {
+      "word": "not",
+      "count": 50
+    },
+    {
+      "word": "top",
+      "count": 50
+    },
+    {
+      "word": "rag",
+      "count": 49
+    },
+    {
+      "word": "are",
+      "count": 48
+    },
+    {
+      "word": "database",
+      "count": 48
+    },
+    {
+      "word": "documents",
+      "count": 47
+    },
+    {
+      "word": "similarity",
+      "count": 46
+    },
+    {
+      "word": "in",
+      "count": 45
+    },
+    {
+      "word": "chunking",
+      "count": 40
+    },
+    {
+      "word": "what",
+      "count": 39
+    },
+    {
+      "word": "embeddings",
+      "count": 38
+    },
+    {
+      "word": "text",
+      "count": 38
+    },
+    {
+      "word": "filtering",
+      "count": 37
+    },
+    {
+      "word": "one",
+      "count": 36
+    },
+    {
+      "word": "more",
+      "count": 35
+    },
+    {
+      "word": "semantic",
+      "count": 35
+    },
+    {
+      "word": "instead",
+      "count": 34
+    },
+    {
+      "word": "pr",
+      "count": 34
+    },
+    {
+      "word": "an",
+      "count": 33
+    },
+    {
+      "word": "chunks",
+      "count": 33
+    },
+    {
+      "word": "factory",
+      "count": 33
+    },
+    {
+      "word": "llm",
+      "count": 33
+    },
+    {
+      "word": "k",
+      "count": 32
+    },
+    {
+      "word": "we",
+      "count": 31
+    },
+    {
+      "word": "production",
+      "count": 29
+    },
+    {
+      "word": "token",
+      "count": 29
+    },
+    {
+      "word": "how",
+      "count": 28
+    },
+    {
+      "word": "model",
+      "count": 28
+    },
+    {
+      "word": "that",
+      "count": 28
+    },
+    {
+      "word": "chunk",
+      "count": 27
+    },
+    {
+      "word": "every",
+      "count": 27
+    },
+    {
+      "word": "context",
+      "count": 26
+    },
+    {
+      "word": "faiss",
+      "count": 26
+    },
+    {
+      "word": "use",
+      "count": 26
+    },
+    {
+      "word": "with",
+      "count": 26
+    },
+    {
+      "word": "architecture",
+      "count": 25
+    },
+    {
+      "word": "no",
+      "count": 25
+    },
+    {
+      "word": "pipeline",
+      "count": 25
+    },
+    {
+      "word": "be",
+      "count": 24
+    },
+    {
+      "word": "by",
+      "count": 24
+    },
+    {
+      "word": "tokens",
+      "count": 24
+    },
+    {
+      "word": "can",
+      "count": 23
+    },
+    {
+      "word": "different",
+      "count": 23
+    },
+    {
+      "word": "on",
+      "count": 23
+    },
+    {
+      "word": "or",
+      "count": 23
+    },
+    {
+      "word": "project",
+      "count": 23
+    },
+    {
+      "word": "quality",
+      "count": 23
+    },
+    {
+      "word": "vectors",
+      "count": 23
+    },
+    {
+      "word": "application",
+      "count": 22
+    },
+    {
+      "word": "p",
+      "count": 22
+    },
+    {
+      "word": "better",
+      "count": 21
+    },
+    {
+      "word": "code",
+      "count": 21
+    },
+    {
+      "word": "design",
+      "count": 21
+    },
+    {
+      "word": "if",
+      "count": 21
+    },
+    {
+      "word": "information",
+      "count": 21
+    },
+    {
+      "word": "definition",
+      "count": 20
+    },
+    {
+      "word": "generation",
+      "count": 20
+    },
+    {
+      "word": "implementation",
+      "count": 20
+    },
+    {
+      "word": "may",
+      "count": 20
+    },
+    {
+      "word": "question",
+      "count": 20
+    },
+    {
+      "word": "each",
+      "count": 19
+    },
+    {
+      "word": "engineering",
+      "count": 19
+    },
+    {
+      "word": "high",
+      "count": 19
+    },
+    {
+      "word": "langchain",
+      "count": 19
+    },
+    {
+      "word": "principle",
+      "count": 19
+    },
+    {
+      "word": "responsibility",
+      "count": 19
+    },
+    {
+      "word": "without",
+      "count": 19
+    },
+    {
+      "word": "before",
+      "count": 18
+    },
+    {
+      "word": "best",
+      "count": 18
+    },
+    {
+      "word": "embeddingservice",
+      "count": 18
+    },
+    {
+      "word": "from",
+      "count": 18
+    },
+    {
+      "word": "new",
+      "count": 18
+    },
+    {
+      "word": "temperature",
+      "count": 18
+    },
+    {
+      "word": "threshold",
+      "count": 18
+    },
+    {
+      "word": "advantages",
+      "count": 17
+    },
+    {
+      "word": "pattern",
+      "count": 17
+    },
+    {
+      "word": "score",
+      "count": 17
+    },
+    {
+      "word": "storage",
+      "count": 17
+    },
+    {
+      "word": "which",
+      "count": 17
+    },
+    {
+      "word": "after",
+      "count": 16
+    },
+    {
+      "word": "control",
+      "count": 16
+    },
+    {
+      "word": "cost",
+      "count": 16
+    },
+    {
+      "word": "higher",
+      "count": 16
+    },
+    {
+      "word": "models",
+      "count": 16
+    },
+    {
+      "word": "object",
+      "count": 16
+    },
+    {
+      "word": "open",
+      "count": 16
+    },
+    {
+      "word": "pinecone",
+      "count": 16
+    },
+    {
+      "word": "qdrant",
+      "count": 16
+    },
+    {
+      "word": "same",
+      "count": 16
+    },
+    {
+      "word": "they",
+      "count": 16
+    },
+    {
+      "word": "using",
+      "count": 16
+    },
+    {
+      "word": "about",
+      "count": 15
+    },
+    {
+      "word": "as",
+      "count": 15
+    },
+    {
+      "word": "goal",
+      "count": 15
+    },
+    {
+      "word": "interview",
+      "count": 15
+    },
+    {
+      "word": "loader",
+      "count": 15
+    },
+    {
+      "word": "penalty",
+      "count": 15
+    },
+    {
+      "word": "than",
+      "count": 15
+    },
+    {
+      "word": "based",
+      "count": 14
+    },
+    {
+      "word": "cloud",
+      "count": 14
+    },
+    {
+      "word": "know",
+      "count": 14
+    },
+    {
+      "word": "large",
+      "count": 14
+    },
+    {
+      "word": "local",
+      "count": 14
+    },
+    {
+      "word": "most",
+      "count": 14
+    },
+    {
+      "word": "parent",
+      "count": 14
+    },
+    {
+      "word": "questions",
+      "count": 14
+    },
+    {
+      "word": "simply",
+      "count": 14
+    },
+    {
+      "word": "split",
+      "count": 14
+    },
+    {
+      "word": "when",
+      "count": 14
+    },
+    {
+      "word": "change",
+      "count": 13
+    },
+    {
+      "word": "character",
+      "count": 13
+    },
+    {
+      "word": "disadvantages",
+      "count": 13
+    },
+    {
+      "word": "enterprise",
+      "count": 13
+    },
+    {
+      "word": "important",
+      "count": 13
+    },
+    {
+      "word": "into",
+      "count": 13
+    },
+    {
+      "word": "knowledge",
+      "count": 13
+    },
+    {
+      "word": "managed",
+      "count": 13
+    },
+    {
+      "word": "now",
+      "count": 13
+    },
+    {
+      "word": "small",
+      "count": 13
+    },
+    {
+      "word": "space",
+      "count": 13
+    },
+    {
+      "word": "while",
+      "count": 13
+    },
+    {
+      "word": "ai",
+      "count": 12
+    },
+    {
+      "word": "candidate",
+      "count": 12
+    },
+    {
+      "word": "during",
+      "count": 12
+    },
+    {
+      "word": "flyweight",
+      "count": 12
+    },
+    {
+      "word": "many",
+      "count": 12
+    },
+    {
+      "word": "multiple",
+      "count": 12
+    },
+    {
+      "word": "never",
+      "count": 12
+    },
+    {
+      "word": "number",
+      "count": 12
+    },
+    {
+      "word": "objects",
+      "count": 12
+    },
+    {
+      "word": "relevant",
+      "count": 12
+    },
+    {
+      "word": "requires",
+      "count": 12
+    },
+    {
+      "word": "source",
+      "count": 12
+    },
+    {
+      "word": "therefore",
+      "count": 12
+    },
+    {
+      "word": "values",
+      "count": 12
+    },
+    {
+      "word": "writing",
+      "count": 12
+    },
+    {
+      "word": "algorithms",
+      "count": 11
+    },
+    {
+      "word": "applications",
+      "count": 11
+    },
+    {
+      "word": "becomes",
+      "count": 11
+    },
+    {
+      "word": "between",
+      "count": 11
+    },
+    {
+      "word": "boundaries",
+      "count": 11
+    },
+    {
+      "word": "choose",
+      "count": 11
+    },
+    {
+      "word": "databases",
+      "count": 11
+    },
+    {
+      "word": "define",
+      "count": 11
+    },
+    {
+      "word": "does",
+      "count": 11
+    },
+    {
+      "word": "i",
+      "count": 11
+    },
+    {
+      "word": "infrastructure",
+      "count": 11
+    },
+    {
+      "word": "learning",
+      "count": 11
+    },
+    {
+      "word": "limits",
+      "count": 11
+    },
+    {
+      "word": "low",
+      "count": 11
+    },
+    {
+      "word": "lower",
+      "count": 11
+    },
+    {
+      "word": "responsibilities",
+      "count": 11
+    },
+    {
+      "word": "return",
+      "count": 11
+    },
+    {
+      "word": "service",
+      "count": 11
+    },
+    {
+      "word": "single",
+      "count": 11
+    },
+    {
+      "word": "size",
+      "count": 11
+    },
+    {
+      "word": "them",
+      "count": 11
+    },
+    {
+      "word": "algorithm",
+      "count": 10
+    },
+    {
+      "word": "all",
+      "count": 10
+    },
+    {
+      "word": "astradb",
+      "count": 10
+    },
+    {
+      "word": "built",
+      "count": 10
+    },
+    {
+      "word": "but",
+      "count": 10
+    },
+    {
+      "word": "changes",
+      "count": 10
+    },
+    {
+      "word": "classes",
+      "count": 10
+    },
+    {
+      "word": "common",
+      "count": 10
+    },
+    {
+      "word": "discussion",
+      "count": 10
+    },
+    {
+      "word": "hybrid",
+      "count": 10
+    },
+    {
+      "word": "its",
+      "count": 10
+    },
+    {
+      "word": "language",
+      "count": 10
+    },
+    {
+      "word": "larger",
+      "count": 10
+    },
+    {
+      "word": "meaning",
+      "count": 10
+    },
+    {
+      "word": "pdf",
+      "count": 10
+    },
+    {
+      "word": "precision",
+      "count": 10
+    },
+    {
+      "word": "process",
+      "count": 10
+    },
+    {
+      "word": "returned",
+      "count": 10
+    },
+    {
+      "word": "stores",
+      "count": 10
+    },
+    {
+      "word": "systems",
+      "count": 10
+    },
+    {
+      "word": "two",
+      "count": 10
+    },
+    {
+      "word": "type",
+      "count": 10
+    },
+    {
+      "word": "uses",
+      "count": 10
+    },
+    {
+      "word": "would",
+      "count": 10
+    },
+    {
+      "word": "adding",
+      "count": 9
+    },
+    {
+      "word": "because",
+      "count": 9
+    },
+    {
+      "word": "biggest",
+      "count": 9
+    },
+    {
+      "word": "class",
+      "count": 9
+    },
+    {
+      "word": "controls",
+      "count": 9
+    },
+    {
+      "word": "dot",
+      "count": 9
+    },
+    {
+      "word": "everything",
+      "count": 9
+    },
+    {
+      "word": "generated",
+      "count": 9
+    },
+    {
+      "word": "have",
+      "count": 9
+    },
+    {
+      "word": "introduced",
+      "count": 9
+    },
+    {
+      "word": "methods",
+      "count": 9
+    },
+    {
+      "word": "parameters",
+      "count": 9
+    },
+    {
+      "word": "probability",
+      "count": 9
+    },
+    {
+      "word": "product",
+      "count": 9
+    },
+    {
+      "word": "query",
+      "count": 9
+    },
+    {
+      "word": "similar",
+      "count": 9
+    },
+    {
+      "word": "splitting",
+      "count": 9
+    },
+    {
+      "word": "support",
+      "count": 9
+    },
+    {
+      "word": "unnecessary",
+      "count": 9
+    },
+    {
+      "word": "user",
+      "count": 9
+    },
+    {
+      "word": "where",
+      "count": 9
+    },
+    {
+      "word": "you",
+      "count": 9
+    },
+    {
+      "word": "chroma",
+      "count": 8
+    },
+    {
+      "word": "difference",
+      "count": 8
+    },
+    {
+      "word": "dimensions",
+      "count": 8
+    },
+    {
+      "word": "exactly",
+      "count": 8
+    },
+    {
+      "word": "existing",
+      "count": 8
+    },
+    {
+      "word": "filters",
+      "count": 8
+    },
+    {
+      "word": "future",
+      "count": 8
+    },
+    {
+      "word": "has",
+      "count": 8
+    },
+    {
+      "word": "less",
+      "count": 8
+    },
+    {
+      "word": "lesson",
+      "count": 8
+    },
+    {
+      "word": "must",
+      "count": 8
+    },
+    {
+      "word": "naturally",
+      "count": 8
+    },
+    {
+      "word": "overlap",
+      "count": 8
+    },
+    {
+      "word": "patterns",
+      "count": 8
+    },
+    {
+      "word": "py",
+      "count": 8
+    },
+    {
+      "word": "python",
+      "count": 8
+    },
+    {
+      "word": "rather",
+      "count": 8
+    },
+    {
+      "word": "reduce",
+      "count": 8
+    },
+    {
+      "word": "require",
+      "count": 8
+    },
+    {
+      "word": "requirements",
+      "count": 8
+    },
+    {
+      "word": "response",
+      "count": 8
+    },
+    {
+      "word": "retriever",
+      "count": 8
+    },
+    {
+      "word": "sampling",
+      "count": 8
+    },
+    {
+      "word": "smaller",
+      "count": 8
+    },
+    {
+      "word": "software",
+      "count": 8
+    },
+    {
+      "word": "store",
+      "count": 8
+    },
+    {
+      "word": "strategies",
+      "count": 8
+    },
+    {
+      "word": "suppose",
+      "count": 8
+    },
+    {
+      "word": "these",
+      "count": 8
+    },
+    {
+      "word": "tomorrow",
+      "count": 8
+    },
+    {
+      "word": "types",
+      "count": 8
+    },
+    {
+      "word": "usage",
+      "count": 8
+    },
+    {
+      "word": "used",
+      "count": 8
+    },
+    {
+      "word": "vs",
+      "count": 8
+    },
+    {
+      "word": "working",
+      "count": 8
+    },
+    {
+      "word": "actually",
+      "count": 7
+    },
+    {
+      "word": "answers",
+      "count": 7
+    },
+    {
+      "word": "backend",
+      "count": 7
+    },
+    {
+      "word": "behind",
+      "count": 7
+    },
+    {
+      "word": "capture",
+      "count": 7
+    },
+    {
+      "word": "cases",
+      "count": 7
+    },
+    {
+      "word": "closed",
+      "count": 7
+    },
+    {
+      "word": "concrete",
+      "count": 7
+    },
+    {
+      "word": "creating",
+      "count": 7
+    },
+    {
+      "word": "details",
+      "count": 7
+    },
+    {
+      "word": "direction",
+      "count": 7
+    },
+    {
+      "word": "do",
+      "count": 7
+    },
+    {
+      "word": "dynamic",
+      "count": 7
+    },
+    {
+      "word": "easier",
+      "count": 7
+    },
+    {
+      "word": "even",
+      "count": 7
+    },
+    {
+      "word": "frequency",
+      "count": 7
+    },
+    {
+      "word": "introducing",
+      "count": 7
+    },
+    {
+      "word": "later",
+      "count": 7
+    },
+    {
+      "word": "library",
+      "count": 7
+    },
+    {
+      "word": "magnitude",
+      "count": 7
+    },
+    {
+      "word": "making",
+      "count": 7
+    },
+    {
+      "word": "management",
+      "count": 7
+    },
+    {
+      "word": "markdown",
+      "count": 7
+    },
+    {
+      "word": "my",
+      "count": 7
+    },
+    {
+      "word": "notice",
+      "count": 7
+    },
+    {
+      "word": "orchestration",
+      "count": 7
+    },
+    {
+      "word": "our",
+      "count": 7
+    },
+    {
+      "word": "persistence",
+      "count": 7
+    },
+    {
+      "word": "presence",
+      "count": 7
+    },
+    {
+      "word": "preserve",
+      "count": 7
+    },
+    {
+      "word": "produces",
+      "count": 7
+    },
+    {
+      "word": "prompt",
+      "count": 7
+    },
+    {
+      "word": "responses",
+      "count": 7
+    },
+    {
+      "word": "scaling",
+      "count": 7
+    },
+    {
+      "word": "semantically",
+      "count": 7
+    },
+    {
+      "word": "takeaways",
+      "count": 7
+    },
+    {
+      "word": "then",
+      "count": 7
+    },
+    {
+      "word": "think",
+      "count": 7
+    },
+    {
+      "word": "very",
+      "count": 7
+    },
+    {
+      "word": "word",
+      "count": 7
+    },
+    {
+      "word": "words",
+      "count": 7
+    },
+    {
+      "word": "additional",
+      "count": 6
+    },
+    {
+      "word": "allowing",
+      "count": 6
+    },
+    {
+      "word": "always",
+      "count": 6
+    },
+    {
+      "word": "automatically",
+      "count": 6
+    },
+    {
+      "word": "become",
+      "count": 6
+    },
+    {
+      "word": "blank",
+      "count": 6
+    },
+    {
+      "word": "both",
+      "count": 6
+    },
+    {
+      "word": "cassandra",
+      "count": 6
+    },
+    {
+      "word": "changing",
+      "count": 6
+    },
+    {
+      "word": "client",
+      "count": 6
+    },
+    {
+      "word": "close",
+      "count": 6
+    },
+    {
+      "word": "concerns",
+      "count": 6
+    },
+    {
+      "word": "considered",
+      "count": 6
+    },
+    {
+      "word": "cosine",
+      "count": 6
+    },
+    {
+      "word": "create",
+      "count": 6
+    },
+    {
+      "word": "creates",
+      "count": 6
+    },
+    {
+      "word": "development",
+      "count": 6
+    },
+    {
+      "word": "dimensionality",
+      "count": 6
+    },
+    {
+      "word": "directly",
+      "count": 6
+    },
+    {
+      "word": "distance",
+      "count": 6
+    },
+    {
+      "word": "don't",
+      "count": 6
+    },
+    {
+      "word": "entire",
+      "count": 6
+    },
+    {
+      "word": "exact",
+      "count": 6
+    },
+    {
+      "word": "files",
+      "count": 6
+    },
+    {
+      "word": "final",
+      "count": 6
+    },
+    {
+      "word": "fixed",
+      "count": 6
+    },
+    {
+      "word": "fully",
+      "count": 6
+    },
+    {
+      "word": "implement",
+      "count": 6
+    },
+    {
+      "word": "implementations",
+      "count": 6
+    },
+    {
+      "word": "independent",
+      "count": 6
+    },
+    {
+      "word": "indexing",
+      "count": 6
+    },
+    {
+      "word": "key",
+      "count": 6
+    },
+    {
+      "word": "layer",
+      "count": 6
+    },
+    {
+      "word": "limited",
+      "count": 6
+    },
+    {
+      "word": "llms",
+      "count": 6
+    },
+    {
+      "word": "material",
+      "count": 6
+    },
+    {
+      "word": "max",
+      "count": 6
+    },
+    {
+      "word": "need",
+      "count": 6
+    },
+    {
+      "word": "noopener",
+      "count": 6
+    },
+    {
+      "word": "note",
+      "count": 6
+    },
+    {
+      "word": "notes",
+      "count": 6
+    },
+    {
+      "word": "original",
+      "count": 6
+    },
+    {
+      "word": "over",
+      "count": 6
+    },
+    {
+      "word": "perform",
+      "count": 6
+    },
+    {
+      "word": "performs",
+      "count": 6
+    },
+    {
+      "word": "preserves",
+      "count": 6
+    },
+    {
+      "word": "problem",
+      "count": 6
+    },
+    {
+      "word": "ready",
+      "count": 6
+    },
+    {
+      "word": "recursive",
+      "count": 6
+    },
+    {
+      "word": "rel",
+      "count": 6
+    },
+    {
+      "word": "remains",
+      "count": 6
+    },
+    {
+      "word": "required",
+      "count": 6
+    },
+    {
+      "word": "retrieve",
+      "count": 6
+    },
+    {
+      "word": "richer",
+      "count": 6
+    },
+    {
+      "word": "scalability",
+      "count": 6
+    },
+    {
+      "word": "splitter",
+      "count": 6
+    },
+    {
+      "word": "structured",
+      "count": 6
+    },
+    {
+      "word": "supports",
+      "count": 6
+    },
+    {
+      "word": "system",
+      "count": 6
+    },
+    {
+      "word": "target",
+      "count": 6
+    },
+    {
+      "word": "together",
+      "count": 6
+    },
+    {
+      "word": "too",
+      "count": 6
+    },
+    {
+      "word": "understand",
+      "count": 6
+    },
+    {
+      "word": "window",
+      "count": 6
+    },
+    {
+      "word": "work",
+      "count": 6
+    },
+    {
+      "word": "workflow",
+      "count": 6
+    },
+    {
+      "word": "accurate",
+      "count": 5
+    },
+    {
+      "word": "add",
+      "count": 5
+    },
+    {
+      "word": "another",
+      "count": 5
+    },
+    {
+      "word": "appropriate",
+      "count": 5
+    },
+    {
+      "word": "assistant",
+      "count": 5
+    },
+    {
+      "word": "at",
+      "count": 5
+    },
+    {
+      "word": "behavior",
+      "count": 5
+    },
+    {
+      "word": "branch",
+      "count": 5
+    },
+    {
+      "word": "child",
+      "count": 5
+    },
+    {
+      "word": "choice",
+      "count": 5
+    },
+    {
+      "word": "chooses",
+      "count": 5
+    },
+    {
+      "word": "combine",
+      "count": 5
+    },
+    {
+      "word": "commonly",
+      "count": 5
+    },
+    {
+      "word": "component",
+      "count": 5
+    },
+    {
+      "word": "configuration",
+      "count": 5
+    },
+    {
+      "word": "creation",
+      "count": 5
+    },
+    {
+      "word": "creative",
+      "count": 5
+    },
+    {
+      "word": "designed",
+      "count": 5
+    },
+    {
+      "word": "determine",
+      "count": 5
+    },
+    {
+      "word": "determines",
+      "count": 5
+    },
+    {
+      "word": "else",
+      "count": 5
+    },
+    {
+      "word": "embedded",
+      "count": 5
+    },
+    {
+      "word": "examples",
+      "count": 5
+    },
+    {
+      "word": "excellent",
+      "count": 5
+    },
+    {
+      "word": "fast",
+      "count": 5
+    },
+    {
+      "word": "feature",
+      "count": 5
+    },
+    {
+      "word": "generating",
+      "count": 5
+    },
+    {
+      "word": "github",
+      "count": 5
+    },
+    {
+      "word": "grade",
+      "count": 5
+    },
+    {
+      "word": "increase",
+      "count": 5
+    },
+    {
+      "word": "ingestion",
+      "count": 5
+    },
+    {
+      "word": "initial",
+      "count": 5
+    },
+    {
+      "word": "initially",
+      "count": 5
+    },
+    {
+      "word": "interface",
+      "count": 5
+    },
+    {
+      "word": "introduce",
+      "count": 5
+    },
+    {
+      "word": "lcel",
+      "count": 5
+    },
+    {
+      "word": "learned",
+      "count": 5
+    },
+    {
+      "word": "meaningful",
+      "count": 5
+    },
+    {
+      "word": "memory",
+      "count": 5
+    },
+    {
+      "word": "moderate",
+      "count": 5
+    },
+    {
+      "word": "natural",
+      "count": 5
+    },
+    {
+      "word": "output",
+      "count": 5
+    },
+    {
+      "word": "owns",
+      "count": 5
+    },
+    {
+      "word": "pages",
+      "count": 5
+    },
+    {
+      "word": "problems",
+      "count": 5
+    },
+    {
+      "word": "products",
+      "count": 5
+    },
+    {
+      "word": "randomness",
+      "count": 5
+    },
+    {
+      "word": "re",
+      "count": 5
+    },
+    {
+      "word": "receives",
+      "count": 5
+    },
+    {
+      "word": "recursivecharactertextsplitter",
+      "count": 5
+    },
+    {
+      "word": "remain",
+      "count": 5
+    },
+    {
+      "word": "responsible",
+      "count": 5
+    },
+    {
+      "word": "retrieved",
+      "count": 5
+    },
+    {
+      "word": "saas",
+      "count": 5
+    },
+    {
+      "word": "scale",
+      "count": 5
+    },
+    {
+      "word": "self",
+      "count": 5
+    },
+    {
+      "word": "separation",
+      "count": 5
+    },
+    {
+      "word": "simple",
+      "count": 5
+    },
+    {
+      "word": "solving",
+      "count": 5
+    },
+    {
+      "word": "splits",
+      "count": 5
+    },
+    {
+      "word": "stages",
+      "count": 5
+    },
+    {
+      "word": "such",
+      "count": 5
+    },
+    {
+      "word": "there",
+      "count": 5
+    },
+    {
+      "word": "today",
+      "count": 5
+    },
+    {
+      "word": "users",
+      "count": 5
+    },
+    {
+      "word": "week",
+      "count": 5
+    },
+    {
+      "word": "will",
+      "count": 5
+    },
+    {
+      "word": "abstractions",
+      "count": 4
+    },
+    {
+      "word": "accuracy",
+      "count": 4
+    },
+    {
+      "word": "across",
+      "count": 4
+    },
+    {
+      "word": "agentic",
+      "count": 4
+    },
+    {
+      "word": "allows",
+      "count": 4
+    },
+    {
+      "word": "answering",
+      "count": 4
+    },
+    {
+      "word": "appears",
+      "count": 4
+    },
+    {
+      "word": "augmented",
+      "count": 4
+    },
+    {
+      "word": "build",
+      "count": 4
+    },
+    {
+      "word": "building",
+      "count": 4
+    },
+    {
+      "word": "chromadb",
+      "count": 4
+    },
+    {
+      "word": "comparison",
+      "count": 4
+    },
+    {
+      "word": "completely",
+      "count": 4
+    },
+    {
+      "word": "contain",
+      "count": 4
+    },
+    {
+      "word": "contract",
+      "count": 4
+    },
+    {
+      "word": "cumulative",
+      "count": 4
+    },
+    {
+      "word": "current",
+      "count": 4
+    },
+    {
+      "word": "db",
+      "count": 4
+    },
+    {
+      "word": "decision",
+      "count": 4
+    },
+    {
+      "word": "decisions",
+      "count": 4
+    },
+    {
+      "word": "default",
+      "count": 4
+    },
+    {
+      "word": "dependency",
+      "count": 4
+    },
+    {
+      "word": "depends",
+      "count": 4
+    },
+    {
+      "word": "deployment",
+      "count": 4
+    },
+    {
+      "word": "designing",
+      "count": 4
+    },
+    {
+      "word": "deterministic",
+      "count": 4
+    },
+    {
+      "word": "dimensional",
+      "count": 4
+    },
+    {
+      "word": "doc",
+      "count": 4
+    },
+    {
+      "word": "easy",
+      "count": 4
+    },
+    {
+      "word": "enables",
+      "count": 4
+    },
+    {
+      "word": "enough",
+      "count": 4
+    },
+    {
+      "word": "evolution",
+      "count": 4
+    },
+    {
+      "word": "exceeds",
+      "count": 4
+    },
+    {
+      "word": "expose",
+      "count": 4
+    },
+    {
+      "word": "extensible",
+      "count": 4
+    },
+    {
+      "word": "extremely",
+      "count": 4
+    },
+    {
+      "word": "focused",
+      "count": 4
+    },
+    {
+      "word": "follows",
+      "count": 4
+    },
+    {
+      "word": "free",
+      "count": 4
+    },
+    {
+      "word": "frontend",
+      "count": 4
+    },
+    {
+      "word": "generate",
+      "count": 4
+    },
+    {
+      "word": "generates",
+      "count": 4
+    },
+    {
+      "word": "happens",
+      "count": 4
+    },
+    {
+      "word": "highest",
+      "count": 4
+    },
+    {
+      "word": "ideal",
+      "count": 4
+    },
+    {
+      "word": "imagine",
+      "count": 4
+    },
+    {
+      "word": "immediately",
+      "count": 4
+    },
+    {
+      "word": "improves",
+      "count": 4
+    },
+    {
+      "word": "input",
+      "count": 4
+    },
+    {
+      "word": "inside",
+      "count": 4
+    },
+    {
+      "word": "inversion",
+      "count": 4
+    },
+    {
+      "word": "java",
+      "count": 4
+    },
+    {
+      "word": "keeps",
+      "count": 4
+    },
+    {
+      "word": "knows",
+      "count": 4
+    },
+    {
+      "word": "learn",
+      "count": 4
+    },
+    {
+      "word": "like",
+      "count": 4
+    },
+    {
+      "word": "lost",
+      "count": 4
+    },
+    {
+      "word": "major",
+      "count": 4
+    },
+    {
+      "word": "mapping",
+      "count": 4
+    },
+    {
+      "word": "matching",
+      "count": 4
+    },
+    {
+      "word": "matrix",
+      "count": 4
+    },
+    {
+      "word": "maximum",
+      "count": 4
+    },
+    {
+      "word": "measures",
+      "count": 4
+    },
+    {
+      "word": "medium",
+      "count": 4
+    },
+    {
+      "word": "modification",
+      "count": 4
+    },
+    {
+      "word": "modifying",
+      "count": 4
+    },
+    {
+      "word": "module",
+      "count": 4
+    },
+    {
+      "word": "often",
+      "count": 4
+    },
+    {
+      "word": "outcome",
+      "count": 4
+    },
+    {
+      "word": "own",
+      "count": 4
+    },
+    {
+      "word": "page",
+      "count": 4
+    },
+    {
+      "word": "performance",
+      "count": 4
+    },
+    {
+      "word": "poor",
+      "count": 4
+    },
+    {
+      "word": "principles",
+      "count": 4
+    },
+    {
+      "word": "produce",
+      "count": 4
+    },
+    {
+      "word": "progress",
+      "count": 4
+    },
+    {
+      "word": "propositions",
+      "count": 4
+    },
+    {
+      "word": "provides",
+      "count": 4
+    },
+    {
+      "word": "pull",
+      "count": 4
+    },
+    {
+      "word": "purpose",
+      "count": 4
+    },
+    {
+      "word": "related",
+      "count": 4
+    },
+    {
+      "word": "represent",
+      "count": 4
+    },
+    {
+      "word": "represents",
+      "count": 4
+    },
+    {
+      "word": "rest",
+      "count": 4
+    },
+    {
+      "word": "retrieves",
+      "count": 4
+    },
+    {
+      "word": "selection",
+      "count": 4
+    },
+    {
+      "word": "sentences",
+      "count": 4
+    },
+    {
+      "word": "set",
+      "count": 4
+    },
+    {
+      "word": "so",
+      "count": 4
+    },
+    {
+      "word": "solved",
+      "count": 4
+    },
+    {
+      "word": "solves",
+      "count": 4
+    },
+    {
+      "word": "specifies",
+      "count": 4
+    },
+    {
+      "word": "splitters",
+      "count": 4
+    },
+    {
+      "word": "sql",
+      "count": 4
+    },
+    {
+      "word": "stateless",
+      "count": 4
+    },
+    {
+      "word": "still",
+      "count": 4
+    },
+    {
+      "word": "stop",
+      "count": 4
+    },
+    {
+      "word": "stored",
+      "count": 4
+    },
+    {
+      "word": "structure",
+      "count": 4
+    },
+    {
+      "word": "time",
+      "count": 4
+    },
+    {
+      "word": "topics",
+      "count": 4
+    },
+    {
+      "word": "training",
+      "count": 4
+    },
+    {
+      "word": "typically",
+      "count": 4
+    },
+    {
+      "word": "unlike",
+      "count": 4
+    },
+    {
+      "word": "upload",
+      "count": 4
+    },
+    {
+      "word": "uploads",
+      "count": 4
+    },
+    {
+      "word": "varies",
+      "count": 4
+    },
+    {
+      "word": "vectorstore",
+      "count": 4
+    },
+    {
+      "word": "vocabulary",
+      "count": 4
+    },
+    {
+      "word": "works",
+      "count": 4
+    },
+    {
+      "word": "your",
+      "count": 4
+    },
+    {
+      "word": "access",
+      "count": 3
+    },
+    {
+      "word": "adjacent",
+      "count": 3
+    },
+    {
+      "word": "advanced",
+      "count": 3
+    },
+    {
+      "word": "affecting",
+      "count": 3
+    },
+    {
+      "word": "along",
+      "count": 3
+    },
+    {
+      "word": "analogy",
+      "count": 3
+    },
+    {
+      "word": "api",
+      "count": 3
+    },
+    {
+      "word": "app",
+      "count": 3
+    },
+    {
+      "word": "approach",
+      "count": 3
+    },
+    {
+      "word": "architectural",
+      "count": 3
+    },
+    {
+      "word": "ask",
+      "count": 3
+    },
+    {
+      "word": "b",
+      "count": 3
+    },
+    {
+      "word": "basic",
+      "count": 3
+    },
+    {
+      "word": "behaviour",
+      "count": 3
+    },
+    {
+      "word": "belong",
+      "count": 3
+    },
+    {
+      "word": "belongs",
+      "count": 3
+    },
+    {
+      "word": "benefits",
+      "count": 3
+    },
+    {
+      "word": "brainstorming",
+      "count": 3
+    },
+    {
+      "word": "call",
+      "count": 3
+    },
+    {
+      "word": "called",
+      "count": 3
+    },
+    {
+      "word": "case",
+      "count": 3
+    },
+    {
+      "word": "characters",
+      "count": 3
+    },
+    {
+      "word": "chat",
+      "count": 3
+    },
+    {
+      "word": "choosing",
+      "count": 3
+    },
+    {
+      "word": "chosen",
+      "count": 3
+    },
+    {
+      "word": "coding",
+      "count": 3
+    },
+    {
+      "word": "combines",
+      "count": 3
+    },
+    {
+      "word": "computational",
+      "count": 3
+    },
+    {
+      "word": "concept",
+      "count": 3
+    },
+    {
+      "word": "concepts",
+      "count": 3
+    },
+    {
+      "word": "contains",
+      "count": 3
+    },
+    {
+      "word": "continue",
+      "count": 3
+    },
+    {
+      "word": "conversation",
+      "count": 3
+    },
+    {
+      "word": "converted",
+      "count": 3
+    },
+    {
+      "word": "converts",
+      "count": 3
+    },
+    {
+      "word": "correct",
+      "count": 3
+    },
+    {
+      "word": "count",
+      "count": 3
+    },
+    {
+      "word": "coupled",
+      "count": 3
+    },
+    {
+      "word": "creativity",
+      "count": 3
+    },
+    {
+      "word": "d",
+      "count": 3
+    },
+    {
+      "word": "dense",
+      "count": 3
+    },
+    {
+      "word": "diverse",
+      "count": 3
+    },
+    {
+      "word": "documentation",
+      "count": 3
+    },
+    {
+      "word": "emerge",
+      "count": 3
+    },
+    {
+      "word": "encourages",
+      "count": 3
+    },
+    {
+      "word": "engine",
+      "count": 3
+    },
+    {
+      "word": "engineer",
+      "count": 3
+    },
+    {
+      "word": "error",
+      "count": 3
+    },
+    {
+      "word": "euclidean",
+      "count": 3
+    },
+    {
+      "word": "evolve",
+      "count": 3
+    },
+    {
+      "word": "exist",
+      "count": 3
+    },
+    {
+      "word": "experimentation",
+      "count": 3
+    },
+    {
+      "word": "expert",
+      "count": 3
+    },
+    {
+      "word": "exposes",
+      "count": 3
+    },
+    {
+      "word": "extension",
+      "count": 3
+    },
+    {
+      "word": "external",
+      "count": 3
+    },
+    {
+      "word": "factual",
+      "count": 3
+    },
+    {
+      "word": "faster",
+      "count": 3
+    },
+    {
+      "word": "file",
+      "count": 3
+    },
+    {
+      "word": "flow",
+      "count": 3
+    },
+    {
+      "word": "follow",
+      "count": 3
+    },
+    {
+      "word": "full",
+      "count": 3
+    },
+    {
+      "word": "functions",
+      "count": 3
+    },
+    {
+      "word": "general",
+      "count": 3
+    },
+    {
+      "word": "guardrails",
+      "count": 3
+    },
+    {
+      "word": "handling",
+      "count": 3
+    },
+    {
+      "word": "here",
+      "count": 3
+    },
+    {
+      "word": "history",
+      "count": 3
+    },
+    {
+      "word": "however",
+      "count": 3
+    },
+    {
+      "word": "html",
+      "count": 3
+    },
+    {
+      "word": "id",
+      "count": 3
+    },
+    {
+      "word": "ignores",
+      "count": 3
+    },
+    {
+      "word": "implemented",
+      "count": 3
+    },
+    {
+      "word": "improve",
+      "count": 3
+    },
+    {
+      "word": "incomplete",
+      "count": 3
+    },
+    {
+      "word": "index",
+      "count": 3
+    },
+    {
+      "word": "insight",
+      "count": 3
+    },
+    {
+      "word": "internal",
+      "count": 3
+    },
+    {
+      "word": "irrelevant",
+      "count": 3
+    },
+    {
+      "word": "journey",
+      "count": 3
+    },
+    {
+      "word": "just",
+      "count": 3
+    },
+    {
+      "word": "latency",
+      "count": 3
+    },
+    {
+      "word": "length",
+      "count": 3
+    },
+    {
+      "word": "level",
+      "count": 3
+    },
+    {
+      "word": "line",
+      "count": 3
+    },
+    {
+      "word": "loading",
+      "count": 3
+    },
+    {
+      "word": "loads",
+      "count": 3
+    },
+    {
+      "word": "logging",
+      "count": 3
+    },
+    {
+      "word": "make",
+      "count": 3
+    },
+    {
+      "word": "makes",
+      "count": 3
+    },
+    {
+      "word": "metrics",
+      "count": 3
+    },
+    {
+      "word": "milestone",
+      "count": 3
+    },
+    {
+      "word": "native",
+      "count": 3
+    },
+    {
+      "word": "nearest",
+      "count": 3
+    },
+    {
+      "word": "needs",
+      "count": 3
+    },
+    {
+      "word": "neighbor",
+      "count": 3
+    },
+    {
+      "word": "next",
+      "count": 3
+    },
+    {
+      "word": "numerical",
+      "count": 3
+    },
+    {
+      "word": "offs",
+      "count": 3
+    },
+    {
+      "word": "operational",
+      "count": 3
+    },
+    {
+      "word": "paid",
+      "count": 3
+    },
+    {
+      "word": "paragraph",
+      "count": 3
+    },
+    {
+      "word": "pdfs",
+      "count": 3
+    },
+    {
+      "word": "performing",
+      "count": 3
+    },
+    {
+      "word": "primarily",
+      "count": 3
+    },
+    {
+      "word": "prototype",
+      "count": 3
+    },
+    {
+      "word": "provide",
+      "count": 3
+    },
+    {
+      "word": "public",
+      "count": 3
+    },
+    {
+      "word": "queries",
+      "count": 3
+    },
+    {
+      "word": "recommendation",
+      "count": 3
+    },
+    {
+      "word": "reduces",
+      "count": 3
+    },
+    {
+      "word": "refactor",
+      "count": 3
+    },
+    {
+      "word": "relationship",
+      "count": 3
+    },
+    {
+      "word": "replace",
+      "count": 3
+    },
+    {
+      "word": "replication",
+      "count": 3
+    },
+    {
+      "word": "repository",
+      "count": 3
+    },
+    {
+      "word": "representation",
+      "count": 3
+    },
+    {
+      "word": "request",
+      "count": 3
+    },
+    {
+      "word": "requests",
+      "count": 3
+    },
+    {
+      "word": "returns",
+      "count": 3
+    },
+    {
+      "word": "risk",
+      "count": 3
+    },
+    {
+      "word": "sentence",
+      "count": 3
+    },
+    {
+      "word": "separators",
+      "count": 3
+    },
+    {
+      "word": "services",
+      "count": 3
+    },
+    {
+      "word": "share",
+      "count": 3
+    },
+    {
+      "word": "slightly",
+      "count": 3
+    },
+    {
+      "word": "smallest",
+      "count": 3
+    },
+    {
+      "word": "spring",
+      "count": 3
+    },
+    {
+      "word": "success",
+      "count": 3
+    },
+    {
+      "word": "supported",
+      "count": 3
+    },
+    {
+      "word": "through",
+      "count": 3
+    },
+    {
+      "word": "trade",
+      "count": 3
+    },
+    {
+      "word": "universally",
+      "count": 3
+    },
+    {
+      "word": "uploaded",
+      "count": 3
+    },
+    {
+      "word": "user's",
+      "count": 3
+    },
+    {
+      "word": "value",
+      "count": 3
+    },
+    {
+      "word": "was",
+      "count": 3
+    },
+    {
+      "word": "whenever",
+      "count": 3
+    },
+    {
+      "word": "who",
+      "count": 3
+    },
+    {
+      "word": "whose",
+      "count": 3
+    },
+    {
+      "word": "workflows",
+      "count": 3
+    },
+    {
+      "word": "x",
+      "count": 3
+    },
+    {
+      "word": "abstraction",
+      "count": 2
+    },
+    {
+      "word": "achieve",
+      "count": 2
+    },
+    {
+      "word": "again",
+      "count": 2
+    },
+    {
+      "word": "allowed",
+      "count": 2
+    },
+    {
+      "word": "already",
+      "count": 2
+    },
+    {
+      "word": "also",
+      "count": 2
+    },
+    {
+      "word": "although",
+      "count": 2
+    },
+    {
+      "word": "amount",
+      "count": 2
+    },
+    {
+      "word": "appear",
+      "count": 2
+    },
+    {
+      "word": "application's",
+      "count": 2
+    },
+    {
+      "word": "around",
+      "count": 2
+    },
+    {
+      "word": "asking",
+      "count": 2
+    },
+    {
+      "word": "attempts",
+      "count": 2
+    },
+    {
+      "word": "avoid",
+      "count": 2
+    },
+    {
+      "word": "becoming",
+      "count": 2
+    },
+    {
+      "word": "being",
+      "count": 2
+    },
+    {
+      "word": "calculated",
+      "count": 2
+    },
+    {
+      "word": "calculations",
+      "count": 2
+    },
+    {
+      "word": "caller",
+      "count": 2
+    },
+    {
+      "word": "can't",
+      "count": 2
+    },
+    {
+      "word": "cannot",
+      "count": 2
+    },
+    {
+      "word": "characteristics",
+      "count": 2
+    },
+    {
+      "word": "chatbot",
+      "count": 2
+    },
+    {
+      "word": "closer",
+      "count": 2
+    },
+    {
+      "word": "clustering",
+      "count": 2
+    },
+    {
+      "word": "collections",
+      "count": 2
+    },
+    {
+      "word": "compare",
+      "count": 2
+    },
+    {
+      "word": "complex",
+      "count": 2
+    },
+    {
+      "word": "complexity",
+      "count": 2
+    },
+    {
+      "word": "computation",
+      "count": 2
+    },
+    {
+      "word": "conceptually",
+      "count": 2
+    },
+    {
+      "word": "confidence",
+      "count": 2
+    },
+    {
+      "word": "contextual",
+      "count": 2
+    },
+    {
+      "word": "convert",
+      "count": 2
+    },
+    {
+      "word": "coordinate",
+      "count": 2
+    },
+    {
+      "word": "coordinates",
+      "count": 2
+    },
+    {
+      "word": "core",
+      "count": 2
+    },
+    {
+      "word": "correctly",
+      "count": 2
+    },
+    {
+      "word": "corresponds",
+      "count": 2
+    },
+    {
+      "word": "could",
+      "count": 2
+    },
+    {
+      "word": "created",
+      "count": 2
+    },
+    {
+      "word": "currently",
+      "count": 2
+    },
+    {
+      "word": "danger",
+      "count": 2
+    },
+    {
+      "word": "data",
+      "count": 2
+    },
+    {
+      "word": "debugging",
+      "count": 2
+    },
+    {
+      "word": "decreases",
+      "count": 2
+    },
+    {
+      "word": "depend",
+      "count": 2
+    },
+    {
+      "word": "deployments",
+      "count": 2
+    },
+    {
+      "word": "developed",
+      "count": 2
+    },
+    {
+      "word": "developers",
+      "count": 2
+    },
+    {
+      "word": "did",
+      "count": 2
+    },
+    {
+      "word": "differences",
+      "count": 2
+    },
+    {
+      "word": "dimension",
+      "count": 2
+    },
+    {
+      "word": "discarded",
+      "count": 2
+    },
+    {
+      "word": "discourages",
+      "count": 2
+    },
+    {
+      "word": "distributed",
+      "count": 2
+    },
+    {
+      "word": "distribution",
+      "count": 2
+    },
+    {
+      "word": "diversity",
+      "count": 2
+    },
+    {
+      "word": "doesn't",
+      "count": 2
+    },
+    {
+      "word": "downstream",
+      "count": 2
+    },
+    {
+      "word": "easiest",
+      "count": 2
+    },
+    {
+      "word": "ecosystem",
+      "count": 2
+    },
+    {
+      "word": "efficient",
+      "count": 2
+    },
+    {
+      "word": "efficiently",
+      "count": 2
+    },
+    {
+      "word": "emerges",
+      "count": 2
+    },
+    {
+      "word": "employee",
+      "count": 2
+    },
+    {
+      "word": "enabling",
+      "count": 2
+    },
+    {
+      "word": "encapsulates",
+      "count": 2
+    },
+    {
+      "word": "end",
+      "count": 2
+    },
+    {
+      "word": "ensures",
+      "count": 2
+    },
+    {
+      "word": "etc",
+      "count": 2
+    },
+    {
+      "word": "execute",
+      "count": 2
+    },
+    {
+      "word": "exists",
+      "count": 2
+    },
+    {
+      "word": "expected",
+      "count": 2
+    },
+    {
+      "word": "expensive",
+      "count": 2
+    },
+    {
+      "word": "expression",
+      "count": 2
+    },
+    {
+      "word": "extend",
+      "count": 2
+    },
+    {
+      "word": "fail",
+      "count": 2
+    },
+    {
+      "word": "famous",
+      "count": 2
+    },
+    {
+      "word": "finding",
+      "count": 2
+    },
+    {
+      "word": "first",
+      "count": 2
+    },
+    {
+      "word": "following",
+      "count": 2
+    },
+    {
+      "word": "formula",
+      "count": 2
+    },
+    {
+      "word": "frequently",
+      "count": 2
+    },
+    {
+      "word": "garbage",
+      "count": 2
+    },
+    {
+      "word": "generalized",
+      "count": 2
+    },
+    {
+      "word": "generally",
+      "count": 2
+    },
+    {
+      "word": "good",
+      "count": 2
+    },
+    {
+      "word": "gpt",
+      "count": 2
+    },
+    {
+      "word": "grasp",
+      "count": 2
+    },
+    {
+      "word": "groups",
+      "count": 2
+    },
+    {
+      "word": "haven't",
+      "count": 2
+    },
+    {
+      "word": "hidden",
+      "count": 2
+    },
+    {
+      "word": "hiding",
+      "count": 2
+    },
+    {
+      "word": "hosted",
+      "count": 2
+    },
+    {
+      "word": "htmlheadertextsplitter",
+      "count": 2
+    },
+    {
+      "word": "huge",
+      "count": 2
+    },
+    {
+      "word": "idea",
+      "count": 2
+    },
+    {
+      "word": "ids",
+      "count": 2
+    },
+    {
+      "word": "implementing",
+      "count": 2
+    },
+    {
+      "word": "increasing",
+      "count": 2
+    },
+    {
+      "word": "injection",
+      "count": 2
+    },
+    {
+      "word": "intentionally",
+      "count": 2
+    },
+    {
+      "word": "it’s",
+      "count": 2
+    },
+    {
+      "word": "job",
+      "count": 2
+    },
+    {
+      "word": "keeping",
+      "count": 2
+    },
+    {
+      "word": "keywords",
+      "count": 2
+    },
+    {
+      "word": "lightweight",
+      "count": 2
+    },
+    {
+      "word": "lock",
+      "count": 2
+    },
+    {
+      "word": "logic",
+      "count": 2
+    },
+    {
+      "word": "long",
+      "count": 2
+    },
+    {
+      "word": "lookup",
+      "count": 2
+    },
+    {
+      "word": "lose",
+      "count": 2
+    },
+    {
+      "word": "maintain",
+      "count": 2
+    },
+    {
+      "word": "manages",
+      "count": 2
+    },
+    {
+      "word": "manually",
+      "count": 2
+    },
+    {
+      "word": "markdownheadertextsplitter",
+      "count": 2
+    },
+    {
+      "word": "massive",
+      "count": 2
+    },
+    {
+      "word": "memorize",
+      "count": 2
+    },
+    {
+      "word": "method",
+      "count": 2
+    },
+    {
+      "word": "metric",
+      "count": 2
+    },
+    {
+      "word": "minimal",
+      "count": 2
+    },
+    {
+      "word": "minimum",
+      "count": 2
+    },
+    {
+      "word": "mixed",
+      "count": 2
+    },
+    {
+      "word": "modifies",
+      "count": 2
+    },
+    {
+      "word": "modular",
+      "count": 2
+    },
+    {
+      "word": "modules",
+      "count": 2
+    },
+    {
+      "word": "move",
+      "count": 2
+    },
+    {
+      "word": "much",
+      "count": 2
+    },
+    {
+      "word": "mutable",
+      "count": 2
+    },
+    {
+      "word": "narrows",
+      "count": 2
+    },
+    {
+      "word": "needed",
+      "count": 2
+    },
+    {
+      "word": "nth",
+      "count": 2
+    },
+    {
+      "word": "nucleus",
+      "count": 2
+    },
+    {
+      "word": "objective",
+      "count": 2
+    },
+    {
+      "word": "once",
+      "count": 2
+    },
+    {
+      "word": "ones",
+      "count": 2
+    },
+    {
+      "word": "operation",
+      "count": 2
+    },
+    {
+      "word": "optimized",
+      "count": 2
+    },
+    {
+      "word": "orchestrates",
+      "count": 2
+    },
+    {
+      "word": "order",
+      "count": 2
+    },
+    {
+      "word": "ordering",
+      "count": 2
+    },
+    {
+      "word": "others",
+      "count": 2
+    },
+    {
+      "word": "outputs",
+      "count": 2
+    },
+    {
+      "word": "parameter",
+      "count": 2
+    },
+    {
+      "word": "passing",
+      "count": 2
+    },
+    {
+      "word": "per",
+      "count": 2
+    },
+    {
+      "word": "phrases",
+      "count": 2
+    },
+    {
+      "word": "pieces",
+      "count": 2
+    },
+    {
+      "word": "place",
+      "count": 2
+    },
+    {
+      "word": "point",
+      "count": 2
+    },
+    {
+      "word": "points",
+      "count": 2
+    },
+    {
+      "word": "polymorphism",
+      "count": 2
+    },
+    {
+      "word": "pool",
+      "count": 2
+    },
+    {
+      "word": "possible",
+      "count": 2
+    },
+    {
+      "word": "powerful",
+      "count": 2
+    },
+    {
+      "word": "powerpoint",
+      "count": 2
+    },
+    {
+      "word": "preferred",
+      "count": 2
+    },
+    {
+      "word": "probabilities",
+      "count": 2
+    },
+    {
+      "word": "probably",
+      "count": 2
+    },
+    {
+      "word": "projects",
+      "count": 2
+    },
+    {
+      "word": "prototyping",
+      "count": 2
+    },
+    {
+      "word": "prs",
+      "count": 2
+    },
+    {
+      "word": "pythoncodetextsplitter",
+      "count": 2
+    },
+    {
+      "word": "random",
+      "count": 2
+    },
+    {
+      "word": "range",
+      "count": 2
+    },
+    {
+      "word": "rapid",
+      "count": 2
+    },
+    {
+      "word": "readiness",
+      "count": 2
+    },
+    {
+      "word": "real",
+      "count": 2
+    },
+    {
+      "word": "recall",
+      "count": 2
+    },
+    {
+      "word": "recommended",
+      "count": 2
+    },
+    {
+      "word": "recursively",
+      "count": 2
+    },
+    {
+      "word": "reduced",
+      "count": 2
+    },
+    {
+      "word": "reducing",
+      "count": 2
+    },
+    {
+      "word": "registering",
+      "count": 2
+    },
+    {
+      "word": "remove",
+      "count": 2
+    },
+    {
+      "word": "repeating",
+      "count": 2
+    },
+    {
+      "word": "represented",
+      "count": 2
+    },
+    {
+      "word": "representing",
+      "count": 2
+    },
+    {
+      "word": "research",
+      "count": 2
+    },
+    {
+      "word": "results",
+      "count": 2
+    },
+    {
+      "word": "returning",
+      "count": 2
+    },
+    {
+      "word": "reuse",
+      "count": 2
+    },
+    {
+      "word": "review",
+      "count": 2
+    },
+    {
+      "word": "roadmap",
+      "count": 2
+    },
+    {
+      "word": "robust",
+      "count": 2
+    },
+    {
+      "word": "rust",
+      "count": 2
+    },
+    {
+      "word": "scalable",
+      "count": 2
+    },
+    {
+      "word": "scratch",
+      "count": 2
+    },
+    {
+      "word": "sections",
+      "count": 2
+    },
+    {
+      "word": "security",
+      "count": 2
+    },
+    {
+      "word": "seems",
+      "count": 2
+    },
+    {
+      "word": "segregation",
+      "count": 2
+    },
+    {
+      "word": "selected",
+      "count": 2
+    },
+    {
+      "word": "selecting",
+      "count": 2
+    },
+    {
+      "word": "sensitive",
+      "count": 2
+    },
+    {
+      "word": "sent",
+      "count": 2
+    },
+    {
+      "word": "separately",
+      "count": 2
+    },
+    {
+      "word": "sequences",
+      "count": 2
+    },
+    {
+      "word": "settings",
+      "count": 2
+    },
+    {
+      "word": "shared",
+      "count": 2
+    },
+    {
+      "word": "sharing",
+      "count": 2
+    },
+    {
+      "word": "slower",
+      "count": 2
+    },
+    {
+      "word": "some",
+      "count": 2
+    },
+    {
+      "word": "spaces",
+      "count": 2
+    },
+    {
+      "word": "specific",
+      "count": 2
+    },
+    {
+      "word": "speed",
+      "count": 2
+    },
+    {
+      "word": "stage",
+      "count": 2
+    },
+    {
+      "word": "state",
+      "count": 2
+    },
+    {
+      "word": "step",
+      "count": 2
+    },
+    {
+      "word": "straight",
+      "count": 2
+    },
+    {
+      "word": "suitable",
+      "count": 2
+    },
+    {
+      "word": "takeaway",
+      "count": 2
+    },
+    {
+      "word": "task",
+      "count": 2
+    },
+    {
+      "word": "thinking",
+      "count": 2
+    },
+    {
+      "word": "those",
+      "count": 2
+    },
+    {
+      "word": "thought",
+      "count": 2
+    },
+    {
+      "word": "throughout",
+      "count": 2
+    },
+    {
+      "word": "tightly",
+      "count": 2
+    },
+    {
+      "word": "today's",
+      "count": 2
+    },
+    {
+      "word": "topic",
+      "count": 2
+    },
+    {
+      "word": "traditional",
+      "count": 2
+    },
+    {
+      "word": "transform",
+      "count": 2
+    },
+    {
+      "word": "transformation",
+      "count": 2
+    },
+    {
+      "word": "tries",
+      "count": 2
+    },
+    {
+      "word": "typical",
+      "count": 2
+    },
+    {
+      "word": "ui",
+      "count": 2
+    },
+    {
+      "word": "ultimately",
+      "count": 2
+    },
+    {
+      "word": "understanding",
+      "count": 2
+    },
+    {
+      "word": "unless",
+      "count": 2
+    },
+    {
+      "word": "untouched",
+      "count": 2
+    },
+    {
+      "word": "useful",
+      "count": 2
+    },
+    {
+      "word": "usually",
+      "count": 2
+    },
+    {
+      "word": "variation",
+      "count": 2
+    },
+    {
+      "word": "vendor",
+      "count": 2
+    },
+    {
+      "word": "violates",
+      "count": 2
+    },
+    {
+      "word": "well",
+      "count": 2
+    },
+    {
+      "word": "workloads",
+      "count": 2
+    },
+    {
+      "word": "yes",
+      "count": 2
+    },
+    {
+      "word": "yourself",
+      "count": 2
+    },
+    {
+      "word": "above",
+      "count": 1
+    },
+    {
+      "word": "abstract",
+      "count": 1
+    },
+    {
+      "word": "abstracts",
+      "count": 1
+    },
+    {
+      "word": "accept",
+      "count": 1
+    },
+    {
+      "word": "accidentally",
+      "count": 1
+    },
+    {
+      "word": "actual",
+      "count": 1
+    },
+    {
+      "word": "adaptive",
+      "count": 1
+    },
+    {
+      "word": "adjusts",
+      "count": 1
+    },
+    {
+      "word": "affected",
+      "count": 1
+    },
+    {
+      "word": "affects",
+      "count": 1
+    },
+    {
+      "word": "agent",
+      "count": 1
+    },
+    {
+      "word": "aggregate",
+      "count": 1
+    },
+    {
+      "word": "aim",
+      "count": 1
+    },
+    {
+      "word": "alert",
+      "count": 1
+    },
+    {
+      "word": "allocation",
+      "count": 1
+    },
+    {
+      "word": "allow",
+      "count": 1
+    },
+    {
+      "word": "almost",
+      "count": 1
+    },
+    {
+      "word": "am",
+      "count": 1
+    },
+    {
+      "word": "analysis",
+      "count": 1
+    },
+    {
+      "word": "angle",
+      "count": 1
+    },
+    {
+      "word": "ann",
+      "count": 1
+    },
+    {
+      "word": "anyone",
+      "count": 1
+    },
+    {
+      "word": "apache",
+      "count": 1
+    },
+    {
+      "word": "apis",
+      "count": 1
+    },
+    {
+      "word": "appeared",
+      "count": 1
+    },
+    {
+      "word": "applied",
+      "count": 1
+    },
+    {
+      "word": "applies",
+      "count": 1
+    },
+    {
+      "word": "apply",
+      "count": 1
+    },
+    {
+      "word": "applying",
+      "count": 1
+    },
+    {
+      "word": "approximate",
+      "count": 1
+    },
+    {
+      "word": "approximately",
+      "count": 1
+    },
+    {
+      "word": "archive",
+      "count": 1
+    },
+    {
+      "word": "article",
+      "count": 1
+    },
+    {
+      "word": "artificial",
+      "count": 1
+    },
+    {
+      "word": "asks",
+      "count": 1
+    },
+    {
+      "word": "attractive",
+      "count": 1
+    },
+    {
+      "word": "author",
+      "count": 1
+    },
+    {
+      "word": "authorized",
+      "count": 1
+    },
+    {
+      "word": "auto",
+      "count": 1
+    },
+    {
+      "word": "automatic",
+      "count": 1
+    },
+    {
+      "word": "availability",
+      "count": 1
+    },
+    {
+      "word": "available",
+      "count": 1
+    },
+    {
+      "word": "average",
+      "count": 1
+    },
+    {
+      "word": "avoids",
+      "count": 1
+    },
+    {
+      "word": "aware",
+      "count": 1
+    },
+    {
+      "word": "back",
+      "count": 1
+    },
+    {
+      "word": "balancing",
+      "count": 1
+    },
+    {
+      "word": "base",
+      "count": 1
+    },
+    {
+      "word": "batching",
+      "count": 1
+    },
+    {
+      "word": "been",
+      "count": 1
+    },
+    {
+      "word": "begins",
+      "count": 1
+    },
+    {
+      "word": "below",
+      "count": 1
+    },
+    {
+      "word": "bias",
+      "count": 1
+    },
+    {
+      "word": "boot",
+      "count": 1
+    },
+    {
+      "word": "bootstrap",
+      "count": 1
+    },
+    {
+      "word": "boy",
+      "count": 1
+    },
+    {
+      "word": "break",
+      "count": 1
+    },
+    {
+      "word": "broken",
+      "count": 1
+    },
+    {
+      "word": "bubble",
+      "count": 1
+    },
+    {
+      "word": "bubbles",
+      "count": 1
+    },
+    {
+      "word": "budget",
+      "count": 1
+    },
+    {
+      "word": "bug",
+      "count": 1
+    },
+    {
+      "word": "c",
+      "count": 1
+    },
+    {
+      "word": "calling",
+      "count": 1
+    },
+    {
+      "word": "capabilities",
+      "count": 1
+    },
+    {
+      "word": "capable",
+      "count": 1
+    },
+    {
+      "word": "captures",
+      "count": 1
+    },
+    {
+      "word": "carrying",
+      "count": 1
+    },
+    {
+      "word": "causing",
+      "count": 1
+    },
+    {
+      "word": "centralizes",
+      "count": 1
+    },
+    {
+      "word": "chance",
+      "count": 1
+    },
+    {
+      "word": "changed",
+      "count": 1
+    },
+    {
+      "word": "chatbots",
+      "count": 1
+    },
+    {
+      "word": "cheap",
+      "count": 1
+    },
+    {
+      "word": "choices",
+      "count": 1
+    },
+    {
+      "word": "chunkservice",
+      "count": 1
+    },
+    {
+      "word": "citation",
+      "count": 1
+    },
+    {
+      "word": "claude",
+      "count": 1
+    },
+    {
+      "word": "clean",
+      "count": 1
+    },
+    {
+      "word": "cleaner",
+      "count": 1
+    },
+    {
+      "word": "cleanest",
+      "count": 1
+    },
+    {
+      "word": "clear",
+      "count": 1
+    },
+    {
+      "word": "clone",
+      "count": 1
+    },
+    {
+      "word": "closely",
+      "count": 1
+    },
+    {
+      "word": "closest",
+      "count": 1
+    },
+    {
+      "word": "coarse",
+      "count": 1
+    },
+    {
+      "word": "codetextsplitter",
+      "count": 1
+    },
+    {
+      "word": "coherence",
+      "count": 1
+    },
+    {
+      "word": "collaboration",
+      "count": 1
+    },
+    {
+      "word": "combinations",
+      "count": 1
+    },
+    {
+      "word": "communicates",
+      "count": 1
+    },
+    {
+      "word": "compared",
+      "count": 1
+    },
+    {
+      "word": "compares",
+      "count": 1
+    },
+    {
+      "word": "comparing",
+      "count": 1
+    },
+    {
+      "word": "complete",
+      "count": 1
+    },
+    {
+      "word": "components",
+      "count": 1
+    },
+    {
+      "word": "composability",
+      "count": 1
+    },
+    {
+      "word": "computationally",
+      "count": 1
+    },
+    {
+      "word": "computer",
+      "count": 1
+    },
+    {
+      "word": "conclusion",
+      "count": 1
+    },
+    {
+      "word": "conditions",
+      "count": 1
+    },
+    {
+      "word": "confuse",
+      "count": 1
+    },
+    {
+      "word": "confused",
+      "count": 1
+    },
+    {
+      "word": "confusing",
+      "count": 1
+    },
+    {
+      "word": "connects",
+      "count": 1
+    },
+    {
+      "word": "consistency",
+      "count": 1
+    },
+    {
+      "word": "consistent",
+      "count": 1
+    },
+    {
+      "word": "constantly",
+      "count": 1
+    },
+    {
+      "word": "contents",
+      "count": 1
+    },
+    {
+      "word": "contextually",
+      "count": 1
+    },
+    {
+      "word": "continues",
+      "count": 1
+    },
+    {
+      "word": "continuity",
+      "count": 1
+    },
+    {
+      "word": "controlling",
+      "count": 1
+    },
+    {
+      "word": "coordinating",
+      "count": 1
+    },
+    {
+      "word": "covering",
+      "count": 1
+    },
+    {
+      "word": "critical",
+      "count": 1
+    },
+    {
+      "word": "csv",
+      "count": 1
+    },
+    {
+      "word": "curve",
+      "count": 1
+    },
+    {
+      "word": "customer",
+      "count": 1
+    },
+    {
+      "word": "cutoff",
+      "count": 1
+    },
+    {
+      "word": "daily",
+      "count": 1
+    },
+    {
+      "word": "dataset",
+      "count": 1
+    },
+    {
+      "word": "datasets",
+      "count": 1
+    },
+    {
+      "word": "datastax's",
+      "count": 1
+    },
+    {
+      "word": "debug",
+      "count": 1
+    },
+    {
+      "word": "decides",
+      "count": 1
+    },
+    {
+      "word": "decoupled",
+      "count": 1
+    },
+    {
+      "word": "decoupling",
+      "count": 1
+    },
+    {
+      "word": "defines",
+      "count": 1
+    },
+    {
+      "word": "defining",
+      "count": 1
+    },
+    {
+      "word": "delivery",
+      "count": 1
+    },
+    {
+      "word": "demonstrates",
+      "count": 1
+    },
+    {
+      "word": "department",
+      "count": 1
+    },
+    {
+      "word": "depending",
+      "count": 1
+    },
+    {
+      "word": "developer",
+      "count": 1
+    },
+    {
+      "word": "devops",
+      "count": 1
+    },
+    {
+      "word": "differ",
+      "count": 1
+    },
+    {
+      "word": "differently",
+      "count": 1
+    },
+    {
+      "word": "differs",
+      "count": 1
+    },
+    {
+      "word": "difficult",
+      "count": 1
+    },
+    {
+      "word": "dip",
+      "count": 1
+    },
+    {
+      "word": "discovery",
+      "count": 1
+    },
+    {
+      "word": "discussing",
+      "count": 1
+    },
+    {
+      "word": "discussions",
+      "count": 1
+    },
+    {
+      "word": "disk",
+      "count": 1
+    },
+    {
+      "word": "distinct",
+      "count": 1
+    },
+    {
+      "word": "documenting",
+      "count": 1
+    },
+    {
+      "word": "doesn’t",
+      "count": 1
+    },
+    {
+      "word": "dom",
+      "count": 1
+    },
+    {
+      "word": "done",
+      "count": 1
+    },
+    {
+      "word": "driven",
+      "count": 1
+    },
+    {
+      "word": "dto",
+      "count": 1
+    },
+    {
+      "word": "duplicated",
+      "count": 1
+    },
+    {
+      "word": "duplicates",
+      "count": 1
+    },
+    {
+      "word": "e",
+      "count": 1
+    },
+    {
+      "word": "educational",
+      "count": 1
+    },
+    {
+      "word": "effective",
+      "count": 1
+    },
+    {
+      "word": "effectively",
+      "count": 1
+    },
+    {
+      "word": "either",
+      "count": 1
+    },
+    {
+      "word": "else's",
+      "count": 1
+    },
+    {
+      "word": "elsewhere",
+      "count": 1
+    },
+    {
+      "word": "embed",
+      "count": 1
+    },
+    {
+      "word": "encapsulate",
+      "count": 1
+    },
+    {
+      "word": "encourage",
+      "count": 1
+    },
+    {
+      "word": "ends",
+      "count": 1
+    },
+    {
+      "word": "engineers",
+      "count": 1
+    },
+    {
+      "word": "engines",
+      "count": 1
+    },
+    {
+      "word": "entities",
+      "count": 1
+    },
+    {
+      "word": "environments",
+      "count": 1
+    },
+    {
+      "word": "essential",
+      "count": 1
+    },
+    {
+      "word": "eventually",
+      "count": 1
+    },
+    {
+      "word": "everywhere",
+      "count": 1
+    },
+    {
+      "word": "evolves",
+      "count": 1
+    },
+    {
+      "word": "excel",
+      "count": 1
+    },
+    {
+      "word": "exclusively",
+      "count": 1
+    },
+    {
+      "word": "executed",
+      "count": 1
+    },
+    {
+      "word": "executes",
+      "count": 1
+    },
+    {
+      "word": "experienced",
+      "count": 1
+    },
+    {
+      "word": "expertise",
+      "count": 1
+    },
+    {
+      "word": "explanation",
+      "count": 1
+    },
+    {
+      "word": "explicit",
+      "count": 1
+    },
+    {
+      "word": "extends",
+      "count": 1
+    },
+    {
+      "word": "extraction",
+      "count": 1
+    },
+    {
+      "word": "extracts",
+      "count": 1
+    },
+    {
+      "word": "facebook",
+      "count": 1
+    },
+    {
+      "word": "facing",
+      "count": 1
+    },
+    {
+      "word": "fact",
+      "count": 1
+    },
+    {
+      "word": "factor",
+      "count": 1
+    },
+    {
+      "word": "falling",
+      "count": 1
+    },
+    {
+      "word": "falls",
+      "count": 1
+    },
+    {
+      "word": "features",
+      "count": 1
+    },
+    {
+      "word": "feedback",
+      "count": 1
+    },
+    {
+      "word": "fewer",
+      "count": 1
+    },
+    {
+      "word": "fields",
+      "count": 1
+    },
+    {
+      "word": "finally",
+      "count": 1
+    },
+    {
+      "word": "finishes",
+      "count": 1
+    },
+    {
+      "word": "five",
+      "count": 1
+    },
+    {
+      "word": "flexibility",
+      "count": 1
+    },
+    {
+      "word": "flowing",
+      "count": 1
+    },
+    {
+      "word": "force",
+      "count": 1
+    },
+    {
+      "word": "forced",
+      "count": 1
+    },
+    {
+      "word": "forces",
+      "count": 1
+    },
+    {
+      "word": "form",
+      "count": 1
+    },
+    {
+      "word": "formats",
+      "count": 1
+    },
+    {
+      "word": "foundation",
+      "count": 1
+    },
+    {
+      "word": "fragmented",
+      "count": 1
+    },
+    {
+      "word": "functional",
+      "count": 1
+    },
+    {
+      "word": "fundamentally",
+      "count": 1
+    },
+    {
+      "word": "fundamentals",
+      "count": 1
+    },
+    {
+      "word": "g",
+      "count": 1
+    },
+    {
+      "word": "generic",
+      "count": 1
+    },
+    {
+      "word": "give",
+      "count": 1
+    },
+    {
+      "word": "given",
+      "count": 1
+    },
+    {
+      "word": "giving",
+      "count": 1
+    },
+    {
+      "word": "glance",
+      "count": 1
+    },
+    {
+      "word": "go",
+      "count": 1
+    },
+    {
+      "word": "gradually",
+      "count": 1
+    },
+    {
+      "word": "grandfather",
+      "count": 1
+    },
+    {
+      "word": "great",
+      "count": 1
+    },
+    {
+      "word": "greater",
+      "count": 1
+    },
+    {
+      "word": "greatly",
+      "count": 1
+    },
+    {
+      "word": "grounded",
+      "count": 1
+    },
+    {
+      "word": "grouping",
+      "count": 1
+    },
+    {
+      "word": "grows",
+      "count": 1
+    },
+    {
+      "word": "grpc",
+      "count": 1
+    },
+    {
+      "word": "guarantee",
+      "count": 1
+    },
+    {
+      "word": "guaranteed",
+      "count": 1
+    },
+    {
+      "word": "hallucination",
+      "count": 1
+    },
+    {
+      "word": "hallucinations",
+      "count": 1
+    },
+    {
+      "word": "handled",
+      "count": 1
+    },
+    {
+      "word": "handles",
+      "count": 1
+    },
+    {
+      "word": "hardcoded",
+      "count": 1
+    },
+    {
+      "word": "hardcoding",
+      "count": 1
+    },
+    {
+      "word": "headers",
+      "count": 1
+    },
+    {
+      "word": "headings",
+      "count": 1
+    },
+    {
+      "word": "help",
+      "count": 1
+    },
+    {
+      "word": "helped",
+      "count": 1
+    },
+    {
+      "word": "helper",
+      "count": 1
+    },
+    {
+      "word": "helping",
+      "count": 1
+    },
+    {
+      "word": "highly",
+      "count": 1
+    },
+    {
+      "word": "home",
+      "count": 1
+    },
+    {
+      "word": "homework",
+      "count": 1
+    },
+    {
+      "word": "hosting",
+      "count": 1
+    },
+    {
+      "word": "htmltextsplitter",
+      "count": 1
+    },
+    {
+      "word": "huggingface",
+      "count": 1
+    },
+    {
+      "word": "human",
+      "count": 1
+    },
+    {
+      "word": "hundreds",
+      "count": 1
+    },
+    {
+      "word": "i'd",
+      "count": 1
+    },
+    {
+      "word": "ideally",
+      "count": 1
+    },
+    {
+      "word": "ideas",
+      "count": 1
+    },
+    {
+      "word": "identifiers",
+      "count": 1
+    },
+    {
+      "word": "identify",
+      "count": 1
+    },
+    {
+      "word": "ignored",
+      "count": 1
+    },
+    {
+      "word": "image",
+      "count": 1
+    },
+    {
+      "word": "immutable",
+      "count": 1
+    },
+    {
+      "word": "impacts",
+      "count": 1
+    },
+    {
+      "word": "impossible",
+      "count": 1
+    },
+    {
+      "word": "improved",
+      "count": 1
+    },
+    {
+      "word": "improvement",
+      "count": 1
+    },
+    {
+      "word": "improvements",
+      "count": 1
+    },
+    {
+      "word": "include",
+      "count": 1
+    },
+    {
+      "word": "incompatible",
+      "count": 1
+    },
+    {
+      "word": "incremental",
+      "count": 1
+    },
+    {
+      "word": "incrementally",
+      "count": 1
+    },
+    {
+      "word": "indexes",
+      "count": 1
+    },
+    {
+      "word": "indicate",
+      "count": 1
+    },
+    {
+      "word": "individual",
+      "count": 1
+    },
+    {
+      "word": "inference",
+      "count": 1
+    },
+    {
+      "word": "info",
+      "count": 1
+    },
+    {
+      "word": "inherited",
+      "count": 1
+    },
+    {
+      "word": "inherits",
+      "count": 1
+    },
+    {
+      "word": "inserted",
+      "count": 1
+    },
+    {
+      "word": "inspect",
+      "count": 1
+    },
+    {
+      "word": "instance",
+      "count": 1
+    },
+    {
+      "word": "instances",
+      "count": 1
+    },
+    {
+      "word": "insufficient",
+      "count": 1
+    },
+    {
+      "word": "integration",
+      "count": 1
+    },
+    {
+      "word": "intelligence",
+      "count": 1
+    },
+    {
+      "word": "intelligently",
+      "count": 1
+    },
+    {
+      "word": "interchangeable",
+      "count": 1
+    },
+    {
+      "word": "intermediate",
+      "count": 1
+    },
+    {
+      "word": "internally",
+      "count": 1
+    },
+    {
+      "word": "interviews",
+      "count": 1
+    },
+    {
+      "word": "introduces",
+      "count": 1
+    },
+    {
+      "word": "intuition",
+      "count": 1
+    },
+    {
+      "word": "intuitive",
+      "count": 1
+    },
+    {
+      "word": "invalid",
+      "count": 1
+    },
+    {
+      "word": "involve",
+      "count": 1
+    },
+    {
+      "word": "isn't",
+      "count": 1
+    },
+    {
+      "word": "isolate",
+      "count": 1
+    },
+    {
+      "word": "isp",
+      "count": 1
+    },
+    {
+      "word": "it's",
+      "count": 1
+    },
+    {
+      "word": "iterate",
+      "count": 1
+    },
+    {
+      "word": "iterates",
+      "count": 1
+    },
+    {
+      "word": "itself",
+      "count": 1
+    },
+    {
+      "word": "js",
+      "count": 1
+    },
+    {
+      "word": "json",
+      "count": 1
+    },
+    {
+      "word": "jsonsplitter",
+      "count": 1
+    },
+    {
+      "word": "justified",
+      "count": 1
+    },
+    {
+      "word": "justify",
+      "count": 1
+    },
+    {
+      "word": "keep",
+      "count": 1
+    },
+    {
+      "word": "keyword",
+      "count": 1
+    },
+    {
+      "word": "knowing",
+      "count": 1
+    },
+    {
+      "word": "known",
+      "count": 1
+    },
+    {
+      "word": "last",
+      "count": 1
+    },
+    {
+      "word": "leads",
+      "count": 1
+    },
+    {
+      "word": "learns",
+      "count": 1
+    },
+    {
+      "word": "legal",
+      "count": 1
+    },
+    {
+      "word": "lessons",
+      "count": 1
+    },
+    {
+      "word": "let",
+      "count": 1
+    },
+    {
+      "word": "leveraging",
+      "count": 1
+    },
+    {
+      "word": "lifecycle",
+      "count": 1
+    },
+    {
+      "word": "limitations",
+      "count": 1
+    },
+    {
+      "word": "lists",
+      "count": 1
+    },
+    {
+      "word": "little",
+      "count": 1
+    },
+    {
+      "word": "lives",
+      "count": 1
+    },
+    {
+      "word": "load",
+      "count": 1
+    },
+    {
+      "word": "logical",
+      "count": 1
+    },
+    {
+      "word": "longer",
+      "count": 1
+    },
+    {
+      "word": "looks",
+      "count": 1
+    },
+    {
+      "word": "loosely",
+      "count": 1
+    },
+    {
+      "word": "magnitudes",
+      "count": 1
+    },
+    {
+      "word": "maintained",
+      "count": 1
+    },
+    {
+      "word": "maintaining",
+      "count": 1
+    },
+    {
+      "word": "man",
+      "count": 1
+    },
+    {
+      "word": "manage",
+      "count": 1
+    },
+    {
+      "word": "manageable",
+      "count": 1
+    },
+    {
+      "word": "managing",
+      "count": 1
+    },
+    {
+      "word": "manual",
+      "count": 1
+    },
+    {
+      "word": "map",
+      "count": 1
+    },
+    {
+      "word": "mappings",
+      "count": 1
+    },
+    {
+      "word": "markdownloader",
+      "count": 1
+    },
+    {
+      "word": "markdowntextsplitter",
+      "count": 1
+    },
+    {
+      "word": "marketing",
+      "count": 1
+    },
+    {
+      "word": "matches",
+      "count": 1
+    },
+    {
+      "word": "meaningless",
+      "count": 1
+    },
+    {
+      "word": "meanings",
+      "count": 1
+    },
+    {
+      "word": "measuring",
+      "count": 1
+    },
+    {
+      "word": "medical",
+      "count": 1
+    },
+    {
+      "word": "memorization",
+      "count": 1
+    },
+    {
+      "word": "meta",
+      "count": 1
+    },
+    {
+      "word": "millions",
+      "count": 1
+    },
+    {
+      "word": "minimizes",
+      "count": 1
+    },
+    {
+      "word": "miss",
+      "count": 1
+    },
+    {
+      "word": "missed",
+      "count": 1
+    },
+    {
+      "word": "modify",
+      "count": 1
+    },
+    {
+      "word": "months",
+      "count": 1
+    },
+    {
+      "word": "mostly",
+      "count": 1
+    },
+    {
+      "word": "multi",
+      "count": 1
+    },
+    {
+      "word": "mvp",
+      "count": 1
+    },
+    {
+      "word": "names",
+      "count": 1
+    },
+    {
+      "word": "nature",
+      "count": 1
+    },
+    {
+      "word": "near",
+      "count": 1
+    },
+    {
+      "word": "neighboring",
+      "count": 1
+    },
+    {
+      "word": "network",
+      "count": 1
+    },
+    {
+      "word": "neural",
+      "count": 1
+    },
+    {
+      "word": "nlp",
+      "count": 1
+    },
+    {
+      "word": "noisy",
+      "count": 1
+    },
+    {
+      "word": "normalizing",
+      "count": 1
+    },
+    {
+      "word": "nosql",
+      "count": 1
+    },
+    {
+      "word": "noticed",
+      "count": 1
+    },
+    {
+      "word": "objectives",
+      "count": 1
+    },
+    {
+      "word": "occur",
+      "count": 1
+    },
+    {
+      "word": "occurred",
+      "count": 1
+    },
+    {
+      "word": "official",
+      "count": 1
+    },
+    {
+      "word": "offline",
+      "count": 1
+    },
+    {
+      "word": "old",
+      "count": 1
+    },
+    {
+      "word": "openai",
+      "count": 1
+    },
+    {
+      "word": "operate",
+      "count": 1
+    },
+    {
+      "word": "optimal",
+      "count": 1
+    },
+    {
+      "word": "optimisation",
+      "count": 1
+    },
+    {
+      "word": "optimization",
+      "count": 1
+    },
+    {
+      "word": "optimizing",
+      "count": 1
+    },
+    {
+      "word": "orchestrate",
+      "count": 1
+    },
+    {
+      "word": "orchestrator",
+      "count": 1
+    },
+    {
+      "word": "organizations",
+      "count": 1
+    },
+    {
+      "word": "oriented",
+      "count": 1
+    },
+    {
+      "word": "other",
+      "count": 1
+    },
+    {
+      "word": "outdated",
+      "count": 1
+    },
+    {
+      "word": "outweighs",
+      "count": 1
+    },
+    {
+      "word": "overfitting",
+      "count": 1
+    },
+    {
+      "word": "overflow",
+      "count": 1
+    },
+    {
+      "word": "overhead",
+      "count": 1
+    },
+    {
+      "word": "overview",
+      "count": 1
+    },
+    {
+      "word": "ownership",
+      "count": 1
+    },
+    {
+      "word": "paragraphs",
+      "count": 1
+    },
+    {
+      "word": "partial",
+      "count": 1
+    },
+    {
+      "word": "participate",
+      "count": 1
+    },
+    {
+      "word": "parts",
+      "count": 1
+    },
+    {
+      "word": "pass",
+      "count": 1
+    },
+    {
+      "word": "passed",
+      "count": 1
+    },
+    {
+      "word": "passes",
+      "count": 1
+    },
+    {
+      "word": "percentile",
+      "count": 1
+    },
+    {
+      "word": "performed",
+      "count": 1
+    },
+    {
+      "word": "persist",
+      "count": 1
+    },
+    {
+      "word": "persistent",
+      "count": 1
+    },
+    {
+      "word": "philosophy",
+      "count": 1
+    },
+    {
+      "word": "phrase",
+      "count": 1
+    },
+    {
+      "word": "plain",
+      "count": 1
+    },
+    {
+      "word": "play",
+      "count": 1
+    },
+    {
+      "word": "plug",
+      "count": 1
+    },
+    {
+      "word": "poetry",
+      "count": 1
+    },
+    {
+      "word": "polished",
+      "count": 1
+    },
+    {
+      "word": "poorly",
+      "count": 1
+    },
+    {
+      "word": "portion",
+      "count": 1
+    },
+    {
+      "word": "possesses",
+      "count": 1
+    },
+    {
+      "word": "practices",
+      "count": 1
+    },
+    {
+      "word": "precise",
+      "count": 1
+    },
+    {
+      "word": "predictable",
+      "count": 1
+    },
+    {
+      "word": "predicts",
+      "count": 1
+    },
+    {
+      "word": "preferences",
+      "count": 1
+    },
+    {
+      "word": "premium",
+      "count": 1
+    },
+    {
+      "word": "presentation",
+      "count": 1
+    },
+    {
+      "word": "preservation",
+      "count": 1
+    },
+    {
+      "word": "preserving",
+      "count": 1
+    },
+    {
+      "word": "prevent",
+      "count": 1
+    },
+    {
+      "word": "preventing",
+      "count": 1
+    },
+    {
+      "word": "pricing",
+      "count": 1
+    },
+    {
+      "word": "probable",
+      "count": 1
+    },
+    {
+      "word": "produced",
+      "count": 1
+    },
+    {
+      "word": "program",
+      "count": 1
+    },
+    {
+      "word": "progressively",
+      "count": 1
+    },
+    {
+      "word": "prompts",
+      "count": 1
+    },
+    {
+      "word": "proper",
+      "count": 1
+    },
+    {
+      "word": "proposal",
+      "count": 1
+    },
+    {
+      "word": "proposition",
+      "count": 1
+    },
+    {
+      "word": "protection",
+      "count": 1
+    },
+    {
+      "word": "prototypes",
+      "count": 1
+    },
+    {
+      "word": "providers",
+      "count": 1
+    },
+    {
+      "word": "published",
+      "count": 1
+    },
+    {
+      "word": "purely",
+      "count": 1
+    },
+    {
+      "word": "put",
+      "count": 1
+    },
+    {
+      "word": "querying",
+      "count": 1
+    },
+    {
+      "word": "quick",
+      "count": 1
+    },
+    {
+      "word": "quicker",
+      "count": 1
+    },
+    {
+      "word": "ranked",
+      "count": 1
+    },
+    {
+      "word": "raw",
+      "count": 1
+    },
+    {
+      "word": "reaches",
+      "count": 1
+    },
+    {
+      "word": "read",
+      "count": 1
+    },
+    {
+      "word": "readable",
+      "count": 1
+    },
+    {
+      "word": "realized",
+      "count": 1
+    },
+    {
+      "word": "reason",
+      "count": 1
+    },
+    {
+      "word": "reasonable",
+      "count": 1
+    },
+    {
+      "word": "reasoning",
+      "count": 1
+    },
+    {
+      "word": "rebuilding",
+      "count": 1
+    },
+    {
+      "word": "rebuilt",
+      "count": 1
+    },
+    {
+      "word": "receiving",
+      "count": 1
+    },
+    {
+      "word": "recognition",
+      "count": 1
+    },
+    {
+      "word": "recommendations",
+      "count": 1
+    },
+    {
+      "word": "recreate",
+      "count": 1
+    },
+    {
+      "word": "rediscover",
+      "count": 1
+    },
+    {
+      "word": "refactoring",
+      "count": 1
+    },
+    {
+      "word": "reflects",
+      "count": 1
+    },
+    {
+      "word": "regardless",
+      "count": 1
+    },
+    {
+      "word": "regenerating",
+      "count": 1
+    },
+    {
+      "word": "register",
+      "count": 1
+    },
+    {
+      "word": "registration",
+      "count": 1
+    },
+    {
+      "word": "reinforced",
+      "count": 1
+    },
+    {
+      "word": "relational",
+      "count": 1
+    },
+    {
+      "word": "relationships",
+      "count": 1
+    },
+    {
+      "word": "reliability",
+      "count": 1
+    },
+    {
+      "word": "reload",
+      "count": 1
+    },
+    {
+      "word": "removes",
+      "count": 1
+    },
+    {
+      "word": "repeatable",
+      "count": 1
+    },
+    {
+      "word": "repeated",
+      "count": 1
+    },
+    {
+      "word": "repetition",
+      "count": 1
+    },
+    {
+      "word": "replaced",
+      "count": 1
+    },
+    {
+      "word": "representations",
+      "count": 1
+    },
+    {
+      "word": "requested",
+      "count": 1
+    },
+    {
+      "word": "reranking",
+      "count": 1
+    },
+    {
+      "word": "resources",
+      "count": 1
+    },
+    {
+      "word": "respective",
+      "count": 1
+    },
+    {
+      "word": "respects",
+      "count": 1
+    },
+    {
+      "word": "restrict",
+      "count": 1
+    },
+    {
+      "word": "result",
+      "count": 1
+    },
+    {
+      "word": "retrieving",
+      "count": 1
+    },
+    {
+      "word": "reusable",
+      "count": 1
+    },
+    {
+      "word": "reuses",
+      "count": 1
+    },
+    {
+      "word": "reusing",
+      "count": 1
+    },
+    {
+      "word": "reviewable",
+      "count": 1
+    },
+    {
+      "word": "reviews",
+      "count": 1
+    },
+    {
+      "word": "revisit",
+      "count": 1
+    },
+    {
+      "word": "rewards",
+      "count": 1
+    },
+    {
+      "word": "rewrite",
+      "count": 1
+    },
+    {
+      "word": "rich",
+      "count": 1
+    },
+    {
+      "word": "rollback",
+      "count": 1
+    },
+    {
+      "word": "rule",
+      "count": 1
+    },
+    {
+      "word": "runtime",
+      "count": 1
+    },
+    {
+      "word": "safely",
+      "count": 1
+    },
+    {
+      "word": "safer",
+      "count": 1
+    },
+    {
+      "word": "satisfy",
+      "count": 1
+    },
+    {
+      "word": "save",
+      "count": 1
+    },
+    {
+      "word": "say",
+      "count": 1
+    },
+    {
+      "word": "saying",
+      "count": 1
+    },
+    {
+      "word": "scenario",
+      "count": 1
+    },
+    {
+      "word": "scores",
+      "count": 1
+    },
+    {
+      "word": "searches",
+      "count": 1
+    },
+    {
+      "word": "searching",
+      "count": 1
+    },
+    {
+      "word": "second",
+      "count": 1
+    },
+    {
+      "word": "seemed",
+      "count": 1
+    },
+    {
+      "word": "selects",
+      "count": 1
+    },
+    {
+      "word": "semanticchunker",
+      "count": 1
+    },
+    {
+      "word": "sending",
+      "count": 1
+    },
+    {
+      "word": "senior",
+      "count": 1
+    },
+    {
+      "word": "sense",
+      "count": 1
+    },
+    {
+      "word": "separate",
+      "count": 1
+    },
+    {
+      "word": "separated",
+      "count": 1
+    },
+    {
+      "word": "separator",
+      "count": 1
+    },
+    {
+      "word": "sequence",
+      "count": 1
+    },
+    {
+      "word": "servers",
+      "count": 1
+    },
+    {
+      "word": "setup",
+      "count": 1
+    },
+    {
+      "word": "several",
+      "count": 1
+    },
+    {
+      "word": "shipped",
+      "count": 1
+    },
+    {
+      "word": "shorter",
+      "count": 1
+    },
+    {
+      "word": "shouldn't",
+      "count": 1
+    },
+    {
+      "word": "similarly",
+      "count": 1
+    },
+    {
+      "word": "simplicity",
+      "count": 1
+    },
+    {
+      "word": "simplified",
+      "count": 1
+    },
+    {
+      "word": "simplifies",
+      "count": 1
+    },
+    {
+      "word": "simultaneously",
+      "count": 1
+    },
+    {
+      "word": "since",
+      "count": 1
+    },
+    {
+      "word": "site",
+      "count": 1
+    },
+    {
+      "word": "six",
+      "count": 1
+    },
+    {
+      "word": "smarter",
+      "count": 1
+    },
+    {
+      "word": "solid",
+      "count": 1
+    },
+    {
+      "word": "solution",
+      "count": 1
+    },
+    {
+      "word": "solve",
+      "count": 1
+    },
+    {
+      "word": "someone",
+      "count": 1
+    },
+    {
+      "word": "something",
+      "count": 1
+    },
+    {
+      "word": "span",
+      "count": 1
+    },
+    {
+      "word": "spanning",
+      "count": 1
+    },
+    {
+      "word": "spans",
+      "count": 1
+    },
+    {
+      "word": "sparse",
+      "count": 1
+    },
+    {
+      "word": "spatial",
+      "count": 1
+    },
+    {
+      "word": "specialized",
+      "count": 1
+    },
+    {
+      "word": "specifically",
+      "count": 1
+    },
+    {
+      "word": "sprint",
+      "count": 1
+    },
+    {
+      "word": "stable",
+      "count": 1
+    },
+    {
+      "word": "startup",
+      "count": 1
+    },
+    {
+      "word": "statistics",
+      "count": 1
+    },
+    {
+      "word": "steeper",
+      "count": 1
+    },
+    {
+      "word": "stopping",
+      "count": 1
+    },
+    {
+      "word": "stops",
+      "count": 1
+    },
+    {
+      "word": "story",
+      "count": 1
+    },
+    {
+      "word": "strength",
+      "count": 1
+    },
+    {
+      "word": "strong",
+      "count": 1
+    },
+    {
+      "word": "structures",
+      "count": 1
+    },
+    {
+      "word": "study",
+      "count": 1
+    },
+    {
+      "word": "studying",
+      "count": 1
+    },
+    {
+      "word": "style",
+      "count": 1
+    },
+    {
+      "word": "subtle",
+      "count": 1
+    },
+    {
+      "word": "sufficient",
+      "count": 1
+    },
+    {
+      "word": "suited",
+      "count": 1
+    },
+    {
+      "word": "summarization",
+      "count": 1
+    },
+    {
+      "word": "supplies",
+      "count": 1
+    },
+    {
+      "word": "supplying",
+      "count": 1
+    },
+    {
+      "word": "survives",
+      "count": 1
+    },
+    {
+      "word": "swapped",
+      "count": 1
+    },
+    {
+      "word": "swapping",
+      "count": 1
+    },
+    {
+      "word": "switch",
+      "count": 1
+    },
+    {
+      "word": "synonyms",
+      "count": 1
+    },
+    {
+      "word": "table",
+      "count": 1
+    },
+    {
+      "word": "tables",
+      "count": 1
+    },
+    {
+      "word": "tailored",
+      "count": 1
+    },
+    {
+      "word": "teach",
+      "count": 1
+    },
+    {
+      "word": "teaches",
+      "count": 1
+    },
+    {
+      "word": "team",
+      "count": 1
+    },
+    {
+      "word": "technical",
+      "count": 1
+    },
+    {
+      "word": "techniques",
+      "count": 1
+    },
+    {
+      "word": "tells",
+      "count": 1
+    },
+    {
+      "word": "testing",
+      "count": 1
+    },
+    {
+      "word": "their",
+      "count": 1
+    },
+    {
+      "word": "thoughts",
+      "count": 1
+    },
+    {
+      "word": "three",
+      "count": 1
+    },
+    {
+      "word": "tip",
+      "count": 1
+    },
+    {
+      "word": "tokenization",
+      "count": 1
+    },
+    {
+      "word": "tokenizer",
+      "count": 1
+    },
+    {
+      "word": "tool",
+      "count": 1
+    },
+    {
+      "word": "tools",
+      "count": 1
+    },
+    {
+      "word": "touch",
+      "count": 1
+    },
+    {
+      "word": "toward",
+      "count": 1
+    },
+    {
+      "word": "traceability",
+      "count": 1
+    },
+    {
+      "word": "tracing",
+      "count": 1
+    },
+    {
+      "word": "tradeoff",
+      "count": 1
+    },
+    {
+      "word": "tradeoffs",
+      "count": 1
+    },
+    {
+      "word": "traffic",
+      "count": 1
+    },
+    {
+      "word": "true",
+      "count": 1
+    },
+    {
+      "word": "trying",
+      "count": 1
+    },
+    {
+      "word": "tuned",
+      "count": 1
+    },
+    {
+      "word": "txtloader",
+      "count": 1
+    },
+    {
+      "word": "unaffected",
+      "count": 1
+    },
+    {
+      "word": "unaware",
+      "count": 1
+    },
+    {
+      "word": "unbounded",
+      "count": 1
+    },
+    {
+      "word": "unchanged",
+      "count": 1
+    },
+    {
+      "word": "underlying",
+      "count": 1
+    },
+    {
+      "word": "unexpected",
+      "count": 1
+    },
+    {
+      "word": "unique",
+      "count": 1
+    },
+    {
+      "word": "unit",
+      "count": 1
+    },
+    {
+      "word": "unnatural",
+      "count": 1
+    },
+    {
+      "word": "unpredictable",
+      "count": 1
+    },
+    {
+      "word": "unrelated",
+      "count": 1
+    },
+    {
+      "word": "unseen",
+      "count": 1
+    },
+    {
+      "word": "unusual",
+      "count": 1
+    },
+    {
+      "word": "upcoming",
+      "count": 1
+    },
+    {
+      "word": "update",
+      "count": 1
+    },
+    {
+      "word": "uploading",
+      "count": 1
+    },
+    {
+      "word": "validates",
+      "count": 1
+    },
+    {
+      "word": "validation",
+      "count": 1
+    },
+    {
+      "word": "valuable",
+      "count": 1
+    },
+    {
+      "word": "variable",
+      "count": 1
+    },
+    {
+      "word": "vary",
+      "count": 1
+    },
+    {
+      "word": "versus",
+      "count": 1
+    },
+    {
+      "word": "vibe",
+      "count": 1
+    },
+    {
+      "word": "violating",
+      "count": 1
+    },
+    {
+      "word": "vision",
+      "count": 1
+    },
+    {
+      "word": "visual",
+      "count": 1
+    },
+    {
+      "word": "warning",
+      "count": 1
+    },
+    {
+      "word": "waste",
+      "count": 1
+    },
+    {
+      "word": "way",
+      "count": 1
+    },
+    {
+      "word": "weakly",
+      "count": 1
+    },
+    {
+      "word": "weakness",
+      "count": 1
+    },
+    {
+      "word": "weaviate",
+      "count": 1
+    },
+    {
+      "word": "webloader",
+      "count": 1
+    },
+    {
+      "word": "website",
+      "count": 1
+    },
+    {
+      "word": "websites",
+      "count": 1
+    },
+    {
+      "word": "weeks",
+      "count": 1
+    },
+    {
+      "word": "were",
+      "count": 1
+    },
+    {
+      "word": "widely",
+      "count": 1
+    },
+    {
+      "word": "willing",
+      "count": 1
+    },
+    {
+      "word": "windows",
+      "count": 1
+    },
+    {
+      "word": "wording",
+      "count": 1
+    },
+    {
+      "word": "writes",
+      "count": 1
+    },
+    {
+      "word": "written",
+      "count": 1
+    },
+    {
+      "word": "year",
+      "count": 1
+    },
+    {
+      "word": "yet",
+      "count": 1
+    },
+    {
+      "word": "you'll",
+      "count": 1
+    },
+    {
+      "word": "youtube",
+      "count": 1
+    },
+    {
+      "word": "zero",
+      "count": 1
+    },
+    {
+      "word": "zip",
+      "count": 1
+    }
+  ]
+}

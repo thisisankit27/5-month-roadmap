@@ -19,6 +19,20 @@ This repository contains my daily learning notes covering:
 
 Every article is written after I study a topic so that I can revisit it later and help others learn along the way.
 
+## Word map
+
+<section class="word-map" data-word-map>
+  <div class="word-map__heading">
+    <div>
+      <p class="word-map__eyebrow">Technical vocabulary</p>
+      <h3>Computer science terms across the site</h3>
+    </div>
+    <p class="word-map__summary" data-word-map-summary>Loading word statistics…</p>
+  </div>
+  <p class="word-map__hint">Each bubble is a computer science term. Larger bubbles appear more frequently in the published notes. Click one to send a ripple through the cluster.</p>
+  <div class="word-map__bubbles" data-word-map-bubbles aria-live="polite"></div>
+</section>
+
 ## 🎯 Goal
 
 By the end of this roadmap I aim to have:

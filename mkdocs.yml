@@ -48,6 +48,12 @@ theme:
 
   custom_dir: overrides
 
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - assets/javascripts/word-bubbles.js
+
 plugins:
   - search
   - awesome-pages

@@ -33,3 +33,24 @@ mark {
 .md-footer {
     border-top: 1px solid rgba(43, 255, 136, .15);
 }
+
+.word-map { margin: 2rem 0; padding: 1.4rem; border: 1px solid rgba(43, 255, 136, .28); border-radius: .5rem; background: linear-gradient(135deg, rgba(43, 255, 136, .09), transparent 62%); }
+.word-map__heading { display: flex; gap: 1rem; align-items: baseline; justify-content: space-between; }
+.word-map h3, .word-map__summary, .word-map__eyebrow, .word-map__hint { margin: 0; }
+.word-map__eyebrow { color: var(--md-accent-fg-color); font-size: .72rem; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
+.word-map__summary { color: var(--md-default-fg-color--light); font-size: .82rem; text-align: right; }
+.word-map__hint { margin-top: .7rem; color: var(--md-default-fg-color--light); font-size: .82rem; }
+.word-map__bubbles { position: relative; height: clamp(30rem, 68vw, 38rem); margin-top: 1.2rem; overflow: hidden; border-radius: .4rem; background: radial-gradient(circle at center, rgba(43, 255, 136, .09), transparent 48%); }
+.word-map__bubble { position: absolute; z-index: 2; display: grid; width: var(--bubble-size); height: var(--bubble-size); place-items: center; box-sizing: border-box; padding: .2rem; overflow: hidden; border: 1px solid rgba(43, 255, 136, .42); border-radius: 50%; background: rgba(43, 255, 136, .11); color: var(--md-default-fg-color); font: inherit; font-size: var(--bubble-font-size); line-height: 1; text-align: center; white-space: nowrap; cursor: pointer; transition: background .16s ease, box-shadow .16s ease; }
+.word-map__bubble:hover, .word-map__bubble:focus-visible { background: rgba(43, 255, 136, .28); box-shadow: 0 0 1rem rgba(43, 255, 136, .36); outline: none; }
+.word-map__gravity { position: absolute; z-index: 1; display: grid; width: 3rem; height: 3rem; place-items: center; border: 1px solid rgba(43, 255, 136, .72); border-radius: 50%; background: #0c2b20; box-shadow: 0 0 1.5rem rgba(43, 255, 136, .35); color: #baffd8; font-size: .78rem; font-weight: 700; letter-spacing: .08em; }
+.word-map__gravity--active { animation: word-map-pulse .45s ease-out; }
+
+@keyframes word-map-pulse { 50% { box-shadow: 0 0 3rem 1rem rgba(43, 255, 136, .5); } }
+
+@media screen and (max-width: 44.9375em) {
+    .word-map { padding: 1rem; }
+    .word-map__heading { align-items: flex-start; flex-direction: column; }
+    .word-map__summary { text-align: left; }
+    .word-map__bubbles { height: 36rem; }
+}
