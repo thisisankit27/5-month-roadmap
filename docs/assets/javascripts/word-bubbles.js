@@ -2,20 +2,10 @@
   "use strict";
 
   const DATA_URL = "assets/data/word-frequencies.json";
-  const MAX_BUBBLES = 50;
-  // This is intentionally a whitelist: prose such as "the" and "is" is ignored.
-  const TECHNICAL_TERMS = new Set([
-    "ai", "algorithm", "algorithms", "api", "apis", "architecture", "astradb",
-    "backend", "cache", "caching", "chroma", "chunk", "chunks", "chunking", "class",
-    "classes", "cloud", "code", "database", "databases", "devops", "docker", "document",
-    "documents", "embedding", "embeddings", "embeddingservice", "engineer", "engineering",
-    "faiss", "filter", "filtering", "filters", "framework", "generation", "github", "hybrid",
-    "index", "indexing", "infrastructure", "json", "langchain", "llm", "llms", "loader",
-    "loaders", "metadata", "model", "models", "object", "objects", "openai", "pdf", "pinecone",
-    "pipeline", "pipelines", "postgres", "prompt", "prompts", "python", "qdrant", "query",
-    "rag", "ranking", "retrieval", "retriever", "retrievers", "search", "semantic", "similarity",
-    "software", "storage", "system", "systems", "token", "tokens", "vector", "vectors", "yaml"
-  ]);
+  // Tune these independently to control how dense the kinetic cloud feels.
+  const MAX_BUBBLES_DESKTOP = 50;
+  const MAX_BUBBLES_MOBILE = 17;
+  const MOBILE_BREAKPOINT = "(max-width: 44.9375em)";
 
   function startKineticLayout(container, nodes) {
     const core = document.createElement("span");
@@ -149,11 +139,12 @@
         return response.json();
       })
       .then((data) => {
-        const technicalWords = data.words.filter(({ word }) => TECHNICAL_TERMS.has(word));
-        const words = technicalWords.slice(0, MAX_BUBBLES);
+        const bubbleLimit = window.matchMedia(MOBILE_BREAKPOINT).matches
+          ? MAX_BUBBLES_MOBILE
+          : MAX_BUBBLES_DESKTOP;
+        const words = data.displayWords.slice(0, bubbleLimit);
         const highestCount = words[0] ? words[0].count : 1;
-        const technicalUses = technicalWords.reduce((total, { count }) => total + count, 0);
-        summary.textContent = `${technicalWords.length.toLocaleString()} technical terms / ${technicalUses.toLocaleString()} uses`;
+        summary.textContent = `${data.displayWordCount.toLocaleString()} curated terms / ${data.displayWordUses.toLocaleString()} uses`;
         const nodes = words.map(({ word, count }) => {
           const size = 42 + Math.sqrt(count / highestCount) * 58;
           const fontSize = Math.max(7, Math.min(15, (size - 10) / (word.length * 0.55)));
