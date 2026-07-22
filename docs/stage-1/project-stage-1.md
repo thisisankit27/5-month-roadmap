@@ -23,6 +23,15 @@ The goal isn't just to build an AI application—it's to document the engineerin
 
 ### 🌱 Week 1 — Core RAG
 
+Related project notes: [Week 1 AI Assistant](Engineering%20Mindset/week-1-AI-Assistant.md)
+
+Related theory:
+[Chunking](AI%20Learning/Deepen-RAG/day-1-chunking-in-rag.md) | 
+[Embedding](AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag.md) |
+[Vector Database](AI%20Learning/Deepen-RAG/day-3-vector-databases.md) |
+[Retrieval](AI%20Learning/Deepen-RAG/day-4-retrieval.md) |
+[Genration Prams](AI%20Learning/Deepen-RAG/day-5-generation-parameters.md)
+
 **Branch:** [:material-github: `week-1-core-RAG`](https://github.com/thisisankit27/archive.vibethroughcode-stage-1-project-1/tree/week-1-core-RAG){ target="_blank" rel="noopener" }
 
 **Goal:** Build a fully functional RAG pipeline capable of answering questions from uploaded PDF documents.
@@ -32,8 +41,8 @@ The goal isn't just to build an AI application—it's to document the engineerin
 - [x] PR-01 — Project Bootstrap
 - [x] PR-02 — PDF Upload & Loading
 - [x] PR-03 — Chunking Engine
-- [ ] PR-04 — Embedding Pipeline
-- [ ] PR-05 — FAISS Vector Store
+- [x] PR-04 — Embedding Pipeline
+- [x] PR-05 — FAISS Vector Store
 - [ ] PR-06 — Basic Question Answering
 
 #### Outcome

@@ -1,4 +1,4 @@
-# Thinking Like a Senior Engineer
+# Thinking Like a Senior Engineer.v1
 
 > These notes are not about AI or LangChain.
 >
