@@ -1,0 +1,2392 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/">
+      
+      
+        <link rel="prev" href="../day-1-hybrid-search/">
+      
+      
+        <link rel="next" href="../day-3-guardrails/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Metadata in RAG - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#metadata-in-rag" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Metadata in RAG
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Metadata?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is Metadata?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types of Metadata
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Types of Metadata">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technical-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-in-rag_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata in RAG
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Indexing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata Indexing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-analogy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple Analogy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-filtering-vs-metadata-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Filtering vs Metadata Indexing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata Filtering vs Metadata Indexing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#easy-way-to-remember" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Easy way to remember
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vector-index-vs-metadata-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vector Index vs Metadata Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-rag-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete RAG Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete RAG Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#during-query-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        During query time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#then-comes-vector-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Then comes vector search
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-the-metadata-index-mapped-to-the-vector-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is the metadata index "mapped" to the vector index?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-real-vector-databases-implement-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How real vector databases implement this
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-metadata_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        . What is metadata?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-metadata-embedded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is metadata embedded?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-metadata-filtering-in-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why use metadata filtering in RAG?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#give-examples-of-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Give examples of metadata.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-metadata-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is metadata indexing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-vs-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering vs indexing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-metadata-useful-in-enterprise-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is metadata useful in enterprise RAG?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-if-metadata-is-inconsistent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What happens if metadata is inconsistent?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-metadata-improve-semantic-understanding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does metadata improve semantic understanding?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-is-metadata-stored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where is metadata stored?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-interview-traps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Interview Traps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remember-these-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remember These Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering Mindset
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering Mindset
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Engineering%20Mindset/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-is-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Metadata?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What is Metadata?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#types-of-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Types of Metadata
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Types of Metadata">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#technical-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Technical Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#business-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Business Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#process-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Process Metadata
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-in-rag_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata in RAG
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#challenges" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Challenges
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-practices" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Practices
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Indexing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata Indexing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#simple-analogy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Simple Analogy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#metadata-filtering-vs-metadata-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Filtering vs Metadata Indexing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Metadata Filtering vs Metadata Indexing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#easy-way-to-remember" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Easy way to remember
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#vector-index-vs-metadata-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Vector Index vs Metadata Index
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-rag-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete RAG Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete RAG Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#during-query-time" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        During query time
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#then-comes-vector-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Then comes vector search
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-the-metadata-index-mapped-to-the-vector-index" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is the metadata index "mapped" to the vector index?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-real-vector-databases-implement-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How real vector databases implement this
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-metadata_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        . What is metadata?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-metadata-embedded" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is metadata embedded?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-metadata-filtering-in-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why use metadata filtering in RAG?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#give-examples-of-metadata" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Give examples of metadata.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-metadata-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is metadata indexing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#filtering-vs-indexing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Filtering vs indexing?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-metadata-useful-in-enterprise-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is metadata useful in enterprise RAG?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-if-metadata-is-inconsistent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What happens if metadata is inconsistent?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-metadata-improve-semantic-understanding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does metadata improve semantic understanding?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-is-metadata-stored" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where is metadata stored?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-interview-traps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Interview Traps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#remember-these-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Remember These Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="metadata-in-rag">Metadata in RAG<a class="headerlink" href="#metadata-in-rag" title="Permanent link">&para;</a></h1>
+<h2 id="what-is-metadata">What is Metadata?<a class="headerlink" href="#what-is-metadata" title="Permanent link">&para;</a></h2>
+<h3 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h3>
+<p><strong>Metadata is data that describes other data.</strong></p>
+<p>It provides additional information about a data object without being the
+primary content itself.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>Document:
+&quot;Spring Boot Security Guide&quot;
+
+Content
+--------------------------------
+...actual document text...
+
+Metadata
+--------------------------------
+Author      : Ankit
+Department  : Engineering
+Project     : Knowledge Base
+Language    : English
+Created On  : 2026-07-22
+Tags         : Spring, Security
+</code></pre></div>
+<div class="admonition info">
+<p class="admonition-title">Important</p>
+<blockquote>
+<p>Metadata is <strong>not embedded</strong>. It is stored separately
+alongside the original document.</p>
+</blockquote>
+</div>
+<hr />
+<h2 id="types-of-metadata">Types of Metadata<a class="headerlink" href="#types-of-metadata" title="Permanent link">&para;</a></h2>
+<h3 id="technical-metadata">Technical Metadata<a class="headerlink" href="#technical-metadata" title="Permanent link">&para;</a></h3>
+<ul>
+<li>File type</li>
+<li>Size</li>
+<li>Encoding</li>
+<li>Creation date</li>
+<li>Last modified</li>
+</ul>
+<h3 id="business-metadata">Business Metadata<a class="headerlink" href="#business-metadata" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Department</li>
+<li>Owner</li>
+<li>Project</li>
+<li>Customer</li>
+<li>Category</li>
+</ul>
+<h3 id="process-metadata">Process Metadata<a class="headerlink" href="#process-metadata" title="Permanent link">&para;</a></h3>
+<ul>
+<li>ETL pipeline</li>
+<li>Data lineage</li>
+<li>Processing status</li>
+<li>Version</li>
+<li>Source system</li>
+</ul>
+<hr />
+<h2 id="metadata-in-rag_1">Metadata in RAG<a class="headerlink" href="#metadata-in-rag_1" title="Permanent link">&para;</a></h2>
+<p>A document stored in a vector database generally contains:</p>
+<div class="highlight"><pre><span></span><code>Document
+│
+├── Original Text
+├── Embedding Vector
+├── Metadata
+└── Document ID
+</code></pre></div>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Document</span><span class="p">(</span>
+    <span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;Hybrid Search combines sparse and dense retrieval.&quot;</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;author&quot;</span><span class="p">:</span> <span class="s2">&quot;Krish Naik&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;RAG&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;level&quot;</span><span class="p">:</span> <span class="s2">&quot;Intermediate&quot;</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Only <strong>page_content</strong> is embedded. Metadata remains structured and
+queryable.</p>
+<hr />
+<h2 id="metadata-filtering">Metadata Filtering<a class="headerlink" href="#metadata-filtering" title="Permanent link">&para;</a></h2>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p>Metadata filtering restricts retrieval to documents that satisfy
+metadata conditions <strong>before (or alongside)</strong> vector similarity search.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>Query
+    ↓
+Filter: author = &quot;Ankit Srivastava&quot;
+    ↓
+Candidate Documents
+    ↓
+Vector Search
+    ↓
+LLM
+</code></pre></div>
+<h3 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Precise Retrieval</strong> -- Reduces irrelevant results.</li>
+<li><strong>Scalability</strong> -- Searches fewer candidate documents.</li>
+<li><strong>Cost Optimization</strong> -- Lower computation and inference cost.</li>
+<li><strong>Governance &amp; Compliance</strong> -- Enables role-based access, auditing
+    and policy enforcement.</li>
+</ul>
+<h3 id="challenges">Challenges<a class="headerlink" href="#challenges" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Inconsistent tagging</li>
+<li>Missing metadata</li>
+<li>Poor schema design</li>
+<li>Indexing overhead</li>
+<li>Legacy-system limitations</li>
+</ul>
+<h3 id="best-practices">Best Practices<a class="headerlink" href="#best-practices" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Define a consistent metadata schema.</li>
+<li>Automate metadata generation during ingestion.</li>
+<li>Validate metadata quality.</li>
+<li>Index frequently filtered fields.</li>
+<li>Store only meaningful metadata.</li>
+</ul>
+<hr />
+<h2 id="metadata-indexing">Metadata Indexing<a class="headerlink" href="#metadata-indexing" title="Permanent link">&para;</a></h2>
+<h3 id="definition_1">Definition<a class="headerlink" href="#definition_1" title="Permanent link">&para;</a></h3>
+<p>Metadata indexing is the process of organizing metadata into efficient
+lookup structures so matching documents can be found quickly.</p>
+<p>Without indexing:</p>
+<div class="highlight"><pre><span></span><code>Search
+ ↓
+Scan every document
+</code></pre></div>
+<p>With indexing:</p>
+<div class="highlight"><pre><span></span><code>Search
+ ↓
+Metadata Index
+ ↓
+Matching Documents
+</code></pre></div>
+<h3 id="simple-analogy">Simple Analogy<a class="headerlink" href="#simple-analogy" title="Permanent link">&para;</a></h3>
+<p>A textbook index lets you jump directly to "Inheritance" instead of
+reading every page.</p>
+<hr />
+<h2 id="metadata-filtering-vs-metadata-indexing">Metadata Filtering vs Metadata Indexing<a class="headerlink" href="#metadata-filtering-vs-metadata-indexing" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Metadata Filtering</th>
+<th>Metadata Indexing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Restricts search results</td>
+<td>Makes filtering fast</td>
+</tr>
+<tr>
+<td>Happens during query</td>
+<td>Happens during storage/ingestion</td>
+</tr>
+<tr>
+<td>Uses metadata conditions</td>
+<td>Organizes metadata for lookup</td>
+</tr>
+</tbody>
+</table>
+<h3 id="easy-way-to-remember">Easy way to remember<a class="headerlink" href="#easy-way-to-remember" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Filtering decides WHAT to search.</strong></p>
+<p><strong>Indexing decides HOW FAST it can be found.</strong></p>
+</blockquote>
+<hr />
+<h2 id="vector-index-vs-metadata-index">Vector Index vs Metadata Index<a class="headerlink" href="#vector-index-vs-metadata-index" title="Permanent link">&para;</a></h2>
+<p>Production RAG systems often maintain <strong>two different indexes</strong>.</p>
+<div class="highlight"><pre><span></span><code>Document
+│
+├── Embedding
+│      ↓
+│  Vector Index
+│
+└── Metadata
+       ↓
+ Metadata Index
+</code></pre></div>
+<ul>
+<li><strong>Vector Index</strong> → Used for semantic similarity search.</li>
+<li><strong>Metadata Index</strong> → Used for structured filtering.</li>
+</ul>
+<hr />
+<h2 id="complete-rag-flow">Complete RAG Flow<a class="headerlink" href="#complete-rag-flow" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>                User Query
+                     │
+         ┌───────────┴───────────┐
+         │                       │
+   Convert query           Extract metadata
+   into embedding          filters (if any)
+         │                       │
+         └───────────┬───────────┘
+                     ▼
+            Metadata Filtering
+                     │
+                     ▼
+          Candidate Documents/Chunks
+                     │
+             Vector Similarity Search
+          (only within candidates)
+                     │
+                     ▼
+                Top-K Chunks
+                     │
+                     ▼
+                    LLM
+</code></pre></div>
+<p>The <strong>metadata index and vector index are linked through the same underlying records (chunks)</strong>. </p>
+<p>A chunk stored in a vector database typically looks conceptually like this:</p>
+<div class="highlight"><pre><span></span><code>Chunk ID: 1024
+
+Text:
+&quot;Employees are entitled to 20 days of annual leave...&quot;
+
+Embedding:
+[0.12, -0.43, 0.91, ...]
+
+Metadata:
+{
+    department: &quot;HR&quot;,
+    year: 2024,
+    document: &quot;Employee Handbook&quot;,
+    language: &quot;en&quot;
+}
+</code></pre></div>
+<p>During ingestion:</p>
+<div class="highlight"><pre><span></span><code>                    Chunk
+                      │
+        ┌─────────────┴─────────────┐
+        │                           │
+Generate Embedding          Store Metadata
+        │                           │
+        ▼                           ▼
+ Vector Index                Metadata Index
+        │                           │
+        └──────────┬────────────────┘
+                   │
+             Same Chunk ID (1024)
+</code></pre></div>
+<p>Notice that <strong>both indexes point to the same chunk ID</strong>.</p>
+<hr />
+<h3 id="during-query-time">During query time<a class="headerlink" href="#during-query-time" title="Permanent link">&para;</a></h3>
+<p>Suppose the user asks:</p>
+<blockquote>
+<p>"Vacation policy for HR employees in 2024"</p>
+</blockquote>
+<p>The system extracts</p>
+<div class="highlight"><pre><span></span><code>Semantic query:
+&quot;Vacation policy&quot;
+
+Metadata filter:
+department = HR
+year = 2024
+</code></pre></div>
+<p>Now the metadata index is queried first.</p>
+<div class="highlight"><pre><span></span><code>Metadata Index
+
+department=HR
+year=2024
+
+↓ returns
+
+Chunk IDs
+
+1024
+2056
+3901
+4812
+...
+</code></pre></div>
+<p>It does <strong>not</strong> return embeddings. It returns the <strong>identifiers</strong> of chunks satisfying the filter.</p>
+<hr />
+<h3 id="then-comes-vector-search">Then comes vector search<a class="headerlink" href="#then-comes-vector-search" title="Permanent link">&para;</a></h3>
+<p>The vector engine receives something like</p>
+<div class="highlight"><pre><span></span><code>Query Embedding
+
+Search only among:
+
+1024
+2056
+3901
+4812
+</code></pre></div>
+<p>Instead of searching every embedding in the database, it only computes similarity against the embeddings of those chunk IDs.</p>
+<p>Conceptually:</p>
+<div class="highlight"><pre><span></span><code>Query Embedding
+       │
+       ▼
+Vector Index
+
+Search Space =
+{1024,2056,3901,4812}
+
+↓
+
+Similarity
+
+1024 → 0.94
+3901 → 0.89
+2056 → 0.82
+4812 → 0.77
+</code></pre></div>
+<p>Return Top-K:</p>
+<div class="highlight"><pre><span></span><code>1024
+3901
+2056
+</code></pre></div>
+<hr />
+<h3 id="is-the-metadata-index-mapped-to-the-vector-index">Is the metadata index "mapped" to the vector index?<a class="headerlink" href="#is-the-metadata-index-mapped-to-the-vector-index" title="Permanent link">&para;</a></h3>
+<p>Yes, although "mapped" isn't usually the term used. A better way to think about it is:</p>
+<div class="highlight"><pre><span></span><code>Chunk
+   │
+   ├── Embedding
+   ├── Metadata
+   └── Chunk ID
+</code></pre></div>
+<p>Both indexes know about the <strong>same Chunk ID</strong>.</p>
+<p>So the flow is:</p>
+<div class="highlight"><pre><span></span><code>Metadata Filter
+       │
+       ▼
+Candidate Chunk IDs
+       │
+       ▼
+Vector Search
+(using embeddings of only those IDs)
+       │
+       ▼
+Top-K Chunks
+       │
+       ▼
+LLM
+</code></pre></div>
+<hr />
+<h2 id="how-real-vector-databases-implement-this">How real vector databases implement this<a class="headerlink" href="#how-real-vector-databases-implement-this" title="Permanent link">&para;</a></h2>
+<p>Databases like <strong>Pinecone</strong>, <strong>Weaviate</strong>, <strong>Qdrant</strong>, <strong>Milvus</strong>, and <strong>Chroma</strong> don't usually execute two completely separate queries internally.</p>
+<p>Instead, when you issue a query like:</p>
+<div class="highlight"><pre><span></span><code><span class="n">vector_db</span><span class="o">.</span><span class="n">search</span><span class="p">(</span>
+    <span class="n">query_embedding</span><span class="o">=...</span><span class="p">,</span>
+    <span class="nb">filter</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;department&quot;</span><span class="p">:</span> <span class="s2">&quot;HR&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;year&quot;</span><span class="p">:</span> <span class="mi">2024</span>
+    <span class="p">},</span>
+    <span class="n">top_k</span><span class="o">=</span><span class="mi">5</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>the engine internally does something equivalent to:</p>
+<ol>
+<li>Apply the metadata filter to determine the eligible chunk IDs.</li>
+<li>Restrict the ANN (Approximate Nearest Neighbor) search to those IDs.</li>
+<li>Compute vector similarity only within that filtered subset.</li>
+<li>Return the top-k matching chunks.</li>
+</ol>
+<p>So yes—the metadata index effectively <strong>gates</strong> which vectors are eligible for similarity search by using the shared chunk identifiers. This tight integration is what makes filtered vector search both efficient and accurate.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-metadata_1">. What is metadata?<a class="headerlink" href="#what-is-metadata_1" title="Permanent link">&para;</a></h3>
+<p>Metadata is data that describes other data and provides context such as
+author, source, language, department or creation date.</p>
+<hr />
+<h3 id="is-metadata-embedded">Is metadata embedded?<a class="headerlink" href="#is-metadata-embedded" title="Permanent link">&para;</a></h3>
+<p>No. Only the document content is converted into embeddings. Metadata is
+stored separately for filtering and retrieval.</p>
+<hr />
+<h3 id="why-use-metadata-filtering-in-rag">Why use metadata filtering in RAG?<a class="headerlink" href="#why-use-metadata-filtering-in-rag" title="Permanent link">&para;</a></h3>
+<p>To reduce the search space, improve retrieval precision, reduce
+computation cost and enforce business or security constraints.</p>
+<hr />
+<h3 id="give-examples-of-metadata">Give examples of metadata.<a class="headerlink" href="#give-examples-of-metadata" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Author</li>
+<li>Source</li>
+<li>Department</li>
+<li>Language</li>
+<li>Customer</li>
+<li>Project</li>
+<li>Tags</li>
+<li>Access Level</li>
+</ul>
+<hr />
+<h3 id="what-is-metadata-indexing">What is metadata indexing?<a class="headerlink" href="#what-is-metadata-indexing" title="Permanent link">&para;</a></h3>
+<p>Metadata indexing organizes metadata into indexes so matching documents
+can be found quickly without scanning the full dataset.</p>
+<hr />
+<h3 id="filtering-vs-indexing">Filtering vs indexing?<a class="headerlink" href="#filtering-vs-indexing" title="Permanent link">&para;</a></h3>
+<p>Filtering decides <strong>what</strong> documents to search.</p>
+<p>Indexing determines <strong>how quickly</strong> those documents can be found.</p>
+<hr />
+<h3 id="why-is-metadata-useful-in-enterprise-rag">Why is metadata useful in enterprise RAG?<a class="headerlink" href="#why-is-metadata-useful-in-enterprise-rag" title="Permanent link">&para;</a></h3>
+<p>It enables tenant isolation, access control, governance, compliance and
+faster retrieval.</p>
+<hr />
+<h3 id="what-happens-if-metadata-is-inconsistent">What happens if metadata is inconsistent?<a class="headerlink" href="#what-happens-if-metadata-is-inconsistent" title="Permanent link">&para;</a></h3>
+<p>Filtering becomes unreliable, relevant documents may be missed and
+retrieval quality decreases.</p>
+<hr />
+<h3 id="does-metadata-improve-semantic-understanding">Does metadata improve semantic understanding?<a class="headerlink" href="#does-metadata-improve-semantic-understanding" title="Permanent link">&para;</a></h3>
+<p>No. Semantic understanding comes from embeddings. Metadata provides
+structured constraints.</p>
+<hr />
+<h3 id="where-is-metadata-stored">Where is metadata stored?<a class="headerlink" href="#where-is-metadata-stored" title="Permanent link">&para;</a></h3>
+<p>Alongside the original document text, embedding vector and document ID.</p>
+<hr />
+<h2 id="common-interview-traps">Common Interview Traps<a class="headerlink" href="#common-interview-traps" title="Permanent link">&para;</a></h2>
+<p>❌ Metadata is embedded.</p>
+<p>✔ Only document content is embedded.</p>
+<hr />
+<p>❌ Metadata filtering and vector search are the same.</p>
+<p>✔ Metadata filtering uses structured fields. Vector search compares
+embeddings.</p>
+<hr />
+<p>❌ Indexing always refers to embeddings.</p>
+<p>✔ Production systems often maintain both vector indexes and metadata
+indexes.</p>
+<hr />
+<p>❌ Metadata always improves search.</p>
+<p>✔ Only when it is accurate and consistently maintained.</p>
+<hr />
+<h2 id="remember-these-forever">Remember These Forever<a class="headerlink" href="#remember-these-forever" title="Permanent link">&para;</a></h2>
+<ol>
+<li>Metadata = <strong>data about data</strong>.</li>
+<li>Metadata is <strong>not embedded</strong>.</li>
+<li>Metadata filtering reduces the candidate search space.</li>
+<li>Metadata indexing makes filtering efficient.</li>
+<li>Filtering decides <strong>what</strong> to search.</li>
+<li>Indexing decides <strong>how fast</strong> it can be found.</li>
+<li>Enterprise RAG relies heavily on metadata for security, governance
+    and multi-tenant retrieval.</li>
+</ol>
+<hr />
+<h1 id="stage-1-week-2-checklist">Stage 1 · Week 2 Checklist<a class="headerlink" href="#stage-1-week-2-checklist" title="Permanent link">&para;</a></h1>
+<ul>
+<li>Explain metadata.</li>
+<li>Explain metadata filtering.</li>
+<li>Explain metadata indexing.</li>
+<li>Explain filtering vs indexing.</li>
+<li>Explain vector index vs metadata index.</li>
+<li>Explain why metadata is not embedded.</li>
+<li>Draw the metadata-aware RAG pipeline from memory.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

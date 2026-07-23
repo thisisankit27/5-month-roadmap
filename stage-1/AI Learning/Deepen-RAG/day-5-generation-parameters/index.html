@@ -1,0 +1,2717 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/">
+      
+      
+        <link rel="prev" href="../day-4-retrieval/">
+      
+      
+        <link rel="next" href="../../Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Generation Parameters - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#generation-parameters" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Generation Parameters
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-generation-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What are Generation Parameters?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-are-generation-parameters-important" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are Generation Parameters Important?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Temperature">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How it works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#temperature-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature = 0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temperature-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature = 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typical-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-p-nucleus-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-p (Nucleus Sampling)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Top-p (Nucleus Sampling)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-p-075" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-p = 0.75
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-p-095" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-p = 0.95
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-uses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Uses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-k-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-k Sampling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Top-k Sampling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-k-vs-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-k vs Top-p
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temperature-vs-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature vs Top-p
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-combinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Combinations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#max-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Tokens
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Max Tokens">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#frequency-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frequency Penalty
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Frequency Penalty">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-uses_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Uses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#presence-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presence Penalty
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Presence Penalty">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Sequences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stop Sequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Temperature?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Top-p?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference-between-temperature-and-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference between Temperature and Top-p?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-top-k-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Top-k Sampling?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference-between-top-k-retrieval-and-top-k-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference between Top-k Retrieval and Top-k Sampling?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-max-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Max Tokens?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference-between-frequency-penalty-and-presence-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference between Frequency Penalty and Presence Penalty?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-settings-would-you-choose-for-a-rag-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which settings would you choose for a RAG application?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering Mindset
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering Mindset
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Engineering%20Mindset/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#what-are-generation-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What are Generation Parameters?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-are-generation-parameters-important" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are Generation Parameters Important?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Temperature">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-it-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How it works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How it works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#temperature-0" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature = 0
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#temperature-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature = 1
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#typical-values" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Typical Values
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-p-nucleus-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-p (Nucleus Sampling)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Top-p (Nucleus Sampling)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Example">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#top-p-075" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-p = 0.75
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#top-p-095" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-p = 0.95
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#best-uses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Uses
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-k-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-k Sampling
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Top-k Sampling">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#top-k-vs-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Top-k vs Top-p
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#temperature-vs-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Temperature vs Top-p
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-combinations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Combinations
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#max-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Max Tokens
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Max Tokens">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#frequency-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Frequency Penalty
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Frequency Penalty">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#best-uses_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Best Uses
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#presence-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Presence Penalty
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Presence Penalty">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stop-sequences" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stop Sequences
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stop Sequences">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applications" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Applications
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#recommended-settings" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Recommended Settings
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-questions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Questions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Questions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-temperature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Temperature?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Top-p?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference-between-temperature-and-top-p" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference between Temperature and Top-p?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-top-k-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Top-k Sampling?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference-between-top-k-retrieval-and-top-k-sampling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference between Top-k Retrieval and Top-k Sampling?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-max-tokens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Max Tokens?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#difference-between-frequency-penalty-and-presence-penalty" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Difference between Frequency Penalty and Presence Penalty?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#which-settings-would-you-choose-for-a-rag-application" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Which settings would you choose for a RAG application?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#key-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="generation-parameters">Generation Parameters<a class="headerlink" href="#generation-parameters" title="Permanent link">&para;</a></h1>
+<h2 id="what-are-generation-parameters">What are Generation Parameters?<a class="headerlink" href="#what-are-generation-parameters" title="Permanent link">&para;</a></h2>
+<p>Generation parameters control <strong>how a Large Language Model (LLM) generates text</strong> after receiving a prompt.
+Unlike Retrieval parameters (which determine <em>what information</em> reaches the LLM), Generation parameters determine <em>how the response is generated</em>.</p>
+<p>Pipeline</p>
+<div class="highlight"><pre><span></span><code>User Query
+
+↓
+
+Retriever (Optional)
+
+↓
+
+Retrieved Context
+
+↓
+
+Prompt
+
+↓
+
+LLM
+
+↓
+
+Generation Parameters
+
+↓
+
+Response
+</code></pre></div>
+<hr />
+<h2 id="why-are-generation-parameters-important">Why are Generation Parameters Important?<a class="headerlink" href="#why-are-generation-parameters-important" title="Permanent link">&para;</a></h2>
+<p>The same prompt can produce very different outputs depending on the chosen parameters.</p>
+<p>Example</p>
+<p>Prompt</p>
+<div class="highlight"><pre><span></span><code>Write a story about a dragon.
+</code></pre></div>
+<p>Low Temperature</p>
+<p>↓</p>
+<div class="highlight"><pre><span></span><code>A factual and predictable story.
+</code></pre></div>
+<p>High Temperature</p>
+<p>↓</p>
+<div class="highlight"><pre><span></span><code>A creative, imaginative fantasy story.
+</code></pre></div>
+<p>Choosing the correct parameters improves:</p>
+<ul>
+<li>Response quality</li>
+<li>Creativity</li>
+<li>Consistency</li>
+<li>Reliability</li>
+<li>Token usage</li>
+</ul>
+<hr />
+<h2 id="temperature">Temperature<a class="headerlink" href="#temperature" title="Permanent link">&para;</a></h2>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p>Temperature controls the <strong>randomness</strong> of token selection. Lower values make responses more deterministic. Higher values increase creativity.</p>
+<hr />
+<h3 id="how-it-works">How it works<a class="headerlink" href="#how-it-works" title="Permanent link">&para;</a></h3>
+<p>The LLM predicts probabilities for the next token.</p>
+<p>Example</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th style="text-align: right;">Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td style="text-align: right;">60%</td>
+</tr>
+<tr>
+<td>Spring</td>
+<td style="text-align: right;">25%</td>
+</tr>
+<tr>
+<td>Python</td>
+<td style="text-align: right;">10%</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td style="text-align: right;">5%</td>
+</tr>
+</tbody>
+</table>
+<p>With</p>
+<div class="highlight"><pre><span></span><code>Temperature = 0
+</code></pre></div>
+<p>the model almost always chooses</p>
+<div class="highlight"><pre><span></span><code>Java
+</code></pre></div>
+<p>With</p>
+<div class="highlight"><pre><span></span><code>Temperature = 1
+</code></pre></div>
+<p>the model becomes more willing to choose</p>
+<div class="highlight"><pre><span></span><code>Spring
+
+Python
+
+Rust
+</code></pre></div>
+<hr />
+<h4 id="temperature-0">Temperature = 0<a class="headerlink" href="#temperature-0" title="Permanent link">&para;</a></h4>
+<p>Characteristics</p>
+<ul>
+<li>Deterministic</li>
+<li>Repeatable</li>
+<li>Fact-oriented</li>
+</ul>
+<p>Best For</p>
+<ul>
+<li>RAG</li>
+<li>Coding</li>
+<li>Technical writing</li>
+<li>Legal</li>
+<li>Medical</li>
+</ul>
+<p>Example</p>
+<p>Question</p>
+<div class="highlight"><pre><span></span><code>Benefits of exercise?
+</code></pre></div>
+<p>Response</p>
+<div class="highlight"><pre><span></span><code>Exercise improves cardiovascular health, increases muscle strength, and reduces the risk of chronic diseases.
+</code></pre></div>
+<hr />
+<h4 id="temperature-1">Temperature = 1<a class="headerlink" href="#temperature-1" title="Permanent link">&para;</a></h4>
+<p>Characteristics</p>
+<ul>
+<li>Creative</li>
+<li>Diverse</li>
+<li>Less predictable</li>
+</ul>
+<p>Best For</p>
+<ul>
+<li>Story writing</li>
+<li>Poetry</li>
+<li>Brainstorming</li>
+<li>Marketing</li>
+</ul>
+<p>Example</p>
+<div class="highlight"><pre><span></span><code>Exercise is the ritual where determination transforms sweat into strength and every heartbeat becomes a celebration of life.
+</code></pre></div>
+<hr />
+<h4 id="typical-values">Typical Values<a class="headerlink" href="#typical-values" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th style="text-align: right;">Temperature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Coding</td>
+<td style="text-align: right;">0–0.2</td>
+</tr>
+<tr>
+<td>RAG</td>
+<td style="text-align: right;">0.1–0.3</td>
+</tr>
+<tr>
+<td>Chatbot</td>
+<td style="text-align: right;">0.5</td>
+</tr>
+<tr>
+<td>Brainstorming</td>
+<td style="text-align: right;">0.7</td>
+</tr>
+<tr>
+<td>Creative Writing</td>
+<td style="text-align: right;">0.8–1.2</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="top-p-nucleus-sampling">Top-p (Nucleus Sampling)<a class="headerlink" href="#top-p-nucleus-sampling" title="Permanent link">&para;</a></h2>
+<h3 id="definition_1">Definition<a class="headerlink" href="#definition_1" title="Permanent link">&para;</a></h3>
+<p>Top-p limits token selection to the <strong>smallest set of tokens whose cumulative probability exceeds p</strong>. Instead of controlling randomness, it controls <strong>how many candidate tokens are considered</strong>.</p>
+<hr />
+<h2 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h2>
+<p>Token probabilities</p>
+<table>
+<thead>
+<tr>
+<th>Token</th>
+<th style="text-align: right;">Probability</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Java</td>
+<td style="text-align: right;">0.50</td>
+</tr>
+<tr>
+<td>Spring</td>
+<td style="text-align: right;">0.25</td>
+</tr>
+<tr>
+<td>Python</td>
+<td style="text-align: right;">0.15</td>
+</tr>
+<tr>
+<td>Rust</td>
+<td style="text-align: right;">0.07</td>
+</tr>
+<tr>
+<td>Go</td>
+<td style="text-align: right;">0.03</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="top-p-075">Top-p = 0.75<a class="headerlink" href="#top-p-075" title="Permanent link">&para;</a></h3>
+<p>Allowed</p>
+<div class="highlight"><pre><span></span><code>Java
+
+Spring
+</code></pre></div>
+<p>because</p>
+<div class="highlight"><pre><span></span><code>0.50 + 0.25 = 0.75
+</code></pre></div>
+<p>Everything else is discarded.</p>
+<hr />
+<h3 id="top-p-095">Top-p = 0.95<a class="headerlink" href="#top-p-095" title="Permanent link">&para;</a></h3>
+<p>Allowed</p>
+<div class="highlight"><pre><span></span><code>Java
+
+Spring
+
+Python
+
+Rust
+</code></pre></div>
+<p>The model now has more choices.</p>
+<hr />
+<h2 id="best-uses">Best Uses<a class="headerlink" href="#best-uses" title="Permanent link">&para;</a></h2>
+<p>Higher Top-p</p>
+<ul>
+<li>More diverse responses</li>
+</ul>
+<p>Lower Top-p</p>
+<ul>
+<li>More focused responses</li>
+</ul>
+<hr />
+<h2 id="top-k-sampling">Top-k Sampling<a class="headerlink" href="#top-k-sampling" title="Permanent link">&para;</a></h2>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<blockquote>
+<p><strong>Note:</strong> This is different from <strong>Top-K Retrieval</strong> in RAG.</p>
+</blockquote>
+</div>
+<hr />
+<h3 id="definition_2">Definition<a class="headerlink" href="#definition_2" title="Permanent link">&para;</a></h3>
+<p>Top-k limits generation to the <strong>k highest-probability tokens</strong>.</p>
+<p>Example</p>
+<div class="highlight"><pre><span></span><code>Top-k = 3
+</code></pre></div>
+<p>Only</p>
+<div class="highlight"><pre><span></span><code>Java
+
+Spring
+
+Python
+</code></pre></div>
+<p>can be selected.</p>
+<p>Everything else is ignored.</p>
+<hr />
+<h3 id="difference">Difference<a class="headerlink" href="#difference" title="Permanent link">&para;</a></h3>
+<p>Top-k</p>
+<p>↓</p>
+<p>Fixed number of candidate tokens.</p>
+<p>Top-p</p>
+<p>↓</p>
+<p>Variable number of candidate tokens based on cumulative probability.</p>
+<hr />
+<h2 id="top-k-vs-top-p">Top-k vs Top-p<a class="headerlink" href="#top-k-vs-top-p" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Top-k</th>
+<th>Top-p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fixed number of tokens</td>
+<td>Dynamic candidate set</td>
+</tr>
+<tr>
+<td>Easier to understand</td>
+<td>More adaptive</td>
+</tr>
+<tr>
+<td>Less commonly tuned</td>
+<td>More commonly used</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="temperature-vs-top-p">Temperature vs Top-p<a class="headerlink" href="#temperature-vs-top-p" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Temperature</th>
+<th>Top-p</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Controls randomness</td>
+<td>Controls candidate pool</td>
+</tr>
+<tr>
+<td>Changes probability distribution</td>
+<td>Filters candidate tokens</td>
+</tr>
+<tr>
+<td>Higher = More creative</td>
+<td>Higher = More diverse</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="common-combinations">Common Combinations<a class="headerlink" href="#common-combinations" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Temperature</th>
+<th style="text-align: right;">Top-p</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Low</td>
+<td style="text-align: right;">Low</td>
+<td>Very deterministic</td>
+</tr>
+<tr>
+<td>Low</td>
+<td style="text-align: right;">High</td>
+<td>Accurate with richer vocabulary</td>
+</tr>
+<tr>
+<td>High</td>
+<td style="text-align: right;">Low</td>
+<td>Slightly unusual wording</td>
+</tr>
+<tr>
+<td>High</td>
+<td style="text-align: right;">High</td>
+<td>Highly creative and unpredictable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="max-tokens">Max Tokens<a class="headerlink" href="#max-tokens" title="Permanent link">&para;</a></h2>
+<h3 id="definition_3">Definition<a class="headerlink" href="#definition_3" title="Permanent link">&para;</a></h3>
+<p>Specifies the maximum number of tokens the model may generate.</p>
+<p>Example</p>
+<div class="highlight"><pre><span></span><code>Max Tokens = 100
+</code></pre></div>
+<p>↓</p>
+<p>The response stops after approximately 100 generated tokens.</p>
+<hr />
+<h3 id="why">Why?<a class="headerlink" href="#why" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Control API cost</li>
+<li>Reduce latency</li>
+<li>Prevent extremely long responses</li>
+</ul>
+<hr />
+<h2 id="frequency-penalty">Frequency Penalty<a class="headerlink" href="#frequency-penalty" title="Permanent link">&para;</a></h2>
+<h3 id="definition_4">Definition<a class="headerlink" href="#definition_4" title="Permanent link">&para;</a></h3>
+<p>Discourages the model from repeating the same tokens frequently.</p>
+<p>Example</p>
+<p>Without Penalty</p>
+<div class="highlight"><pre><span></span><code>Java is powerful.
+
+Java is popular.
+
+Java is scalable.
+
+Java...
+</code></pre></div>
+<p>With Frequency Penalty</p>
+<div class="highlight"><pre><span></span><code>Java is powerful.
+
+It is widely used in enterprise applications and supports scalable software development.
+</code></pre></div>
+<hr />
+<h3 id="best-uses_1">Best Uses<a class="headerlink" href="#best-uses_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Long-form writing</li>
+<li>Summarization</li>
+<li>Chatbots</li>
+</ul>
+<hr />
+<h2 id="presence-penalty">Presence Penalty<a class="headerlink" href="#presence-penalty" title="Permanent link">&para;</a></h2>
+<h3 id="definition_5">Definition<a class="headerlink" href="#definition_5" title="Permanent link">&para;</a></h3>
+<p>Encourages the model to introduce <strong>new topics or vocabulary</strong>. Unlike Frequency Penalty, it rewards discussing concepts that haven't appeared yet.</p>
+<hr />
+<h3 id="example_1">Example<a class="headerlink" href="#example_1" title="Permanent link">&para;</a></h3>
+<p>Without Presence Penalty</p>
+<div class="highlight"><pre><span></span><code>Spring Boot
+
+Spring Boot
+
+Spring Boot
+</code></pre></div>
+<p>With Presence Penalty</p>
+<div class="highlight"><pre><span></span><code>Spring Boot
+
+Dependency Injection
+
+Microservices
+
+REST APIs
+</code></pre></div>
+<hr />
+<h3 id="difference_1">Difference<a class="headerlink" href="#difference_1" title="Permanent link">&para;</a></h3>
+<p>Frequency Penalty</p>
+<p>↓</p>
+<p>Avoid repeating the same words.</p>
+<p>Presence Penalty</p>
+<p>↓</p>
+<p>Encourage introducing new concepts.</p>
+<hr />
+<h2 id="stop-sequences">Stop Sequences<a class="headerlink" href="#stop-sequences" title="Permanent link">&para;</a></h2>
+<h3 id="definition_6">Definition<a class="headerlink" href="#definition_6" title="Permanent link">&para;</a></h3>
+<p>A Stop Sequence tells the model where to stop generating.</p>
+<p>Example</p>
+<div class="highlight"><pre><span></span><code>Stop = &quot;END&quot;
+</code></pre></div>
+<p>Generated</p>
+<div class="highlight"><pre><span></span><code>Hello
+
+END
+
+Ignored Text...
+</code></pre></div>
+<p>Final Output</p>
+<div class="highlight"><pre><span></span><code>Hello
+</code></pre></div>
+<hr />
+<h3 id="applications">Applications<a class="headerlink" href="#applications" title="Permanent link">&para;</a></h3>
+<ul>
+<li>JSON generation</li>
+<li>Structured outputs</li>
+<li>Tool calling</li>
+<li>Multi-agent workflows</li>
+</ul>
+<hr />
+<h2 id="recommended-settings">Recommended Settings<a class="headerlink" href="#recommended-settings" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th style="text-align: right;">Temperature</th>
+<th style="text-align: right;">Top-p</th>
+<th style="text-align: right;">Max Tokens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>RAG</td>
+<td style="text-align: right;">0.1–0.3</td>
+<td style="text-align: right;">0.9–1.0</td>
+<td style="text-align: right;">Moderate</td>
+</tr>
+<tr>
+<td>Coding</td>
+<td style="text-align: right;">0–0.2</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">Moderate</td>
+</tr>
+<tr>
+<td>Chatbot</td>
+<td style="text-align: right;">0.5</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">Medium</td>
+</tr>
+<tr>
+<td>Creative Writing</td>
+<td style="text-align: right;">0.8–1.2</td>
+<td style="text-align: right;">0.95–1.0</td>
+<td style="text-align: right;">High</td>
+</tr>
+<tr>
+<td>Brainstorming</td>
+<td style="text-align: right;">0.9</td>
+<td style="text-align: right;">1.0</td>
+<td style="text-align: right;">High</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="interview-questions">Interview Questions<a class="headerlink" href="#interview-questions" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-temperature">What is Temperature?<a class="headerlink" href="#what-is-temperature" title="Permanent link">&para;</a></h3>
+<p><strong>Answer</strong></p>
+<p>Temperature controls the randomness of token generation. Lower values produce deterministic and factual responses, while higher values increase creativity and diversity.</p>
+<hr />
+<h3 id="what-is-top-p">What is Top-p?<a class="headerlink" href="#what-is-top-p" title="Permanent link">&para;</a></h3>
+<p><strong>Answer</strong></p>
+<p>Top-p (Nucleus Sampling) limits token selection to the smallest set of tokens whose cumulative probability exceeds a threshold, balancing diversity and coherence.</p>
+<hr />
+<h3 id="difference-between-temperature-and-top-p">Difference between Temperature and Top-p?<a class="headerlink" href="#difference-between-temperature-and-top-p" title="Permanent link">&para;</a></h3>
+<p><strong>Answer</strong></p>
+<p>Temperature modifies the probability distribution, making token selection more or less random.
+Top-p filters the candidate tokens before sampling by keeping only the most probable cumulative set.</p>
+<hr />
+<h3 id="what-is-top-k-sampling">What is Top-k Sampling?<a class="headerlink" href="#what-is-top-k-sampling" title="Permanent link">&para;</a></h3>
+<p><strong>Answer</strong></p>
+<p>Top-k limits generation to the k highest-probability candidate tokens. Unlike Top-p, the number of candidate tokens is fixed.</p>
+<hr />
+<h3 id="difference-between-top-k-retrieval-and-top-k-sampling">Difference between Top-k Retrieval and Top-k Sampling?<a class="headerlink" href="#difference-between-top-k-retrieval-and-top-k-sampling" title="Permanent link">&para;</a></h3>
+<p><strong>Answer</strong></p>
+<p>Top-k Retrieval is a <strong>RAG retrieval parameter</strong> that determines how many documents are returned from the Vector Database.</p>
+<p>Top-k Sampling is an <strong>LLM generation parameter</strong> that limits how many candidate tokens the model can choose from while generating text.</p>
+<hr />
+<h3 id="what-is-max-tokens">What is Max Tokens?<a class="headerlink" href="#what-is-max-tokens" title="Permanent link">&para;</a></h3>
+<p><strong>Answer</strong></p>
+<p>Max Tokens limits the maximum length of the generated response, helping control latency and API cost.</p>
+<hr />
+<h3 id="difference-between-frequency-penalty-and-presence-penalty">Difference between Frequency Penalty and Presence Penalty?<a class="headerlink" href="#difference-between-frequency-penalty-and-presence-penalty" title="Permanent link">&para;</a></h3>
+<p><strong>Answer</strong></p>
+<p>Frequency Penalty discourages repeated words or phrases.</p>
+<p>Presence Penalty encourages the model to introduce new topics and vocabulary.</p>
+<hr />
+<h3 id="which-settings-would-you-choose-for-a-rag-application">Which settings would you choose for a RAG application?<a class="headerlink" href="#which-settings-would-you-choose-for-a-rag-application" title="Permanent link">&para;</a></h3>
+<p><strong>Answer</strong></p>
+<p>Typically:</p>
+<ul>
+<li>Temperature: 0.1–0.3</li>
+<li>Top-p: 0.9–1.0</li>
+<li>Moderate Max Tokens</li>
+</ul>
+<p>The goal is to generate factual, grounded responses while allowing enough flexibility for natural language generation.</p>
+<hr />
+<h2 id="key-takeaways">Key Takeaways<a class="headerlink" href="#key-takeaways" title="Permanent link">&para;</a></h2>
+<ul>
+<li>Generation parameters control <strong>how</strong> the LLM generates text.</li>
+<li>Temperature controls randomness.</li>
+<li>Top-p controls the candidate token pool.</li>
+<li>Top-k sampling limits generation to a fixed number of candidate tokens.</li>
+<li>Max Tokens limits response length.</li>
+<li>Frequency Penalty reduces repetition.</li>
+<li>Presence Penalty encourages introducing new concepts.</li>
+<li>Stop Sequences provide explicit stopping points for generation.</li>
+<li>For RAG systems, low Temperature with a high Top-p is a common and effective configuration.</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

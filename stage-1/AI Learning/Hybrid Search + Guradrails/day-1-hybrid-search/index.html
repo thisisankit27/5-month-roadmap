@@ -1,0 +1,3762 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/">
+      
+      
+        <link rel="prev" href="../../Deepen-RAG/day-5-generation-parameters/">
+      
+      
+        <link rel="next" href="../day-2-metadata/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Hybrid Search - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#hybrid-search" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Hybrid Search
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mental Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Hybrid Search?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Hybrid Search?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bm25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BM25
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BM25">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crisp-definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-bm25-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How BM25 Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How BM25 Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#term-frequency-tf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Term Frequency (TF)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inverse-document-frequency-idf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inverse Document Frequency (IDF)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#document-length-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document-Length Normalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bm25-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BM25 Intuition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bm25-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BM25 Limitations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BM25 Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lexical-rather-than-semantic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lexical rather than semantic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synonyms-and-paraphrases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synonyms and paraphrases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-usercontext-awareness-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No user/context awareness by default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#corpus-dependent-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Corpus-dependent ranking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-dense-semantic-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No dense semantic representation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sparse-representations-sparse-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sparse Representations / Sparse Retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sparse Representations / Sparse Retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strong-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strong Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dense-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dense Vectors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dense Vectors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#characteristics_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-vector-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Vector Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strong-use-cases_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strong Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sparse-vs-dense-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sparse vs Dense Retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sparse vs Dense Retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#useful-mental-shortcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Mental Shortcut
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-fusion-is-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Fusion Is Required
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reciprocal-rank-fusion-rrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reciprocal Rank Fusion (RRF)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reciprocal Rank Fusion (RRF)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-rrf-is-popular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why RRF Is Popular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-combination-weighted-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linear Combination / Weighted Scoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linear Combination / Weighted Scoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-idea_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Use It?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relative-score-fusion-rsf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relative Score Fusion (RSF)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Relative Score Fusion (RSF)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-idea_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trade-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rrf-vs-weighted-fusion-vs-rsf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RRF vs Weighted Fusion vs RSF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-hybrid-search-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Hybrid Search Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete Hybrid Search Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#important-distinction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important distinction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-does-bm25-win" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Does BM25 Win?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When Does BM25 Win?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exact-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exact identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#product-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Product codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apiclassmethod-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API/class/method names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rare-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rare terminology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#names-legal-clauses-ticket-numbers-and-error-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Names, legal clauses, ticket numbers and error codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-isnt-vector-search-alone-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Isn't Vector Search Alone Enough?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Hybrid Search?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-use-only-vector-search-for-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not use only vector search for RAG?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-bm25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is BM25?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-is-bm25-different-from-tf-idf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How is BM25 different from TF-IDF?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-term-frequency-saturation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is term-frequency saturation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-bm25-use-document-length-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does BM25 use document-length normalization?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-difference-between-sparse-and-dense-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the difference between sparse and dense vectors?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#give-an-example-where-dense-retrieval-beats-bm25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Give an example where dense retrieval beats BM25.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#give-an-example-where-bm25-beats-dense-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Give an example where BM25 beats dense retrieval.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-we-directly-add-bm25-and-cosine-similarity-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't we directly add BM25 and cosine-similarity scores?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-reciprocal-rank-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Reciprocal Rank Fusion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-rrf-commonly-used-for-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is RRF commonly used for Hybrid Search?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-limitation-of-rrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the limitation of RRF?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-weighted-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is weighted fusion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-relative-score-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Relative Score Fusion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fusion-vs-reranking-whats-the-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fusion vs reranking --- what's the difference?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-hybrid-search-always-outperform-dense-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does Hybrid Search always outperform dense search?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explain-hybrid-search-in-one-minute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explain Hybrid Search in one minute.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-interview-traps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Interview Traps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Interview Traps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bm25-is-semantic-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "BM25 is semantic search."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sparse-vectors-are-always-bm25-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Sparse vectors are always BM25 vectors."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dense-vectors-always-have-768-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Dense vectors always have 768 dimensions."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-search-means-rrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Hybrid Search means RRF."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dense-recall-and-sparse-precision-always" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Dense = recall and sparse = precision, always."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fusion-and-reranking-are-the-same" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Fusion and reranking are the same."
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-1-week-2-checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1 --- Week 2 Checkpoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering Mindset
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering Mindset
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Engineering%20Mindset/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mental Model
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Hybrid Search?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Hybrid Search?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#key-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#bm25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BM25
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BM25">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crisp-definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-bm25-works" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How BM25 Works
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How BM25 Works">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#term-frequency-tf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Term Frequency (TF)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#inverse-document-frequency-idf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inverse Document Frequency (IDF)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#document-length-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Document-Length Normalization
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bm25-intuition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BM25 Intuition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#bm25-limitations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        BM25 Limitations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="BM25 Limitations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#lexical-rather-than-semantic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Lexical rather than semantic
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#synonyms-and-paraphrases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Synonyms and paraphrases
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-usercontext-awareness-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No user/context awareness by default
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#corpus-dependent-ranking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Corpus-dependent ranking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#no-dense-semantic-representation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        No dense semantic representation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sparse-representations-sparse-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sparse Representations / Sparse Retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sparse Representations / Sparse Retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#characteristics" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strong-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strong Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dense-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dense Vectors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dense Vectors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#characteristics_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Characteristics
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-vector-systems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Vector Systems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#strong-use-cases_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Strong Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#sparse-vs-dense-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sparse vs Dense Retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Sparse vs Dense Retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#useful-mental-shortcut" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Useful Mental Shortcut
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-fusion-is-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Fusion Is Required
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reciprocal-rank-fusion-rrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reciprocal Rank Fusion (RRF)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reciprocal Rank Fusion (RRF)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-rrf-is-popular" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why RRF Is Popular
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#linear-combination-weighted-scoring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Linear Combination / Weighted Scoring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Linear Combination / Weighted Scoring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-idea_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Use It?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#limitation_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Limitation
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#relative-score-fusion-rsf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relative Score Fusion (RSF)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Relative Score Fusion (RSF)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-idea_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trade-off" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-off
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#rrf-vs-weighted-fusion-vs-rsf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RRF vs Weighted Fusion vs RSF
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#complete-hybrid-search-pipeline" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Complete Hybrid Search Pipeline
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Complete Hybrid Search Pipeline">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#important-distinction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important distinction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#when-does-bm25-win" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Does BM25 Win?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="When Does BM25 Win?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#exact-identifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exact identifiers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#product-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Product codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#apiclassmethod-names" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        API/class/method names
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rare-terminology" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rare terminology
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#names-legal-clauses-ticket-numbers-and-error-codes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Names, legal clauses, ticket numbers and error codes
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-isnt-vector-search-alone-enough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Isn't Vector Search Alone Enough?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Hybrid Search?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-use-only-vector-search-for-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not use only vector search for RAG?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-bm25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is BM25?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-is-bm25-different-from-tf-idf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How is BM25 different from TF-IDF?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-term-frequency-saturation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is term-frequency saturation?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-bm25-use-document-length-normalization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does BM25 use document-length normalization?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-difference-between-sparse-and-dense-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the difference between sparse and dense vectors?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#give-an-example-where-dense-retrieval-beats-bm25" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Give an example where dense retrieval beats BM25.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#give-an-example-where-bm25-beats-dense-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Give an example where BM25 beats dense retrieval.
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-we-directly-add-bm25-and-cosine-similarity-scores" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't we directly add BM25 and cosine-similarity scores?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-reciprocal-rank-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Reciprocal Rank Fusion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-rrf-commonly-used-for-hybrid-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is RRF commonly used for Hybrid Search?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-limitation-of-rrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the limitation of RRF?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-weighted-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is weighted fusion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-relative-score-fusion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Relative Score Fusion?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fusion-vs-reranking-whats-the-difference" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fusion vs reranking --- what's the difference?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-hybrid-search-always-outperform-dense-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does Hybrid Search always outperform dense search?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#explain-hybrid-search-in-one-minute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Explain Hybrid Search in one minute.
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-interview-traps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Interview Traps
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Common Interview Traps">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#bm25-is-semantic-search" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "BM25 is semantic search."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#sparse-vectors-are-always-bm25-vectors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Sparse vectors are always BM25 vectors."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dense-vectors-always-have-768-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Dense vectors always have 768 dimensions."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#hybrid-search-means-rrf" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Hybrid Search means RRF."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dense-recall-and-sparse-precision-always" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Dense = recall and sparse = precision, always."
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fusion-and-reranking-are-the-same" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ "Fusion and reranking are the same."
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-1-week-2-checkpoint" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 1 --- Week 2 Checkpoint
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="hybrid-search">Hybrid Search<a class="headerlink" href="#hybrid-search" title="Permanent link">&para;</a></h1>
+<hr />
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>Hybrid Search</strong> is an information-retrieval strategy that combines
+<strong>lexical/keyword search</strong> (typically BM25 or another sparse retrieval
+method) with <strong>semantic/vector search</strong> (dense embeddings) to produce
+more relevant search results.</p>
+<p>It combines the strengths of:</p>
+<ul>
+<li><strong>Sparse / lexical retrieval</strong> → exact words, identifiers, rare
+    terms and domain-specific keywords.</li>
+<li><strong>Dense / semantic retrieval</strong> → meaning, synonyms, paraphrases and
+    conceptual similarity.</li>
+</ul>
+<h2 id="mental-model">Mental Model<a class="headerlink" href="#mental-model" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>                           User Query
+                               |
+                  +------------+------------+
+                  |                         |
+                  v                         v
+          Sparse Retrieval           Dense Retrieval
+            (e.g. BM25)              (Embeddings)
+                  |                         |
+                  v                         v
+           Ranked Result A           Ranked Result B
+                  \                         /
+                   \                       /
+                    +------- Fusion ------+
+                               |
+                               v
+                       Final Ranked Results
+                               |
+                               v
+                              LLM
+</code></pre></div>
+<h2 id="why-hybrid-search">Why Hybrid Search?<a class="headerlink" href="#why-hybrid-search" title="Permanent link">&para;</a></h2>
+<p>Neither sparse nor dense retrieval is perfect.</p>
+<p>Consider:</p>
+<div class="highlight"><pre><span></span><code>Query: Spring Boot error HHH000104
+</code></pre></div>
+<p>An exact lexical retriever can strongly match <code>HHH000104</code>.</p>
+<p>A dense retriever may understand that the query concerns a Hibernate/Spring Boot issue, but an exact error identifier is especially well suited to lexical matching.</p>
+<p>Now consider:</p>
+<div class="highlight"><pre><span></span><code>Query: I cannot remember my account credentials
+</code></pre></div>
+<p>Document:</p>
+<div class="highlight"><pre><span></span><code>How to reset a forgotten password
+</code></pre></div>
+<p>The exact words differ, but dense retrieval can recognize their semantic similarity.</p>
+<p>Hybrid search gives us <strong>both capabilities</strong>.</p>
+<h3 id="key-benefits">Key Benefits<a class="headerlink" href="#key-benefits" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Better retrieval quality across different query types.</li>
+<li>Handles exact keywords <strong>and</strong> semantic meaning.</li>
+<li>Particularly useful for heterogeneous enterprise data.</li>
+<li>Retrieval behavior can be tuned through weighting/fusion strategies.</li>
+</ul>
+<div class="admonition tip">
+<p class="admonition-title">Important</p>
+<p>Hybrid search does not automatically guarantee better results. Its effectiveness depends on retrieval quality, fusion strategy, corpus characteristics, and tuning.</p>
+</div>
+<hr />
+<h2 id="bm25">BM25<a class="headerlink" href="#bm25" title="Permanent link">&para;</a></h2>
+<h3 id="crisp-definition_1">Crisp Definition<a class="headerlink" href="#crisp-definition_1" title="Permanent link">&para;</a></h3>
+<p><strong>BM25 (Best Matching 25)</strong> is a probabilistic ranking function used by
+information-retrieval systems to estimate how relevant a document is to
+a search query.</p>
+<p>It builds upon ideas from TF-IDF while adding important mechanisms such
+as:</p>
+<ol>
+<li>Term-frequency saturation</li>
+<li>Inverse document frequency</li>
+<li>Document-length normalization</li>
+</ol>
+<hr />
+<h3 id="how-bm25-works">How BM25 Works<a class="headerlink" href="#how-bm25-works" title="Permanent link">&para;</a></h3>
+<h4 id="term-frequency-tf">Term Frequency (TF)<a class="headerlink" href="#term-frequency-tf" title="Permanent link">&para;</a></h4>
+<p>Term frequency asks:</p>
+<blockquote>
+<p>How often does the query term occur in this document?</p>
+</blockquote>
+<p>If the query is:</p>
+<div class="highlight"><pre><span></span><code>Spring Boot Security
+</code></pre></div>
+<p>a document containing <code>Security</code> several times is generally more likely
+to be relevant than one that never mentions it.</p>
+<p>However, BM25 introduces <strong>term-frequency saturation</strong>.</p>
+<div class="highlight"><pre><span></span><code>1 occurrence  → significant evidence
+2 occurrences → additional evidence
+10 → 11 occurrences → comparatively little additional benefit
+</code></pre></div>
+<p>Therefore, repeatedly stuffing a keyword into a document does not cause
+its relevance score to increase linearly forever.</p>
+<hr />
+<h4 id="inverse-document-frequency-idf">Inverse Document Frequency (IDF)<a class="headerlink" href="#inverse-document-frequency-idf" title="Permanent link">&para;</a></h4>
+<p>IDF asks:</p>
+<blockquote>
+<p>How informative is this term across the corpus?</p>
+</blockquote>
+<p>Common words carry little discriminative value.</p>
+<div class="highlight"><pre><span></span><code>&quot;the&quot;        → extremely common → low importance
+&quot;application&quot;→ relatively common
+&quot;HHH000104&quot;  → rare             → high importance
+</code></pre></div>
+<p>Rare query terms generally contribute more strongly to relevance.</p>
+<hr />
+<h4 id="document-length-normalization">Document-Length Normalization<a class="headerlink" href="#document-length-normalization" title="Permanent link">&para;</a></h4>
+<p>Long documents naturally contain more words and therefore have more
+opportunities to match query terms.</p>
+<p>Without normalization, long documents could receive an unfair advantage.</p>
+<p>BM25 compensates for document length relative to the average document
+length in the corpus.</p>
+<hr />
+<h3 id="bm25-intuition">BM25 Intuition<a class="headerlink" href="#bm25-intuition" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>BM25 Score
+    =
+Term Frequency contribution
+    +
+Term rarity / IDF contribution
+    +
+Document-length normalization
+</code></pre></div>
+<p>You do <strong>not</strong> need to memorize the complete BM25 equation for most
+AI-engineering interviews.</p>
+<p>You should understand the intuition behind these three components.</p>
+<hr />
+<h3 id="bm25-limitations">BM25 Limitations<a class="headerlink" href="#bm25-limitations" title="Permanent link">&para;</a></h3>
+<h4 id="lexical-rather-than-semantic">Lexical rather than semantic<a class="headerlink" href="#lexical-rather-than-semantic" title="Permanent link">&para;</a></h4>
+<p>BM25 primarily depends on term matching.</p>
+<div class="highlight"><pre><span></span><code>Query:
+forgot login credentials
+
+Document:
+reset password
+</code></pre></div>
+<p>The concepts are related, but lexical overlap may be weak.</p>
+<h4 id="synonyms-and-paraphrases">Synonyms and paraphrases<a class="headerlink" href="#synonyms-and-paraphrases" title="Permanent link">&para;</a></h4>
+<p>BM25 does not inherently understand:</p>
+<div class="highlight"><pre><span></span><code>car ≈ automobile
+</code></pre></div>
+<p>or:</p>
+<div class="highlight"><pre><span></span><code>software engineer ≈ developer
+</code></pre></div>
+<h4 id="no-usercontext-awareness-by-default">No user/context awareness by default<a class="headerlink" href="#no-usercontext-awareness-by-default" title="Permanent link">&para;</a></h4>
+<p>BM25 itself does not automatically understand:</p>
+<ul>
+<li>user history</li>
+<li>preferences</li>
+<li>conversational context</li>
+<li>intent beyond lexical evidence</li>
+</ul>
+<p>These capabilities have to be added by the surrounding system.</p>
+<h4 id="corpus-dependent-ranking">Corpus-dependent ranking<a class="headerlink" href="#corpus-dependent-ranking" title="Permanent link">&para;</a></h4>
+<p>Document lengths, term frequencies and corpus composition influence BM25
+scores.</p>
+<h4 id="no-dense-semantic-representation">No dense semantic representation<a class="headerlink" href="#no-dense-semantic-representation" title="Permanent link">&para;</a></h4>
+<p>BM25 does not use dense neural embeddings, so it cannot model semantic
+relationships in the same way as dense retrieval.</p>
+<hr />
+<h2 id="sparse-representations-sparse-retrieval">Sparse Representations / Sparse Retrieval<a class="headerlink" href="#sparse-representations-sparse-retrieval" title="Permanent link">&para;</a></h2>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p>A <strong>sparse vector</strong> represents text using a very high-dimensional
+feature space where only a small number of dimensions have non-zero
+values.</p>
+<p>Conceptually:</p>
+<div class="highlight"><pre><span></span><code>Vocabulary:
+
+[Java, Spring, Python, Docker, Redis, Kafka, ...]
+
+Document:
+
+&quot;Java Spring Redis&quot;
+
+Sparse representation:
+
+[0.8, 0.9, 0, 0, 0.7, 0, ...]
+</code></pre></div>
+<p>Most dimensions are zero.</p>
+<p>Hence:</p>
+<blockquote>
+<p><strong>Sparse vector</strong></p>
+</blockquote>
+<p>Traditional lexical systems may use representations derived from term
+statistics such as TF-IDF. Modern sparse retrieval systems can also use
+learned sparse representations. BM25 itself is best thought of as a
+lexical ranking function rather than simply "a sparse embedding model."</p>
+<hr />
+<h3 id="characteristics">Characteristics<a class="headerlink" href="#characteristics" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Very high dimensional</li>
+<li>Mostly zeros</li>
+<li>Strong exact-term matching</li>
+<li>Excellent for rare keywords and identifiers</li>
+<li>Traditional approaches do not require dense embedding inference</li>
+</ul>
+<h3 id="common-systems">Common Systems<a class="headerlink" href="#common-systems" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Elasticsearch</li>
+<li>OpenSearch</li>
+<li>Apache Solr</li>
+<li>PostgreSQL Full-Text Search</li>
+</ul>
+<p>Some modern vector databases/search engines also support sparse-vector
+retrieval directly.</p>
+<h3 id="strong-use-cases">Strong Use Cases<a class="headerlink" href="#strong-use-cases" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Legal document retrieval</li>
+<li>Product catalogs and SKUs</li>
+<li>Error codes</li>
+<li>Logs and observability</li>
+<li>Compliance documents</li>
+<li>Technical terminology</li>
+<li>Names and identifiers</li>
+</ul>
+<hr />
+<h2 id="dense-vectors">Dense Vectors<a class="headerlink" href="#dense-vectors" title="Permanent link">&para;</a></h2>
+<h3 id="definition_1">Definition<a class="headerlink" href="#definition_1" title="Permanent link">&para;</a></h3>
+<p>Dense vectors are generated by <strong>embedding models</strong> and represent
+semantic information as fixed-length numerical vectors.</p>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>&quot;How do I reset my password?&quot;
+
+            ↓
+      Embedding Model
+            ↓
+[0.12, -0.32, 0.81, ..., 0.17]
+</code></pre></div>
+<p>Another sentence:</p>
+<div class="highlight"><pre><span></span><code>&quot;I forgot my login credentials&quot;
+
+            ↓
+      Embedding Model
+            ↓
+[0.11, -0.30, 0.79, ..., 0.20]
+</code></pre></div>
+<p>The vectors can be close in vector space even though the sentences do
+not use exactly the same words.</p>
+<hr />
+<h3 id="characteristics_1">Characteristics<a class="headerlink" href="#characteristics_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Fixed dimensionality for a particular embedding model/configuration</li>
+<li>Usually most dimensions contain non-zero floating-point values</li>
+<li>Captures semantic relationships</li>
+<li>Requires an embedding model</li>
+<li>Similarity can be measured using metrics such as cosine similarity,
+    dot product, or Euclidean distance depending on the model/index</li>
+</ul>
+<h3 id="common-vector-systems">Common Vector Systems<a class="headerlink" href="#common-vector-systems" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Pinecone</li>
+<li>Weaviate</li>
+<li>Milvus</li>
+<li>Qdrant</li>
+<li>Chroma</li>
+<li>FAISS</li>
+</ul>
+<hr />
+<h3 id="strong-use-cases_1">Strong Use Cases<a class="headerlink" href="#strong-use-cases_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Semantic search</li>
+<li>RAG retrieval</li>
+<li>FAQ matching</li>
+<li>Knowledge-base search</li>
+<li>Recommendation and similarity systems</li>
+<li>Natural-language document discovery</li>
+</ul>
+<hr />
+<h2 id="sparse-vs-dense-retrieval">Sparse vs Dense Retrieval<a class="headerlink" href="#sparse-vs-dense-retrieval" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Sparse / Lexical</th>
+<th>Dense / Semantic</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Main strength</strong></td>
+<td>Exact lexical matching</td>
+<td>Semantic similarity</td>
+</tr>
+<tr>
+<td><strong>Representation</strong></td>
+<td>High-dimensional, mostly zero</td>
+<td>Fixed-size dense vector</td>
+</tr>
+<tr>
+<td><strong>Meaning awareness</strong></td>
+<td>Limited</td>
+<td>Strong</td>
+</tr>
+<tr>
+<td><strong>Exact identifiers</strong></td>
+<td>Excellent</td>
+<td>Can be weaker</td>
+</tr>
+<tr>
+<td><strong>Synonyms/paraphrases</strong></td>
+<td>Weak by default</td>
+<td>Strong</td>
+</tr>
+<tr>
+<td><strong>Typical examples</strong></td>
+<td>BM25, TF-IDF</td>
+<td>Embedding retrieval</td>
+</tr>
+<tr>
+<td><strong>ML embedding required</strong></td>
+<td>Not necessarily</td>
+<td>Yes</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="useful-mental-shortcut">Useful Mental Shortcut<a class="headerlink" href="#useful-mental-shortcut" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Sparse retrieves what you said.</strong>\
+<strong>Dense retrieves what you meant.</strong></p>
+</blockquote>
+<p>This is an intuition, not an absolute rule.</p>
+<p>Another common intuition is:</p>
+<blockquote>
+<p>Sparse retrieval often contributes <strong>precision for exact lexical
+evidence</strong>, while dense retrieval often improves <strong>semantic recall</strong>.</p>
+</blockquote>
+<p>Again, don't treat this as a mathematical law---performance depends on
+the dataset and query distribution.</p>
+<hr />
+<h2 id="why-fusion-is-required">Why Fusion Is Required<a class="headerlink" href="#why-fusion-is-required" title="Permanent link">&para;</a></h2>
+<p>Suppose sparse retrieval returns:</p>
+<div class="highlight"><pre><span></span><code>Document A → BM25 score = 12.4
+</code></pre></div>
+<p>Dense retrieval returns:</p>
+<div class="highlight"><pre><span></span><code>Document B → cosine similarity = 0.85
+</code></pre></div>
+<p>Can we simply calculate:</p>
+<div class="highlight"><pre><span></span><code>12.4 + 0.85
+</code></pre></div>
+<p>No.</p>
+<p>The scores originate from <strong>different scoring systems and scales</strong>.</p>
+<p>A fusion strategy is therefore needed to combine the result lists or
+normalize/combine their scores.</p>
+<hr />
+<h2 id="reciprocal-rank-fusion-rrf">Reciprocal Rank Fusion (RRF)<a class="headerlink" href="#reciprocal-rank-fusion-rrf" title="Permanent link">&para;</a></h2>
+<h3 id="core-idea">Core Idea<a class="headerlink" href="#core-idea" title="Permanent link">&para;</a></h3>
+<p>RRF largely ignores the raw scores and instead uses the <strong>rank
+position</strong> of each document.</p>
+<blockquote>
+<p>A document that ranks highly across multiple retrieval methods is
+likely to be relevant.</p>
+</blockquote>
+<p>A common form is:</p>
+<div class="highlight"><pre><span></span><code>RRF(d) = Σ 1 / (k + rank(d))
+</code></pre></div>
+<p>where:</p>
+<ul>
+<li><code>d</code> = document</li>
+<li><code>rank(d)</code> = its position in a result list</li>
+<li><code>k</code> = a constant that reduces the impact of very small rank
+    differences</li>
+</ul>
+<hr />
+<h3 id="example">Example<a class="headerlink" href="#example" title="Permanent link">&para;</a></h3>
+<p>Sparse results:</p>
+<div class="highlight"><pre><span></span><code>1. Doc A
+2. Doc B
+3. Doc C
+</code></pre></div>
+<p>Dense results:</p>
+<div class="highlight"><pre><span></span><code>1. Doc B
+2. Doc D
+3. Doc A
+</code></pre></div>
+<p>Doc A and Doc B appear near the top of <strong>both lists</strong>.</p>
+<p>RRF therefore gives them strong combined rankings.</p>
+<hr />
+<h3 id="why-rrf-is-popular">Why RRF Is Popular<a class="headerlink" href="#why-rrf-is-popular" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Doesn't require BM25 and vector scores to share the same scale.</li>
+<li>Simple.</li>
+<li>Robust.</li>
+<li>Requires relatively little score calibration.</li>
+<li>Works well as a strong baseline for hybrid retrieval.</li>
+</ul>
+<h3 id="limitation">Limitation<a class="headerlink" href="#limitation" title="Permanent link">&para;</a></h3>
+<p>RRF mainly uses <strong>rank positions</strong>, so it discards much of the magnitude
+information contained in the original retrieval scores.</p>
+<hr />
+<h2 id="linear-combination-weighted-scoring">Linear Combination / Weighted Scoring<a class="headerlink" href="#linear-combination-weighted-scoring" title="Permanent link">&para;</a></h2>
+<h3 id="core-idea_1">Core Idea<a class="headerlink" href="#core-idea_1" title="Permanent link">&para;</a></h3>
+<p>After making scores comparable (for example through normalization where
+appropriate), combine them using configurable weights.</p>
+<p>Conceptually:</p>
+<div class="highlight"><pre><span></span><code>Final Score =
+α × Dense Score
++
+(1 - α) × Sparse Score
+</code></pre></div>
+<p>Example:</p>
+<div class="highlight"><pre><span></span><code>α = 0.7
+
+70% influence → Dense
+30% influence → Sparse
+</code></pre></div>
+<hr />
+<h3 id="why-use-it">Why Use It?<a class="headerlink" href="#why-use-it" title="Permanent link">&para;</a></h3>
+<p>Useful when you know one retrieval method should carry greater influence
+for your particular application.</p>
+<p>Example:</p>
+<p>A natural-language FAQ system may favor semantic retrieval.</p>
+<p>A product-code search system may favor lexical retrieval.</p>
+<h3 id="limitation_1">Limitation<a class="headerlink" href="#limitation_1" title="Permanent link">&para;</a></h3>
+<p>Weights require tuning and raw scores often need
+normalization/calibration before meaningful combination.</p>
+<hr />
+<h2 id="relative-score-fusion-rsf">Relative Score Fusion (RSF)<a class="headerlink" href="#relative-score-fusion-rsf" title="Permanent link">&para;</a></h2>
+<h3 id="core-idea_2">Core Idea<a class="headerlink" href="#core-idea_2" title="Permanent link">&para;</a></h3>
+<p>Instead of directly comparing raw scores from unrelated retrieval
+systems, scores are normalized relative to the results produced by each
+retrieval method and then combined.</p>
+<p>Conceptually:</p>
+<div class="highlight"><pre><span></span><code>Sparse scores
+      ↓
+Normalize relative to sparse result range
+
+Dense scores
+      ↓
+Normalize relative to dense result range
+
+      ↓
+Weighted combination
+</code></pre></div>
+<p>This preserves more score information than purely rank-based fusion.</p>
+<h3 id="trade-off">Trade-off<a class="headerlink" href="#trade-off" title="Permanent link">&para;</a></h3>
+<p>RSF can use score magnitude information, but it is more sensitive to
+score distributions and normalization behavior than RRF.</p>
+<hr />
+<h2 id="rrf-vs-weighted-fusion-vs-rsf">RRF vs Weighted Fusion vs RSF<a class="headerlink" href="#rrf-vs-weighted-fusion-vs-rsf" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>Main Idea</th>
+<th>Strength</th>
+<th>Limitation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>RRF</strong></td>
+<td>Combine ranks</td>
+<td>Simple, robust, scale-independent</td>
+<td>Loses much raw-score magnitude</td>
+</tr>
+<tr>
+<td><strong>Weighted Scoring</strong></td>
+<td>Combine comparable scores with weights</td>
+<td>Explicit control</td>
+<td>Requires tuning/calibration</td>
+</tr>
+<tr>
+<td><strong>RSF</strong></td>
+<td>Normalize scores relative to each result list and combine</td>
+<td>Retains score information</td>
+<td>Sensitive to normalization/distribution</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="complete-hybrid-search-pipeline">Complete Hybrid Search Pipeline<a class="headerlink" href="#complete-hybrid-search-pipeline" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>User Query
+    |
+    +-------------------------+
+    |                         |
+    v                         v
+Sparse Retriever        Dense Retriever
+(BM25 / sparse)          (Embeddings)
+    |                         |
+    v                         v
+Top-K Sparse            Top-K Dense
+Results                 Results
+    |                         |
+    +------------+------------+
+                 |
+                 v
+            Fusion Layer
+         (RRF / RSF / Weighted)
+                 |
+                 v
+        Final Ranked Documents
+                 |
+          [Optional Reranker]
+                 |
+                 v
+             Top Context
+                 |
+                 v
+                 LLM
+</code></pre></div>
+<h3 id="important-distinction">Important distinction<a class="headerlink" href="#important-distinction" title="Permanent link">&para;</a></h3>
+<p><strong>Fusion</strong> combines outputs from different retrieval systems.</p>
+<p>A <strong>reranker</strong> is an optional later stage that takes candidate documents
+and scores/orders them again using a stronger relevance model or another
+ranking strategy.</p>
+<p>They are related, but <strong>fusion ≠ reranking</strong>.</p>
+<hr />
+<h2 id="when-does-bm25-win">When Does BM25 Win?<a class="headerlink" href="#when-does-bm25-win" title="Permanent link">&para;</a></h2>
+<p>BM25 is especially strong when queries contain:</p>
+<h3 id="exact-identifiers">Exact identifiers<a class="headerlink" href="#exact-identifiers" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ERR_CONNECTION_REFUSED
+</code></pre></div>
+<h3 id="product-codes">Product codes<a class="headerlink" href="#product-codes" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SM-S928B
+</code></pre></div>
+<h3 id="apiclassmethod-names">API/class/method names<a class="headerlink" href="#apiclassmethod-names" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ConcurrentHashMap.computeIfAbsent
+</code></pre></div>
+<h3 id="rare-terminology">Rare terminology<a class="headerlink" href="#rare-terminology" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>pneumonoultramicroscopicsilicovolcanoconiosis
+</code></pre></div>
+<h3 id="names-legal-clauses-ticket-numbers-and-error-codes">Names, legal clauses, ticket numbers and error codes<a class="headerlink" href="#names-legal-clauses-ticket-numbers-and-error-codes" title="Permanent link">&para;</a></h3>
+<p>In these situations, exact lexical evidence can be more valuable than
+broad semantic similarity.</p>
+<hr />
+<h2 id="why-isnt-vector-search-alone-enough">Why Isn't Vector Search Alone Enough?<a class="headerlink" href="#why-isnt-vector-search-alone-enough" title="Permanent link">&para;</a></h2>
+<p>Dense retrieval is powerful, but it can:</p>
+<ul>
+<li>miss exact identifiers</li>
+<li>underweight rare lexical matches</li>
+<li>retrieve semantically related but factually irrelevant chunks</li>
+<li>behave differently depending on embedding-model quality/domain</li>
+<li>struggle with certain acronyms, codes, numbers, names and domain
+    terminology</li>
+</ul>
+<p>Hybrid search provides another retrieval signal to compensate for these
+weaknesses.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-hybrid-search">What is Hybrid Search?<a class="headerlink" href="#what-is-hybrid-search" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Hybrid search combines lexical retrieval, such as BM25, with dense
+semantic retrieval using embeddings. Lexical search is strong at exact
+terms and rare identifiers, while dense retrieval captures semantic
+similarity and paraphrases. Their result sets are combined using a
+fusion strategy such as Reciprocal Rank Fusion or normalized weighted
+scoring to produce a stronger final ranking.</p>
+<hr />
+<h3 id="why-not-use-only-vector-search-for-rag">Why not use only vector search for RAG?<a class="headerlink" href="#why-not-use-only-vector-search-for-rag" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Vector search is excellent for semantic similarity, but it can perform
+poorly for exact identifiers, rare terms, error codes, product IDs,
+names or domain-specific keywords. Lexical search handles these cases
+well. Hybrid retrieval combines both signals and therefore tends to be
+more robust across different query types.</p>
+<hr />
+<h3 id="what-is-bm25">What is BM25?<a class="headerlink" href="#what-is-bm25" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>BM25 is a probabilistic lexical ranking function used to estimate
+document relevance for a query. Its ranking behavior primarily considers
+term frequency with saturation, inverse document frequency and
+document-length normalization.</p>
+<hr />
+<h3 id="how-is-bm25-different-from-tf-idf">How is BM25 different from TF-IDF?<a class="headerlink" href="#how-is-bm25-different-from-tf-idf" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Both use term-frequency and inverse-document-frequency ideas, but BM25
+improves ranking behavior through term-frequency saturation and explicit
+document-length normalization. This prevents repeated terms and long
+documents from receiving disproportionately high relevance simply
+because of frequency or size.</p>
+<hr />
+<h3 id="what-is-term-frequency-saturation">What is term-frequency saturation?<a class="headerlink" href="#what-is-term-frequency-saturation" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>The first few occurrences of a query term provide useful relevance
+evidence, but repeatedly adding the same term should not increase
+relevance indefinitely. BM25 therefore makes the contribution from term
+frequency grow more slowly as occurrences increase.</p>
+<hr />
+<h3 id="why-does-bm25-use-document-length-normalization">Why does BM25 use document-length normalization?<a class="headerlink" href="#why-does-bm25-use-document-length-normalization" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Long documents naturally contain more terms and therefore have more
+opportunities to match a query. Length normalization prevents them from
+receiving an unfair ranking advantage solely because they contain more
+words.</p>
+<hr />
+<h3 id="what-is-the-difference-between-sparse-and-dense-vectors">What is the difference between sparse and dense vectors?<a class="headerlink" href="#what-is-the-difference-between-sparse-and-dense-vectors" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Sparse representations typically have a very large number of dimensions
+with most values equal to zero and are commonly associated with lexical
+features or terms. Dense vectors are fixed-size numerical
+representations generated by embedding models, with information
+distributed across their dimensions to capture semantic relationships.</p>
+<hr />
+<h3 id="give-an-example-where-dense-retrieval-beats-bm25">Give an example where dense retrieval beats BM25.<a class="headerlink" href="#give-an-example-where-dense-retrieval-beats-bm25" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Query:</p>
+<div class="highlight"><pre><span></span><code>I forgot my login credentials
+</code></pre></div>
+<p>Document:</p>
+<div class="highlight"><pre><span></span><code>How to reset your password
+</code></pre></div>
+<p>There is limited lexical overlap, but their meanings are closely
+related. Dense embeddings can place them close together in vector space
+and retrieve the document.</p>
+<hr />
+<h3 id="give-an-example-where-bm25-beats-dense-retrieval">Give an example where BM25 beats dense retrieval.<a class="headerlink" href="#give-an-example-where-bm25-beats-dense-retrieval" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>If the query contains an exact error code such as:</p>
+<div class="highlight"><pre><span></span><code>ORA-00942
+</code></pre></div>
+<p>a lexical retriever can strongly match documents containing that exact
+identifier. Dense semantic retrieval may not reliably give that rare
+identifier enough importance.</p>
+<hr />
+<h3 id="why-cant-we-directly-add-bm25-and-cosine-similarity-scores">Why can't we directly add BM25 and cosine-similarity scores?<a class="headerlink" href="#why-cant-we-directly-add-bm25-and-cosine-similarity-scores" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Because the scores come from different retrieval systems and generally
+exist on different scales with different interpretations. A BM25 score
+such as <code>12.4</code> and cosine similarity such as <code>0.85</code> are not directly
+comparable. We need rank fusion or appropriate score
+normalization/calibration before combining them.</p>
+<hr />
+<h3 id="what-is-reciprocal-rank-fusion">What is Reciprocal Rank Fusion?<a class="headerlink" href="#what-is-reciprocal-rank-fusion" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>RRF combines multiple ranked result lists using each document's rank
+rather than its raw retrieval score. Documents appearing near the top of
+multiple result lists receive higher combined scores. This makes RRF
+useful when retrieval systems produce scores on incompatible scales.</p>
+<hr />
+<h3 id="why-is-rrf-commonly-used-for-hybrid-search">Why is RRF commonly used for Hybrid Search?<a class="headerlink" href="#why-is-rrf-commonly-used-for-hybrid-search" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>It is simple, robust and largely score-scale independent. BM25 and dense
+retrieval can produce very different score distributions, but RRF only
+needs their ranking positions, avoiding complicated score calibration.</p>
+<hr />
+<h3 id="what-is-the-limitation-of-rrf">What is the limitation of RRF?<a class="headerlink" href="#what-is-the-limitation-of-rrf" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Because RRF primarily operates on rank positions, it discards much of
+the information contained in raw score magnitudes. Two documents with
+very different relevance scores can still have adjacent ranks.</p>
+<hr />
+<h3 id="what-is-weighted-fusion">What is weighted fusion?<a class="headerlink" href="#what-is-weighted-fusion" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Weighted fusion combines retrieval signals by assigning each method a
+configurable influence, such as 70% dense and 30% sparse. Scores
+generally need to be made comparable first, and the weights should be
+tuned against the application's retrieval requirements.</p>
+<hr />
+<h3 id="what-is-relative-score-fusion">What is Relative Score Fusion?<a class="headerlink" href="#what-is-relative-score-fusion" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Relative Score Fusion normalizes scores relative to the score
+distribution or range within each retrieval result set before combining
+them. Unlike RRF, it retains information about score magnitude while
+avoiding direct comparison of unrelated raw score scales.</p>
+<hr />
+<h3 id="fusion-vs-reranking-whats-the-difference">Fusion vs reranking --- what's the difference?<a class="headerlink" href="#fusion-vs-reranking-whats-the-difference" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>Fusion combines candidate results produced by multiple retrieval
+systems, such as BM25 and dense vector retrieval. Reranking happens
+after candidate retrieval/fusion and uses another ranking
+mechanism---often a stronger model---to reorder candidates according to
+query-document relevance.</p>
+<hr />
+<h3 id="does-hybrid-search-always-outperform-dense-search">Does Hybrid Search always outperform dense search?<a class="headerlink" href="#does-hybrid-search-always-outperform-dense-search" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>No. Hybrid search provides additional retrieval signals, but performance
+depends on the dataset, queries, retriever configuration, fusion method
+and tuning. Retrieval quality should be evaluated using representative
+queries and relevance judgments rather than assuming hybrid is
+automatically superior.</p>
+<hr />
+<h3 id="explain-hybrid-search-in-one-minute">Explain Hybrid Search in one minute.<a class="headerlink" href="#explain-hybrid-search-in-one-minute" title="Permanent link">&para;</a></h3>
+<p><strong>Answer:</strong></p>
+<p>In traditional keyword search, algorithms such as BM25 retrieve
+documents based primarily on lexical overlap, which is very effective
+for exact keywords, names and identifiers but does not inherently
+understand semantic similarity. Dense retrieval converts queries and
+documents into embeddings, allowing semantically similar text to match
+even when the wording differs, but it can be weaker for exact lexical
+signals such as error codes. Hybrid search runs both retrieval
+strategies and combines their result lists using techniques such as
+Reciprocal Rank Fusion or normalized weighted scoring. This gives a RAG
+system both lexical precision and semantic retrieval capability.</p>
+<hr />
+<h2 id="common-interview-traps">Common Interview Traps<a class="headerlink" href="#common-interview-traps" title="Permanent link">&para;</a></h2>
+<h3 id="bm25-is-semantic-search">❌ "BM25 is semantic search."<a class="headerlink" href="#bm25-is-semantic-search" title="Permanent link">&para;</a></h3>
+<p>Incorrect.</p>
+<p>BM25 is primarily a <strong>lexical ranking algorithm</strong>.</p>
+<hr />
+<h3 id="sparse-vectors-are-always-bm25-vectors">❌ "Sparse vectors are always BM25 vectors."<a class="headerlink" href="#sparse-vectors-are-always-bm25-vectors" title="Permanent link">&para;</a></h3>
+<p>Too broad.</p>
+<p>BM25 is a lexical ranking function. Sparse representations can come from
+TF-IDF, learned sparse retrieval models, or other sparse techniques.</p>
+<hr />
+<h3 id="dense-vectors-always-have-768-dimensions">❌ "Dense vectors always have 768 dimensions."<a class="headerlink" href="#dense-vectors-always-have-768-dimensions" title="Permanent link">&para;</a></h3>
+<p>Incorrect.</p>
+<p>Dimension depends on the embedding model/configuration.</p>
+<p>Examples can include:</p>
+<div class="highlight"><pre><span></span><code>384
+768
+1024
+1536
+3072
+...
+</code></pre></div>
+<hr />
+<h3 id="hybrid-search-means-rrf">❌ "Hybrid Search means RRF."<a class="headerlink" href="#hybrid-search-means-rrf" title="Permanent link">&para;</a></h3>
+<p>Incorrect.</p>
+<p>RRF is <strong>one fusion strategy</strong>.</p>
+<p>Other approaches include weighted/linear score combination and
+relative-score normalization/fusion.</p>
+<hr />
+<h3 id="dense-recall-and-sparse-precision-always">❌ "Dense = recall and sparse = precision, always."<a class="headerlink" href="#dense-recall-and-sparse-precision-always" title="Permanent link">&para;</a></h3>
+<p>Treat this as an intuition, not a law.</p>
+<p>Actual precision and recall depend on the dataset, queries and retrieval
+configuration.</p>
+<hr />
+<h3 id="fusion-and-reranking-are-the-same">❌ "Fusion and reranking are the same."<a class="headerlink" href="#fusion-and-reranking-are-the-same" title="Permanent link">&para;</a></h3>
+<p>Incorrect.</p>
+<div class="highlight"><pre><span></span><code>Retrievers → Fusion → Candidate Set → Optional Reranker
+</code></pre></div>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<p>If you revisit only one section, remember this:</p>
+<ul>
+<li><strong>Hybrid Search = Lexical/Sparse Retrieval + Dense/Semantic Retrieval + Fusion</strong></li>
+<li><strong>BM25 = term-frequency saturation + IDF + document-length normalization</strong></li>
+<li><strong>Sparse retrieval is excellent at exact lexical evidence.</strong></li>
+<li><strong>Dense retrieval captures semantic relationships and paraphrases.</strong></li>
+<li><strong>Sparse retrieves what you said; dense retrieves what you meant.</strong> Use that as intuition—not an absolute rule.</li>
+<li>Raw BM25 and dense similarity scores generally cannot simply be added because their scales are unrelated.</li>
+<li><strong>RRF solves this by combining ranks instead of raw scores.</strong></li>
+<li>Weighted/relative-score approaches preserve more score information but require normalization and/or tuning.</li>
+<li><strong>Fusion ≠ reranking.</strong></li>
+<li>Hybrid retrieval is particularly valuable in RAG systems containing both natural-language content and exact terminology/identifiers.</li>
+</ul>
+<hr />
+<h2 id="stage-1-week-2-checkpoint">Stage 1 --- Week 2 Checkpoint<a class="headerlink" href="#stage-1-week-2-checkpoint" title="Permanent link">&para;</a></h2>
+<p>Before moving beyond Hybrid Search, you should be able to explain
+without notes:</p>
+<ul>
+<li>What Hybrid Search is</li>
+<li>Why dense retrieval alone can fail</li>
+<li>How BM25 works conceptually</li>
+<li>TF saturation</li>
+<li>IDF</li>
+<li>Document-length normalization</li>
+<li>Sparse vs dense representations</li>
+<li>Where BM25 wins</li>
+<li>Where dense retrieval wins</li>
+<li>Why fusion is necessary</li>
+<li>RRF</li>
+<li>Weighted fusion</li>
+<li>Relative Score Fusion</li>
+<li>Fusion vs reranking</li>
+<li>A complete Hybrid RAG retrieval pipeline</li>
+</ul>
+<p>If you can explain these confidently, your Hybrid Search foundation is
+strong enough to move to the next Week 2 topic: <strong>Metadata Filtering &amp;
+Indexing</strong>.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

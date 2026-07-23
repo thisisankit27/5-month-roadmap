@@ -1,0 +1,1724 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/project-stage-1/">
+      
+      
+        <link rel="prev" href="../..">
+      
+      
+        <link rel="next" href="../AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Project: Knowledge Assistant - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#project-knowledge-assistant" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Project: Knowledge Assistant
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#journey-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛤️ Journey Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Learning Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Learning Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-1-core-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌱 Week 1 — Core RAG
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌱 Week 1 — Core RAG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-2-better-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Week 2 — Better Retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Week 2 — Better Retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-lcel-refactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Week 3 — LCEL Refactor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Week 3 — LCEL Refactor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-4-production-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏁 Week 4 — Production Readiness
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏁 Week 4 — Production Readiness">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📈 Project Evolution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Final Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Engineering Mindset
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Engineering Mindset
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../Engineering%20Mindset/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#journey-philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🛤️ Journey Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-roadmap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Learning Roadmap
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Learning Roadmap">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#week-1-core-rag" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🌱 Week 1 — Core RAG
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🌱 Week 1 — Core RAG">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-2-better-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🚀 Week 2 — Better Retrieval
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🚀 Week 2 — Better Retrieval">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-3-lcel-refactor" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏗️ Week 3 — LCEL Refactor
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏗️ Week 3 — LCEL Refactor">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#week-4-production-readiness" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🏁 Week 4 — Production Readiness
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="🏁 Week 4 — Production Readiness">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#progress_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Progress
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#outcome_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Outcome
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#project-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📈 Project Evolution
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-features" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        🎯 Final Features
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#learning-objectives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        📚 Learning Objectives
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="project-knowledge-assistant">Project: Knowledge Assistant<a class="headerlink" href="#project-knowledge-assistant" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Building a production-ready RAG (Retrieval-Augmented Generation) application from scratch.</p>
+<p>This repository is developed incrementally over <strong>4 weeks</strong>, with each branch representing a major milestone in the journey.</p>
+</blockquote>
+<hr />
+<h2 id="journey-philosophy">🛤️ Journey Philosophy<a class="headerlink" href="#journey-philosophy" title="Permanent link">&para;</a></h2>
+<p>This repository is intentionally built in small, reviewable Pull Requests.</p>
+<p>Each Pull Request introduces exactly one major concept, making it easy for anyone to:</p>
+<ul>
+<li>Follow the learning journey</li>
+<li>Review architectural decisions</li>
+<li>Understand how a production RAG system evolves over time</li>
+<li>Recreate the project from scratch</li>
+</ul>
+<p>The goal isn't just to build an AI application—it's to document the engineering process behind it.</p>
+<h2 id="learning-roadmap">🚀 Learning Roadmap<a class="headerlink" href="#learning-roadmap" title="Permanent link">&para;</a></h2>
+<h3 id="week-1-core-rag">🌱 Week 1 — Core RAG<a class="headerlink" href="#week-1-core-rag" title="Permanent link">&para;</a></h3>
+<p>Related project notes: <a href="../Engineering%20Mindset/week-1-AI-Assistant/">Week 1 AI Assistant</a></p>
+<p>Related theory:
+<a href="../AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/">Chunking</a> | 
+<a href="../AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/">Embedding</a> |
+<a href="../AI%20Learning/Deepen-RAG/day-3-vector-databases/">Vector Database</a> |
+<a href="../AI%20Learning/Deepen-RAG/day-4-retrieval/">Retrieval</a> |
+<a href="../AI%20Learning/Deepen-RAG/day-5-generation-parameters/">Genration Prams</a></p>
+<p><strong>Branch:</strong> <a href="https://github.com/thisisankit27/archive.vibethroughcode-stage-1-project-1/tree/week-1-core-RAG" rel="noopener" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span> <code>week-1-core-RAG</code></a></p>
+<p><strong>Goal:</strong> Build a fully functional RAG pipeline capable of answering questions from uploaded PDF documents.</p>
+<h4 id="progress">Progress<a class="headerlink" href="#progress" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[x] PR-01 — Project Bootstrap</li>
+<li>[x] PR-02 — PDF Upload &amp; Loading</li>
+<li>[x] PR-03 — Chunking Engine</li>
+<li>[x] PR-04 — Embedding Pipeline</li>
+<li>[x] PR-05 — FAISS Vector Store</li>
+<li>[ ] PR-06 — Basic Question Answering</li>
+</ul>
+<h4 id="outcome">Outcome<a class="headerlink" href="#outcome" title="Permanent link">&para;</a></h4>
+<p>By the end of Week 1, the application will:</p>
+<ul>
+<li>📄 Upload one or more PDF documents</li>
+<li>✂️ Split documents into chunks</li>
+<li>🧠 Generate embeddings</li>
+<li>🗄️ Store embeddings in FAISS</li>
+<li>🔍 Retrieve relevant chunks</li>
+<li>💬 Answer user questions using the uploaded documents</li>
+</ul>
+<hr />
+<h3 id="week-2-better-retrieval">🚀 Week 2 — Better Retrieval<a class="headerlink" href="#week-2-better-retrieval" title="Permanent link">&para;</a></h3>
+<p><strong>Branch:</strong> <a href="https://github.com/thisisankit27/archive.vibethroughcode-stage-1-project-1/tree/week-2-better-retrieval" rel="noopener" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span> <code>week-2-better-retrieval</code></a></p>
+<p><strong>Goal:</strong> Improve retrieval quality to make the assistant more production-ready.</p>
+<h4 id="progress_1">Progress<a class="headerlink" href="#progress_1" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] PR-07 — Hybrid Search</li>
+<li>[ ] PR-08 — Metadata Filtering</li>
+<li>[ ] PR-09 — Guardrails</li>
+</ul>
+<h4 id="outcome_1">Outcome<a class="headerlink" href="#outcome_1" title="Permanent link">&para;</a></h4>
+<p>The assistant will now support:</p>
+<ul>
+<li>🔀 Hybrid Search (Dense + Sparse Retrieval)</li>
+<li>🏷️ Metadata-based Filtering</li>
+<li>🛡️ Prompt Injection Protection</li>
+<li>✅ Safer and more accurate responses</li>
+</ul>
+<hr />
+<h3 id="week-3-lcel-refactor">🏗️ Week 3 — LCEL Refactor<a class="headerlink" href="#week-3-lcel-refactor" title="Permanent link">&para;</a></h3>
+<p><strong>Branch:</strong> <a href="https://github.com/thisisankit27/archive.vibethroughcode-stage-1-project-1/tree/week-3-LCEL-refactor" rel="noopener" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span> <code>week-3-LCEL-refactor</code></a></p>
+<p><strong>Goal:</strong> Refactor the application using LangChain Expression Language (LCEL).</p>
+<h4 id="progress_2">Progress<a class="headerlink" href="#progress_2" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] PR-10 — LCEL Pipeline</li>
+<li>[ ] PR-11 — Prompt Refactoring</li>
+</ul>
+<h4 id="outcome_2">Outcome<a class="headerlink" href="#outcome_2" title="Permanent link">&para;</a></h4>
+<p>The project will evolve from helper functions to a modular pipeline:</p>
+<div class="highlight"><pre><span></span><code>Retriever
+      │
+      ▼
+Prompt
+      │
+      ▼
+LLM
+      │
+      ▼
+Output Parser
+</code></pre></div>
+<p>Benefits:</p>
+<ul>
+<li>Better architecture</li>
+<li>Easier debugging</li>
+<li>Improved composability</li>
+<li>Production-style LangChain implementation</li>
+</ul>
+<hr />
+<h3 id="week-4-production-readiness">🏁 Week 4 — Production Readiness<a class="headerlink" href="#week-4-production-readiness" title="Permanent link">&para;</a></h3>
+<p><strong>Branch:</strong> <a href="https://github.com/thisisankit27/archive.vibethroughcode-stage-1-project-1/tree/week-4-production-readiness" rel="noopener" target="_blank"><span class="twemoji"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 2A10 10 0 0 0 2 12c0 4.42 2.87 8.17 6.84 9.5.5.08.66-.23.66-.5v-1.69c-2.77.6-3.36-1.34-3.36-1.34-.46-1.16-1.11-1.47-1.11-1.47-.91-.62.07-.6.07-.6 1 .07 1.53 1.03 1.53 1.03.87 1.52 2.34 1.07 2.91.83.09-.65.35-1.09.63-1.34-2.22-.25-4.55-1.11-4.55-4.92 0-1.11.38-2 1.03-2.71-.1-.25-.45-1.29.1-2.64 0 0 .84-.27 2.75 1.02.79-.22 1.65-.33 2.5-.33s1.71.11 2.5.33c1.91-1.29 2.75-1.02 2.75-1.02.55 1.35.2 2.39.1 2.64.65.71 1.03 1.6 1.03 2.71 0 3.82-2.34 4.66-4.57 4.91.36.31.69.92.69 1.85V21c0 .27.16.59.67.5C19.14 20.16 22 16.42 22 12A10 10 0 0 0 12 2"/></svg></span> <code>week-4-production-readiness</code></a></p>
+<p><strong>Goal:</strong> Transform the prototype into a production-quality application.</p>
+<h4 id="progress_3">Progress<a class="headerlink" href="#progress_3" title="Permanent link">&para;</a></h4>
+<ul>
+<li>[ ] PR-12 — Chat History</li>
+<li>[ ] PR-13 — Conversation Memory</li>
+<li>[ ] PR-14 — Logging &amp; Configuration</li>
+<li>[ ] PR-15 — Error Handling</li>
+<li>[ ] PR-16 — Documentation &amp; Deployment</li>
+</ul>
+<h4 id="outcome_3">Outcome<a class="headerlink" href="#outcome_3" title="Permanent link">&para;</a></h4>
+<p>The final application will include:</p>
+<ul>
+<li>💬 Chat History</li>
+<li>🧠 Conversation Memory</li>
+<li>📊 Logging</li>
+<li>⚙️ Configuration Management</li>
+<li>🚨 Robust Error Handling</li>
+<li>📖 Complete Documentation</li>
+<li>☁️ Deployment</li>
+</ul>
+<hr />
+<h2 id="project-evolution">📈 Project Evolution<a class="headerlink" href="#project-evolution" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Week 1
+──────────────
+PDF Upload
+      │
+      ▼
+Chunking
+      │
+      ▼
+Embeddings
+      │
+      ▼
+FAISS
+      │
+      ▼
+Question Answering
+
+                ↓
+
+Week 2
+────────────────────────
+Hybrid Search
+      │
+      ▼
+Metadata Filtering
+      │
+      ▼
+Guardrails
+
+                ↓
+
+Week 3
+────────────────────────
+LCEL Refactor
+      │
+      ▼
+Cleaner Architecture
+      │
+      ▼
+Better Prompt Pipeline
+
+                ↓
+
+Week 4
+────────────────────────
+Chat History
+      │
+      ▼
+Conversation Memory
+      │
+      ▼
+Logging
+      │
+      ▼
+Configuration
+      │
+      ▼
+Error Handling
+      │
+      ▼
+Deployment
+</code></pre></div>
+<hr />
+<h2 id="final-features">🎯 Final Features<a class="headerlink" href="#final-features" title="Permanent link">&para;</a></h2>
+<ul>
+<li>✅ PDF Upload</li>
+<li>✅ Recursive Chunking</li>
+<li>✅ Embeddings</li>
+<li>✅ FAISS Vector Store</li>
+<li>✅ Semantic Search</li>
+<li>✅ Hybrid Search</li>
+<li>✅ Metadata Filtering</li>
+<li>✅ Guardrails</li>
+<li>✅ LCEL Architecture</li>
+<li>✅ Chat History</li>
+<li>✅ Conversation Memory</li>
+<li>✅ Logging</li>
+<li>✅ Configuration Management</li>
+<li>✅ Error Handling</li>
+<li>✅ Deployment</li>
+</ul>
+<hr />
+<h2 id="learning-objectives">📚 Learning Objectives<a class="headerlink" href="#learning-objectives" title="Permanent link">&para;</a></h2>
+<p>This project is designed to teach:</p>
+<ul>
+<li>Retrieval-Augmented Generation (RAG)</li>
+<li>Vector Databases</li>
+<li>Embeddings</li>
+<li>Similarity Search</li>
+<li>Hybrid Search</li>
+<li>Metadata Filtering</li>
+<li>Guardrails</li>
+<li>LangChain Expression Language (LCEL)</li>
+<li>Production-ready AI application architecture</li>
+</ul>
+<hr />
+<blockquote>
+<p>Every Pull Request represents a single engineering milestone, making it easy to follow the evolution of the project from a minimal RAG prototype to a production-ready AI application.</p>
+</blockquote>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>
