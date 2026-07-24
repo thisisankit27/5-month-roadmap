@@ -60,6 +60,15 @@ By the end of Week 1, the application will:
 
 ### 🚀 Week 2 — Better Retrieval
 
+Related project notes: [Week 2 AI Assistant](Engineering%20Mindset/week-2-AI-Assistent.md)
+
+Related Theory:
+[Hybrid Search](AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search.md) | 
+[Metadata](AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata.md) | 
+[Guardrails](AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails.md) | 
+[Structured Outputs](AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs.md)
+
+
 **Branch:** [:material-github: `week-2-better-retrieval`](https://github.com/thisisankit27/archive.vibethroughcode-stage-1-project-1/tree/week-2-better-retrieval){ target="_blank" rel="noopener" }
 
 **Goal:** Improve retrieval quality to make the assistant more production-ready.
