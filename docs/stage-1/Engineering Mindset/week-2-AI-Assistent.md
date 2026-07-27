@@ -491,3 +491,668 @@ You should now be able to answer:
 - Why is Fusion a separate service?
 - Why is BM25 considered an implementation detail rather than an architectural concern?
 - Why should the RAG orchestrator not know which retrieval strategy is being used?
+
+---
+
+## PR-8 — Metadata Catalog & Metadata Filtering
+
+### Objective
+
+After completing PR-7 (Hybrid Search), our RAG system could retrieve information using both semantic (Dense Retrieval) and lexical (BM25) search.
+
+However, every search was still performed across the **entire knowledge base**.
+
+Real-world RAG systems rarely search every document.
+
+Instead, users often restrict searches to:
+
+- Specific files
+- Departments
+- Projects
+- Date ranges
+- Authors
+- Pages
+
+PR-8 introduces the architectural foundation for that capability.
+
+---
+
+### The Problem
+
+Current architecture:
+
+```
+User Question
+      │
+      ▼
+Retrieval Service
+      │
+      ▼
+Dense + Sparse Retrieval
+      │
+      ▼
+Fusion
+```
+
+The retrievers have no knowledge of:
+
+- which documents exist
+- which documents the user selected
+- which metadata belongs to each document
+
+Likewise, the UI has no persistent knowledge of previously indexed documents.
+
+Once indexing completes, the uploaded files are forgotten.
+
+---
+
+### Core Idea
+
+Instead of treating Metadata Filtering as merely "adding filters", we realized that the system is actually missing an entire architectural layer.
+
+That layer is:
+
+> **Metadata Catalog**
+
+This becomes the **source of truth** for the knowledge base.
+
+---
+
+### What is a Metadata Catalog?
+
+A Metadata Catalog stores information **about the corpus**, not the document contents themselves.
+
+It does **NOT** store:
+
+- embeddings
+- vectors
+- chunks
+- BM25 indexes
+
+Instead, it stores metadata describing the uploaded documents.
+
+Example:
+
+```python
+{
+    "document_id": "doc_001",
+    "display_name": "Spring Boot Guide.pdf",
+    "source": "/uploads/spring.pdf",
+    "uploaded_at": "...",
+    "chunk_count": 42
+}
+```
+
+---
+
+### Why introduce Metadata Catalog?
+
+Without it:
+
+```
+UI
+ │
+ ▼
+What documents exist?
+
+❌ No answer.
+```
+
+After introducing Metadata Catalog:
+
+```
+UI
+ │
+ ▼
+MetadataCatalog.list_documents()
+
+↓
+
+Spring.pdf
+Docker.pdf
+Java.pdf
+```
+
+The UI no longer guesses.
+
+It asks the catalog.
+
+---
+
+### Metadata Catalog Responsibilities
+
+The Metadata Catalog owns only one responsibility:
+
+> Managing document metadata.
+
+Responsibilities:
+
+- Register newly uploaded documents
+- Persist metadata
+- List available documents
+- Find document by ID
+- Delete document (future)
+
+It does NOT know:
+
+- Retrieval
+- BM25
+- FAISS
+- Embeddings
+- Prompting
+
+This follows the **Single Responsibility Principle (SRP)**.
+
+---
+
+### Why not store document information inside Vector Store?
+
+Because Vector Store is optimized for:
+
+- vector similarity search
+
+Metadata Catalog is optimized for:
+
+- document management
+
+These are different responsibilities.
+
+Separating them makes the architecture cleaner.
+
+---
+
+### Folder Structure
+
+After discussion, we decided NOT to create a separate `DocumentMetadata` class.
+
+Reason:
+
+It would simply wrap a dictionary and be used by only one class.
+
+That violates the YAGNI principle ("You Aren't Gonna Need It").
+
+Instead:
+
+```
+src
+│
+├── catalog
+│     metadata_catalog.py
+```
+
+Only one class is needed.
+
+---
+
+### Final Ingestion Architecture
+
+```
+                 Uploaded Files
+                        │
+                        ▼
+           Document Loader (Factory)
+                        │
+                        ▼
+               LangChain Documents
+                        │
+                        ▼
+          MetadataCatalog.register()
+                        │
+      assigns document_id & stores metadata
+                        │
+                        ▼
+                Chunking Engine
+                        │
+                        ▼
+            Inject Chunk Metadata
+            ├── document_id
+            ├── display_name
+            ├── source
+            ├── chunk_index
+            └── chunk_id
+                        │
+                        ▼
+               Indexer Service
+                ┌──────────────┐
+                ▼              ▼
+        EmbeddingService   BM25Indexer
+                ▼              ▼
+         Dense Vector Store  Sparse Index
+```
+
+---
+
+### Why Metadata Catalog comes BEFORE Chunking
+
+Originally, chunking generated metadata.
+
+However, we realized:
+
+Every chunk needs:
+
+```
+document_id
+```
+
+The Metadata Catalog is responsible for generating that.
+
+Therefore:
+
+```
+Metadata Catalog
+
+↓
+
+Chunking
+```
+
+instead of
+
+```
+Chunking
+
+↓
+
+Metadata Catalog
+```
+
+This is an important architectural decision.
+
+---
+
+### Chunk Metadata
+
+Every chunk now carries:
+
+```python
+{
+    "document_id": "...",
+    "display_name": "...",
+    "source": "...",
+    "chunk_index": ...,
+    "chunk_id": ...
+}
+```
+
+This metadata is reused throughout the entire pipeline.
+
+---
+
+### Retrieval Architecture
+
+```
+                    UI
+                     │
+                     ▼
+         Multi Select Documents
+            (display_name)
+                     │
+                     ▼
+          Selected document_ids
+                     │
+                     ▼
+                  rag.py
+                     │
+                     ▼
+            RetrievalService
+                     │
+        passes filters to retrievers
+            ┌────────┴────────┐
+            ▼                 ▼
+      DenseRetriever    SparseRetriever
+         (filters)         (filters)
+            ▼                 ▼
+         FAISS             BM25 Index
+            └────────┬────────┘
+                     ▼
+              FusionService
+                     ▼
+              Ranked Documents
+                     ▼
+           GenerationService
+                     ▼
+                 LLM Response
+```
+
+Notice:
+
+Generation Service never changes.
+
+Only Retrieval becomes filter-aware.
+
+This is exactly what good layered architecture should achieve.
+
+---
+
+### Why UI should NOT send filenames
+
+Initially, we discussed filtering by filename.
+
+Later we changed the design.
+
+The UI displays:
+
+```
+Spring Boot Guide.pdf
+```
+
+But sends:
+
+```python
+filters = {
+    "document_ids": [
+        "doc_001",
+        "doc_002"
+    ]
+}
+```
+
+Reason:
+
+Filenames are not guaranteed to be unique.
+
+Example:
+
+```
+HR/Policy.pdf
+
+Finance/Policy.pdf
+```
+
+Using filenames would introduce ambiguity.
+
+Document IDs never do.
+
+---
+
+### UI Responsibility
+
+The UI is responsible for:
+
+Displaying
+
+```
+☑ Spring Boot Guide.pdf
+☑ Docker Guide.pdf
+☐ Java Notes.pdf
+```
+
+When the user clicks Ask:
+
+```
+display_name
+
+↓
+
+document_id
+
+↓
+
+filters
+
+↓
+
+Retrieval Service
+```
+
+The backend never depends on filenames.
+
+---
+
+### Retrieval Interface
+
+Before:
+
+```python
+retrieve(query, top_k)
+```
+
+After:
+
+```python
+retrieve(
+    query,
+    top_k,
+    filters
+)
+```
+
+Both retrievers receive exactly the same filter object. This keeps RetrievalService independent of filtering implementation.
+
+---
+
+### Why Filtering belongs inside Retrievers
+
+Possible options:
+
+Option A
+
+```
+Question
+
+↓
+
+Filter
+
+↓
+
+Retriever
+```
+
+Option B
+
+```
+Question
+
+↓
+
+Retriever
+
+↓
+
+Filter
+```
+
+Option C (Chosen)
+
+```
+Retrieval Service
+
+↓
+
+DenseRetriever(filters)
+
+SparseRetriever(filters)
+```
+
+Reason:
+
+Only each retriever knows how filtering should be implemented.
+
+RetrievalService simply orchestrates.
+
+This follows SRP.
+
+---
+
+### Dynamic Filtering Groundwork
+
+PR-8 intentionally does NOT implement natural language filtering.
+
+Example:
+
+```
+Search only Spring.pdf
+```
+
+Instead, the UI sends structured filters.
+
+Later, an LLM can translate natural language into:
+
+```python
+{
+    "document_ids": [
+        "doc_001"
+    ]
+}
+```
+
+This is exactly why the roadmap says:
+
+> Self-query Preparation
+
+and not
+
+> Self-query Retrieval
+
+---
+
+### Architecture Principles Learned
+
+#### Metadata ≠ Retrieval
+
+Metadata management deserves its own layer.
+
+---
+
+#### Storage has different purposes
+
+Dense Store
+
+↓
+
+Similarity Search
+
+Sparse Store
+
+↓
+
+Keyword Search
+
+Metadata Catalog
+
+↓
+
+Corpus Management
+
+Different storage.
+
+Different responsibility.
+
+---
+
+#### UI and Backend should speak different languages
+
+UI:
+
+```
+Spring Boot Guide.pdf
+```
+
+Backend:
+
+```
+doc_001
+```
+
+This separation avoids ambiguity.
+
+---
+
+#### Stable IDs are fundamental
+
+Everything should operate using:
+
+```
+document_id
+```
+
+instead of filenames.
+
+---
+
+#### Layered Architecture
+
+UI
+
+↓
+
+RAG
+
+↓
+
+Retrieval
+
+↓
+
+Fusion
+
+↓
+
+Generation
+
+Metadata filtering extends only the Retrieval layer.
+
+Everything else remains unchanged.
+
+---
+
+### Future Possibilities
+
+The Metadata Catalog enables future features with minimal changes:
+
+- Delete documents
+- Update documents
+- Metadata filtering
+- Page filtering
+- Author filtering
+- Department filtering
+- Self-query retrieval
+- Corpus statistics
+- Knowledge base dashboard
+- Incremental indexing
+
+---
+
+### Interview Questions
+
+#### Why introduce a Metadata Catalog instead of storing everything inside the Vector Store?
+
+Vector Stores are optimized for similarity search.
+
+Metadata Catalogs are optimized for corpus management.
+
+Separating them follows the Single Responsibility Principle and keeps retrieval independent from document management.
+
+---
+
+#### Why should the UI send document IDs instead of filenames?
+
+Filenames are not guaranteed to be unique.
+
+Document IDs are stable and unique, preventing ambiguity during filtering.
+
+---
+
+#### Why does Metadata Catalog execute before Chunking?
+
+Chunking requires a stable `document_id` so every generated chunk can inherit the correct metadata.
+
+---
+
+#### Why should filtering happen inside each retriever instead of RetrievalService?
+
+Each retriever knows how filtering applies to its own storage mechanism.
+
+RetrievalService should remain an orchestrator and not contain storage-specific logic.
+
+---
+
+### Key Takeaways
+
+- Metadata filtering is fundamentally a **corpus management** problem.
+- Introduced **Metadata Catalog** as the source of truth for document metadata.
+- Distinguished **display_name** (UI) from **document_id** (backend).
+- Established a clean ingestion pipeline where metadata is assigned before chunking.
+- Extended retrieval through structured filters without modifying Generation or Fusion.
+- Designed the system to naturally support future self-query retrieval and advanced metadata-based search.
