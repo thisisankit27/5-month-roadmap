@@ -627,11 +627,16 @@ The Metadata Catalog owns only one responsibility:
 
 Responsibilities:
 
-- Register newly uploaded documents
-- Persist metadata
+- Register newly uploaded documents into the catalog
+- Persist the metadata catalog to disk
+- Load the catalog from storage
 - List available documents
-- Find document by ID
-- Delete document (future)
+- Find document metadata by document ID (future)
+- Delete document metadata (future)
+
+The Metadata Catalog does NOT generate metadata.
+
+It simply indexes and persists metadata that already exists on the loaded documents.
 
 It does NOT know:
 
@@ -642,6 +647,28 @@ It does NOT know:
 - Prompting
 
 This follows the **Single Responsibility Principle (SRP)**.
+
+---
+
+## Metadata Filtering Service
+
+Metadata Filtering is a separate responsibility from retrieval.
+
+Its job is to filter retrieved chunks based on structured metadata supplied by the UI.
+
+Current implementation supports:
+
+- document_id filtering
+
+Future versions can easily extend to:
+
+- page filtering
+- author filtering
+- department filtering
+- date filtering
+- tags
+
+Because filtering lives in one dedicated service, RetrievalService and the retrievers remain unchanged as filtering capabilities grow.
 
 ---
 
@@ -687,76 +714,64 @@ Only one class is needed.
 ### Final Ingestion Architecture
 
 ```
-                 Uploaded Files
-                        │
-                        ▼
-           Document Loader (Factory)
-                        │
-                        ▼
-               LangChain Documents
-                        │
-                        ▼
-          MetadataCatalog.register()
-                        │
-      assigns document_id & stores metadata
-                        │
-                        ▼
-                Chunking Engine
-                        │
-                        ▼
-            Inject Chunk Metadata
-            ├── document_id
-            ├── display_name
-            ├── source
-            ├── chunk_index
-            └── chunk_id
-                        │
-                        ▼
-               Indexer Service
-                ┌──────────────┐
-                ▼              ▼
-        EmbeddingService   BM25Indexer
-                ▼              ▼
-         Dense Vector Store  Sparse Index
+            Uploaded Files
+                │
+                ▼
+        Document Loader (Factory)
+                │
+                ▼
+        Assign Document Metadata
+        ├── document_id
+        └── display_name
+                │
+                ▼
+        MetadataCatalog.register()
+        (persist catalog only)
+                │
+                ▼
+            Chunking Engine
+                │
+                ▼
+        Inject Chunk Metadata
+        ├── chunk_index
+        └── chunk_id
+                │
+                ▼
+            Indexer Service
+        ┌───────────────┐
+        ▼               ▼
+        EmbeddingService  BM25Indexer
+        ▼               ▼
+        Dense Store     Sparse Store
 ```
 
 ---
 
 ### Why Metadata Catalog comes BEFORE Chunking
 
-Originally, chunking generated metadata.
+Originally we considered letting the Metadata Catalog generate document metadata.
 
-However, we realized:
+After further architectural discussion, we realized that metadata should be created as early as possible.
 
-Every chunk needs:
+The Document Loader is the first component that knows:
 
-```
-document_id
-```
+- which uploaded file produced the documents
+- the display name
+- the logical identity of the document
 
-The Metadata Catalog is responsible for generating that.
+Therefore the loader assigns:
 
-Therefore:
+- document_id
+- display_name
 
-```
-Metadata Catalog
+The Metadata Catalog simply persists that information.
 
-↓
+Chunking then inherits the document metadata and only contributes chunk-specific metadata:
 
-Chunking
-```
+- chunk_index
+- chunk_id
 
-instead of
-
-```
-Chunking
-
-↓
-
-Metadata Catalog
-```
-
-This is an important architectural decision.
+This keeps every layer responsible only for metadata it owns.
 
 ---
 
@@ -768,7 +783,6 @@ Every chunk now carries:
 {
     "document_id": "...",
     "display_name": "...",
-    "source": "...",
     "chunk_index": ...,
     "chunk_id": ...
 }
@@ -796,14 +810,15 @@ This metadata is reused throughout the entire pipeline.
                      ▼
             RetrievalService
                      │
-        passes filters to retrievers
             ┌────────┴────────┐
             ▼                 ▼
       DenseRetriever    SparseRetriever
-         (filters)         (filters)
+            |                 |
             ▼                 ▼
-         FAISS             BM25 Index
+ Raw Dense Results         Raw Sparse Results
             └────────┬────────┘
+                     ▼
+            MetadataFilteringService
                      ▼
               FusionService
                      ▼
@@ -811,7 +826,7 @@ This metadata is reused throughout the entire pipeline.
                      ▼
            GenerationService
                      ▼
-                 LLM Response
+                LLM Response
 ```
 
 Notice:
@@ -917,17 +932,18 @@ retrieve(
 )
 ```
 
-Both retrievers receive exactly the same filter object. This keeps RetrievalService independent of filtering implementation.
+The RetrievalService orchestrates retrieval but does not implement filtering itself.
+
+Instead, it delegates metadata filtering to the dedicated MetadataFilteringService before passing the filtered results to Fusion.
 
 ---
 
-### Why Filtering belongs inside Retrievers
+### Why Metadata Filtering became its own service
 
-Possible options:
+During implementation we considered three designs:
 
 Option A
 
-```
 Question
 
 ↓
@@ -937,11 +953,9 @@ Filter
 ↓
 
 Retriever
-```
 
 Option B
 
-```
 Question
 
 ↓
@@ -951,27 +965,35 @@ Retriever
 ↓
 
 Filter
-```
 
 Option C (Chosen)
 
-```
-Retrieval Service
+Dense Retriever
 
 ↓
 
-DenseRetriever(filters)
+Metadata Filtering
 
-SparseRetriever(filters)
-```
+Sparse Retriever
 
-Reason:
+↓
 
-Only each retriever knows how filtering should be implemented.
+Metadata Filtering
 
-RetrievalService simply orchestrates.
+↓
 
-This follows SRP.
+Fusion
+
+Rather than embedding filtering logic inside each retriever, we extracted a dedicated MetadataFilteringService.
+
+Benefits:
+
+- RetrievalService remains an orchestrator.
+- DenseRetriever and SparseRetriever focus only on retrieval.
+- Metadata filtering has a single implementation (DRY).
+- Future metadata filters (pages, authors, departments, tags) require changes in only one place.
+
+This follows the Single Responsibility Principle.
 
 ---
 
@@ -1097,6 +1119,18 @@ Everything else remains unchanged.
 
 ---
 
+#### Filtering is Business Logic
+
+Metadata filtering is not a storage concern.
+
+Vector Stores retrieve similar documents.
+
+Metadata Filtering decides which retrieved documents are eligible.
+
+Separating these concerns keeps storage engines independent of application rules.
+
+---
+
 ### Future Possibilities
 
 The Metadata Catalog enables future features with minimal changes:
@@ -1154,5 +1188,7 @@ RetrievalService should remain an orchestrator and not contain storage-specific 
 - Introduced **Metadata Catalog** as the source of truth for document metadata.
 - Distinguished **display_name** (UI) from **document_id** (backend).
 - Established a clean ingestion pipeline where metadata is assigned before chunking.
+- Metadata Catalog became a persistence layer for document metadata rather than a metadata generator.
 - Extended retrieval through structured filters without modifying Generation or Fusion.
+- Introduced MetadataFilteringService to centralize all metadata-based filtering and keep RetrievalService focused on orchestration.
 - Designed the system to naturally support future self-query retrieval and advanced metadata-based search.
