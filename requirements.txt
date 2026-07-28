@@ -2,3 +2,8 @@ mkdocs
 mkdocs-material
 mkdocs-awesome-pages-plugin
 pymdown-extensions
+
+# Word-map generation (tools/generate_word_frequencies.py)
+# One-time setup after installing: python -m spacy download en_core_web_sm
+spacy
+wordfreq
