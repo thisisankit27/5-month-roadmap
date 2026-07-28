@@ -650,7 +650,7 @@ This follows the **Single Responsibility Principle (SRP)**.
 
 ---
 
-## Metadata Filtering Service
+### Metadata Filtering Service
 
 Metadata Filtering is a separate responsibility from retrieval.
 
@@ -1192,3 +1192,355 @@ RetrievalService should remain an orchestrator and not contain storage-specific 
 - Extended retrieval through structured filters without modifying Generation or Fusion.
 - Introduced MetadataFilteringService to centralize all metadata-based filtering and keep RetrievalService focused on orchestration.
 - Designed the system to naturally support future self-query retrieval and advanced metadata-based search.
+
+---
+
+## PR-9 — Validation Pipeline (Guardrails)
+
+### Objective
+
+Until PR-8, our RAG pipeline focused solely on retrieving relevant information.
+
+However, production AI systems must also decide **whether a request should continue through the pipeline at all**.
+
+PR-9 introduces a **Validation Pipeline**, allowing every stage of the request lifecycle to validate its inputs and terminate processing early when necessary.
+
+Instead of treating guardrails as isolated checks, they become first-class architectural components.
+
+---
+
+### Architectural Shift
+
+Before PR-9, the request flow was:
+
+```text
+Question
+    │
+    ▼
+Retrieval
+    │
+    ▼
+Generation
+```
+
+After PR-9:
+
+```text
+Question
+    │
+    ▼
+Input Guardrails
+    │
+    ▼
+Retrieval
+    │
+    ▼
+Context Guardrails
+    │
+    ▼
+Generation
+    │
+    ▼
+Output Guardrails
+    │
+    ▼
+Response
+```
+
+The pipeline now validates requests **before**, **during**, and **after** generation.
+
+---
+
+### Design Philosophy
+
+A guardrail is **not** responsible for interacting with the user.
+
+Instead, each guardrail answers a single question:
+
+> "Should this request continue?"
+
+If the answer is **No**, the guardrail returns a structured response explaining why.
+
+If the answer is **Yes**, the pipeline proceeds normally.
+
+This keeps validation independent from the UI.
+
+---
+
+### Early Exit Pipeline
+
+Every stage has permission to terminate the request.
+
+```text
+Question
+    │
+    ▼
+Input Guardrails
+    │
+    ├── Validation Failed?
+    │        │
+    │        └── Return Response
+    │
+    ▼
+Retrieval
+    │
+    ▼
+Context Guardrails
+    │
+    ├── Validation Failed?
+    │        │
+    │        └── Return Response
+    │
+    ▼
+Generation
+    │
+    ▼
+Output Guardrails
+    │
+    ├── Validation Failed?
+    │        │
+    │        └── Return Response
+    │
+    ▼
+Final Response
+```
+
+The orchestrator (`rag.py`) simply coordinates these stages.
+
+---
+
+### Single Response Contract
+
+One important architectural decision was to **avoid multiple response types**.
+
+Instead of introducing a separate `GuardrailResult`, every stage returns the same object:
+
+```text
+GenerationResponse
+```
+
+Whether:
+
+- generation succeeds,
+- validation fails,
+- context is missing,
+
+the caller always receives a `GenerationResponse`.
+
+This keeps the API contract stable.
+
+---
+
+### GenerationResponse Evolution
+
+Originally, `GenerationResponse` only represented successful generations.
+
+PR-9 evolves it into the response object for the **entire request lifecycle**.
+
+Additional fields:
+
+- success
+- reason
+- message
+
+Example:
+
+Successful request:
+
+```text
+success = true
+answer = "..."
+```
+
+Blocked request:
+
+```text
+success = false
+reason = "EMPTY_QUERY"
+message = "Please enter a question."
+```
+
+---
+
+### Validation Layers
+
+#### Input Guardrails
+
+Executed before retrieval.
+
+Purpose:
+
+- Prevent invalid requests from entering the pipeline.
+
+Current validators:
+
+- Empty Question
+- Prompt Injection Detection
+
+Future ideas:
+
+- Maximum length
+- Language detection
+- PII detection
+- Profanity
+- Rate limiting
+
+---
+
+#### Context Guardrails
+
+Executed after retrieval.
+
+Purpose:
+
+Determine whether retrieved information is sufficient for generation.
+
+Current validators:
+
+- Empty Retrieval
+
+Future ideas:
+
+- Semantic relevance validation
+- Confidence threshold
+- Helper LLM for context verification
+
+---
+
+#### Output Guardrails
+
+Executed after generation.
+
+Purpose:
+
+Validate generated responses before presenting them to the user.
+
+Current validators:
+
+- Empty Response
+
+Future ideas:
+
+- Groundedness verification
+- Safety classification
+- Hallucination detection
+- Citation verification
+
+---
+
+### Why Separate Guardrails?
+
+Validation responsibilities naturally occur at different stages.
+
+| Stage | Responsibility |
+|---------|----------------|
+| Input | Is the question valid? |
+| Context | Is the retrieved knowledge sufficient? |
+| Output | Is the generated response acceptable? |
+
+Separating these concerns keeps every validator focused on one responsibility.
+
+---
+
+### Why Validation Happens Outside Services
+
+GenerationService is responsible for **generation only**.
+
+RetrievalService is responsible for **retrieval only**.
+
+Neither service should decide whether processing should stop.
+
+Validation belongs to dedicated guardrail components, keeping every service focused on a single responsibility.
+
+---
+
+### Orchestration Responsibility
+
+`rag.py` now acts as the orchestration layer.
+
+Responsibilities:
+
+- Run Input Guardrails
+- Coordinate Retrieval
+- Run Context Guardrails
+- Coordinate Generation
+- Run Output Guardrails
+- Return the final response
+
+Business logic remains distributed across specialized services.
+
+---
+
+### Extensibility
+
+One major goal of PR-9 was extensibility.
+
+Adding a new validator requires only:
+
+1. Implement validator.
+2. Register it in the corresponding guardrail.
+3. No changes to Retrieval or Generation.
+
+The overall pipeline remains unchanged.
+
+---
+
+### Key Learnings
+
+This PR introduced several production-oriented software engineering concepts:
+
+- Validation Pipeline
+- Early Exit Pattern
+- Stable Response Contracts
+- Separation of Concerns
+- Orchestration Layer
+- Pipeline Architecture
+- Layered Validation
+- Guardrail Design
+- Production AI Request Lifecycle
+
+---
+
+### Final Architecture
+
+```text
+                User Question
+                      │
+                      ▼
+            Input Guardrails
+         ├── Empty Query
+         └── Prompt Injection
+                      │
+                      ▼
+            Retrieval Service
+                      │
+                      ▼
+           Context Guardrails
+         ├── Empty Retrieval
+         └── Relevance (Future)
+                      │
+                      ▼
+           Generation Service
+                      │
+                      ▼
+            Output Guardrails
+         ├── Empty Response
+         ├── Safety (Future)
+         └── Groundedness (Future)
+                      │
+                      ▼
+            GenerationResponse
+                      │
+                      ▼
+                 Streamlit UI
+```
+
+---
+
+### Outcome
+
+PR-9 transformed the application from a simple RAG pipeline into a structured AI request-processing pipeline.
+
+Instead of blindly retrieving and generating, the application now validates every stage of the request lifecycle before allowing execution to continue.
+
+This architecture closely mirrors how production AI systems coordinate validation, retrieval, generation, and response handling while maintaining a clean separation of responsibilities.

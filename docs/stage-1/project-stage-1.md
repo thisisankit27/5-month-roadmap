@@ -43,7 +43,7 @@ Related theory:
 - [x] PR-03 — Chunking Engine
 - [x] PR-04 — Embedding Pipeline
 - [x] PR-05 — FAISS Vector Store
-- [ ] PR-06 — Basic Question Answering
+- [x] PR-06 — Basic Question Answering
 
 #### Outcome
 
@@ -75,9 +75,9 @@ Related Theory:
 
 #### Progress
 
-- [ ] PR-07 — Hybrid Search
-- [ ] PR-08 — Metadata Filtering
-- [ ] PR-09 — Guardrails
+- [x] PR-07 — Hybrid Search
+- [x] PR-08 — Metadata Filtering
+- [x] PR-09 — Guardrails
 
 #### Outcome
 
