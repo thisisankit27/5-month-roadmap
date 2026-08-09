@@ -2,544 +2,317 @@
 
 > These notes are not about AI or LangChain.
 >
-> They are lessons learned while designing the Knowledge Assistant project.
->
-> The goal is to learn *how experienced engineers think* before writing code.
+> They are lessons learned while designing the Knowledge Assistant project — an attempt to
+> learn *how experienced engineers think* before writing code.
+
+Week 1 builds the ingestion half of a RAG system: load, chunk, embed, and prepare for
+storage. Almost none of the difficulty turned out to be in the libraries. It was in
+answering one question over and over, at every layer:
+
+> Who owns this responsibility — and how much has to change when the requirements change?
 
 ---
 
 ## Principle 1 — Design Before Code
 
-Instead of immediately writing code, ask:
+Before writing anything, four questions:
 
 - What problem am I solving?
 - What responsibilities exist?
 - Which components should own those responsibilities?
 - Can this design scale in the future?
 
-Good software is designed first and implemented second.
+> **Engineering Principle**
+> Good software is designed first and implemented second.
 
 ---
 
-## PR-1 Discussion
+## PR-1 Discussion — Project Foundation
 
 ### Goal
 
 Create a clean project foundation.
 
-Not a RAG system.
+Not a RAG system. Not a polished SaaS. Simply a project that another engineer can clone and
+immediately understand.
 
-Not a polished SaaS.
+That is a deliberately small goal, and treating it as a real deliverable — rather than
+scaffolding to rush through — is what made every later PR cheap.
 
-Simply a project that another engineer can clone and immediately understand.
+------------------------------------------------------------------------
 
----
+### Why Separate Modules Instead of Everything in `app.py`?
 
-### Why use separate modules instead of writing everything inside `app.py`?
+**My answer at the time:** Separation of Concerns. The architecture should be plug-and-play.
+Each module exposes a contract, so implementations can change without affecting other
+modules.
 
-#### My Answer
-
-Separation of Concerns.
-
-The architecture should be plug-and-play.
-
-Each module exposes a contract, allowing implementations to change without affecting other modules.
-
-Example
-
-```
-Today
-
-FAISS
-
-↓
-
-Tomorrow
-
-Qdrant
+```text
+Today                Tomorrow
+─────                ────────
+FAISS      ──────►   Qdrant
 ```
 
-Only the implementation changes.
+Only the implementation changes. The rest of the application is unaffected.
 
-The rest of the application remains unaffected.
+**The sharper version of the same answer** — the one that belongs in an interview:
 
----
+> Each module has a single responsibility and exposes a clear contract. That allows
+> implementations to be replaced — FAISS to Qdrant — without touching the orchestration
+> layer, because the application depends on abstractions rather than concrete
+> implementations.
 
-#### Better Interview Answer
+Same idea. The second version names the mechanism instead of describing the feeling.
 
-Each module has a single responsibility and exposes a clear contract.
+------------------------------------------------------------------------
 
-This allows implementations to be replaced (e.g., FAISS → Qdrant) without affecting the orchestration layer.
+### If We Replace FAISS with Qdrant, How Many Files Change?
 
-The application depends on abstractions rather than concrete implementations.
+**My initial answer:** two files — `embeddings.py` and `vectorstore.py`.
 
----
+**The correction:** only `vectorstore.py`.
 
-### If we replace FAISS with Qdrant, how many files should change?
+The embedding model has no knowledge of where vectors are stored. Its responsibility is
+exactly one transformation:
 
-#### My Initial Answer
-
-```
-embeddings.py
-
-vectorstore.py
-```
-
----
-
-#### Discussion
-
-Actually,
-
-only
-
-```
-vectorstore.py
+```text
+Text  ──►  Embedding Vector
 ```
 
-should change.
+Storage is somebody else's problem. Once that boundary is real, swapping the vector database
+cannot reach into embedding code, because embedding code was never told the database exists.
 
-The embedding model has no knowledge of where vectors are stored.
+Including `embeddings.py` in the answer was the tell: I had assumed a coupling that the
+design did not actually require.
 
-Its responsibility is simply
+> **Engineering Principle**
+> Never let one module know unnecessary implementation details about another. The number of
+> files a change touches is a direct measurement of how well the boundaries were drawn.
 
-```
-Text
+------------------------------------------------------------------------
 
-↓
+### Why Many Small Pull Requests Instead of One Huge PR?
 
-Embedding Vector
-```
+**My answer:** easier collaboration, manageable reviews, better testing, incremental
+delivery, quicker feedback, sprint-based development.
 
-Storage is someone else's responsibility.
+**The lesson underneath it** — imagine a bug appears:
 
-This is true decoupling.
+| | 7000 changed lines | `PR-09 — Introduced Guardrails` |
+| --- | --- | --- |
+| Review | practically impossible | a single reviewable idea |
+| Rollback | reverts everything | reverts one capability |
+| Debug | which of 40 changes did it? | the surface is already named |
 
----
+> **Engineering Principle**
+> Each PR should represent one engineering milestone — not simply "more code."
 
-#### Lesson
-
-Never let one module know unnecessary implementation details about another.
-
----
-
-### Why create many small Pull Requests instead of one huge PR?
-
-#### My Answer
-
-Small PRs provide
-
-- easier collaboration
-- manageable reviews
-- better testing
-- incremental delivery
-- quicker feedback
-- sprint-based development
-
----
-
-#### Additional Lesson
-
-Imagine
-
-```
-7000 changed lines
-```
-
-versus
-
-```
-PR-09
-
-↓
-
-Introduced Guardrails
-```
-
-If a bug appears,
-
-small PRs are
-
-- easier to review
-- easier to rollback
-- easier to debug
-
----
-
-#### Lesson
-
-Each PR should represent one engineering milestone.
-
-Not simply "more code."
-
----
+------------------------------------------------------------------------
 
 ### Module Responsibilities
 
-Initial design
+The initial design:
 
-```
-loaders.py
-→ Load documents
-
-splitter.py
-→ Split documents
-
-embeddings.py
-→ Generate embeddings
-
-vectorstore.py
-→ Store and retrieve vectors
-
-rag.py
-→ Orchestrate everything
+```text
+loaders.py       →  Load documents
+splitter.py      →  Split documents
+embeddings.py    →  Generate embeddings
+vectorstore.py   →  Store and retrieve vectors
+rag.py           →  Orchestrate everything
 ```
 
----
+The discussion that followed surfaced something the file list hides: **uploading documents
+and answering questions are two completely different workflows**, and they share almost
+nothing but data types.
 
-#### Discussion
+**Workflow 1 — Knowledge Ingestion:**
 
-Uploading documents and answering questions are two completely different workflows.
-
----
-
-#### Workflow 1
-
-Knowledge Ingestion
-
-```
+```text
 PDF
-
-↓
-
+ │
+ ▼
 Loader
-
-↓
-
+ │
+ ▼
 Splitter
-
-↓
-
+ │
+ ▼
 Embeddings
-
-↓
-
+ │
+ ▼
 Vector Store
 ```
 
----
+**Workflow 2 — Question Answering:**
 
-#### Workflow 2
-
-Question Answering
-
-```
+```text
 Question
-
-↓
-
+ │
+ ▼
 Retriever
-
-↓
-
+ │
+ ▼
 Prompt
-
-↓
-
+ │
+ ▼
 LLM
-
-↓
-
+ │
+ ▼
 Answer
 ```
 
----
+Recognising this early is what later allowed indexing and retrieval to evolve on independent
+lifecycles instead of tangling.
 
-### Architecture Discussion
+------------------------------------------------------------------------
 
-#### Future Problem
+### The Extensibility Problem in `loaders.py`
 
-Today
+Today `loaders.py` supports PDF. Tomorrow it needs PDF, Word, Markdown, Website, and
+PowerPoint.
 
-```
-loaders.py
-```
+Should the code keep growing this?
 
-supports
-
-```
-PDF
-```
-
-Tomorrow
-
-- PDF
-- Word
-- Markdown
-- Website
-- PowerPoint
-
-Should we keep adding
-
-```
-if pdf
-
-elif docx
-
-elif md
-
-elif website
+```python
+if pdf:
+    ...
+elif docx:
+    ...
+elif md:
+    ...
+elif website:
+    ...
 ```
 
-?
+No. Every new format edits the same block for an unrelated reason, and the block is reachable
+from anywhere that loads a file.
 
-Probably not.
+**My initial idea:** a parent class, child classes, and Inversion of Control — with the
+frontend determining the appropriate loader and passing it to the backend.
 
----
+**The correction:** the frontend should never know backend implementation details.
 
-#### My Initial Idea
+The frontend uploads `resume.pdf`. That is the entirety of what it knows. The backend decides
+everything else:
 
-Use
-
-- Parent class
-- Child classes
-- Inversion of Control
-
-The frontend determines the appropriate loader and passes it to the backend.
-
----
-
-#### Discussion
-
-The frontend should never know backend implementation details.
-
-Instead,
-
-the frontend simply uploads
-
-```
-resume.pdf
-```
-
-The backend decides
-
-```
-Extension
-
-↓
-
+```text
+Uploaded File
+      │
+      ▼
+  Extension
+      │
+      ▼
 LoaderFactory
-
-↓
-
-PdfLoader
-
-↓
-
-load()
+      │
+      ▼
+  PdfLoader
+      │
+      ▼
+   load()
 ```
 
-The frontend only knows
+**Better design:**
 
-```
-Upload File
-```
-
-Everything else is backend responsibility.
-
----
-
-#### Better Design
-
-```
+```text
+                   Uploaded File
+                         │
+                         ▼
+                   LoaderFactory
+                         │
+                         ▼
                   DocumentLoader
                          ▲
-                         │
         ┌────────────────┼────────────────┐
-        ▼                ▼                ▼
-   PdfLoader      DocxLoader      WebLoader
-                         ▲
-                         │
-                  LoaderFactory
-                         ▲
-                         │
-                  Uploaded File
+        │                │                │
+   PdfLoader        DocxLoader        WebLoader
 ```
 
----
+The frontend knows one verb: **upload**. Everything else is backend responsibility.
 
-## Design Principles Accidentally Learned
+------------------------------------------------------------------------
 
-Without studying design patterns, this discussion naturally introduced
+### Design Principles Accidentally Learned
+
+Without setting out to study design patterns, this one discussion produced:
 
 - Separation of Concerns
 - Single Responsibility Principle
-- Dependency Inversion Thinking
+- Dependency Inversion thinking
 - Open/Closed Principle
 - Polymorphism
 - Factory Pattern (conceptually)
 
-This reinforced the idea that project-driven learning teaches design patterns naturally.
+> **Engineering Principle**
+> Don't memorize design patterns. Build enough projects and you'll rediscover them yourself.
+> Learning the official names afterwards turns memorization into recognition.
+
+------------------------------------------------------------------------
+
+### Interview Takeaways
+
+**Why use a Factory instead of writing `if extension == "pdf"` everywhere?**
+
+> A Factory centralizes object creation. Adding support for a new document type means
+> creating a new implementation and registering it, rather than modifying multiple parts of
+> the application. That is the Open/Closed Principle in practice.
+
+**Why separate modules instead of one `app.py`?**
+
+> Each module has a single responsibility and exposes a clear contract, so implementations
+> can be replaced without affecting the orchestration layer. The application depends on
+> abstractions, not concrete implementations.
+
+**Why should the frontend not choose the loader?**
+
+> Because that would make the UI depend on backend implementation details. The frontend's
+> only knowledge should be that a file was uploaded; deciding *how* to read it is a backend
+> responsibility that changes far more often.
+
+------------------------------------------------------------------------
+
+### Open Questions Carried into PR-2
+
+Three questions were left deliberately unanswered, to be reasoned about before any code was
+written:
+
+1. What methods should the parent `Loader` define — only `load()`, or more?
+2. Should `LoaderFactory` return `PdfLoader` or `Loader`? Why?
+3. When `ExcelLoader` is added tomorrow, how many existing files should require modification?
+
+If the answer to (3) is *"one registration point"* or close to it, the architecture is
+becoming extensible.
+
+------------------------------------------------------------------------
+
+### Biggest Takeaway
+
+> **"If the requirements change tomorrow, how much of my code will I need to rewrite?"**
+
+The best software is not the one that works today. The best software is the one that is
+easiest to change tomorrow.
 
 ---
-
-## Important Lesson
-
-Don't memorize design patterns. Build enough projects and you'll rediscover them yourself. Later, when learning the official pattern names, they become recognition instead of memorization.
-
----
-
-## Interview Insight
-
-Question
-
-Why use a Factory instead of writing
-
-```
-if extension == "pdf"
-```
-
-everywhere?
-
-Answer
-
-A Factory centralizes object creation.
-
-Adding support for a new document type only requires creating a new implementation and registering it with the factory, rather than modifying multiple parts of the application.
-
-This follows the Open/Closed Principle.
-
----
-
-## Homework
-
-Think about the following architecture.
-
-```
-                  Loader
-                    ▲
-      ┌─────────────┼─────────────┐
-      ▼             ▼             ▼
- PdfLoader     DocxLoader     WebLoader
-```
-
-Without writing code, answer the following questions.
-
----
-
-### Question 1
-
-What methods should the parent `Loader` define?
-
-Should it expose only
-
-```
-load()
-```
-
-or should it define additional responsibilities?
-
----
-
-### Question 2
-
-Should `LoaderFactory` return
-
-```
-PdfLoader
-```
-
-or
-
-```
-Loader
-```
-
-Why?
-
----
-
-### Question 3
-
-Tomorrow we add
-
-```
-ExcelLoader
-```
-
-How many existing files should require modification?
-
-If your answer is
-
-```
-One registration point
-```
-
-or close to it,
-
-your architecture is becoming extensible.
-
----
-
-## Biggest Takeaway
-
-Before writing code, always ask
-
-> "If the requirements change tomorrow, how much of my code will I need to rewrite?"
-
-The best software is not the one that works today.
-
-The best software is the one that is easiest to change tomorrow.
 
 ## PR-2 Discussion — Designing an Extensible Loader Architecture
 
-> These answers are based on engineering principles such as **SOLID**, **Separation of Concerns**, and **Open/Closed Principle**, rather than simply making the code "work."
+> These answers come from engineering principles — **SOLID**, Separation of Concerns, the
+> Open/Closed Principle — rather than from what makes the code "work."
 
----
+### Question 1 — What Methods Should the Parent `Loader` Define?
 
-### Question 1
-
-#### What methods should the parent `Loader` define?
-
-Should it expose only
-
-```text
-load()
-```
-
-or should it define additional responsibilities?
-
----
-
-##### Initial Thought
-
-At first glance, it seems that every loader only needs one method:
+**Initial thought:** every loader only needs one method.
 
 ```python
 load()
 ```
 
-After all,
+After all, a PDF loader loads PDFs, a Word loader loads Word documents, a Markdown loader
+loads Markdown files — and all of them ultimately return LangChain `Document` objects.
 
-- PDF Loader loads PDFs
-- Word Loader loads Word documents
-- Markdown Loader loads Markdown files
+**That instinct was correct, and it is worth knowing *why* it was correct.**
 
-All of them ultimately return LangChain `Document` objects.
-
----
-
-##### Better Design
-
-The parent class should define **only the behavior that every loader is guaranteed to support**.
-
-For our current project, that is simply
-
-```python
-load()
-```
-
-Example
+The parent class should define **only the behaviour every loader is guaranteed to support**.
+For this project, that is exactly `load()`.
 
 ```text
 Loader
@@ -552,85 +325,44 @@ Loader
 └── WebLoader
 ```
 
-Every child loader knows **how** to load its own document type.
+Every child knows **how** to load its own document type. The parent guarantees only **that**
+it can be loaded.
 
----
+#### Why Not Define More Methods?
 
-##### Why not define more methods?
-
-Suppose we also define
+Suppose the parent also declared:
 
 ```python
 validate()
-
 extract_images()
-
 extract_tables()
 ```
 
-Immediately we have a problem.
+The problem appears immediately:
 
-A WebLoader may not support image extraction.
+| Loader | The method that makes no sense |
+| --- | --- |
+| `WebLoader` | `extract_images()` — may not support image extraction |
+| `MarkdownLoader` | `extract_tables()` — may contain no tables |
+| `TxtLoader` | `validate()` — may require no validation |
 
-A MarkdownLoader may not contain tables.
+Every child is now forced to implement methods that are meaningless for it — usually as an
+empty body or a raised exception, both of which are lies about the contract.
 
-A TXTLoader may not require validation.
+That is a violation of the **Interface Segregation Principle**.
 
-Now every child class is forced to implement methods that don't make sense.
+> **Engineering Principle**
+> A parent class should define only the common contract shared by every implementation. If
+> every loader can guarantee exactly one operation, then one operation is enough — don't
+> force child classes to implement methods they don't need.
 
-This violates the **Interface Segregation Principle (ISP)**.
+------------------------------------------------------------------------
 
----
+### Question 2 — Should `LoaderFactory` Return `PdfLoader` or `Loader`?
 
-##### Engineering Principle
+The Factory should always return the **parent type**, `Loader`.
 
-A parent class should define only the **common contract** shared by every implementation.
-
-If every loader can only guarantee one operation,
-
-then one operation is enough.
-
-> **Don't force child classes to implement methods they don't need.**
-
----
-
-### Question 2
-
-#### What Should `LoaderFactory` return
-
-```text
-PdfLoader
-```
-
-or
-
-```text
-Loader
-```
-
-Why?
-
----
-
-##### Correct Answer
-
-The Factory should always return
-
-```text
-Loader
-```
-
-(the parent type)
-
-not
-
-```text
-PdfLoader
-```
-
----
-
-##### ❌ Returning Concrete Classes
+#### ❌ Returning Concrete Classes
 
 ```text
                 Uploaded File
@@ -640,13 +372,13 @@ PdfLoader
                       │
           ┌───────────┴───────────┐
           ▼                       ▼
-    PdfLoader               DocxLoader
+     PdfLoader               DocxLoader
           │                       │
           ▼                       ▼
-      Client Code          Client Code
+     Client Code            Client Code
 ```
 
-Now the client needs to know:
+The client now has to know every implementation:
 
 ```python
 if isinstance(loader, PdfLoader):
@@ -656,13 +388,10 @@ elif isinstance(loader, DocxLoader):
     loader.load()
 ```
 
-The client is tightly coupled to every implementation.
+Note how absurd this is: **both branches call the same method.** The type check buys nothing
+and costs a client edit for every new loader ever added.
 
-Every time a new loader is introduced, the client code must change.
-
----
-
-##### ✅ Returning the Parent Type
+#### ✔ Returning the Parent Type
 
 ```text
                 Uploaded File
@@ -671,7 +400,7 @@ Every time a new loader is introduced, the client code must change.
               LoaderFactory.create()
                       │
                       ▼
-                 Loader (Reference)
+                 Loader (reference)
                       │
       ┌───────────────┼────────────────┐
       ▼               ▼                ▼
@@ -680,685 +409,368 @@ Every time a new loader is introduced, the client code must change.
       └───────────────┴────────────────┘
                       │
                       ▼
-                  load()
+                   load()
 ```
 
-The client never knows the actual implementation.
-
-It simply writes
+The client never learns the actual implementation:
 
 ```python
 loader = LoaderFactory.create(file)
 documents = loader.load()
 ```
 
-without knowing the concrete implementation.
+#### Why This Matters
 
----
+Suppose `PdfLoader` is replaced by, or joined by, `BetterPdfLoader`.
 
-##### Why is this important?
+| Does it change? | Answer |
+| --- | --- |
+| Client code | No |
+| The Factory | Only enough to know about the new loader — or not even that, with auto-registration |
 
-Suppose tomorrow we replace/add
+This is what **programming to abstractions rather than implementations** actually buys.
 
-```text
-PdfLoader
-```
+> **Engineering Principle**
+> Depend on abstractions, not concrete classes. That is the core of the **Dependency
+> Inversion Principle**.
 
-with
+------------------------------------------------------------------------
 
-```text
-BetterPdfLoader
-```
+### Question 3 — Adding `ExcelLoader`: How Many Files Should Change?
 
-Does the client code change?
+As close to **one** as possible.
 
-```
-No.
-```
+If adding a new document type required editing `loader.py`, `rag.py`, `app.py`,
+`splitter.py`, and `embeddings.py`, the architecture would be tightly coupled — and the
+coupling would compound with every format added.
 
-Does the Factory change?
+Instead, adding a feature should be:
 
-```
-Only enough to know about the new loader
-(or not even that if loaders are auto-registered).
-```
+1. create a new implementation (`ExcelLoader`)
+2. register it with the Factory
 
-This is why we **program to abstractions, not implementations.**
-
----
-
-##### Engineering Principle
-
-Depend on **abstractions**, not concrete classes.
-
-This is one of the core ideas behind the **Dependency Inversion Principle (DIP)**.
-
----
-
-### Question 3
-
-Tomorrow we add
+Everything else continues working.
 
 ```text
-ExcelLoader
+Before                     Tomorrow
+──────                     ────────
+Loader                     Loader
+│                          │
+├── PdfLoader              ├── PdfLoader
+├── DocxLoader             ├── DocxLoader
+└── MarkdownLoader         ├── MarkdownLoader
+                           └── ExcelLoader
 ```
 
-How many existing files should require modification?
+#### Why This Is Valuable
 
----
+Imagine six months out, with the product supporting PDF, Word, Markdown, PowerPoint, Excel,
+CSV, HTML, and websites. If each of those eight formats had required changing five existing
+files, the project would already be unmaintainable.
 
-#### Ideal Answer
-
-As close to **one file** as possible.
-
----
-
-#### Why?
-
-If adding a new document type requires modifying
-
-- loader.py
-- rag.py
-- app.py
-- splitter.py
-- embeddings.py
-
-then the architecture is tightly coupled.
-
-Instead,
-
-adding a new feature should mostly involve
-
-1. Creating a new implementation
-
-```
-ExcelLoader
-```
-
-2. Registering it with the Factory
-
-Everything else should continue working.
-
----
-
-#### Ideal Workflow
-
-Before
-
-```text
-Loader
-│
-├── PdfLoader
-├── DocxLoader
-└── MarkdownLoader
-```
-
-Tomorrow
-
-```text
-Loader
-│
-├── PdfLoader
-├── DocxLoader
-├── MarkdownLoader
-└── ExcelLoader
-```
-
-The rest of the system remains untouched.
-
----
-
-#### Why is this valuable?
-
-Imagine six months from now.
-
-The product supports
-
-- PDF
-- Word
-- Markdown
-- PowerPoint
-- Excel
-- CSV
-- HTML
-- Websites
-
-If every new loader requires changing five existing files, the project becomes difficult to maintain.
-
-Instead,
-
-each new feature should be
+Instead, every new format should be:
 
 > **Add a class. Register it. Done.**
 
----
-
-#### Engineering Principle
-
-!!! tip ""This follows the **Open/Closed Principle**"
-    > Software entities should be **open for extension** but **closed for modification**.
-
-We extend the application by adding new classes, not by constantly modifying existing ones.
-
----
+> **Engineering Principle — Open/Closed**
+> Software entities should be **open for extension** but **closed for modification**. We
+> extend the application by adding new classes, not by constantly modifying existing ones.
 
 #### Visual Architecture
 
 ```text
-                   Loader (Abstract)
-
-                         ▲
-                         │
-      ┌──────────────────┼──────────────────┐
-      ▼                  ▼                  ▼
- PdfLoader         DocxLoader        MarkdownLoader
-                                              │
-                                              ▼
-                                        ExcelLoader
-                                              ▲
-                                              │
-                                       LoaderFactory
-                                              ▲
-                                              │
-                                       Uploaded File
+                 Uploaded File
+                       │
+                       ▼
+                 LoaderFactory
+                       │
+                       ▼
+                Loader (abstract)
+                       ▲
+       ┌───────────┬───┴───────┬───────────┐
+       │           │           │           │
+  PdfLoader   DocxLoader  MarkdownLoader  ExcelLoader
 ```
 
-The application communicates only with the parent type. Every concrete loader is hidden behind the Factory.
+The application communicates only with the parent type. Every concrete loader is hidden
+behind the Factory.
 
----
+------------------------------------------------------------------------
 
 ### Interview Takeaways
 
-#### Why should the parent `Loader` expose only `load()`?
+**Why should the parent `Loader` expose only `load()`?**
 
-Because it should define only the behavior common to every loader. Adding unnecessary methods forces child classes to implement responsibilities they may not support, violating the Interface Segregation Principle.
+> Because it should define only the behaviour common to every loader. Adding extra methods
+> forces child classes to implement responsibilities they may not support — a `WebLoader`
+> with `extract_images()`, a `MarkdownLoader` with `extract_tables()` — which violates the
+> Interface Segregation Principle.
 
----
+**Why should the Factory return `Loader` instead of `PdfLoader`?**
 
-#### Why should the Factory return `Loader` instead of `PdfLoader`?
+> Because client code should depend on abstractions rather than concrete implementations.
+> Returning the concrete type pushes `isinstance` checks into the client and forces a client
+> edit for every new loader, even though every branch calls the same method.
 
-Because client code should depend on abstractions rather than concrete implementations. This makes the system loosely coupled and easier to extend.
+**How many files should change when adding `ExcelLoader`?**
 
----
+> One new class, plus one registration in the Factory — or even zero registration with
+> auto-discovery. Everything else should continue working without modification.
 
-#### How many files should change when adding `ExcelLoader`?
+------------------------------------------------------------------------
 
-Ideally:
+### Biggest Takeaway
 
-- One new class (`ExcelLoader`)
-- One registration/update in the Factory (or even zero if using auto-discovery)
-
-Everything else should continue working without modification.
-
----
-
-## Biggest Lesson
-
-The goal of good architecture is **not** to reduce the amount of code.
-
-The goal is to reduce the amount of **existing code that must change** when requirements evolve.
+> **The goal of good architecture is not to reduce the amount of code.**
+> It is to reduce the amount of *existing* code that must change when requirements evolve.
 
 The easiest code to maintain is the code you don't have to touch.
 
-## PR-3 Discussion - Chunking Engine
-
-!!! note
-    > These notes capture the engineering discussions, design decisions, interview answers, and architectural reasoning behind the Chunking Engine implementation.
-
 ---
 
-### Project Pipeline Evolution
+## PR-3 Discussion — Chunking Engine
 
-#### PR-2
+> The engineering discussions, design decisions, interview answers, and architectural
+> reasoning behind the Chunking Engine.
+
+### Pipeline Evolution
+
+**After PR-2:**
 
 ```text
 PDF
-    │
-    ▼
+ │
+ ▼
 Loader
-    │
-    ▼
+ │
+ ▼
 List<Document>
 ```
 
----
-
-#### PR-3
+**After PR-3:**
 
 ```text
 PDF
-    │
-    ▼
+ │
+ ▼
 Loader
-    │
-    ▼
+ │
+ ▼
 List<Document>
-    │
-    ▼
+ │
+ ▼
 Chunking Engine
-    │
-    ▼
+ │
+ ▼
 List<Document> (Chunks)
 ```
 
-Notice something important:
+Notice what did **not** happen: the pipeline grew, and `app.py` was never modified.
+`ingestion.py` absorbs each additional stage.
 
-The pipeline grows. We **never modify app.py**. Instead, `ingestion.py` orchestrates additional stages over time.
+------------------------------------------------------------------------
 
----
+### Should `app.py` Know About Chunking?
 
-### Should app.py know about Chunking?
-
-No. `app.py` should remain completely unaware of the internal pipeline.
-
-Instead it should simply call
+No. `app.py` should remain completely unaware of the internal pipeline. It calls one thing:
 
 ```python
 documents = ingest_documents(uploaded_files)
 ```
 
-Today
+Meanwhile the pipeline behind that call keeps growing:
 
 ```text
-Load
+Today        Tomorrow        Later           Eventually
+─────        ────────        ─────           ──────────
+Load         Load            Load            Load
+             ↓               ↓               ↓
+             Chunk           Chunk           Chunk
+                             ↓               ↓
+                             Embed           Embed
+                                             ↓
+                                             Vector Store
 ```
 
-Tomorrow
+**The caller never changes.** That is one of the biggest responsibilities of an orchestration
+layer.
+
+------------------------------------------------------------------------
+
+### Why Have an Ingestion Pipeline at All?
+
+Think of it as a workflow orchestrator with a very clear division of knowledge:
 
 ```text
-Load
-↓
-
-Chunk
+app.py           "I have files."
+   │
+   ▼
+ingestion.py     "I know exactly how to process them."
 ```
 
-Later
+The orchestration layer coordinates all stages while keeping the UI completely decoupled from
+implementation details.
+
+------------------------------------------------------------------------
+
+### Should Chunking Use the Strategy Pattern?
+
+**Initial thought:** yes — introduce an abstract `Splitter` so different splitting algorithms
+could be swapped without affecting the rest of the application.
 
 ```text
-Load
-↓
-
-Chunk
-↓
-
-Embed
-```
-
-Eventually
-
-```text
-Load
-↓
-
-Chunk
-↓
-
-Embed
-↓
-
-Vector Store
-```
-
-The caller never changes. This is one of the biggest responsibilities of an orchestration layer.
-
----
-
-### Why have an Ingestion Pipeline?
-
-Think of it as a workflow orchestrator.
-
-```text
-app.py
-
-↓
-
-"I have files."
-
-↓
-
-ingestion.py
-
-↓
-
-"I know exactly how to process them."
-```
-
-The orchestration layer coordinates all stages while keeping the UI completely decoupled from implementation details.
-
----
-
-### Should we use Strategy Pattern for Chunking?
-
-#### Initial Thought
-
-We considered creating
-
-```text
-Splitter (Abstract)
-
+Splitter (abstract)
         ▲
-
+        │
 RecursiveSplitter
 ```
 
-so different splitting algorithms could be swapped without affecting the rest of the application.
+Possible future strategies: `RecursiveCharacterTextSplitter`, `MarkdownHeaderTextSplitter`,
+`PythonCodeTextSplitter`, `HTMLHeaderTextSplitter`, `SemanticChunker`. All share the same
+goal — `List<Document> → Chunks` — and differ only in algorithm. Textbook Strategy Pattern.
 
-Possible future strategies
+**Why not do it today?** The project supports exactly one splitter,
+`RecursiveCharacterTextSplitter`. There is no runtime decision to make. Adding the
+abstraction now would add complexity without solving an existing problem.
 
-- RecursiveCharacterTextSplitter
-- MarkdownHeaderTextSplitter
-- PythonCodeTextSplitter
-- HTMLHeaderTextSplitter
-- SemanticChunker
-
-All share the same goal:
+So PR-3 kept it direct:
 
 ```text
-List<Document>
-
-↓
-
-Chunks
+splitter.py  →  split_documents(documents)
 ```
 
-Only the algorithm changes. This is the Strategy Pattern.
+Later, when multiple chunking algorithms genuinely exist, refactor to Strategy.
 
----
+> **Engineering Principle**
+> Design for extension. Implement for today's requirements.
 
-#### Why NOT use Strategy today?
-
-Current project supports only
-
-```text
-RecursiveCharacterTextSplitter
-```
-
-There is no runtime decision. Adding an abstraction now would increase complexity without solving an existing problem.
-
-Instead we follow
-
-> Design for extension.
-> Implement for today's requirements.
-
-Current implementation
-
-```text
-splitter.py
-
-↓
-
-split_documents(documents)
-```
-
-Later, if multiple chunking algorithms are supported, refactor to Strategy Pattern.
-
----
+*(This deferral did not last long — see the next section, where a real requirement made
+Strategy necessary within the same PR.)*
 
 #### Factory vs Strategy
 
-Factory answers
+| | Question it answers | Example |
+| --- | --- | --- |
+| **Factory** | *Which object should I create?* | `UploadedFile → LoaderFactory → PdfLoader` |
+| **Strategy** | *Which algorithm should I execute?* | `Documents → Chunk Strategy → Recursive Splitter` |
 
-> Which object should I create?
+Factory creates objects. Strategy chooses algorithms.
 
-Example
+------------------------------------------------------------------------
 
-```text
-UploadedFile
+### Why `RecursiveCharacterTextSplitter`?
 
-↓
-
-LoaderFactory
-
-↓
-
-PdfLoader
-```
-
-Strategy answers
-
-> Which algorithm should I execute?
-
-Example
+Many developers assume it simply splits by character count. It actually tries to preserve
+**semantic boundaries**, falling back through separators in order:
 
 ```text
-Documents
-
-↓
-
-Chunk Strategy
-
-↓
-
-Recursive Splitter
-```
-
-Factory creates objects.
-Strategy chooses algorithms.
-
----
-
-### Why RecursiveCharacterTextSplitter?
-
-Many developers think it simply splits by character count. It actually tries to preserve semantic boundaries.
-
-Order of separators
-
-```text
-Paragraph (\n\n)
-
-↓
-
-Line (\n)
-
-↓
-
-Space (" ")
-
-↓
-
+Paragraph  (\n\n)
+    │  fails to fit?
+    ▼
+Line       (\n)
+    │  fails to fit?
+    ▼
+Space      (" ")
+    │  fails to fit?
+    ▼
 Character
 ```
 
-Only when larger boundaries fail does it move to smaller ones. Therefore it minimizes broken sentences and incomplete thoughts.
+It only moves to a smaller boundary when a larger one fails, which minimises broken sentences
+and incomplete thoughts.
 
----
+------------------------------------------------------------------------
 
-### Why not split by Pages?
+### Why Not Split by Pages?
 
-Initially page splitting appears attractive because pages usually contain related information. However pages are presentation boundaries, not semantic boundaries.
-
-Example
+Page splitting looks attractive because a page usually contains related information. But
+**pages are presentation boundaries, not semantic boundaries**.
 
 ```text
-Page 17
-
-Spring Boot provides dependency...
-
--------------------------
-
-Page 18
-
-...Injection and IoC...
+Page 17                             Page 18
+────────────────────────────        ────────────────────────────
+Spring Boot provides dependency ──► ...Injection and IoC...
 ```
 
-Now one logical concept spans two pages.
+One logical concept now spans two chunks, and retrieval quality drops. The problem cuts both
+ways:
 
-Retrieval quality decreases.
-
-Similarly
-
-- One page may contain many unrelated topics.
-- One topic may span multiple pages.
+- one page may contain many unrelated topics
+- one topic may span multiple pages
 
 Therefore page boundaries should not define chunk boundaries.
 
----
+------------------------------------------------------------------------
 
-### Why Chunk at all?
+### Why Chunk at All?
 
-Embedding the entire document creates a single semantic representation.
+Embedding an entire document produces a single semantic representation of the whole thing.
 
-Problems
+| Problem | Consequence |
+| --- | --- |
+| Retrieval becomes coarse | you get "the document", not "the answer" |
+| Embedding is an average of meanings | specific topics get washed out |
+| Context window may overflow | the whole document must be sent to the LLM |
+| Higher token cost | you pay for text the question never needed |
+| Lower answer precision | the model has to find the answer inside noise |
 
-- Retrieval becomes coarse.
-- Embedding represents an "average meaning" of the document.
-- Context window may overflow.
-- Entire document must be sent to the LLM.
-- Higher token cost.
-- Lower answer precision.
+Chunking replaces *retrieve the entire book* with *retrieve the relevant sections*, producing
+smaller prompts, lower token usage, better retrieval precision, and more focused answers.
 
-Chunking solves this.
-
-Instead of retrieving
-
-```text
-Entire Book
-```
-
-RAG retrieves only
-
-```text
-Relevant Sections
-```
-
-This produces
-
-- Smaller prompts
-- Lower token usage
-- Better retrieval precision
-- More focused answers
-
----
+------------------------------------------------------------------------
 
 ### Why Overlap?
 
-Imagine
+Consider a concept that lands exactly on a boundary:
 
 ```text
-Chunk 1
-
-Spring Boot provides dependency
-
------------------------------
-
-Chunk 2
-
-injection, allowing loose coupling...
+Chunk 1                              Chunk 2
+──────────────────────────────       ──────────────────────────────
+Spring Boot provides dependency      injection, allowing loose coupling...
 ```
 
-The concept
+"Dependency injection" has been split in half. Similarity search may fail to match either
+chunk, because neither one contains the concept.
+
+Overlap duplicates a small portion of adjacent chunks:
 
 ```text
-dependency injection
+Chunk 1                              Chunk 2
+──────────────────────────────       ──────────────────────────────
+...dependency injection              dependency injection allows...
 ```
 
-has been split. Similarity search may fail.
+Now either chunk carries enough context to be retrieved. Overlap preserves semantic
+continuity across chunk boundaries.
 
-Overlap duplicates a small portion of adjacent chunks.
+------------------------------------------------------------------------
 
-Example
+### How Should Chunk Size Be Chosen?
 
-```text
-Chunk 1
+There is no universally correct value. Chunk size is a balance of competing pressures:
 
-...dependency injection
+| Factor | Pushes chunks smaller | Pushes chunks larger |
+| --- | --- | --- |
+| LLM context window | smaller prompts fit more chunks | — |
+| Retrieval precision | more precise matches | — |
+| Context preservation | — | fewer truncated ideas |
+| Token cost | lower prompt cost | — |
+| Embedding model | some models favour short text | others preserve context better when longer |
 
-Chunk 2
+And the documents themselves change the answer entirely:
 
-dependency injection allows...
-```
+| Document type | Split after |
+| --- | --- |
+| Python code | classes, methods, functions — never inside a method |
+| Markdown | headings, sections |
+| HTML | DOM sections, headers |
+| Plain text | `RecursiveCharacterTextSplitter` is generally suitable |
 
-Now either chunk contains sufficient context. Overlap preserves semantic continuity across chunk boundaries.
+------------------------------------------------------------------------
 
----
+### Metadata Survives Chunking
 
-### How should Chunk Size be chosen?
-
-There is no universally correct value. Chunk size depends on several tradeoffs.
-
-#### LLM Context Window
-
-Smaller chunks reduce prompt size.
-
----
-
-#### Embedding Model
-
-Different embedding models capture semantic meaning differently. Some perform better with shorter chunks. Others preserve context better with larger chunks.
-
----
-
-#### Retrieval Precision
-
-Large chunks
-
-- More context
-- Less precise retrieval
-
-Small chunks
-
-- Better retrieval precision
-- Risk of insufficient context
-
----
-
-#### Token Cost
-
-Large chunks
-
-- Higher token usage
-
-Small chunks
-
-- Lower prompt cost
-
----
-
-#### Nature of Documents
-
-Different document types require different chunking strategies.
-
-Examples
-
-##### Python Code
-
-Split after
-
-- classes
-- methods
-- functions
-
-Not inside methods.
-
----
-
-##### Markdown
-
-Split after
-
-- headings
-- sections
-
----
-
-##### HTML
-
-Split after
-
-- DOM sections
-- headers
-
----
-
-##### Plain Text
-
-RecursiveCharacterTextSplitter is generally suitable.
-
----
-
-### Metadata after Chunking
-
-Before chunking
+**Before chunking:**
 
 ```python
 Document(
@@ -1370,7 +782,7 @@ Document(
 )
 ```
 
-After chunking
+**After chunking:**
 
 ```python
 Document(
@@ -1382,15 +794,10 @@ Document(
 )
 ```
 
-The **Document type does not change**. Only `page_content` becomes smaller. Metadata is inherited.
+The **`Document` type does not change**. Only `page_content` becomes smaller; metadata is
+inherited.
 
----
-
-### Can Metadata become richer?
-
-Yes. Additional metadata may be introduced.
-
-Example
+Metadata can also become richer over time:
 
 ```json
 {
@@ -1402,1740 +809,923 @@ Example
 }
 ```
 
-This enables
+which is what later enables filtering, tracing, debugging, citation, and advanced retrieval.
 
-- filtering
-- tracing
-- debugging
-- citation
-- advanced retrieval
+------------------------------------------------------------------------
 
----
+### The Pipeline Carries One Type
 
-### Important Design Principle
-
-Throughout the pipeline we continue passing
-
-```python
-Document
-```
-
-Objects. 
-
-Only the contents evolve.
+Throughout the pipeline the same `Document` object flows forward. Only its contents evolve:
 
 ```text
 Document
-
-↓
-
+   │
+   ▼
 Loaded Document
-
-↓
-
+   │
+   ▼
 Chunked Document
-
-↓
-
+   │
+   ▼
 Embedded Document
-
-↓
-
+   │
+   ▼
 Stored Vector
 ```
 
-The type remains consistent. This greatly simplifies downstream pipeline stages.
+Keeping the type consistent is what makes each downstream stage simple — no stage has to
+translate between shapes before it can do its own work.
 
----
+> **Engineering Principle**
+> A stable data contract between pipeline stages is worth more than a perfectly specialised
+> type at each stage.
 
-### Interview Questions
+------------------------------------------------------------------------
 
-#### Why RecursiveCharacterTextSplitter?
+### Interview Takeaways
 
-It attempts to preserve semantic boundaries by recursively trying progressively smaller separators before finally splitting by character count. This creates more meaningful chunks than fixed-size character splitting.
+**Why `RecursiveCharacterTextSplitter`?**
 
----
+> It preserves semantic boundaries by recursively trying progressively smaller separators —
+> paragraph, line, space, character — before falling back to raw character splitting. That
+> produces more meaningful chunks than fixed-size splitting.
 
-#### Why overlap?
+**Why overlap?**
 
-Overlap ensures important context near chunk boundaries is duplicated into adjacent chunks, preventing semantic information from being lost during retrieval.
+> Overlap duplicates context near chunk boundaries into adjacent chunks, so a concept split
+> across a boundary still appears whole in at least one chunk and remains retrievable.
 
----
+**How do you choose chunk size?**
 
-#### How do you choose chunk size?
+> It is a tradeoff between retrieval precision, context preservation, embedding quality, the
+> LLM context window, token cost, and the structure of the underlying documents. There is no
+> universally optimal value.
 
-Chunk size is a tradeoff between retrieval precision, context preservation, embedding quality, LLM context window, token cost, and the structure of the underlying documents.
+**Why not chunk by page?**
 
-!!! success "Note"
-    There is no universally optimal value.
+> Pages are presentation boundaries, not semantic ones. A single topic can span two pages and
+> a single page can hold several unrelated topics, so page boundaries systematically cut
+> concepts in half.
 
----
+------------------------------------------------------------------------
 
 ### Biggest Takeaway
 
-A production RAG pipeline is not about LangChain APIs. It is about information flowing through multiple well-separated stages.
+> **A production RAG pipeline is not about LangChain APIs. It is about information flowing
+> through well-separated stages.**
 
 ```text
-Upload
-
-↓
-
-Load
-
-↓
-
-Chunk
-
-↓
-
-Embed
-
-↓
-
-Store
-
-↓
-
-Retrieve
-
-↓
-
-Generate
+Upload  →  Load  →  Chunk  →  Embed  →  Store  →  Retrieve  →  Generate
 ```
 
-Each stage should have a single responsibility and expose a stable interface to the next stage.
-
-### Design Patterns in our RAG Project (PR-3)
-
-> These notes capture the engineering decisions behind introducing the **Strategy Pattern** and **Flyweight Pattern** while building our RAG ingestion pipeline.
-
-The goal is **not** to memorize design patterns. The goal is to understand **why** they naturally emerge while solving software engineering problems.
+Each stage should have a single responsibility and expose a stable interface to the next.
 
 ---
 
-#### Project Evolution
+## PR-3 Deep Dive — Design Patterns That Emerged
 
-##### PR-1
+> The engineering decisions behind introducing the **Strategy Pattern** and **Flyweight
+> Pattern** in the ingestion pipeline.
+>
+> The goal is **not** to memorize design patterns. It is to understand **why** they naturally
+> emerge while solving software engineering problems.
 
-```text
-User
-
-↓
-
-UI
-```
-
----
-
-##### PR-2
+### Project Evolution
 
 ```text
-User
-
-↓
-
-Upload
-
-↓
-
-Loader Factory
-
-↓
-
-PdfLoader
-
-↓
-
-Documents
+PR-1                PR-2                        PR-3
+────                ────                        ────
+User                User                        User
+ │                   │                           │
+ ▼                   ▼                           ▼
+UI                 Upload                      Upload
+                     │                           │
+                     ▼                           ▼
+              Loader Factory                  Loader
+                     │                           │
+                     ▼                           ▼
+                 PdfLoader                   Documents
+                     │                           │
+                     ▼                           ▼
+                 Documents                  Chunk Service
+                                                 │
+                                                 ▼
+                                            Chunk Strategy
+                                                 │
+                                                 ▼
+                                              Chunks
 ```
 
-Introduced:
+| PR | Introduced |
+| --- | --- |
+| PR-2 | Factory Pattern, Polymorphism, Abstract Classes |
+| PR-3 | Strategy Pattern, Flyweight Pattern, better Separation of Concerns |
 
-- Factory Pattern
-- Polymorphism
-- Abstract Classes
+------------------------------------------------------------------------
 
----
+### Why the Strategy Pattern Became Necessary
 
-##### PR-3
+Initially the project supported only PDFs, and one splitter was enough:
 
 ```text
-User
-
-↓
-
-Upload
-
-↓
-
-Loader
-
-↓
-
-Documents
-
-↓
-
-Chunk Service
-
-↓
-
-Chunk Strategy
-
-↓
-
-Chunks
+PDF  →  RecursiveCharacterTextSplitter
 ```
 
-Introduced:
+Then the requirement changed: the application should support PDF, Markdown, Python, HTML, and
+TXT. Should every file use `RecursiveCharacterTextSplitter`?
 
-- Strategy Pattern
-- Flyweight Pattern
-- Better Separation of Concerns
+No. **Different document types require different chunking algorithms.**
 
----
+| Document type | Preferred chunking |
+| --- | --- |
+| PDF | `RecursiveCharacterTextSplitter` |
+| Markdown | `MarkdownHeaderTextSplitter` |
+| Python | `PythonCodeTextSplitter` |
+| HTML | `HTMLHeaderTextSplitter` |
 
-#### Why did we need Strategy Pattern?
+The **behaviour varies at runtime**. That is exactly the condition Strategy solves — and it is
+exactly the condition that was *absent* when Strategy was deferred earlier in this PR. The
+pattern did not become correct because it is famous; it became correct because a real
+requirement made behaviour vary.
 
-Initially our project only supported PDFs.
+------------------------------------------------------------------------
 
-```text
-PDF
+### The Strategy Pattern
 
-↓
-
-RecursiveCharacterTextSplitter
-```
-
-Everything seemed simple.
-
----
-
-Then requirements changed.
-
-The application should support
-
-```text
-PDF
-
-Markdown
-
-Python
-
-HTML
-
-TXT
-```
-
-Question:
-
-Should every file use
-
-```text
-RecursiveCharacterTextSplitter
-```
-
-?
-
-Answer:
-
-No.
-
-Different document types require different chunking algorithms.
-
-Examples
-
-| Document Type | Preferred Chunking |
-|---------------|--------------------|
-| PDF | RecursiveCharacterTextSplitter |
-| Markdown | MarkdownHeaderTextSplitter |
-| Python | PythonCodeTextSplitter |
-| HTML | HTMLHeaderTextSplitter |
-
-The **behavior varies**. This is exactly what Strategy Pattern solves.
-
----
-
-#### Strategy Pattern
-
-Instead of writing
+Instead of scattering this through the project:
 
 ```python
 if extension == ".pdf":
     ...
-
 elif extension == ".py":
     ...
-
 elif extension == ".md":
     ...
 ```
 
-throughout the project, we encapsulate each algorithm inside its own class.
+each algorithm is encapsulated in its own class behind one interface:
 
 ```text
-                 Strategy (Abstract)
-
-                        ▲
-
-      ┌─────────────────┼─────────────────┐
-
-      │                 │                 │
-
-      ▼                 ▼                 ▼
-
-RecursiveStrategy  PythonStrategy  MarkdownStrategy
+                 Strategy (abstract)
+                         ▲
+      ┌──────────────────┼──────────────────┐
+      │                  │                  │
+RecursiveStrategy  PythonStrategy   MarkdownStrategy
 ```
 
-Every strategy exposes exactly the same interface.
+Every strategy exposes exactly the same method:
 
 ```python
 chunk(document)
 ```
 
-The caller never knows which implementation is executed.
+The caller never knows which implementation runs.
 
----
-
-#### Why is this better?
-
-Without Strategy
+**Without Strategy**, every new algorithm modifies existing code:
 
 ```text
 Chunk Service
-
-↓
-
-if PDF
-
-↓
-
-Recursive
-
-↓
-
-else if Python
-
-↓
-
-Python Splitter
-
-↓
-
-else if Markdown
+     │
+     ├── if PDF        →  Recursive
+     ├── else if .py   →  Python Splitter
+     └── else if .md   →  ...
 ```
 
-Every new algorithm modifies existing code.
-
----
-
-With Strategy
+**With Strategy**, the Chunk Service never changes:
 
 ```text
 Chunk Service
-
-↓
-
+     │
+     ▼
 Strategy Factory
-
-↓
-
+     │
+     ▼
 Correct Strategy
-
-↓
-
+     │
+     ▼
 chunk(document)
 ```
 
-The Chunk Service never changes.
+------------------------------------------------------------------------
 
----
+### Factory and Strategy Solve Different Problems
 
-#### Factory vs Strategy
+This project uses **both**, and confusing them is a common interview failure.
 
-This project uses **both**. They solve different problems.
+| | Question | Responsible for | Example |
+| --- | --- | --- | --- |
+| **Factory** | Which object should I create? | object creation | `Uploaded File → LoaderFactory → PdfLoader` |
+| **Strategy** | Which algorithm should execute? | behaviour | `Document → StrategyFactory → RecursiveChunkStrategy → chunk()` |
 
----
-
-##### Factory
-
-Question:
-
-> Which object should I create?
-
-Example
-
-```text
-Uploaded File
-
-↓
-
-LoaderFactory
-
-↓
-
-PdfLoader
-```
-
-Factory is responsible for object creation.
-
----
-
-##### Strategy
-
-Question:
-
-> Which algorithm should execute?
-
-Example
-
-```text
-Document
-
-↓
-
-StrategyFactory
-
-↓
-
-RecursiveChunkStrategy
-
-↓
-
-chunk(document)
-```
-
-Strategy is responsible for behavior.
-
----
-
-#### They work together
-
-Our architecture
+They compose naturally:
 
 ```text
 Chunk Service
-
-↓
-
-Strategy Factory
-
-↓
-
-Strategy
-
-↓
-
-LangChain
+     │
+     ▼
+Strategy Factory      ← chooses the appropriate strategy
+     │
+     ▼
+Strategy              ← executes the algorithm
+     │
+     ▼
+LangChain Splitters
 ```
 
-The factory chooses the appropriate strategy.
-The strategy executes the algorithm.
+------------------------------------------------------------------------
 
----
+### Responsibilities
 
-#### Chunk Service
+**Chunk Service** owns orchestration only:
 
-Responsibility
+| Owns | Explicitly does NOT own |
+| --- | --- |
+| iterating over `Document`s | knowing chunking algorithms |
+| asking the Factory for the right strategy | performing splitting |
+| aggregating chunks | inspecting file types |
 
-- Iterate over Documents
-- Ask Factory for appropriate strategy
-- Aggregate chunks
-
-It should **never**
-
-- know chunking algorithms
-- perform splitting
-- inspect file types
-
-Its only job is orchestration.
-
----
-
-#### Strategy Factory
-
-Responsibility
-
-Given
-
-```python
-Document
-```
-
-Return
-
-```python
-Correct Chunk Strategy
-```
-
-Example
+**Strategy Factory** owns one mapping: given a `Document`, return the correct chunk strategy.
 
 ```text
-.pdf
-
-↓
-
-RecursiveChunkStrategy
-
-----------------------
-
-.py
-
-↓
-
-PythonChunkStrategy
-
-----------------------
-
-.md
-
-↓
-
-RecursiveChunkStrategy
+.pdf  →  RecursiveChunkStrategy
+.py   →  PythonChunkStrategy
+.md   →  RecursiveChunkStrategy
 ```
 
-Notice
+Note the third row. **Multiple document types may reuse the same strategy** — the factory
+maps to *algorithms*, not to document types. Those are different things, and conflating them
+would create a strategy class per extension for no reason.
 
-Multiple document types may reuse the same strategy. The factory chooses algorithms, not document types.
+------------------------------------------------------------------------
 
----
+### Why Choose the Strategy Per Document?
 
-#### Why choose strategy per Document?
-
-Suppose user uploads
+A user may upload:
 
 ```text
 resume.pdf
-
 main.py
-
 README.md
 ```
 
-Every document requires a different chunking algorithm.
-
-Therefore
+in a single batch. Each needs a different chunking algorithm.
 
 ```text
 ChunkService
-
-↓
-
+     │
+     ▼
 for each Document
-
-↓
-
+     │
+     ▼
 StrategyFactory
-
-↓
-
+     │
+     ▼
 Correct Strategy
 ```
 
-If we selected strategy only once,
+If the strategy were selected once per upload batch, mixed uploads would be impossible.
 
-mixed uploads would become impossible.
+> **Engineering Principle**
+> Choose the strategy at the **smallest unit where behaviour actually varies**. Here that
+> unit is one `Document`, not one upload.
 
----
+------------------------------------------------------------------------
 
-#### Why use split_documents() instead of split_text()?
+### Why `split_documents()` Instead of `split_text()`?
 
-Initially
+The first instinct was:
 
 ```python
 split_text(document.page_content)
 ```
 
-was considered.
-
-Problem
-
-Metadata would be lost.
-
-Instead
+**Problem:** metadata would be lost. `split_text` takes a string and returns strings — the
+`Document` wrapper, and everything it carried, is discarded at the boundary.
 
 ```python
-split_documents([document])
+split_documents([document])   # returns List[Document]
 ```
 
-returns
+Each chunk inherits its parent's metadata automatically:
 
 ```python
-List[Document]
+# Before
+Document(page_content="...",          metadata={"source": "spring.pdf", "page": 7})
+
+# After chunking
+Document(page_content="Smaller chunk", metadata={"source": "spring.pdf", "page": 7})
 ```
 
-Each chunk inherits
+That metadata is what later makes traceability, filtering, and citation possible. Reaching
+for `page_content` would have silently thrown it away at the very first stage.
 
-```python
-metadata
-```
+------------------------------------------------------------------------
 
-Example
+### The Flyweight Pattern
 
-Before
-
-```python
-Document(
-    page_content="...",
-    metadata={
-        "source":"spring.pdf",
-        "page":7
-    }
-)
-```
-
-After chunking
-
-```python
-Document(
-    page_content="Smaller chunk",
-    metadata={
-        "source":"spring.pdf",
-        "page":7
-    }
-)
-```
-
-Metadata survives automatically.
-
----
-
-#### Flyweight Pattern
-
-After Strategy was implemented,
-
-we noticed
-
-```python
-StrategyFactory.create(document)
-```
-
-created
-
-```python
-RecursiveChunkStrategy()
-```
-
-for every document.
-
-Example
+Once Strategy was implemented, a second observation followed: `StrategyFactory.create()` was
+constructing a fresh object for every single document.
 
 ```text
-Document 1
-
-↓
-
-RecursiveChunkStrategy()
-
-Document 2
-
-↓
-
-RecursiveChunkStrategy()
-
-Document 3
-
-↓
-
-RecursiveChunkStrategy()
+Document 1  →  RecursiveChunkStrategy()
+Document 2  →  RecursiveChunkStrategy()
+Document 3  →  RecursiveChunkStrategy()
 ```
 
-This is unnecessary. The strategy stores no state.
+That is unnecessary, because **the strategy stores no state**.
 
----
-
-#### Flyweight Solution
-
-The Factory owns reusable strategy instances.
+**Flyweight solution** — the Factory owns reusable instances and hands out the same object:
 
 ```text
 StrategyFactory
-
 │
-
-├── RecursiveChunkStrategy
-
+├── RecursiveChunkStrategy    ← one instance, shared
 ├── PythonChunkStrategy
-
 └── MarkdownChunkStrategy
 ```
 
-Whenever requested
+#### Why It Works Here
 
-```text
-PDF
-
-↓
-
-same RecursiveChunkStrategy object
-```
-
-Multiple documents share *one* strategy object.
-
----
-
-#### Why Flyweight works
-
-Our Strategy stores no mutable state.
+The strategy takes everything it needs as an argument:
 
 ```python
-chunk(document)
+chunk(document)        # not  self.document
 ```
 
-instead of
+With no mutable instance state, the same object can safely process PDF A, then PDF B, then
+PDF C — including concurrently.
 
-```python
-self.document
-```
+#### When Flyweight Would *Not* Work
 
-Therefore
-
-the same object can safely process
-
-```text
-PDF A
-
-↓
-
-PDF B
-
-↓
-
-PDF C
-```
-
----
-
-#### When would Flyweight NOT work?
-
-Suppose Strategy stores
+Suppose the strategy stored configuration:
 
 ```python
 self.chunk_size = 500
 ```
 
-and another request changes it to
+and another request changed it to `1000`. Every user now shares one mutable object, and
+behaviour becomes non-deterministic in a way that is extremely hard to reproduce.
 
-```python
-1000
-```
+> **Engineering Principle**
+> Flyweight requires shared objects to be effectively immutable or stateless. Sharing a
+> stateful object is not an optimisation; it is a race condition.
 
-Now, all users share the same mutable object. Unexpected behaviour appears. Flyweight requires shared objects to remain effectively immutable or stateless.
+#### Why Implement It Anyway?
 
----
+Honestly: in production this is probably unnecessary. Creating one strategy object is
+extremely cheap, and the memory saved is negligible.
 
-#### Why we still implemented Flyweight
+This project is primarily for learning, and implementing Flyweight taught object sharing,
+stateless service design, object lifecycle, and memory optimisation patterns — plus the far
+more valuable inverse lesson above about when sharing becomes dangerous.
 
-Production?
-Probably unnecessary. Creating one Strategy object is extremely cheap.
+------------------------------------------------------------------------
 
-However, this project is primarily for learning.
-Implementing Flyweight helped understand
-- object sharing
-- stateless services
-- object lifecycle
-- memory optimisation patterns
+### Future Improvement
 
----
-
-#### Future Improvement
-
-Currently
+The extension-to-strategy mapping is currently hardcoded:
 
 ```text
-.pdf
-
-↓
-
-Recursive Strategy
+.pdf  →  Recursive Strategy
 ```
 
-is hardcoded.
-
-Future
+It could instead be configuration:
 
 ```yaml
 chunking:
-
   pdf: recursive
-
   md: recursive
-
   py: python
-
   html: html
 ```
 
-The Factory could read configuration instead of hardcoding mappings. No source code changes required.
+The Factory would read the mapping rather than hardcode it, and supporting a new file type
+would require no source code change at all.
 
----
+------------------------------------------------------------------------
 
-### Design Principles Learned
+### Design Principles Applied
 
-#### Single Responsibility Principle
+| Principle | How it shows up here |
+| --- | --- |
+| **Single Responsibility** | Chunk Service orchestrates, Strategy chunks, Factory creates strategies — one reason to change each |
+| **Open/Closed** | Adding `SemanticChunkStrategy` means one new class plus a Factory entry; existing strategies are untouched |
+| **Dependency Inversion** | Chunk Service depends on `Strategy`, never on `RecursiveChunkStrategy` |
 
-Chunk Service orchestrates.
-Strategy chunks.
-Factory creates strategies.
-Every class has one reason to change.
-
----
-
-#### Open/Closed Principle
-
-Adding
-
-```text
-SemanticChunkStrategy
-```
-
-requires
-
-- creating one new class
-- modifying only the Factory
-
-Existing strategies remain untouched.
-
----
-
-#### Dependency Inversion
-
-Chunk Service depends on
-
-```python
-Strategy
-```
-
-not
-
-```python
-RecursiveChunkStrategy
-```
-
-Concrete implementations remain hidden.
-
----
+------------------------------------------------------------------------
 
 ### Final Architecture
 
 ```text
-                 Upload
-
-                    │
-
-                    ▼
-
-          Loader Factory
-
-                    │
-
-                    ▼
-
-               Documents
-
-                    │
-
-                    ▼
-
-             Chunk Service
-
-                    │
-
-                    ▼
-
-          Strategy Factory
-
-                    │
-
-      ┌─────────────┴─────────────┐
-
-      ▼                           ▼
-
-RecursiveChunkStrategy    PythonChunkStrategy
-
-      │                           │
-
-      └─────────────┬─────────────┘
-
-                    ▼
-
-             LangChain Splitters
-
-                    ▼
-
-                 Chunks
+                     Upload
+                        │
+                        ▼
+                 Loader Factory
+                        │
+                        ▼
+                    Documents
+                        │
+                        ▼
+                  Chunk Service
+                        │
+                        ▼
+                 Strategy Factory
+                        │
+          ┌─────────────┴─────────────┐
+          ▼                           ▼
+RecursiveChunkStrategy      PythonChunkStrategy
+          │                           │
+          └─────────────┬─────────────┘
+                        ▼
+                LangChain Splitters
+                        │
+                        ▼
+                     Chunks
 ```
 
+------------------------------------------------------------------------
+
+### Engineering Lessons
+
+1. **Factory creates objects. Strategy encapsulates algorithms. Flyweight reuses stateless
+   objects.** Three patterns, three distinct problems.
+2. **Services orchestrate workflows** — and orchestrators should not contain the logic they
+   orchestrate.
+3. **The pipeline keeps carrying `Document` objects.** A stable type between stages is a
+   design decision, not an accident.
+4. **Metadata should never be discarded.** `split_text` versus `split_documents` is a
+   one-word choice that determines whether citation is possible later.
+5. **Choose the strategy at the smallest unit where behaviour varies** — per `Document`, not
+   per upload.
+6. **Flyweight requires statelessness.** Sharing a mutable object trades allocation cost for
+   correctness.
+7. **Patterns should be introduced when a requirement makes behaviour vary** — which is why
+   Strategy was correctly deferred earlier in this same PR and correctly adopted later.
+
+------------------------------------------------------------------------
+
+### Interview Takeaways
+
+**Why did you introduce the Strategy Pattern?**
+
+> Different document types require different chunking algorithms. Strategy encapsulates each
+> algorithm behind a common interface so the Chunk Service stays independent of any
+> implementation, and adding an algorithm doesn't edit the service.
+
+**Why use a Factory *with* Strategy?**
+
+> They answer different questions. The Factory selects the appropriate strategy based on
+> document metadata; the Strategy performs the chunking. Factory chooses **which object**,
+> Strategy defines **what behaviour**.
+
+**Why process one `Document` at a time?**
+
+> Because a single upload can mix PDF, Markdown, and Python files, each needing a different
+> algorithm. Selecting the strategy per document is what makes mixed uploads work at all.
+
+**Why `split_documents()` rather than `split_text()`?**
+
+> `split_text` returns plain strings and drops the `Document` wrapper, discarding metadata.
+> `split_documents` preserves LangChain `Document` objects with their metadata intact, which
+> is what enables traceability, filtering, and downstream retrieval.
+
+**Why implement Flyweight?**
+
+> Chunking strategies are stateless, so a single shared instance is safe and avoids
+> unnecessary object creation. In this project the optimisation is primarily educational —
+> the more useful lesson is the constraint: the moment a strategy held mutable state, sharing
+> it would become a bug.
+
+------------------------------------------------------------------------
+
+### Biggest Takeaway
+
+> **Design patterns should never be introduced because they are famous. They should emerge
+> naturally when solving real software engineering problems.**
+
+In this project: Factory solved object creation, Strategy solved algorithm variation, and
+Flyweight solved object reuse. Each one arrived *after* the problem it answers.
+
 ---
-
-### Biggest Takeaways
-
-- Factory creates objects.
-- Strategy encapsulates algorithms.
-- Flyweight reuses stateless objects.
-- Services orchestrate workflows.
-- The pipeline continues carrying `Document` objects.
-- Metadata should never be discarded.
-- Choose the strategy at the **smallest unit where behaviour varies**.
-- Design patterns are not interview topics—they naturally emerge while solving engineering problems.
-
----
-
-### Interview Questions
-
-#### Why did you introduce Strategy Pattern?
-
-Different document types require different chunking algorithms. Strategy encapsulates each algorithm behind a common interface, allowing the Chunk Service to remain independent of implementation details.
-
----
-
-#### Why use a Factory with Strategy?
-
-The Factory selects the appropriate strategy based on document metadata. The Strategy performs the chunking algorithm. Factory chooses **which object**, Strategy defines **what behaviour**.
-
----
-
-#### Why process one Document at a time?
-
-Different uploaded documents may require different chunking strategies. Selecting the strategy per Document allows mixed uploads (PDF, Markdown, Python) to be handled correctly.
-
----
-
-#### Why use split_documents()?
-
-It preserves LangChain `Document` objects along with metadata, enabling traceability, filtering, and downstream retrieval.
-
----
-
-#### Why implement Flyweight?
-
-Chunking strategies are stateless. Reusing a single strategy instance avoids unnecessary object creation and demonstrates efficient object sharing, although the optimization is primarily educational in this project.
-
----
-
-### Biggest Engineering Lesson
-
-Design patterns should never be introduced because they are famous. They should emerge naturally when solving real software engineering problems.
-
-In this project:
-- Factory solved object creation.
-- Strategy solved algorithm variation.
-- Flyweight solved object reuse.
 
 ## PR-4 Discussion — Embedding Pipeline & Designing for PR-5
 
-> These notes capture the engineering decisions behind designing the Embedding Pipeline and how it naturally connects to the upcoming Vector Database layer.
+> The objective is **not** simply generating embeddings. It is understanding **how
+> responsibilities are distributed across services** in a scalable RAG architecture.
 
-The objective is **not** simply generating embeddings. The objective is understanding **how responsibilities are distributed across services** in a scalable RAG architecture.
+### Where the Pipeline Stands
 
----
-
-### Current Architecture
-
-After PR-3, the pipeline looks like:
+**After PR-3:**
 
 ```text
-Upload
-
-↓
-
-Loader Factory
-
-↓
-
-Documents
-
-↓
-
-Chunk Service
-
-↓
-
-Chunks (List<Document>)
+Upload → Loader Factory → Documents → Chunk Service → Chunks (List<Document>)
 ```
 
-PR-4 extends it to:
+**After PR-4:**
 
 ```text
-Upload
-
-↓
-
-Loader Factory
-
-↓
-
-Documents
-
-↓
-
-Chunk Service
-
-↓
-
-Chunks
-
-↓
-
-Embedding Service
-
-↓
-
-Embeddings
+Upload → Loader Factory → Documents → Chunk Service → Chunks → Embedding Service → Embeddings
 ```
 
-Notice that we still haven't introduced the Vector Database. Embeddings exist **before** they are stored.
+Notice what is still missing: the Vector Database. **Embeddings exist before they are
+stored**, and keeping those two facts separate is the entire subject of this PR.
 
----
+------------------------------------------------------------------------
 
-### Why EmbeddingService?
+### Why an `EmbeddingService` at All?
 
-Question:
-
-Should `ingestion.py` directly call the embedding model?
-
-Example
+Should `ingestion.py` simply call the model directly?
 
 ```python
 embedding_model.embed_documents(...)
 ```
 
-Answer
-
-No.
-
-`ingestion.py` is an orchestration layer. It should coordinate the workflow but never know implementation details.
-
-Its responsibility is simply
+No. `ingestion.py` is an **orchestration layer**. It coordinates the workflow and must never
+know implementation details. Its knowledge is limited to the sequence:
 
 ```text
-Load
-
-↓
-
-Chunk
-
-↓
-
-Embed
-
-↓
-
-Store
-
-↓
-
-Retrieve
+Load  →  Chunk  →  Embed  →  Store  →  Retrieve
 ```
 
-This keeps the application extensible and follows the Single Responsibility Principle.
+Putting the model call inside it would mean that changing embedding providers edits the
+orchestrator — a component with no stake in that decision.
 
----
-
-### Responsibility of EmbeddingService
-
-EmbeddingService is responsible for
+**`EmbeddingService` owns:**
 
 - selecting the embedding model
 - generating embeddings
-- batching requests (future)
+- batching requests *(future)*
 - measuring embedding performance
 - hiding LangChain implementation details
 
-It should **not**
+**It must not know about:** vector databases, FAISS, retrieval, or the UI.
 
-- know about Vector Databases
-- know about FAISS
-- know about retrieval
-- know about UI
-
-Its only job is
+Its entire job is one transformation:
 
 ```text
-Text
-
-↓
-
-Vectors
+Text  ──►  Vectors
 ```
 
----
+------------------------------------------------------------------------
 
-### Should Strategy Pattern be used?
+### Should the Strategy Pattern Be Used Here?
 
-Initially the answer seems yes because embedding models can vary.
+At first glance yes, because embedding models genuinely vary:
 
-Examples
+| Model | Dimensions |
+| --- | --- |
+| `BAAI/bge-small-en-v1.5` | 384 |
+| OpenAI `text-embedding-3-small` | 1536 |
+| Nomic Embed | 768 |
 
-```text
-BAAI/bge-small-en-v1.5
+Different models, different dimensions, different retrieval quality.
 
-↓
+**But today the application supports exactly one model.** There is no runtime decision, so
+Strategy would be abstraction without a problem — the same conclusion reached (and initially
+reached) for chunking in PR-3.
 
-384 dimensions
+> **Engineering Principle**
+> Design for extension. Implement for today's requirements.
 
--------------------------
+#### When Strategy Would Become Justified
 
-OpenAI text-embedding-3-small
+Suppose premium users get OpenAI embeddings and free users get HuggingFace embeddings. Now
+behaviour varies at runtime and Strategy emerges naturally.
 
-↓
+The important detail is **what** varies:
 
-1536 dimensions
+| | Variation axis |
+| --- | --- |
+| Chunking (PR-3) | Document Type |
+| Embedding (hypothetical) | User Tier |
 
--------------------------
+This is a key architectural insight: **always identify what actually varies before
+introducing Strategy.** Two Strategy implementations in the same codebase can key off
+completely different things, and getting the axis wrong produces an abstraction that fits
+nothing.
 
-Nomic Embed
+#### Why a Factory Is Also Unnecessary Here
 
-↓
+During loading, different document types required different loader **objects**, so the
+Factory answered "which object should I create?"
 
-768 dimensions
-```
+During embedding, every input is already a `Document`. There is no object creation decision
+to make, so a Factory would add a layer with nothing to decide.
 
-Different models.
-Different dimensions.
-Different retrieval quality.
+------------------------------------------------------------------------
 
-However
+### The Service Contract
 
-today, our application supports exactly one model.
+| | Input | Output |
+| --- | --- | --- |
+| `ChunkService` | `List[Document]` | `List[Document]` |
+| `EmbeddingService` | `List[Document]` | `List[List[float]]` |
+| `VectorStore` | `documents`, `embeddings` | *storage* |
 
-Introducing Strategy now would create unnecessary abstraction.
+Every service owns exactly one transformation, and the responsibility of `EmbeddingService`
+ends the moment vectors are produced.
 
-!!!success "Engineering lesson"
-    > Design for extension.
-    >
-    > Implement for today's requirements.
+#### Why Not Return Vector Objects?
 
-Therefore
-
-PR-4 intentionally keeps
-
-```text
-Embedding Service
-
-↓
-
-Embedding Model
-```
-
-without introducing Strategy.
-
----
-
-### When Strategy becomes useful
-
-Suppose
-
-Premium users
-
-↓
-
-OpenAI Embeddings
-
-Free users
-
-↓
-
-HuggingFace Embeddings
-
-Now
-
-behavior varies.
-
-At this point, Strategy Pattern naturally emerges.
-
-The variation is
-
-```text
-User Tier
-```
-
-not
-
-```text
-Document Type
-```
-
-This is a key architectural insight. Always identify **what actually varies** before introducing Strategy.
-
----
-
-### Why Factory is unnecessary here
-
-During loading, different document types required different loader objects.
-
-Factory solved
-
-```text
-Which object should I create?
-```
-
-During embedding, every document is already represented as
+A richer return type was considered:
 
 ```python
-Document
-```
-
-No object creation decision exists.
-
-Therefore
-
-Factory provides little value here.
-
----
-
-### Service Contract
-
-Question
-
-What should EmbeddingService accept?
-
-Answer
-
-```python
-List[Document]
-```
-
-Question
-
-What should it return?
-
-EmbeddingService returns only
-
-```python
-List[List[float]]
-```
-
-Its responsibility ends once vectors are produced.
-
----
-
-### Why not return Vector Objects?
-
-Suppose EmbeddingService returned
-
-```python
-EmbeddingResult
-
-{
-
-document,
-
-chunk,
-
-metadata,
-
-embedding
-
+EmbeddingResult {
+    document,
+    chunk,
+    metadata,
+    embedding
 }
 ```
 
-Question
+It is a reasonable-looking design, so the deciding question is: **who actually needs this
+structure?**
 
-Who actually needs this structure?
+Only the Vector Database. Which means `EmbeddingService` would be assembling a shape for a
+component it is not supposed to know exists — doing work that belongs elsewhere and acquiring
+a dependency it was specifically designed to avoid.
 
-Answer
+------------------------------------------------------------------------
 
-Only the Vector Database.
+### How Documents and Embeddings Stay Associated
 
-Therefore
+If `EmbeddingService` returns only vectors, how does the application know which embedding
+belongs to which `Document`?
 
-EmbeddingService would be performing work that belongs elsewhere.
-
-This violates proper responsibility allocation.
-
----
-
-### Service Responsibilities
-
-ChunkService
-
-Input
-
-```python
-List[Document]
-```
-
-Output
-
-```python
-List[Document]
-```
-
-EmbeddingService
-
-Input
-
-```python
-List[Document]
-```
-
-Output
-
-```python
-List[List[float]]
-```
-
-VectorStore
-
-Input
-
-```python
-documents,
-embeddings
-```
-
-Output
-
-*Storage*
-
-Every service owns exactly one transformation.
-
----
-
-### Relationship between Documents and Embeddings
-
-Question
-
-If EmbeddingService returns only vectors, how does the application know which embedding belongs to which Document?
-
-Answer
-
-Ordering.
-
-Example
-
-Documents
+**Ordering.**
 
 ```text
-Chunk1
-
-Chunk2
-
-Chunk3
+Documents        Embeddings
+─────────        ──────────
+Chunk1     ───►  Vector1
+Chunk2     ───►  Vector2
+Chunk3     ───►  Vector3
 ```
 
-Embeddings
+Both lists preserve the same order, so the *n*th embedding always corresponds to the *n*th
+document. The relationship is maintained without an intermediate object.
 
-```text
-Vector1
-
-Vector2
-
-Vector3
-```
-
-Both lists preserve the same order.
-
-Therefore
-
-```text
-Chunk2
-
-↓
-
-Vector2
-```
-
-The relationship is naturally maintained.
-
----
-
-### Where should mapping occur?
-
-One proposal was introducing
+The mapping then happens where the knowledge is needed — inside `VectorStore`:
 
 ```python
-EmbeddingResult
-```
+store(documents, embeddings)
 
-to combine
-
-- Document
-- Metadata
-- Chunk
-- Embedding
-
-Although reasonable, only one component actually requires this information.
-
-The Vector Database.
-
-Therefore, the mapping responsibility belongs to
-
-```text
-VectorStore
-```
-
-rather than EmbeddingService.
-
----
-
-### Why VectorStore should perform mapping
-
-VectorStore receives
-
-```python
-documents
-```
-
-and
-
-```python
-embeddings
-```
-
-Example
-
-```python
-store(
-    documents,
-    embeddings
-)
-```
-
-Internally
-
-```python
-for document, embedding in zip(
-    documents,
-    embeddings
-):
-```
-
-Store them together. This keeps EmbeddingService completely independent of storage implementation.
-
----
-
-#### Why use zip()?
-
-Python provides
-
-```python
-zip()
-```
-
-which iterates over two collections simultaneously.
-
-Example
-
-```python
+# internally
 for document, embedding in zip(documents, embeddings):
+    ...
 ```
 
-Each embedding automatically corresponds to its respective Document. No intermediate DTO is required.
+`zip()` iterates two collections simultaneously, pairing each document with its embedding. No
+DTO is required, and `EmbeddingService` stays completely independent of storage.
 
----
+> **Engineering Principle — Information Expert (GRASP)**
+> Give a responsibility to the component that already possesses the knowledge required to
+> carry it out. The component that owns storage should be the one that combines documents
+> with their embeddings.
 
-### Why doesn't EmbeddingService know FAISS?
+------------------------------------------------------------------------
 
-EmbeddingService should not know
+### Why `EmbeddingService` Must Not Know FAISS
 
-- FAISS
-- Chroma
-- Pinecone
-- Qdrant
-
-It simply converts
+`EmbeddingService` should know nothing about FAISS, Chroma, Pinecone, or Qdrant. It converts:
 
 ```text
-Chunk
-
-↓
-
-Vector
+Chunk  ──►  Vector
 ```
 
-Storage concerns belong exclusively to the Vector Database layer.
+Storage concerns belong exclusively to the Vector Database layer. This is the same boundary
+identified back in PR-1, when the question "how many files change when FAISS becomes Qdrant?"
+had the answer **one**. That answer only stays true if this boundary is never crossed.
 
----
+#### Does the Vector Database Determine Dimensions?
 
-### Does the Vector Database determine dimensions?
-
-Embedding models determine vector dimensionality.
-
-Examples
+No. **The embedding model determines dimensionality:**
 
 ```text
-BAAI
-
-↓
-
-384
-
-------------------
-
-OpenAI
-
-↓
-
-1536
-
-------------------
-
-Nomic
-
-↓
-
-768
+BAAI    →  384
+OpenAI  →  1536
+Nomic   →  768
 ```
 
-The Vector Database simply validates that every inserted vector has the expected dimension. It does not choose it.
+The Vector Database merely **validates** that every inserted vector has the expected
+dimension. It does not choose it.
 
-!!!alert "Rule"
-    > One Vector Database index should contain vectors generated by a single embedding model (or models with the same output dimensionality and representation).
+> **Rule**
+> One Vector Database index should contain vectors generated by a single embedding model — or
+> by models with the same output dimensionality and representation.
 
----
+------------------------------------------------------------------------
 
-### Why don't we directly embed PDFs?
+### Why Not Embed PDFs Directly?
 
-Embedding models operate on `text` not `binary document` formats.
-
-Therefore, the pipeline becomes
+Embedding models operate on **text**, not on binary document formats. Hence the pipeline:
 
 ```text
-PDF
-
-↓
-
-Loader
-
-↓
-
-Text
-
-↓
-
-Chunking
-
-↓
-
-Embeddings
+PDF  →  Loader  →  Text  →  Chunking  →  Embeddings
 ```
 
-Chunking is essential because embedding an entire document would
+Chunking is not an optional optimisation in that chain. Embedding an entire document would
+produce generic embeddings, reduce retrieval precision, increase token usage, waste context
+window, and reduce answer quality. Only semantically relevant chunks should ever reach the
+LLM.
 
-- produce generic embeddings
-- reduce retrieval precision
-- increase token usage
-- waste context window
-- reduce answer quality
+------------------------------------------------------------------------
 
-Instead, only semantically relevant chunks are retrieved during RAG.
-
----
-
-### Future Pipeline (PR-5)
-
-After EmbeddingService
-
-the architecture becomes
+### The Pipeline After PR-5
 
 ```text
 Chunks
-
-↓
-
+   │
+   ▼
 Embedding Service
-
-↓
-
+   │
+   ▼
 Embeddings
-
-↓
-
+   │
+   ▼
 Vector Store
-
-↓
-
+   │
+   ▼
 Similarity Search
-
-↓
-
+   │
+   ▼
 Retrieved Chunks
-
-↓
-
+   │
+   ▼
 LLM
 ```
 
-Notice, EmbeddingService finishes before retrieval begins.
+`EmbeddingService` finishes before retrieval begins — and it has no idea retrieval exists.
 
----
-
-### Information Expert Principle
-
-A major design discussion occurred around who should combine Documents and Embeddings.
-
-Conclusion: The component that owns storage should combine them.
-
-This follows the GRASP principle Information Expert.
-
-Give responsibility to the component that possesses the required knowledge.
-
----
-
-### Final Architecture
+**Full ingestion + query architecture:**
 
 ```text
-Upload
-
-↓
-
-Loader Factory
-
-↓
-
-Documents
-
-↓
-
-Chunk Service
-
-↓
-
-Chunks
-
-↓
-
-Embedding Service
-
-↓
-
-Embeddings
-
-↓
-
-Vector Store
-
-↓
-
-Retriever
-
-↓
-
-LLM
+Upload  →  Loader Factory  →  Documents  →  Chunk Service  →  Chunks
+                                                                │
+                                                                ▼
+                                                       Embedding Service
+                                                                │
+                                                                ▼
+                                                           Embeddings
+                                                                │
+                                                                ▼
+                                                          Vector Store
+                                                                │
+                                                                ▼
+                                                            Retriever
+                                                                │
+                                                                ▼
+                                                               LLM
 ```
 
----
+------------------------------------------------------------------------
 
-### Design Principles Learned
+### Rejected Alternatives
 
-#### Single Responsibility
+| Alternative | Why rejected |
+| --- | --- |
+| `ingestion.py` calls the embedding model directly | Orchestration would own an implementation detail; changing providers would edit the orchestrator |
+| `EmbeddingService` returns an `EmbeddingResult` DTO | Only the Vector Database needs that shape; building it means doing another component's work |
+| Strategy Pattern for embedding models | Only one model exists today — abstraction without a runtime decision |
+| Factory for embedding models | Every input is already a `Document`; there is no object-creation decision to make |
+| `EmbeddingService` writes to the vector store | Generation and storage are independent responsibilities; coupling them blocks swapping the database |
 
-Each service performs one transformation.
+------------------------------------------------------------------------
 
----
+### Design Principles Applied
 
-#### Separation of Concerns
+| Principle | How it shows up here |
+| --- | --- |
+| **Single Responsibility** | Each service performs exactly one transformation |
+| **Separation of Concerns** | Embedding generation stays independent of storage |
+| **Open/Closed** | New embedding models can be introduced without changing orchestration |
+| **Information Expert (GRASP)** | The component that owns storage owns the document↔embedding mapping |
 
-Embedding generation remains independent from storage.
+------------------------------------------------------------------------
 
----
+### Future Improvement
 
-#### Open/Closed Principle
-
-New embedding models can later be introduced without changing orchestration.
-
----
-
-#### Information Expert (GRASP)
-
-Responsibilities belong to the component that owns the required knowledge.
-
----
-
-### Future Improvements
-
-When multiple embedding providers are supported
-
-introduce
-
-```text
-Embedding Strategy
-```
-
-Example
+When multiple embedding providers genuinely exist, the abstraction earns its place:
 
 ```text
 Embedding Service
-
-↓
-
+        │
+        ▼
 Embedding Strategy
-
-↓
-
-OpenAI Strategy
-
-↓
-
-HuggingFace Strategy
-
-↓
-
-Nomic Strategy
+        │
+   ┌────┴────────────────┬──────────────┐
+   ▼                     ▼              ▼
+OpenAI Strategy   HuggingFace     Nomic Strategy
 ```
 
 Only then does Strategy become justified.
 
----
+------------------------------------------------------------------------
 
-### Interview Questions
+### Interview Takeaways
 
-#### Why introduce EmbeddingService?
+**Why introduce an `EmbeddingService`?**
 
-To isolate embedding logic from orchestration, making the application extensible while hiding implementation details.
+> To isolate embedding logic from orchestration. It keeps the application extensible and
+> hides LangChain implementation details behind one transformation — text to vectors.
 
----
+**Why doesn't `ingestion.py` call LangChain directly?**
 
-#### Why doesn't ingestion.py directly call LangChain?
+> Because ingestion is responsible only for coordinating pipeline stages, not implementing
+> them. If it called the model directly, swapping embedding providers would become an
+> orchestration change.
 
-Because ingestion is responsible only for coordinating pipeline stages, not implementing them.
+**Why not use Strategy immediately?**
 
----
+> Only one embedding model currently exists, so there is no runtime decision to encapsulate.
+> Strategy should be introduced when multiple interchangeable algorithms genuinely exist —
+> and the trigger here would be user tier, not document type.
 
-#### Why not use Strategy immediately?
+**Why not return vector objects?**
 
-Only one embedding model currently exists. Strategy should be introduced when multiple interchangeable algorithms exist.
+> `EmbeddingService` should only transform text into vectors. A combined structure of
+> document, chunk, metadata, and embedding is needed by exactly one component — the Vector
+> Database — so building it in the embedding layer would mean doing another layer's work.
 
----
+**Why preserve ordering instead of returning a mapping?**
 
-#### Why not return Vector Objects?
+> The *n*th embedding always corresponds to the *n*th document, so the Vector Database can
+> combine them with `zip(documents, embeddings)`. The relationship is maintained without
+> introducing a DTO that couples embedding to storage.
 
-EmbeddingService should only transform text into vectors.
+**Why shouldn't `EmbeddingService` know FAISS?**
 
-Storage structures belong to the Vector Database.
+> Embedding generation and storage are independent responsibilities. Keeping them separate is
+> what makes it possible to swap vector databases without touching embedding logic — the
+> answer to PR-1's original "how many files change?" question.
 
----
+**Does the vector database choose the embedding dimension?**
 
-#### Why preserve ordering?
+> No. The embedding model determines dimensionality — 384 for BAAI, 1536 for OpenAI, 768 for
+> Nomic. The database only validates that inserted vectors match the expected dimension, which
+> is why one index should hold vectors from a single model.
 
-The nth embedding always corresponds to the nth Document. The Vector Database can combine them using
+------------------------------------------------------------------------
 
-```python
-zip(documents, embeddings)
-```
+### Biggest Takeaway
 
-without additional mapping objects.
+> **Software architecture is not about creating more classes. It is about giving every
+> component exactly one responsibility.**
 
----
-
-#### Why shouldn't EmbeddingService know FAISS?
-
-Embedding generation and storage are independent responsibilities. This keeps the architecture modular and allows swapping Vector Databases without changing embedding logic.
-
----
-
-### Biggest Engineering Lesson
-
-During this PR we realized that software architecture is not about creating more classes.
-
-It is about giving every component exactly one responsibility.
-
-The cleanest architecture often emerges by asking
+The cleanest architecture emerged from repeatedly asking:
 
 > **"Who actually owns this responsibility?"**
 
-instead of
+instead of:
 
 > **"Where can I put this code?"**
+
+---
+
+## Self-Check
+
+Answer these without looking. If any is shaky, the corresponding section above is the fix.
+
+1. If FAISS is replaced by Qdrant, which files change — and why is `embeddings.py` not one of
+   them?
+2. Why should the parent `Loader` expose only `load()`?
+3. Why should a Factory return `Loader` rather than `PdfLoader`, given both branches of the
+   `isinstance` check call the same method?
+4. What is the measurable test of an extensible architecture when `ExcelLoader` is added?
+5. Why are pages a bad chunk boundary?
+6. What does overlap actually prevent, and give the example.
+7. What changes about a `Document` during chunking, and what does not?
+8. Why was Strategy *deferred* for chunking and then *adopted* in the same PR?
+9. What does `split_text` silently throw away that `split_documents` keeps?
+10. Under what condition does Flyweight become a bug rather than an optimisation?
+11. Why does `EmbeddingService` return `List[List[float]]` rather than an `EmbeddingResult`?
+12. Who owns the mapping between documents and embeddings, and what principle decides that?
+13. Which component chooses vector dimensionality — the model or the database?
+
+---
+
+### What Week 1 Actually Built
+
+```text
+Upload
+   │
+   ▼ LoaderFactory     ← Factory Pattern, polymorphism      (PR-1, PR-2)
+   │
+   ▼ ChunkService      ← Strategy + Flyweight               (PR-3)
+   │
+   ▼ EmbeddingService  ← one transformation, no storage     (PR-4)
+   │
+   ▼ (Vector Store)                                          → PR-5
+```
+
+Four PRs, and the recurring result is the same in each: `app.py` never changed, and every new
+capability was added by writing a new class rather than editing an old one.
+
+The patterns — Factory, Strategy, Flyweight, Information Expert — were never the goal. Each
+one was the shape left behind after asking who owns a responsibility and how much has to
+change when requirements do.
+
+---
+
+**Next:** PR-5 — the Vector Store: persistence, similarity search, and the layer every other
+component in Week 1 was deliberately built not to know about.
