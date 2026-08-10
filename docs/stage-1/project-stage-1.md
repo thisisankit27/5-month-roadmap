@@ -23,9 +23,9 @@ The goal isn't just to build an AI application—it's to document the engineerin
 
 ### 🌱 Week 1 — Core RAG
 
-Related project notes: [Week 1 AI Assistant](Engineering%20Mindset/week-1-AI-Assistant.md)
+**Related project notes:** [Week 1 AI Assistant](Product%20Engineering/week-1-AI-Assistant.md)
 
-Related theory:
+**Related theory:**
 [Chunking](AI%20Learning/Deepen-RAG/day-1-chunking-in-rag.md) | 
 [Embedding](AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag.md) |
 [Vector Database](AI%20Learning/Deepen-RAG/day-3-vector-databases.md) |
@@ -38,12 +38,12 @@ Related theory:
 
 #### Progress
 
-- [x] PR-01 — Project Bootstrap
-- [x] PR-02 — PDF Upload & Loading
-- [x] PR-03 — Chunking Engine
-- [x] PR-04 — Embedding Pipeline
-- [x] PR-05 — FAISS Vector Store
-- [x] PR-06 — Basic Question Answering
+- ✅ PR-01 — Project Bootstrap
+- ✅ PR-02 — PDF Upload & Loading
+- ✅ PR-03 — Chunking Engine
+- ✅ PR-04 — Embedding Pipeline
+- ✅ PR-05 — FAISS Vector Store
+- ✅ PR-06 — Basic Question Answering
 
 #### Outcome
 
@@ -60,9 +60,9 @@ By the end of Week 1, the application will:
 
 ### 🚀 Week 2 — Better Retrieval
 
-Related project notes: [Week 2 AI Assistant](Engineering%20Mindset/week-2-AI-Assistent.md)
+**Related project notes:** [Week 2 AI Assistant](Product%20Engineering/week-2-AI-Assistent.md)
 
-Related Theory:
+**Related theory:**
 [Hybrid Search](AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search.md) | 
 [Metadata](AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata.md) | 
 [Guardrails](AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails.md) | 
@@ -75,9 +75,9 @@ Related Theory:
 
 #### Progress
 
-- [x] PR-07 — Hybrid Search
-- [x] PR-08 — Metadata Filtering
-- [x] PR-09 — Guardrails
+- ✅ PR-07 — Hybrid Search
+- ✅ PR-08 — Metadata Filtering
+- ✅ PR-09 — Guardrails
 
 #### Outcome
 
@@ -92,14 +92,22 @@ The assistant will now support:
 
 ### 🏗️ Week 3 — LCEL Refactor
 
+**Related project notes:** [Week 3 AI Assistant](Product%20Engineering/week-3-AI-Assistent.md)
+
+**Related theory:**
+[LCEL](AI%20Learning/LCEL/day-1-engineering-foundation.md) | 
+[Metadata](AI%20Learning/LCEL/day-2-lcel.md) | 
+[Guardrails](AI%20Learning/LCEL/day-3-prompt-engineering.md) | 
+[Structured Outputs](AI%20Learning/LCEL/day-4-streaming.md)
+
 **Branch:** [:material-github: `week-3-LCEL-refactor`](https://github.com/thisisankit27/archive.vibethroughcode-stage-1-project-1/tree/week-3-LCEL-refactor){ target="_blank" rel="noopener" }
 
 **Goal:** Refactor the application using LangChain Expression Language (LCEL).
 
 #### Progress
 
-- [ ] PR-10 — LCEL Pipeline
-- [ ] PR-11 — Prompt Refactoring
+- ✅ PR-10 — LCEL Pipeline
+- ✅ PR-11 — Prompt Refactoring
 
 #### Outcome
 
@@ -129,17 +137,19 @@ Benefits:
 
 ### 🏁 Week 4 — Production Readiness
 
+**Related project notes:** [Week 3 AI Assistant](Product%20Engineering/week-4-AI-Assistent.md)
+
 **Branch:** [:material-github: `week-4-production-readiness`](https://github.com/thisisankit27/archive.vibethroughcode-stage-1-project-1/tree/week-4-production-readiness){ target="_blank" rel="noopener" }
 
 **Goal:** Transform the prototype into a production-quality application.
 
 #### Progress
 
-- [ ] PR-12 — Chat History
-- [ ] PR-13 — Conversation Memory
-- [ ] PR-14 — Logging & Configuration
-- [ ] PR-15 — Error Handling
-- [ ] PR-16 — Documentation & Deployment
+- ✅ PR-12 — Chat History
+- ✅ PR-13 — Conversation Memory
+- ✅ PR-14 — Logging & Configuration
+- ✅ PR-15 — Error Handling
+- ✅ PR-16 — Documentation & Deployment
 
 #### Outcome
 
@@ -238,7 +248,7 @@ Deployment
 - ✅ Logging
 - ✅ Configuration Management
 - ✅ Error Handling
-- ✅ Deployment
+- ⬜ Deployment
 
 ---
 

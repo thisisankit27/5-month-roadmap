@@ -1432,7 +1432,6 @@ and `FLUSH_FLOOR`, `MARKER_MAX`, and now the summary's sentence cap have joined 
 of those is a value someone may need to change without a redeploy.
 
 ---
----
 
 > **PR-14a shipped** — eleven settings moved into `data/src/config.py`, environment variables
 > with defaults, failing loudly at import on bad input. The two decisions worth remembering are
@@ -1441,7 +1440,6 @@ of those is a value someone may need to change without a redeploy.
 > citation), and the summary's sentence cap stayed in the prompt because it is a digit inside
 > English prose. *If a value can be computed from another value, it is not configuration.*
 
----
 ---
 
 ## PR-14b Discussion — Observability
