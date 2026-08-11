@@ -26,7 +26,6 @@ renumbered five PRs already referenced in commit messages and published posts. I
 **PR-12a** instead. An irregular number costs less than a broken reference.
 
 ---
----
 
 ## PR-11a Discussion — Prompt Ownership
 
@@ -129,7 +128,6 @@ naturally short. The rule had been cutting off answers that were never going to 
 > about the claim — the chain compiles the prompt at import, so moving the text makes *text* a
 > one-file change, not *behaviour*.
 
----
 ---
 
 ## PR-12a Discussion — Streaming
@@ -754,7 +752,6 @@ already visible: the answer you just watched stream in will vanish the moment yo
 other widget on the page.
 
 ---
----
 
 ## PR-12 Discussion — State Management *(in brief)*
 
@@ -850,7 +847,6 @@ signature was never revisited.
 Removed from the chain, not just from session state — `app.py` caching it was the symptom;
 returning a consumed value was the defect.
 
----
 ---
 
 ## PR-13 Discussion — Conversation Memory
