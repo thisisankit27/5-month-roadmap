@@ -1,0 +1,3981 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Java/day-7-config-events/">
+      
+      
+        <link rel="prev" href="../day-6-ioc-di-spring/">
+      
+      
+        <link rel="next" href="../day-8-spring-mvc/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Spring: Circular Beans, Config Beans, Profiles & Application Events - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spring-circular-beans-config-beans-profiles-application-events" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#circular-dependency-between-beans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Circular Dependency Between Beans
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Circular Dependency Between Beans">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-at-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Happens at Startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-error-spring-boot-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Error (Spring Boot 2.6+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-scanning-what-spring-finds-and-what-it-doesnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Scanning — What Spring Finds, and What It Doesn't
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component Scanning — What Spring Finds, and What It Doesn&#39;t">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-1-a-non-annotated-class-from-a-third-party-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case 1 — A Non-Annotated Class From a Third-Party Library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-2-an-component-annotated-class-in-another-package-yours-or-a-librarys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case 2 — An @Component-Annotated Class in Another Package (Yours or a Library's)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables-and-property-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables and Property Sources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Variables and Property Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-injection-full-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Value Injection — Full Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#property-sources-and-priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Property Sources and Priority Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-value-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Value Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-without-propertysource-doesnt-reach-custom-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Value Without @PropertySource Doesn't Reach Custom Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationrunner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ApplicationRunner
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profile-based-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile-Based Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Profile-Based Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-convention-strict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Convention (Strict)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-spring-does-internally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Spring Does Internally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-no-autowired-was-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why No @Autowired Was Needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-setters-are-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Setters Are Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mental Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-journey-of-a-web-request-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Journey of a Web Request (Preview)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-based-architecture-the-observer-pattern-in-spring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event-Based Architecture — the Observer Pattern in Spring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Event-Based Architecture — the Observer Pattern in Spring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#foundation-the-observer-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation — the Observer Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-spring-implements-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Spring Implements This
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#built-in-spring-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-In Spring Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reacting-to-built-in-events-full-working-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reacting to Built-In Events — Full Working Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-confusions-answered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Confusions, Answered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publishing-your-own-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publishing Your Own Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Publishing Your Own Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-were-building" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What We're Building
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-the-custom-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — the Custom Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-the-publisher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — the Publisher
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-listener-1-modern-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Listener 1 (Modern Way)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-listener-2-explicit-interface-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Listener 2 (Explicit Interface Way)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-trigger-the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Trigger the Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-mistakes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Mistakes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-mental-model-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Mental Model Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-does-spring-reject-circular-bean-dependencies-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does Spring reject circular bean dependencies by default?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-a-real-fix-for-a-circular-dependency-between-two-beans-beyond-re-enabling-legacy-circular-reference-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's a real fix for a circular dependency between two beans, beyond re-enabling legacy circular-reference support?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-doesnt-spring-automatically-turn-every-class-into-a-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why doesn't Spring automatically turn every class into a bean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-you-register-a-bean-for-a-third-party-class-you-cant-annotate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do you register a bean for a third-party class you can't annotate?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-practical-difference-between-component-and-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the practical difference between @Component and @Bean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-priority-order-spring-uses-when-resolving-a-property-that-exists-in-multiple-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the priority order Spring uses when resolving a property that exists in multiple sources?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-valuesomekeydefaultvalue-matter-for-startup-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does @Value("${SomeKey:defaultValue}") matter for startup reliability?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-doesnt-value-resolve-a-key-that-only-exists-in-a-custom-properties-file-unless-you-do-something-extra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why doesn't @Value resolve a key that only exists in a custom properties file, unless you do something extra?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-naming-convention-do-profile-specific-property-files-require-and-why-does-it-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What naming convention do profile-specific property files require, and why does it matter?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-configurationproperties-bind-values-without-any-autowired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does @ConfigurationProperties bind values without any @Autowired?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-setters-required-on-a-configurationproperties-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are setters required on a @ConfigurationProperties class?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-observer-pattern-and-how-does-spring-implement-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the Observer Pattern, and how does Spring implement it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-a-listener-method-know-which-event-type-to-react-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does a listener method know which event type to react to?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-spring-application-events-processed-asynchronously-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Are Spring application events processed asynchronously by default?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-main-engineering-benefit-of-using-events-instead-of-direct-method-calls-between-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the main engineering benefit of using events instead of direct method calls between services?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#circular-dependency-between-beans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Circular Dependency Between Beans
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Circular Dependency Between Beans">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-happens-at-startup" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Happens at Startup
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-error-spring-boot-26" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Error (Spring Boot 2.6+)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#component-scanning-what-spring-finds-and-what-it-doesnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Component Scanning — What Spring Finds, and What It Doesn't
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Component Scanning — What Spring Finds, and What It Doesn&#39;t">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-1-a-non-annotated-class-from-a-third-party-library" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case 1 — A Non-Annotated Class From a Third-Party Library
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#case-2-an-component-annotated-class-in-another-package-yours-or-a-librarys" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Case 2 — An @Component-Annotated Class in Another Package (Yours or a Library's)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#environment-variables-and-property-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Environment Variables and Property Sources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Environment Variables and Property Sources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-injection-full-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Value Injection — Full Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#property-sources-and-priority-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Property Sources and Priority Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-value-handling" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default Value Handling
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#value-without-propertysource-doesnt-reach-custom-files" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Value Without @PropertySource Doesn't Reach Custom Files
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationrunner" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ApplicationRunner
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#profile-based-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Profile-Based Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Profile-Based Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-convention-strict" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming Convention (Strict)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-spring-does-internally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Spring Does Internally
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#worked-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Worked Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-no-autowired-was-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why No @Autowired Was Needed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-setters-are-required" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Setters Are Required
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mental Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-journey-of-a-web-request-preview" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Journey of a Web Request (Preview)
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#event-based-architecture-the-observer-pattern-in-spring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Event-Based Architecture — the Observer Pattern in Spring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Event-Based Architecture — the Observer Pattern in Spring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#foundation-the-observer-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Foundation — the Observer Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-spring-implements-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Spring Implements This
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#built-in-spring-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Built-In Spring Events
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#reacting-to-built-in-events-full-working-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reacting to Built-In Events — Full Working Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-confusions-answered" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Confusions, Answered
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#real-world-use-cases" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Real-World Use Cases
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#publishing-your-own-events" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Publishing Your Own Events
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Publishing Your Own Events">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-were-building" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What We're Building
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-1-the-custom-event" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1 — the Custom Event
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-2-the-publisher" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 2 — the Publisher
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-3-listener-1-modern-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 3 — Listener 1 (Modern Way)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-4-listener-2-explicit-interface-way" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 4 — Listener 2 (Explicit Interface Way)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#step-5-trigger-the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 5 — Trigger the Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-insights" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Insights
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-mistakes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Mistakes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-mental-model-upgrade" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Mental Model Upgrade
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-does-spring-reject-circular-bean-dependencies-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does Spring reject circular bean dependencies by default?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-a-real-fix-for-a-circular-dependency-between-two-beans-beyond-re-enabling-legacy-circular-reference-support" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's a real fix for a circular dependency between two beans, beyond re-enabling legacy circular-reference support?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-doesnt-spring-automatically-turn-every-class-into-a-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why doesn't Spring automatically turn every class into a bean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-do-you-register-a-bean-for-a-third-party-class-you-cant-annotate" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How do you register a bean for a third-party class you can't annotate?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-practical-difference-between-component-and-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the practical difference between @Component and @Bean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-priority-order-spring-uses-when-resolving-a-property-that-exists-in-multiple-sources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the priority order Spring uses when resolving a property that exists in multiple sources?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-valuesomekeydefaultvalue-matter-for-startup-reliability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does @Value("${SomeKey:defaultValue}") matter for startup reliability?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-doesnt-value-resolve-a-key-that-only-exists-in-a-custom-properties-file-unless-you-do-something-extra" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why doesn't @Value resolve a key that only exists in a custom properties file, unless you do something extra?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-naming-convention-do-profile-specific-property-files-require-and-why-does-it-matter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What naming convention do profile-specific property files require, and why does it matter?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-configurationproperties-bind-values-without-any-autowired" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does @ConfigurationProperties bind values without any @Autowired?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-setters-required-on-a-configurationproperties-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are setters required on a @ConfigurationProperties class?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-the-observer-pattern-and-how-does-spring-implement-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is the Observer Pattern, and how does Spring implement it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-a-listener-method-know-which-event-type-to-react-to" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does a listener method know which event type to react to?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#are-spring-application-events-processed-asynchronously-by-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Are Spring application events processed asynchronously by default?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-main-engineering-benefit-of-using-events-instead-of-direct-method-calls-between-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the main engineering benefit of using events instead of direct method calls between services?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="spring-circular-beans-config-beans-profiles-application-events">Spring: Circular Beans, Config Beans, Profiles &amp; Application Events<a class="headerlink" href="#spring-circular-beans-config-beans-profiles-application-events" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+This is not "here's another annotation." Every mechanism here — cyclic-dependency detection, <code>@Bean</code>/<code>@Configuration</code>, property resolution priority, profiles, application events — exists to answer the same underlying question the IoC chapter raised: <strong>who is responsible for creating and wiring something, and what happens when that responsibility can't be resolved cleanly?</strong> Circular beans are what happens when it <em>can't</em> be resolved. Config beans and profiles are about wiring things Spring can't discover on its own. Events are about decoupling <em>who reacts</em> from <em>who acted</em> entirely.</p>
+</blockquote>
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>Spring resolves what to build and how to configure it from three places: component scanning (what it can discover), explicit configuration (what you register by hand), and externalized properties (what varies by environment) — and it decouples cross-cutting reactions from the code that triggers them via an internal publish/subscribe event system.</strong></p>
+<hr />
+<h2 id="circular-dependency-between-beans">Circular Dependency Between Beans<a class="headerlink" href="#circular-dependency-between-beans" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Customer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Cart</span><span class="w"> </span><span class="n">cart</span><span class="p">;</span>
+<span class="p">}</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Cart</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Customer</span><span class="w"> </span><span class="n">customer</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Both are singleton beans (default scope), field-injected, and <strong>mutually dependent</strong> — <code>Customer</code> needs <code>Cart</code> to exist, and <code>Cart</code> needs <code>Customer</code> to exist.</p>
+<h3 id="what-happens-at-startup">What Happens at Startup<a class="headerlink" href="#what-happens-at-startup" title="Permanent link">&para;</a></h3>
+<p>Spring tries to create beans during context initialization:</p>
+<ol>
+<li>Create <code>Customer</code>.</li>
+<li><code>Customer</code> needs <code>Cart</code>.</li>
+<li>Create <code>Cart</code>.</li>
+<li><code>Cart</code> needs <code>Customer</code>.</li>
+<li>But <code>Customer</code> is still being created — it doesn't exist yet to hand over.</li>
+</ol>
+<p>Now there's a cycle: neither bean can finish construction without the other already existing.</p>
+<h3 id="the-error-spring-boot-26">The Error (Spring Boot 2.6+)<a class="headerlink" href="#the-error-spring-boot-26" title="Permanent link">&para;</a></h3>
+<p>By default, circular references are disabled, and Spring reports:</p>
+<div class="highlight"><pre><span></span><code>The dependencies of some of the beans in the application context form a cycle:
+
+┌─────┐
+| customer
+↑     ↓
+| cart
+└─────┘
+
+Action:
+
+Relying upon circular references is discouraged and they are prohibited by default.
+Update your application to remove the dependency cycle.
+</code></pre></div>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>This is the same "control of creation" question from <a href="../day-6-ioc-di-spring/">Spring IoC</a>, just pushed to its limit: if two beans each require the other to already exist before <em>they</em> can exist, there is no valid creation order at all. The right fix isn't a workaround (older Spring versions tolerated this via early bean references) — it's redesigning ownership so the dependency graph is actually acyclic: extract shared state into a third bean, use <code>@Lazy</code> to defer resolution, or — as the <a href="#event-based-architecture-the-observer-pattern-in-spring">event architecture</a> section below shows — replace a direct dependency with a published event neither side needs a hard reference to.</p>
+<hr />
+<h2 id="component-scanning-what-spring-finds-and-what-it-doesnt">Component Scanning — What Spring Finds, and What It Doesn't<a class="headerlink" href="#component-scanning-what-spring-finds-and-what-it-doesnt" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<p><code>@Component</code> only gets picked up by <strong>component scanning</strong>, and component scanning by default only looks in the same package (and sub-packages) as your <code>@SpringBootApplication</code> class. A third-party class you didn't write can't be annotated at all, and even your own <code>@Component</code>-annotated classes go undiscovered if they live in a package the scan never reaches.</p>
+<h3 id="case-1-a-non-annotated-class-from-a-third-party-library">Case 1 — A Non-Annotated Class From a Third-Party Library<a class="headerlink" href="#case-1-a-non-annotated-class-from-a-third-party-library" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Third-party class — you cannot add annotations to it</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SomeExtLibrary</span><span class="w"> </span><span class="p">{</span>
+<span class="p">}</span>
+
+<span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ExternalConfig</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeExtLibrary</span><span class="w"> </span><span class="nf">someExtLibrary</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SomeExtLibrary</span><span class="p">();</span><span class="w">   </span><span class="c1">// you own the creational responsibility —</span>
+<span class="w">                                        </span><span class="c1">// hence you can customize, log, etc.</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li><code>@Configuration</code> tells Spring: <em>"this class defines beans."</em></li>
+<li><code>@Bean</code> tells Spring: <em>"the return value of this method is a Spring Bean."</em></li>
+</ul>
+<p><strong>Common mistakes:</strong></p>
+<ul>
+<li><strong>Forgetting <code>@Configuration</code></strong> — Spring may never scan the class, so the bean is never created.</li>
+<li><strong>Thinking <code>@Bean</code> works anywhere</strong> — it must be inside a <code>@Configuration</code> class (or at least a component class).</li>
+<li><strong>Wrong bean name confusion</strong> — the default bean name is the method name; override it with <code>@Bean(name = "customLib")</code>.</li>
+</ul>
+<p><strong>Interview one-liner:</strong> <em>"For third-party classes where we cannot add annotations, we use <code>@Bean</code> inside a <code>@Configuration</code> class to manually register them in the Spring IoC container."</em></p>
+<h3 id="case-2-an-component-annotated-class-in-another-package-yours-or-a-librarys">Case 2 — An <code>@Component</code>-Annotated Class in Another Package (Yours or a Library's)<a class="headerlink" href="#case-2-an-component-annotated-class-in-another-package-yours-or-a-librarys" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
+<span class="nd">@ComponentScan</span><span class="p">(</span><span class="n">basePackages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;com.example.resources&quot;</span><span class="p">)</span><span class="w">   </span><span class="c1">// scans everything in this package</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ExternalConfig</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">SomeExtLibrary</span><span class="w"> </span><span class="nf">someExtLibrary</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">SomeExtLibrary</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="c1">// Alternative: manually select which single component to register,</span>
+<span class="w">    </span><span class="c1">// instead of scanning the whole package</span>
+<span class="w">    </span><span class="c1">// @Bean</span>
+<span class="w">    </span><span class="c1">// public MongoDBConnector mongoDBConnector() {</span>
+<span class="w">    </span><span class="c1">//     return new MongoDBConnector();</span>
+<span class="w">    </span><span class="c1">// }</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p><code>@Component</code> means "let Spring discover and construct this end to end." <code>@Bean</code> means "I own the construction — Spring only takes the finished object." That distinction is exactly why third-party classes always need <code>@Bean</code>: you can't retroactively give a class you don't own a <code>@Component</code> annotation, so you take over construction yourself and only hand Spring the result.</p>
+<hr />
+<h2 id="environment-variables-and-property-sources">Environment Variables and Property Sources<a class="headerlink" href="#environment-variables-and-property-sources" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>Secrets and environment-specific values (DB credentials, API keys, feature flags) shouldn't be hardcoded — and the <em>same</em> application needs to read different values depending on where it's running (local dev, CI, production), without a code change.</p>
+<h3 id="value-injection-full-example"><code>@Value</code> Injection — Full Example<a class="headerlink" href="#value-injection-full-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@SpringBootApplication</span>
+<span class="nd">@PropertySource</span><span class="p">(</span><span class="s">&quot;classpath:extra.properties&quot;</span><span class="p">)</span><span class="w">   </span><span class="c1">// adds src/.../extra.properties as a source</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyFirstSpringProjectApplication</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ApplicationRunner</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${KEY}&quot;</span><span class="p">)</span><span class="w">                              </span><span class="c1">// from IntelliJ Run/Debug Config</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">envVar</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${AnkitType}&quot;</span><span class="p">)</span><span class="w">                         </span><span class="c1">// from src/main/resources/application.properties</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">envVar2</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${Duplicate}&quot;</span><span class="p">)</span><span class="w">                          </span><span class="c1">// from Java Args, NOT application.properties</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">envVar3</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${SomeKey:defaultValueCanBeGivenToPreventCTE}&quot;</span><span class="p">)</span><span class="w">   </span><span class="c1">// default if not found anywhere</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">notPresentInEnv</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${MongoDBKey}&quot;</span><span class="p">)</span><span class="w">                          </span><span class="c1">// from extra.properties, via @PropertySource</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">mongoDBSecret</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">ClassNotFoundException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">MyFirstSpringProjectApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">ApplicationArguments</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">envVar</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;|&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">envVar2</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">envVar3</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">notPresentInEnv</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">mongoDBSecret</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// Output:</span>
+<span class="c1">// ankitisthebest|Human</span>
+<span class="c1">// IntelliJVariable</span>
+<span class="c1">// defaultValueCanBeGivenToPreventCTE</span>
+<span class="c1">// ThisIsRandom12*(^OK</span>
+</code></pre></div>
+<h3 id="property-sources-and-priority-order">Property Sources and Priority Order<a class="headerlink" href="#property-sources-and-priority-order" title="Permanent link">&para;</a></h3>
+<p>Spring resolves properties from multiple sources:</p>
+<ul>
+<li>Java Args (VM options / <code>-D</code>)</li>
+<li>Environment Variables (OS / IntelliJ Run Config)</li>
+<li><code>application.properties</code> / <code>application.yml</code></li>
+<li>Custom files, added via <code>@PropertySource</code></li>
+</ul>
+<p><strong>Priority order (highest wins on a duplicate key):</strong></p>
+<div class="highlight"><pre><span></span><code>Java Args (-D)
+  &gt; Environment Variables
+  &gt; application.properties / application.yml
+  &gt; @PropertySource (extra.properties, etc.)
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Source</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>envVar</code></td>
+<td>IntelliJ Run Config</td>
+</tr>
+<tr>
+<td><code>envVar2</code></td>
+<td><code>application.properties</code></td>
+</tr>
+<tr>
+<td><code>envVar3</code></td>
+<td>Java Args (<code>-D</code>) — overrides everything else</td>
+</tr>
+<tr>
+<td><code>notPresentInEnv</code></td>
+<td>Default value used (<code>${key:default}</code> syntax)</td>
+</tr>
+<tr>
+<td><code>mongoDBSecret</code></td>
+<td><code>extra.properties</code>, via <code>@PropertySource</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="default-value-handling">Default Value Handling<a class="headerlink" href="#default-value-handling" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Value</span><span class="p">(</span><span class="s">&quot;${SomeKey:defaultValue}&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>If <code>SomeKey</code> isn't found in any source, <code>defaultValue</code> is used instead — this is what prevents a missing property from failing context startup (a <strong>Context Load Failure</strong>) outright.</p>
+<h3 id="value-without-propertysource-doesnt-reach-custom-files"><code>@Value</code> Without <code>@PropertySource</code> Doesn't Reach Custom Files<a class="headerlink" href="#value-without-propertysource-doesnt-reach-custom-files" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// @Value(&quot;${exclusive.properties.DirectCheck}&quot;)   // ✘ does NOT work without @PropertySource</span>
+</code></pre></div>
+<p>A property that only exists in a custom file is invisible to <code>@Value</code> unless that file was registered via <code>@PropertySource</code> first — Spring's default property sources don't include arbitrary files.</p>
+<h3 id="applicationrunner"><code>ApplicationRunner</code><a class="headerlink" href="#applicationrunner" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyFirstSpringProjectApplication</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ApplicationRunner</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">ApplicationArguments</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>ApplicationRunner</code>'s <code>run()</code> executes <strong>after</strong> the Spring context is fully initialized — useful for debugging configs, initial logging, or general startup logic that needs every bean already wired.</p>
+<p><strong>Interview one-liners:</strong></p>
+<ul>
+<li><em>"Spring resolves properties from multiple sources with a defined priority, where JVM arguments override all."</em></li>
+<li><em>"<code>@Value</code> injects configuration values at startup from Spring's Environment abstraction."</em></li>
+<li><em>"We can avoid startup failures by providing default values using <code>${key:default}</code> syntax."</em></li>
+</ul>
+<hr />
+<h2 id="profile-based-configuration">Profile-Based Configuration<a class="headerlink" href="#profile-based-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_3">Engineering Problem<a class="headerlink" href="#engineering-problem_3" title="Permanent link">&para;</a></h3>
+<p>Beta and production environments need different credentials and connection details for the same components — hardcoding either, or branching on environment inside application code, would couple business logic to deployment concerns.</p>
+<h3 id="naming-convention-strict">Naming Convention (Strict)<a class="headerlink" href="#naming-convention-strict" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>application-{profile}.properties
+</code></pre></div>
+<p>Examples: <code>application-beta.properties</code>, <code>application-prod.properties</code>. Spring auto-detects files that follow this pattern exactly:</p>
+<div class="highlight"><pre><span></span><code>application_beta.properties   ✘   (underscore — not detected)
+application-beta.properties   ✔
+</code></pre></div>
+<h3 id="what-spring-does-internally">What Spring Does Internally<a class="headerlink" href="#what-spring-does-internally" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Read the active profile (<code>spring.profiles.active</code>).</li>
+<li>Load <code>application.properties</code> <strong>and</strong> <code>application-{activeProfile}.properties</code>.</li>
+<li>Merge them.</li>
+<li>Profile-specific values <strong>override</strong> the defaults.</li>
+</ol>
+<h3 id="worked-example">Worked Example<a class="headerlink" href="#worked-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1"># application-beta.properties</span>
+<span class="na">mongodb.userName</span><span class="o">=</span><span class="s">betaUser</span>
+<span class="na">mongodb.userPswd</span><span class="o">=</span><span class="s">betaPass</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="c1"># application-prod.properties</span>
+<span class="na">mongodb.userName</span><span class="o">=</span><span class="s">prodUser</span>
+<span class="na">mongodb.userPswd</span><span class="o">=</span><span class="s">prodPass</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="nd">@ConfigurationProperties</span><span class="p">(</span><span class="n">prefix</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;mongodb&quot;</span><span class="p">)</span><span class="w">   </span><span class="c1">// binds every property under the &quot;mongodb&quot; prefix</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MongoDBConnector</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">userPswd</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getUserName</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">userName</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setUserName</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">userName</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">userName</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userName</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">getUserPswd</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">userPswd</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setUserPswd</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">userPswd</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">userPswd</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">userPswd</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">ApplicationContext</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">MyFirstSpringProjectApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="n">MongoDBConnector</span><span class="w"> </span><span class="n">mongoDB</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">MongoDBConnector</span><span class="p">)</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="s">&quot;mongoDBConnector&quot;</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">mongoDB</span><span class="p">.</span><span class="na">getUserName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;|&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">mongoDB</span><span class="p">.</span><span class="na">getUserPswd</span><span class="p">());</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Env: spring.profiles.active=prod   →   OUTPUT: prodUser|prodPass
+Env: spring.profiles.active=beta   →   OUTPUT: betaUser|betaPass
+</code></pre></div>
+<p>No <code>@Autowired</code> field was written anywhere in <code>MongoDBConnector</code> — it still initialized correctly from the active profile.</p>
+<h3 id="why-no-autowired-was-needed">Why No <code>@Autowired</code> Was Needed<a class="headerlink" href="#why-no-autowired-was-needed" title="Permanent link">&para;</a></h3>
+<ul>
+<li><code>@Component</code> → the bean gets created.</li>
+<li><code>@ConfigurationProperties</code> → values are injected <strong>during</strong> bean creation, automatically, as part of the binding phase.</li>
+</ul>
+<h3 id="why-setters-are-required">Why Setters Are Required<a class="headerlink" href="#why-setters-are-required" title="Permanent link">&para;</a></h3>
+<p><code>@ConfigurationProperties</code> binding uses <strong>setter injection</strong> internally — without setters, the properties simply won't populate the fields. This also makes setters a natural place for preventive checks (e.g. sanitizing against SQL injection), since these values ultimately come from an external, potentially untrusted source (environment config).</p>
+<h3 id="mental-model">Mental Model<a class="headerlink" href="#mental-model" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>ENV decides PROFILE
+PROFILE decides FILE
+FILE provides VALUES
+VALUES bind to BEAN
+</code></pre></div>
+<hr />
+<h2 id="the-journey-of-a-web-request-preview">The Journey of a Web Request (Preview)<a class="headerlink" href="#the-journey-of-a-web-request-preview" title="Permanent link">&para;</a></h2>
+<p>This is a first pass, not the full picture — enough to place Spring MVC in context before going deeper later.</p>
+<div class="highlight"><pre><span></span><code>NIC receives packet
+      │
+      ▼
+Kernel interrupt → OS decides TCP or UDP
+      │
+      ▼
+TCP: ordering + reassembly → complete packet
+      │
+      ▼
+User space — caught by the servlet container as an HTTP request
+      │
+      ▼
+Spring MVC (DispatcherServlet) — routes to the matching controller method
+      │
+      ▼
+Deserialization — request body → Java objects
+</code></pre></div>
+<p>The part worth remembering for now: by the time your <code>@Controller</code> method runs, the framework has already handled packet reassembly, protocol parsing, and request routing — none of that is something application code touches directly.</p>
+<hr />
+<h2 id="event-based-architecture-the-observer-pattern-in-spring">Event-Based Architecture — the Observer Pattern in Spring<a class="headerlink" href="#event-based-architecture-the-observer-pattern-in-spring" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_4">Engineering Problem<a class="headerlink" href="#engineering-problem_4" title="Permanent link">&para;</a></h3>
+<p>Direct method calls between services (<code>ServiceA.doSomething()</code> calling <code>ServiceB.reactToIt()</code>) couple the caller to every reactor. If five different things need to happen when "the score updates," <code>ServiceA</code> ends up calling all five directly — and every time a new reaction is added, <code>ServiceA</code>'s code has to change.</p>
+<h3 id="foundation-the-observer-pattern">Foundation — the Observer Pattern<a class="headerlink" href="#foundation-the-observer-pattern" title="Permanent link">&para;</a></h3>
+<p>One object announces that something happened; many objects react to it independently. Example: a cricket match score updates, and many apps react (TV, mobile app, notifications) — none of them told the scoreboard they exist.</p>
+<div class="highlight"><pre><span></span><code>Subject (Publisher) → notifies → Observers (Listeners)
+</code></pre></div>
+<h3 id="how-spring-implements-this">How Spring Implements This<a class="headerlink" href="#how-spring-implements-this" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>Spring Type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Publisher</td>
+<td><code>ApplicationEventPublisher</code></td>
+</tr>
+<tr>
+<td>Listeners</td>
+<td><code>@EventListener</code>, or <code>implements ApplicationListener&lt;T&gt;</code></td>
+</tr>
+<tr>
+<td>Dispatcher</td>
+<td>Hidden — Spring internally manages who listens to what</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Important fact:</strong> <code>ApplicationContext</code> <strong>extends</strong> <code>ApplicationEventPublisher</code> — Spring itself can publish events, and your application code can too, through the same mechanism.</p>
+<h3 id="built-in-spring-events">Built-In Spring Events<a class="headerlink" href="#built-in-spring-events" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>When</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ApplicationStartedEvent</code></td>
+<td>The app just started</td>
+</tr>
+<tr>
+<td><code>ContextClosedEvent</code></td>
+<td>The app is shutting down</td>
+</tr>
+</tbody>
+</table>
+<p>You never write the publisher for these — Spring publishes them for you.</p>
+<h3 id="reacting-to-built-in-events-full-working-example">Reacting to Built-In Events — Full Working Example<a class="headerlink" href="#reacting-to-built-in-events-full-working-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@SpringBootApplication</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">EventDemoApplication</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">EventDemoApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">StartupListener</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@EventListener</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onStartup</span><span class="p">(</span><span class="n">ApplicationStartedEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Application has started!&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Initializing cache...&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Connecting to external services...&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ShutdownListener</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@EventListener</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onShutdown</span><span class="p">(</span><span class="n">ContextClosedEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Application is shutting down!&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Closing DB connections...&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Sending shutdown alert...&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>What's happening:</strong></p>
+<ul>
+<li><code>@Component</code> → Spring creates the bean.</li>
+<li><code>@EventListener</code> → registers this method as a listener.</li>
+<li>The <strong>method parameter type</strong> decides which event it listens to — <code>ApplicationStartedEvent</code> here fires only on startup.</li>
+</ul>
+<h3 id="flow">Flow<a class="headerlink" href="#flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>SpringApplication.run()
+        ↓
+Spring Boot starts the context
+        ↓
+Spring publishes ApplicationStartedEvent
+        ↓
+StartupListener.onStartup() executes
+        ↓
+App runs normally
+        ↓
+App shuts down
+        ↓
+Spring publishes ContextClosedEvent
+        ↓
+ShutdownListener.onShutdown() executes
+</code></pre></div>
+<p><strong>Key concept:</strong> you never called these listener methods manually. Spring detected them, matched them to the event type, and executed them — because of <code>@EventListener</code>, not because of any explicit wiring you wrote.</p>
+<h3 id="common-confusions-answered">Common Confusions, Answered<a class="headerlink" href="#common-confusions-answered" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>"Where is <code>ApplicationEventPublisher</code> used here?"</strong> — Not by you. Spring uses it internally (<code>ApplicationContext extends ApplicationEventPublisher</code>).</li>
+<li><strong>"Who called my method?"</strong> — Spring's internal event dispatcher.</li>
+<li><strong>"Why no interface implementation?"</strong> — <code>@EventListener</code> replaces the need to <code>implement ApplicationListener&lt;T&gt;</code> explicitly.</li>
+</ul>
+<h3 id="real-world-use-cases">Real-World Use Cases<a class="headerlink" href="#real-world-use-cases" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>On Startup</th>
+<th>On Shutdown</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Warm up cache</td>
+<td>Save in-memory data</td>
+</tr>
+<tr>
+<td>Load ML model</td>
+<td>Close connections</td>
+</tr>
+<tr>
+<td>Start schedulers</td>
+<td>Notify monitoring system</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="publishing-your-own-events">Publishing Your Own Events<a class="headerlink" href="#publishing-your-own-events" title="Permanent link">&para;</a></h2>
+<h3 id="what-were-building">What We're Building<a class="headerlink" href="#what-were-building" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>CricketScoreBroadcaster → publishes event
+        ↓
+CricketScoreEvent → carries data
+        ↓
+Listener1 (@EventListener)
+Listener2 (ApplicationListener)
+</code></pre></div>
+<p>One publisher, multiple listeners — the Observer pattern, end to end, with your own event type instead of a built-in one.</p>
+<h3 id="step-1-the-custom-event">Step 1 — the Custom Event<a class="headerlink" href="#step-1-the-custom-event" title="Permanent link">&para;</a></h3>
+<p>Modern Spring doesn't require extending <code>ApplicationEvent</code>, but the explicit version makes the mechanics visible:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">import</span><span class="w"> </span><span class="nn">org.springframework.context.ApplicationEvent</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CricketScoreEvent</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">ApplicationEvent</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">runs</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">wickets</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">overs</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">CricketScoreEvent</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">source</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">runs</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">wickets</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">overs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">source</span><span class="p">);</span><span class="w">   </span><span class="c1">// required — records who fired the event</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">runs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">runs</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">wickets</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">wickets</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">overs</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">overs</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getRuns</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">runs</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getWickets</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">wickets</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getOvers</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">overs</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>An event is just a data container: <strong>"something happened" + the data describing it.</strong></p>
+<h3 id="step-2-the-publisher">Step 2 — the Publisher<a class="headerlink" href="#step-2-the-publisher" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">CricketScoreBroadcaster</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">ApplicationEventPublisher</span><span class="w"> </span><span class="n">eventPublisher</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">broadcast</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">runs</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">wickets</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">overs</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Score Update: &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">runs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">wickets</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; (&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">overs</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; overs)&quot;</span><span class="p">);</span>
+
+<span class="w">        </span><span class="n">CricketScoreEvent</span><span class="w"> </span><span class="n">event</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">CricketScoreEvent</span><span class="p">(</span><span class="k">this</span><span class="p">,</span><span class="w"> </span><span class="n">runs</span><span class="p">,</span><span class="w"> </span><span class="n">wickets</span><span class="p">,</span><span class="w"> </span><span class="n">overs</span><span class="p">);</span>
+<span class="w">        </span><span class="n">eventPublisher</span><span class="p">.</span><span class="na">publishEvent</span><span class="p">(</span><span class="n">event</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>ApplicationEventPublisher</code> is the bridge to Spring's event system; <code>publishEvent()</code> triggers every registered listener for that event type. <strong>You publish → Spring notifies all listeners.</strong></p>
+<h3 id="step-3-listener-1-modern-way">Step 3 — Listener 1 (Modern Way)<a class="headerlink" href="#step-3-listener-1-modern-way" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ScoreListener1</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@EventListener</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">handleScore</span><span class="p">(</span><span class="n">CricketScoreEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Listener1 (Mobile App): &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getRuns</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getWickets</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="step-4-listener-2-explicit-interface-way">Step 4 — Listener 2 (Explicit Interface Way)<a class="headerlink" href="#step-4-listener-2-explicit-interface-way" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ScoreListener2</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">ApplicationListener</span><span class="o">&lt;</span><span class="n">CricketScoreEvent</span><span class="o">&gt;</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">onApplicationEvent</span><span class="p">(</span><span class="n">CricketScoreEvent</span><span class="w"> </span><span class="n">event</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Listener2 (TV Broadcast): &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getRuns</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;/&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">event</span><span class="p">.</span><span class="na">getWickets</span><span class="p">());</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Spring detects the generic type parameter (<code>CricketScoreEvent</code>) and binds this listener to exactly that event type.</p>
+<h3 id="step-5-trigger-the-flow">Step 5 — Trigger the Flow<a class="headerlink" href="#step-5-trigger-the-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Configuration</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RunnerConfig</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Bean</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ApplicationRunner</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="n">CricketScoreBroadcaster</span><span class="w"> </span><span class="n">broadcaster</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">args</span><span class="w"> </span><span class="o">-&gt;</span><span class="w"> </span><span class="n">broadcaster</span><span class="p">.</span><span class="na">broadcast</span><span class="p">(</span><span class="mi">120</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">15</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="final-flow">Final Flow<a class="headerlink" href="#final-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>App starts
+   ↓
+RunnerConfig triggers broadcaster
+   ↓
+CricketScoreBroadcaster.broadcast()
+   ↓
+publishEvent(event)
+   ↓
+Spring Event Dispatcher
+   ↓
+Listener1 executes
+Listener2 executes
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Score Update: 120/3 (15 overs)
+Listener1 (Mobile App): 120/3
+Listener2 (TV Broadcast): 120/3
+</code></pre></div>
+<h3 id="key-insights">Key Insights<a class="headerlink" href="#key-insights" title="Permanent link">&para;</a></h3>
+<p><strong>1. Loose coupling</strong> — <code>CricketScoreBroadcaster</code> does not know its listeners exist. Ten more listeners could be added with zero change to the broadcaster.</p>
+<p><strong>2. One-to-many</strong> — one event, multiple independent reactions.</p>
+<p><strong>3. Same thread by default</strong> — publisher → Listener1 → Listener2 run sequentially, on the same thread. This is <strong>blocking</strong> behavior, not async.</p>
+<p><strong>4. Order is not guaranteed</strong> — don't depend on listener execution order unless explicitly configured.</p>
+<h3 id="common-mistakes">Common Mistakes<a class="headerlink" href="#common-mistakes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Forgetting <code>@Component</code></strong> on a listener class — it simply won't be registered, with no error.</li>
+<li><strong>Expecting async behavior</strong> — it's synchronous by default; a slow listener blocks everything after it.</li>
+<li><strong>Heavy logic inside a listener</strong> — since execution is synchronous by default, this can slow the entire publishing call.</li>
+</ul>
+<h3 id="the-mental-model-upgrade">The Mental Model Upgrade<a class="headerlink" href="#the-mental-model-upgrade" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Before:  Service A → calls Service B directly     (tight coupling)
+
+After:   Service A → announces an event
+                          ↓
+                B, C, D react independently         (loose coupling)
+</code></pre></div>
+<p><strong>Interview punchline:</strong> <em>"Spring's event mechanism allows decoupled communication where publishers emit events and multiple listeners react without direct dependency."</em></p>
+<h3 id="engineering-insight_2">Engineering Insight<a class="headerlink" href="#engineering-insight_2" title="Permanent link">&para;</a></h3>
+<p>This is the Observer Pattern, not just "an annotation that fires code" — the payoff is identical to Observer anywhere else: the publisher's code never has to change to add a new reaction, because it never held a reference to any listener in the first place. It's also a genuine alternative to the circular-dependency problem from the top of this chapter: two beans that seem to need each other often actually need to <em>react to the same event</em>, not hold a direct reference to one another.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="why-does-spring-reject-circular-bean-dependencies-by-default">Why does Spring reject circular bean dependencies by default?<a class="headerlink" href="#why-does-spring-reject-circular-bean-dependencies-by-default" title="Permanent link">&para;</a></h3>
+<p>Because neither bean can complete construction without the other already existing — there's no valid instantiation order. Spring Boot 2.6+ disables the legacy workaround (exposing early, partially-constructed bean references) and fails fast instead, forcing a redesign of the dependency graph.</p>
+<h3 id="whats-a-real-fix-for-a-circular-dependency-between-two-beans-beyond-re-enabling-legacy-circular-reference-support">What's a real fix for a circular dependency between two beans, beyond re-enabling legacy circular-reference support?<a class="headerlink" href="#whats-a-real-fix-for-a-circular-dependency-between-two-beans-beyond-re-enabling-legacy-circular-reference-support" title="Permanent link">&para;</a></h3>
+<p>Redesign the ownership so the graph is acyclic — extract shared behavior into a third bean both depend on, defer one side with <code>@Lazy</code>, or replace the direct dependency with an event: one bean publishes, the other reacts, and neither holds a hard reference to the other.</p>
+<h3 id="why-doesnt-spring-automatically-turn-every-class-into-a-bean">Why doesn't Spring automatically turn every class into a bean?<a class="headerlink" href="#why-doesnt-spring-automatically-turn-every-class-into-a-bean" title="Permanent link">&para;</a></h3>
+<p>Component scanning only discovers <code>@Component</code>-annotated classes within the scanned package tree (by default, the package of your <code>@SpringBootApplication</code> class and its sub-packages). Classes in other packages, or third-party classes you can't annotate, are invisible to it.</p>
+<h3 id="how-do-you-register-a-bean-for-a-third-party-class-you-cant-annotate">How do you register a bean for a third-party class you can't annotate?<a class="headerlink" href="#how-do-you-register-a-bean-for-a-third-party-class-you-cant-annotate" title="Permanent link">&para;</a></h3>
+<p>Write a <code>@Bean</code>-annotated method inside a <code>@Configuration</code> class that constructs and returns the object — you take over the construction responsibility Spring would otherwise infer from <code>@Component</code>.</p>
+<h3 id="whats-the-practical-difference-between-component-and-bean">What's the practical difference between <code>@Component</code> and <code>@Bean</code>?<a class="headerlink" href="#whats-the-practical-difference-between-component-and-bean" title="Permanent link">&para;</a></h3>
+<p><code>@Component</code> means Spring discovers and constructs the object end-to-end via scanning. <code>@Bean</code> means you personally own construction (inside a <code>@Configuration</code> class) and only hand the finished object to Spring — necessary whenever you can't put <code>@Component</code> directly on the class.</p>
+<h3 id="whats-the-priority-order-spring-uses-when-resolving-a-property-that-exists-in-multiple-sources">What's the priority order Spring uses when resolving a property that exists in multiple sources?<a class="headerlink" href="#whats-the-priority-order-spring-uses-when-resolving-a-property-that-exists-in-multiple-sources" title="Permanent link">&para;</a></h3>
+<p>Java Args (<code>-D</code>) highest, then Environment Variables, then <code>application.properties</code>/<code>application.yml</code>, then <code>@PropertySource</code>-registered custom files lowest.</p>
+<h3 id="why-does-valuesomekeydefaultvalue-matter-for-startup-reliability">Why does <code>@Value("${SomeKey:defaultValue}")</code> matter for startup reliability?<a class="headerlink" href="#why-does-valuesomekeydefaultvalue-matter-for-startup-reliability" title="Permanent link">&para;</a></h3>
+<p>Without a default, a missing property causes a Context Load Failure at startup. The <code>${key:default}</code> syntax lets the application start successfully even if that property isn't set anywhere.</p>
+<h3 id="why-doesnt-value-resolve-a-key-that-only-exists-in-a-custom-properties-file-unless-you-do-something-extra">Why doesn't <code>@Value</code> resolve a key that only exists in a custom properties file, unless you do something extra?<a class="headerlink" href="#why-doesnt-value-resolve-a-key-that-only-exists-in-a-custom-properties-file-unless-you-do-something-extra" title="Permanent link">&para;</a></h3>
+<p>Because Spring's default property sources don't include arbitrary files — the file has to be explicitly registered via <code>@PropertySource</code> before <code>@Value</code> can see keys defined only there.</p>
+<h3 id="what-naming-convention-do-profile-specific-property-files-require-and-why-does-it-matter">What naming convention do profile-specific property files require, and why does it matter?<a class="headerlink" href="#what-naming-convention-do-profile-specific-property-files-require-and-why-does-it-matter" title="Permanent link">&para;</a></h3>
+<p><code>application-{profile}.properties</code> exactly — e.g. <code>application-beta.properties</code>. Spring auto-detects files that match this pattern; an underscore instead of a hyphen (<code>application_beta.properties</code>) simply won't be picked up.</p>
+<h3 id="how-does-configurationproperties-bind-values-without-any-autowired">How does <code>@ConfigurationProperties</code> bind values without any <code>@Autowired</code>?<a class="headerlink" href="#how-does-configurationproperties-bind-values-without-any-autowired" title="Permanent link">&para;</a></h3>
+<p><code>@Component</code> gets the bean created, and <code>@ConfigurationProperties(prefix = "...")</code> injects matching property values during that same creation process, via setter injection under the hood — no explicit wiring code is needed.</p>
+<h3 id="why-are-setters-required-on-a-configurationproperties-class">Why are setters required on a <code>@ConfigurationProperties</code> class?<a class="headerlink" href="#why-are-setters-required-on-a-configurationproperties-class" title="Permanent link">&para;</a></h3>
+<p>Because Spring uses setter injection internally to populate the bound fields — without setters, the properties simply won't populate, and setters also give you a natural place to validate/sanitize values coming from an external, potentially untrusted config source.</p>
+<h3 id="what-is-the-observer-pattern-and-how-does-spring-implement-it">What is the Observer Pattern, and how does Spring implement it?<a class="headerlink" href="#what-is-the-observer-pattern-and-how-does-spring-implement-it" title="Permanent link">&para;</a></h3>
+<p>One object (the Subject/Publisher) announces something happened; many independent objects (Observers/Listeners) react. Spring implements this with <code>ApplicationEventPublisher</code> as the publisher, <code>@EventListener</code> (or <code>implements ApplicationListener&lt;T&gt;</code>) as listeners, and an internal dispatcher that matches events to listeners by type.</p>
+<h3 id="how-does-a-listener-method-know-which-event-type-to-react-to">How does a listener method know which event type to react to?<a class="headerlink" href="#how-does-a-listener-method-know-which-event-type-to-react-to" title="Permanent link">&para;</a></h3>
+<p>From its own parameter type — <code>@EventListener public void onStartup(ApplicationStartedEvent event)</code> only fires for <code>ApplicationStartedEvent</code>; Spring inspects the parameter to register the binding.</p>
+<h3 id="are-spring-application-events-processed-asynchronously-by-default">Are Spring application events processed asynchronously by default?<a class="headerlink" href="#are-spring-application-events-processed-asynchronously-by-default" title="Permanent link">&para;</a></h3>
+<p>No — by default, listeners execute synchronously, on the same thread as the publisher, in unspecified order. A slow or heavy listener blocks everything downstream of the <code>publishEvent()</code> call.</p>
+<h3 id="whats-the-main-engineering-benefit-of-using-events-instead-of-direct-method-calls-between-services">What's the main engineering benefit of using events instead of direct method calls between services?<a class="headerlink" href="#whats-the-main-engineering-benefit-of-using-events-instead-of-direct-method-calls-between-services" title="Permanent link">&para;</a></h3>
+<p>Loose coupling — the publisher never holds a reference to its listeners, so new reactions can be added (or removed) without changing the publisher's code at all, unlike a direct call chain where the caller must know about every reactor.</p>
+<hr />
+<p>❌ A circular dependency between two <code>@Autowired</code> fields is just a warning — the app still starts.</p>
+<p>✔ In Spring Boot 2.6+, circular references are prohibited by default and fail context startup outright, specifically because relying on them is discouraged.</p>
+<hr />
+<p>❌ Any class in your project automatically becomes a Spring bean once the app runs.</p>
+<p>✔ Only classes reached by component scanning (by default, the application's own package tree) and annotated <code>@Component</code> become beans — anything outside that scope, or any class you can't annotate, needs explicit <code>@Bean</code> registration.</p>
+<hr />
+<p>❌ <code>application_beta.properties</code> (underscore) will be picked up the same as <code>application-beta.properties</code>.</p>
+<p>✔ Spring's profile-file detection requires the exact hyphenated pattern — the underscore variant is silently ignored.</p>
+<hr />
+<p>❌ Since <code>MongoDBConnector</code> has no <code>@Autowired</code> field, its values must be hardcoded or manually set.</p>
+<p>✔ <code>@ConfigurationProperties</code> binds property values automatically during bean creation via setter injection — no <code>@Autowired</code> is needed for this kind of binding.</p>
+<hr />
+<p>❌ Spring application events are processed asynchronously, so a slow listener won't block anything else.</p>
+<p>✔ They're synchronous by default — publisher and every listener run sequentially, on the same thread, and a slow listener blocks the call that published the event.</p>
+<hr />
+<p>❌ Listeners always execute in the order they're defined or registered.</p>
+<p>✔ Execution order is not guaranteed by default — don't design logic that depends on one listener running before another unless it's explicitly configured to.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Circular bean dependency  → no valid construction order exists;
+                             Spring 2.6+ fails fast by default;
+                             fix the graph, don&#39;t re-enable the workaround
+
+Component scanning         → only finds @Component within the scanned
+                              package tree
+@Bean + @Configuration      → for classes Spring can&#39;t discover
+                              (third-party, or outside the scan path)
+
+Property priority           → Java Args &gt; Env Vars &gt;
+                               application.properties/yml &gt; @PropertySource
+
+Profile files                → application-{profile}.properties, exact
+                                 hyphenated naming, merged over the defaults
+@ConfigurationProperties      → binds values via setter injection,
+                                 no @Autowired needed
+
+Web request (preview)          → NIC → kernel/TCP → servlet container →
+                                   DispatcherServlet → controller
+
+Spring events                  → ApplicationEventPublisher (publish) +
+                                   @EventListener / ApplicationListener&lt;T&gt;
+                                   (react) — synchronous, same-thread,
+                                   order not guaranteed by default
+Events                         → decouple &quot;what happened&quot; from &quot;who reacts,&quot;
+                                   the same benefit Observer always provides
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-1-checklist">Stage 2 · Week 1 Checklist<a class="headerlink" href="#stage-2-week-1-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain why a circular bean dependency fails at startup, and how to actually fix it</li>
+<li>[x] Explain the difference between <code>@Component</code> and <code>@Bean</code>, and when each is required</li>
+<li>[x] Explain the full property-source priority order, and what <code>${key:default}</code> protects against</li>
+<li>[x] Explain why <code>@Value</code> can't see a key from a custom file without <code>@PropertySource</code></li>
+<li>[x] Explain the profile file naming convention and what happens internally when a profile is active</li>
+<li>[x] Explain why <code>@ConfigurationProperties</code> doesn't need <code>@Autowired</code>, and why it needs setters</li>
+<li>[x] Explain the Observer Pattern and how <code>ApplicationEventPublisher</code>/<code>@EventListener</code> implement it</li>
+<li>[x] Explain why Spring's built-in events (<code>ApplicationStartedEvent</code>, <code>ContextClosedEvent</code>) never require you to write a publisher</li>
+<li>[x] Explain why application events are synchronous and unordered by default, and what that implies for listener design</li>
+<li>[x] Explain how publishing an event can eliminate a circular dependency between two beans</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

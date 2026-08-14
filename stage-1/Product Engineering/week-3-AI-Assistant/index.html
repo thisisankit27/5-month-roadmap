@@ -1,0 +1,3981 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/Product%20Engineering/week-3-AI-Assistant/">
+      
+      
+        <link rel="prev" href="../week-2-AI-Assistent/">
+      
+      
+        <link rel="next" href="../week-4-AI-Assistant/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Thinking Like a Senior Engineer.v3 - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#thinking-like-a-senior-engineerv3" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Thinking Like a Senior Engineer.v3
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pr-10-discussion-lcel-composition-in-the-generation-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-10 Discussion — LCEL Composition in the Generation Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-10 Discussion — LCEL Composition in the Generation Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-roadmap-divergence-a-discovery-not-a-defect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Roadmap Divergence — A Discovery, Not a Defect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-1-lcel-is-the-ai-composition-layer-not-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #1 — LCEL Is the AI Composition Layer, Not the Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-2-where-the-chain-terminates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #2 — Where the Chain Terminates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-3-document-formatting-lives-inside-the-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #3 — Document Formatting Lives Inside the Chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-4-runnableparallel-for-shape-not-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #4 — RunnableParallel for Shape, Not Speed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-5-split-the-prompt-by-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #5 — Split the Prompt by Ownership
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-6-_format_documents-is-a-function-not-a-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #6 — _format_documents Is a Function, Not a Method
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities-before-and-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities — Before and After
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistakes-i-made" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistakes I Made
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mistakes I Made">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mistake-1-planning-to-call-format_messages-inside-an-lcel-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 1 — Planning to call format_messages() inside an LCEL chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-2-composing-the-chain-and-never-invoking-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 2 — Composing the chain and never invoking it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-3-putting-retrieved-context-in-an-ai-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 3 — Putting retrieved context in an ai message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-4-passing-two-dictionaries-to-invoke" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 4 — Passing two dictionaries to .invoke()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-5-referencing-a-classmethod-from-the-class-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 5 — Referencing a classmethod from the class body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-6-every-branch-receives-the-whole-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 6 — Every branch receives the whole input
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-pr-deliberately-did-not-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This PR Deliberately Did Not Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-11-discussion-citations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-11 Discussion — Citations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-11 Discussion — Citations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-real-problem-one-line-destroys-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Real Problem — One Line Destroys Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-7-level-1-citations-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #7 — Level 1 Citations Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-8-free-text-markers-not-structured-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #8 — Free-Text Markers, Not Structured Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-9-request-scoped-labels-with-a-materialized-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #9 — Request-Scoped Labels With a Materialized Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-10-labelling-is-a-business-decision-rendering-is-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #10 — Labelling Is a Business Decision, Rendering Is Formatting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-11-context-format-solves-the-boundary-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #11 — Context Format Solves the Boundary Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-12-sanitize-dont-reject-pr-11c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #12 — Sanitize, Don't Reject (PR-11c)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities-after-pr-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities After PR-11
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistakes-i-made_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistakes I Made
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mistakes I Made">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mistake-7-module-level-mutable-state-for-the-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 7 — Module-level mutable state for the labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-8-trying-to-mutate-a-string-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 8 — Trying to mutate a string parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-9-storing-only-chunk_id-in-the-pairing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 9 — Storing only chunk_id in the pairing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-10-forgetting-what-was-already-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 10 — Forgetting what was already built
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-failure-modes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pr-10-discussion-lcel-composition-in-the-generation-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-10 Discussion — LCEL Composition in the Generation Layer
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-10 Discussion — LCEL Composition in the Generation Layer">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-roadmap-divergence-a-discovery-not-a-defect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Roadmap Divergence — A Discovery, Not a Defect
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-1-lcel-is-the-ai-composition-layer-not-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #1 — LCEL Is the AI Composition Layer, Not the Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-2-where-the-chain-terminates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #2 — Where the Chain Terminates
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-3-document-formatting-lives-inside-the-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #3 — Document Formatting Lives Inside the Chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-4-runnableparallel-for-shape-not-speed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #4 — RunnableParallel for Shape, Not Speed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-5-split-the-prompt-by-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #5 — Split the Prompt by Ownership
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-6-_format_documents-is-a-function-not-a-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #6 — _format_documents Is a Function, Not a Method
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities-before-and-after" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities — Before and After
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistakes-i-made" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistakes I Made
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mistakes I Made">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mistake-1-planning-to-call-format_messages-inside-an-lcel-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 1 — Planning to call format_messages() inside an LCEL chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-2-composing-the-chain-and-never-invoking-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 2 — Composing the chain and never invoking it
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-3-putting-retrieved-context-in-an-ai-message" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 3 — Putting retrieved context in an ai message
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-4-passing-two-dictionaries-to-invoke" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 4 — Passing two dictionaries to .invoke()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-5-referencing-a-classmethod-from-the-class-body" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 5 — Referencing a classmethod from the class body
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-6-every-branch-receives-the-whole-input" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 6 — Every branch receives the whole input
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-pr-deliberately-did-not-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This PR Deliberately Did Not Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-11-discussion-citations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-11 Discussion — Citations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-11 Discussion — Citations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-real-problem-one-line-destroys-identity" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Real Problem — One Line Destroys Identity
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-7-level-1-citations-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #7 — Level 1 Citations Only
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-8-free-text-markers-not-structured-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #8 — Free-Text Markers, Not Structured Output
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-9-request-scoped-labels-with-a-materialized-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #9 — Request-Scoped Labels With a Materialized Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-10-labelling-is-a-business-decision-rendering-is-formatting" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #10 — Labelling Is a Business Decision, Rendering Is Formatting
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-11-context-format-solves-the-boundary-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #11 — Context Format Solves the Boundary Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-12-sanitize-dont-reject-pr-11c" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #12 — Sanitize, Don't Reject (PR-11c)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities-after-pr-11" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities After PR-11
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistakes-i-made_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistakes I Made
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Mistakes I Made">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#mistake-7-module-level-mutable-state-for-the-labels" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 7 — Module-level mutable state for the labels
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-8-trying-to-mutate-a-string-parameter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 8 — Trying to mutate a string parameter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-9-storing-only-chunk_id-in-the-pairing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 9 — Storing only chunk_id in the pairing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mistake-10-forgetting-what-was-already-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mistake 10 — Forgetting what was already built
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-failure-modes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="thinking-like-a-senior-engineerv3">Thinking Like a Senior Engineer.v3<a class="headerlink" href="#thinking-like-a-senior-engineerv3" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Nothing new for the user.
+Everything changes internally.</p>
+</blockquote>
+<p>Week 1 built a RAG pipeline. Week 2 made retrieval production-grade. Week 3 changes no
+feature at all — it changes <strong>how the AI layer is composed</strong>, and asks a question that
+should be asked before adopting any framework:</p>
+<blockquote>
+<p>What engineering problem does this actually solve, and what does it cost me?</p>
+</blockquote>
+<hr />
+<h2 id="pr-10-discussion-lcel-composition-in-the-generation-layer">PR-10 Discussion — LCEL Composition in the Generation Layer<a class="headerlink" href="#pr-10-discussion-lcel-composition-in-the-generation-layer" title="Permanent link">&para;</a></h2>
+<h3 id="problem-statement">Problem Statement<a class="headerlink" href="#problem-statement" title="Permanent link">&para;</a></h3>
+<p>The generation step worked. That was the difficulty.</p>
+<p><code>GenerationService.generate_answer()</code> did four things in sequence, wired together by local
+variables and line order:</p>
+<div class="highlight"><pre><span></span><code>1. join retrieved documents  →  one context string
+2. fill the prompt template
+3. call the LLM
+4. map the reply             →  GenerationResponse
+</code></pre></div>
+<p>Nothing was broken. So the first honest question was whether this PR should exist at all.</p>
+<p>It should, and the reason is not "LCEL is the modern way." It is a specific, nameable
+weakness. Imagine four requirements arriving over the next two weeks:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th>What I would have to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Stream tokens to the UI</td>
+<td>Edit <code>generate_answer</code></td>
+</tr>
+<tr>
+<td>Batch 50 questions to evaluate retrieval</td>
+<td>Edit <code>generate_answer</code></td>
+</tr>
+<tr>
+<td>Retry when Ollama times out</td>
+<td>Edit <code>generate_answer</code></td>
+</tr>
+<tr>
+<td>Log how long each step took</td>
+<td>Edit <code>generate_answer</code></td>
+</tr>
+</tbody>
+</table>
+<p>One method, modified four times, for four unrelated reasons.</p>
+<p>That is an <strong>Open/Closed Principle</strong> violation. The method is not closed to modification
+when <em>execution</em> requirements change. Every new execution concern reaches into
+orchestration code that has nothing to do with it.</p>
+<blockquote>
+<p><strong>The engineering problem is not "my code is ugly."</strong>
+It is: <em>execution concerns and orchestration logic are fused in one method.</em></p>
+</blockquote>
+<hr />
+<h3 id="core-thoughts-what-i-believed-going-in">Core Thoughts — What I Believed Going In<a class="headerlink" href="#core-thoughts-what-i-believed-going-in" title="Permanent link">&para;</a></h3>
+<p>My starting position was roughly: <em>LCEL is LangChain's newer syntax, so Week 3 replaces my
+code with the pipe operator.</em></p>
+<p>That framing is wrong in a way worth recording, because it is the framing an interviewer
+will probe. Rewriting working code in a newer syntax is a <strong>lateral refactor</strong> — same
+behaviour, same weaknesses, new imports. It is indistinguishable from cargo-culting.</p>
+<p>The correct framing only appeared after asking what LCEL's <em>bet</em> is:</p>
+<blockquote>
+<p>Make every step implement <strong>one interface</strong>.
+Then execution modes belong to the <strong>composition</strong>, not to each step.</p>
+</blockquote>
+<p>Once <code>prompt</code>, <code>llm</code>, and the document formatter all satisfy the <code>Runnable</code> contract,
+<code>.stream()</code>, <code>.batch()</code>, <code>.ainvoke()</code>, <code>.with_retry()</code> apply to the <strong>entire chain</strong> —
+because a chain of Runnables is itself a Runnable. All four rows of the table above are
+solved without touching orchestration code.</p>
+<p>That is a real engineering argument. "It's the modern way" is not.</p>
+<hr />
+<h3 id="the-roadmap-divergence-a-discovery-not-a-defect">The Roadmap Divergence — A Discovery, Not a Defect<a class="headerlink" href="#the-roadmap-divergence-a-discovery-not-a-defect" title="Permanent link">&para;</a></h3>
+<p><code>PR-Journey.md</code> describes PR-10 as:</p>
+<div class="highlight"><pre><span></span><code>Replace create_retrieval_chain(...)   with   Retriever → Prompt → LLM → Parser
+</code></pre></div>
+<p>I never built <code>create_retrieval_chain</code>. Weeks 1 and 2 hand-built the orchestration, and
+<code>RetrievalService</code> already owns dense retrieval, sparse retrieval, metadata filtering, and
+reciprocal rank fusion as a proper layer.</p>
+<p>The roadmap was written <strong>before the code existed</strong>. The right conclusion is not "the plan
+was wrong" — it is:</p>
+<blockquote>
+<p>I arrived at this checkpoint and found the architecture was already ahead of the plan.</p>
+</blockquote>
+<p>So the real PR-10 is <strong><code>Prompt → LLM</code></strong>, scoped to <code>GenerationService</code>. Retrieval stays
+exactly where it is.</p>
+<p><strong>Interview value:</strong> <em>"I evaluated the framework's helper chain and found my own retrieval
+layer was already cleaner, so I adopted LCEL only where it earned its place"</em> is a stronger
+answer than <em>"I used the recommended helper."</em></p>
+<hr />
+<h3 id="design-decision-1-lcel-is-the-ai-composition-layer-not-the-architecture">Design Decision #1 — LCEL Is the AI Composition Layer, Not the Architecture<a class="headerlink" href="#design-decision-1-lcel-is-the-ai-composition-layer-not-the-architecture" title="Permanent link">&para;</a></h3>
+<p>The most consequential decision was a <strong>boundary</strong>, made before any code.</p>
+<div class="highlight"><pre><span></span><code>ask()
+  │
+  ▼ Input Guardrails         ← plain Python
+  │
+  ▼ RetrievalService         ← plain Python
+  │
+  ▼ Context Guardrails       ← plain Python
+  │
+  ▼ LCEL Chain               ← the ONLY framework-composed region
+  │
+  ▼ Output Guardrails        ← plain Python
+  │
+  ▼ GenerationResponse
+</code></pre></div>
+<p><strong>Bad version:</strong> everything becomes a Runnable.
+<strong>Chosen version:</strong> business logic stays plain Python; only AI composition is declarative.</p>
+<p><strong>Why.</strong> Guardrails are <em>business policy</em>. <code>validate_input()</code> is a pure function over a
+string — testable with a plain <code>assert</code> and zero framework imports. Wrapping it in a
+<code>RunnableLambda</code> would buy nothing and would couple domain policy to LangChain's execution
+model, making the policy untestable without the framework.</p>
+<p>Ingestion was excluded for a different reason: LCEL's value is composing <strong>stateless
+transformations</strong>. Ingestion writes to indexes and registers metadata — side effects at
+every step. Declarative composition over side-effecting steps is a lie you tell yourself.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+A framework may own <em>composition</em>. It must not own <em>policy</em>.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-2-where-the-chain-terminates">Design Decision #2 — Where the Chain Terminates<a class="headerlink" href="#design-decision-2-where-the-chain-terminates" title="Permanent link">&para;</a></h3>
+<p>The textbook LCEL chain ends <code>... | llm | StrOutputParser()</code>. I deliberately stopped at the
+LLM.</p>
+<p><code>StrOutputParser</code> returns <code>message.content</code> — a plain string. It <strong>discards</strong>
+<code>response_metadata</code> and <code>usage_metadata</code>. The UI renders prompt tokens, completion tokens,
+finish reason, and latency from exactly those fields.</p>
+<p>The textbook chain would have silently broken the observability I built in Week 1.</p>
+<p>There is a second, better reason. <code>GenerationResponse</code> is <strong>my</strong> type. The moment a
+LangChain chain produces it, my domain object is entangled with the framework's execution
+model. Keeping the mapping in the service means the chain returns something
+LangChain-native and the service <strong>translates at the boundary</strong> — the same instinct that
+stops a Spring controller returning JPA entities straight to the client.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Translate framework types into domain types at the boundary you own.</p>
+</blockquote>
+<p><strong>Consequence accepted:</strong> this chain cannot be dropped into a generic LCEL pipeline that
+expects a string. That is fine — it is not a reusable public chain, it is the internal
+composition of one service.</p>
+<hr />
+<h3 id="design-decision-3-document-formatting-lives-inside-the-chain">Design Decision #3 — Document Formatting Lives <em>Inside</em> the Chain<a class="headerlink" href="#design-decision-3-document-formatting-lives-inside-the-chain" title="Permanent link">&para;</a></h3>
+<p>Two options:</p>
+<p><strong>(a)</strong> Join documents outside the chain; pass a finished context string in.
+<strong>(b)</strong> Join documents inside the chain; the chain accepts raw <code>Document</code> objects.</p>
+<p>Chose <strong>(b)</strong>.</p>
+<p>Under (a), the caller must know how to format context before it can use the chain — the
+chain leaks its input requirements upward. Under (b) the chain is one complete unit, from
+domain objects to LLM reply.</p>
+<p>The payoff is deferred but real: when streaming arrives in Week 4, the whole transformation
+is a single <code>.stream()</code> call on one object. Under (a), the caller's pre-formatting step
+sits outside anything the framework can stream, batch, or trace.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+A component should accept the data its caller naturally has, not a shape the caller must
+learn to construct.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-4-runnableparallel-for-shape-not-speed">Design Decision #4 — RunnableParallel for <strong>Shape</strong>, Not Speed<a class="headerlink" href="#design-decision-4-runnableparallel-for-shape-not-speed" title="Permanent link">&para;</a></h3>
+<p>This one I arrived at by hitting a wall.</p>
+<p>The pipe operator is a straight line: whatever one step returns is <em>all</em> the next step
+receives. But the prompt needs <strong>two</strong> variables:</p>
+<div class="highlight"><pre><span></span><code>{context}      ← derived from the documents
+{user_query}   ← comes from the caller
+</code></pre></div>
+<p>So piping documents into a formatter destroys <code>user_query</code>. <strong>A Runnable accepts exactly
+one input.</strong> That constraint is precisely <em>why</em> <code>RunnableParallel</code> exists — it is how you
+carry multiple values through a single-input pipeline.</p>
+<div class="highlight"><pre><span></span><code>{&quot;documents&quot;: [...], &quot;user_query&quot;: &quot;...&quot;}       ← chain input
+                │
+    ┌───────────┴───────────┐        both branches receive the FULL dict
+    ▼                       ▼
+pluck &quot;documents&quot;      pluck &quot;user_query&quot;
+    │                       │
+join into one string    (unchanged)
+    ▼                       ▼
+{&quot;context&quot;: &quot;...&quot;, &quot;user_query&quot;: &quot;...&quot;}         ← what the prompt needs
+</code></pre></div>
+<p><strong>The correction that mattered.</strong> My first instinct — and my mentor's first framing — was
+that <code>RunnableParallel</code> is about <em>concurrency</em>, and that this project had no use for it
+because joining three strings is instant. That judged it on latency alone.</p>
+<p>The real reason to reach for it here is <strong>structural</strong>: fanning one input out into a named
+dictionary. Concurrency is a <em>consequence</em> the runtime is free to exploit; it is not the
+motivation.</p>
+<blockquote>
+<p><strong>Interview answer</strong>
+"RunnableParallel isn't primarily about concurrency. It's a declarative fan-out of one
+input into a named structure. The runtime may execute branches concurrently, but that's a
+consequence, not the reason you use it."</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-5-split-the-prompt-by-ownership">Design Decision #5 — Split the Prompt by Ownership<a class="headerlink" href="#design-decision-5-split-the-prompt-by-ownership" title="Permanent link">&para;</a></h3>
+<p>Before, one string carried persona, rules, delimiters, context, and question — and it was
+sent to the model as a <strong>single human message</strong>, because passing a plain string to
+<code>ChatOllama.invoke()</code> wraps everything as one <code>HumanMessage</code>.</p>
+<p>There was no system message at all. Carefully written rules were sitting in the user's
+turn — the least authoritative position in the conversation, and the same place untrusted
+input lives.</p>
+<p>The split is by <strong>reason to change</strong>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Changes when</th>
+<th>Contains</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_SYSTEM_PROMPT</code></td>
+<td><em>policy</em> changes</td>
+<td>persona + the four rules — developer-controlled</td>
+</tr>
+<tr>
+<td><code>_HUMAN_PROMPT</code></td>
+<td><em>every request</em></td>
+<td>retrieved context + the question — untrusted data</td>
+</tr>
+</tbody>
+</table>
+<p>Different change frequencies, different reasons to change, therefore different places. That
+is the <strong>Single Responsibility Principle applied to a prompt</strong>.</p>
+<p>Retrieved context stays in the human message on purpose. It came from user-uploaded
+documents, so it is <strong>data, not instruction</strong> — and the <code>&lt;context&gt;</code> delimiters mark it as
+quoted material rather than commands.</p>
+<p>Both prompts live at <strong>module level</strong>, not inside the class body. A triple-quoted string
+keeps every character between the quotes, including indentation — written inside a class,
+every line ships to the model with eight leading spaces.</p>
+<hr />
+<h3 id="design-decision-6-_format_documents-is-a-function-not-a-method">Design Decision #6 — <code>_format_documents</code> Is a Function, Not a Method<a class="headerlink" href="#design-decision-6-_format_documents-is-a-function-not-a-method" title="Permanent link">&para;</a></h3>
+<p>The document joiner was originally a <code>@classmethod</code>. Referencing it while building the
+chain as a class attribute produced a <code>NameError</code>, and the fix turned out to be a design
+lesson rather than a workaround.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">__generate_context</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">retrieved_documents</span><span class="p">):</span>
+    <span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="n">doc</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">doc</span> <span class="ow">in</span> <span class="n">retrieved_documents</span><span class="p">])</span>
+</code></pre></div>
+<p><strong>It never uses <code>cls</code>.</strong> Not once. It is a pure function <code>list[Document] → str</code> that was
+put in a class out of habit.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+If a method doesn't use <code>self</code> or <code>cls</code>, it isn't a method.</p>
+</blockquote>
+<p>Moving it to module level fixed the ordering problem, removed the <code>cls</code> problem, and made
+it unit-testable without instantiating or importing <code>GenerationService</code> at all.</p>
+<p>This also protects <strong>framework independence</strong>: <code>_format_documents</code> knows nothing about
+LangChain. <code>RunnableLambda</code> adapts it to the <code>Runnable</code> contract from the outside — the
+<strong>Adapter Pattern</strong>. LangChain bends to my function; my function does not bend to
+LangChain.</p>
+<hr />
+<h3 id="responsibilities-before-and-after">Responsibilities — Before and After<a class="headerlink" href="#responsibilities-before-and-after" title="Permanent link">&para;</a></h3>
+<p><strong>Before — <code>generate_answer()</code> owned:</strong></p>
+<ul>
+<li>joining documents into a context string</li>
+<li>filling the prompt template</li>
+<li>invoking the LLM</li>
+<li>mapping the reply to <code>GenerationResponse</code></li>
+<li><em>implicitly:</em> the execution strategy (sync, once, no retry, no streaming)</li>
+</ul>
+<p><strong>After:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Owns</th>
+<th>Explicitly does NOT own</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_format_documents</code></td>
+<td>turning <code>list[Document]</code> into one string</td>
+<td>prompts, LLMs, framework types</td>
+</tr>
+<tr>
+<td><code>_SYSTEM_PROMPT</code></td>
+<td>answering policy and rules</td>
+<td>per-request data</td>
+</tr>
+<tr>
+<td><code>_HUMAN_PROMPT</code></td>
+<td>per-request framing of context + question</td>
+<td>policy</td>
+</tr>
+<tr>
+<td><code>_chain</code></td>
+<td>composition and execution strategy</td>
+<td>domain types, business policy</td>
+</tr>
+<tr>
+<td><code>generate_answer</code></td>
+<td>translating the LLM reply into <code>GenerationResponse</code></td>
+<td>prompt construction, invocation mechanics</td>
+</tr>
+</tbody>
+</table>
+<p>The fifth bullet is the one that moved. <strong>Execution strategy is now owned by the chain</strong>,
+which is the entire point of the PR.</p>
+<hr />
+<h3 id="final-architecture">Final Architecture<a class="headerlink" href="#final-architecture" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>RetrievalService
+        │
+        │  list[Document]
+        ▼
+GenerationService.generate_answer(user_query, retrieved_documents)
+        │
+        │  {&quot;documents&quot;: [...], &quot;user_query&quot;: &quot;...&quot;}
+        ▼
+┌───────────────────────────────────────────────┐
+│                 _chain                        │
+│                                               │
+│   RunnableParallel                            │
+│      ├── context     ← itemgetter(&quot;documents&quot;)│
+│      │                 | _format_documents    │
+│      └── user_query  ← itemgetter(&quot;user_query&quot;)│
+│                    │                          │
+│                    ▼                          │
+│           ChatPromptTemplate                  │
+│              system: rules                    │
+│              human:  &lt;context&gt; + question     │
+│                    │                          │
+│                    ▼                          │
+│                ChatOllama                     │
+└───────────────────────────────────────────────┘
+        │
+        │  AIMessage (content + response_metadata + usage_metadata)
+        ▼
+GenerationResponse   ← translated in the service, not in the chain
+</code></pre></div>
+<hr />
+<h3 id="mistakes-i-made">Mistakes I Made<a class="headerlink" href="#mistakes-i-made" title="Permanent link">&para;</a></h3>
+<p>The wrong attempts taught more than the final code. Recording them, because each maps to a
+misconception an interviewer can expose in one question.</p>
+<h4 id="mistake-1-planning-to-call-format_messages-inside-an-lcel-chain">Mistake 1 — Planning to call <code>format_messages()</code> inside an LCEL chain<a class="headerlink" href="#mistake-1-planning-to-call-format_messages-inside-an-lcel-chain" title="Permanent link">&para;</a></h4>
+<p>I said, in one breath, that I would use <code>format_messages()</code> <em>and</em> that the prompt would be
+part of the LCEL pipeline. Those are opposites.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># imperative — I call it, I hold the result, I pass it on</span>
+<span class="n">messages</span> <span class="o">=</span> <span class="n">prompt</span><span class="o">.</span><span class="n">format_messages</span><span class="p">(</span><span class="n">context</span><span class="o">=...</span><span class="p">,</span> <span class="n">user_query</span><span class="o">=...</span><span class="p">)</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">llm</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span><span class="n">messages</span><span class="p">)</span>
+
+<span class="c1"># declarative — I never call it; I wire it, and the runtime calls it</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">llm</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span> <span class="s2">&quot;user_query&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">})</span>
+</code></pre></div>
+<p>Calling <code>format_messages()</code> would have been my <em>existing</em> code with a different method
+name — a cosmetic refactor.</p>
+<blockquote>
+<p><strong>Lesson:</strong> In LCEL you do not call the prompt. You connect it. <code>format_messages()</code> is a
+debugging escape hatch, not how a chain runs.</p>
+</blockquote>
+<h4 id="mistake-2-composing-the-chain-and-never-invoking-it">Mistake 2 — Composing the chain and never invoking it<a class="headerlink" href="#mistake-2-composing-the-chain-and-never-invoking-it" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">llm_response</span> <span class="o">=</span> <span class="nb">input</span> <span class="o">|</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_prompt</span> <span class="o">|</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_llm</span>   <span class="c1"># this is a RunnableSequence OBJECT</span>
+<span class="o">...</span>
+<span class="n">answer</span> <span class="o">=</span> <span class="n">llm_response</span><span class="o">.</span><span class="n">content</span>                   <span class="c1"># AttributeError</span>
+</code></pre></div>
+<p>The exact mirror of Mistake 1. First I wanted to call everything and compose nothing; then
+I composed everything and called nothing.</p>
+<blockquote>
+<p><strong>Lesson:</strong> Composition and execution are two separate steps. <code>|</code> builds the pipeline.
+<code>.invoke()</code> runs it.</p>
+</blockquote>
+<h4 id="mistake-3-putting-retrieved-context-in-an-ai-message">Mistake 3 — Putting retrieved context in an <code>ai</code> message<a class="headerlink" href="#mistake-3-putting-retrieved-context-in-an-ai-message" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="p">(</span><span class="s2">&quot;ai&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{context}</span><span class="s2">&quot;</span><span class="p">),</span>
+<span class="p">(</span><span class="s2">&quot;human&quot;</span><span class="p">,</span> <span class="s2">&quot;</span><span class="si">{user_input}</span><span class="s2">&quot;</span><span class="p">)</span>
+</code></pre></div>
+<p>An <code>ai</code> message means <em>"the assistant said this earlier."</em> This tells the model it
+<strong>already produced</strong> the retrieved documents, so it treats them as its own prior output —
+its own memory — rather than as evidence it must be constrained by.</p>
+<blockquote>
+<p><strong>Lesson:</strong> Retrieved context is data. Data belongs in the human turn, inside delimiters
+that mark it as quoted material.</p>
+</blockquote>
+<h4 id="mistake-4-passing-two-dictionaries-to-invoke">Mistake 4 — Passing two dictionaries to <code>.invoke()</code><a class="headerlink" href="#mistake-4-passing-two-dictionaries-to-invoke" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="bp">cls</span><span class="o">.</span><span class="n">_chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">(</span>
+    <span class="p">{</span><span class="s2">&quot;context&quot;</span><span class="p">:</span> <span class="n">retrieved_documents</span><span class="p">},</span>
+    <span class="p">{</span><span class="s2">&quot;user_input&quot;</span><span class="p">:</span> <span class="n">user_query</span><span class="p">},</span>        <span class="c1"># silently treated as CONFIG</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><code>invoke()</code>'s signature is <code>invoke(input, config=None)</code>. The second positional argument is
+<code>RunnableConfig</code> — callbacks, tags, timeouts. My query was handed to LangChain as
+configuration and discarded.</p>
+<blockquote>
+<p><strong>Lesson:</strong> A Runnable takes exactly one input. This constraint is <em>why</em> <code>RunnableParallel</code>
+has to exist.</p>
+</blockquote>
+<h4 id="mistake-5-referencing-a-classmethod-from-the-class-body">Mistake 5 — Referencing a classmethod from the class body<a class="headerlink" href="#mistake-5-referencing-a-classmethod-from-the-class-body" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">class</span><span class="w"> </span><span class="nc">GenerationService</span><span class="p">:</span>
+    <span class="nb">input</span> <span class="o">=</span> <span class="n">RunnableParallel</span><span class="p">(</span>
+        <span class="n">context</span><span class="o">=</span><span class="n">__generate_context</span><span class="p">(),</span>   <span class="c1"># NameError</span>
+    <span class="p">)</span>
+    <span class="o">...</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">__generate_context</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="o">...</span><span class="p">):</span>   <span class="c1"># defined 44 lines later</span>
+</code></pre></div>
+<p>Three problems stacked: (1) a class body executes top-to-bottom <em>immediately</em>, so the name
+does not exist yet; (2) <code>cls</code> does not exist until a method is called; (3) <code>()</code> calls the
+function instead of passing it — LCEL needs the function object, not its return value.</p>
+<blockquote>
+<p><strong>Lesson:</strong> A Python class body is executable code, not a declaration block. And see
+Design Decision #6 — this was Python pointing at a design problem, not a language
+limitation.</p>
+</blockquote>
+<h4 id="mistake-6-every-branch-receives-the-whole-input">Mistake 6 — Every branch receives the <em>whole</em> input<a class="headerlink" href="#mistake-6-every-branch-receives-the-whole-input" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">RunnableParallel</span><span class="p">(</span>
+    <span class="n">context</span><span class="o">=</span><span class="n">_format_documents</span><span class="p">,</span>           <span class="c1"># receives the ENTIRE dict, not documents</span>
+    <span class="n">user_query</span><span class="o">=</span><span class="n">RunnablePassthrough</span><span class="p">(),</span>    <span class="c1"># forwards the ENTIRE dict</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>Branches of a <code>RunnableParallel</code> are each handed the complete input. Each branch must pluck
+its own key — that is what <code>itemgetter</code> is for.</p>
+<p><code>RunnablePassthrough</code> was the wrong tool: it forwards <em>everything</em>, and I only wanted one
+key. It belongs where you genuinely want the whole input carried forward.</p>
+<hr />
+<h3 id="rejected-alternatives">Rejected Alternatives<a class="headerlink" href="#rejected-alternatives" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Why rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>... \| llm \| StrOutputParser()</code></td>
+<td>Discards <code>usage_metadata</code> and <code>response_metadata</code>; silently breaks token/latency reporting</td>
+</tr>
+<tr>
+<td>A custom Runnable emitting <code>GenerationResponse</code></td>
+<td>Drags my domain DTO into the framework's execution model</td>
+</tr>
+<tr>
+<td>Guardrails as <code>RunnableLambda</code>s</td>
+<td>Couples business policy to LangChain; destroys framework-free testability</td>
+</tr>
+<tr>
+<td><code>RetrievalService</code> inside the chain</td>
+<td>Retrieval is the Information Expert for its own strategy; LCEL adds nothing</td>
+</tr>
+<tr>
+<td><code>RunnablePassthrough.assign(context=...)</code></td>
+<td>Fewer lines, but also forwards <code>documents</code>, which the prompt silently ignores. <code>RunnableParallel</code> states <em>exactly</em> what the prompt receives — explicit beats implicit at a boundary</td>
+</tr>
+<tr>
+<td>Formatting documents outside the chain</td>
+<td>Caller would need to know how to build context; breaks the chain as a self-contained unit</td>
+</tr>
+<tr>
+<td>Refactoring the ingestion pipeline to LCEL</td>
+<td>Ingestion is side-effect-heavy; LCEL composes stateless transformations</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="what-this-pr-deliberately-did-not-change">What This PR Deliberately Did <em>Not</em> Change<a class="headerlink" href="#what-this-pr-deliberately-did-not-change" title="Permanent link">&para;</a></h3>
+<p>Restraint is a design decision and deserves to be recorded.</p>
+<ul>
+<li><code>rag.py</code> — untouched. Orchestration order is unchanged.</li>
+<li><code>app.py</code> — untouched. Zero user-visible change, as the roadmap intended.</li>
+<li><code>RetrievalService</code> and everything under it — untouched.</li>
+<li>All three guardrail modules — untouched.</li>
+<li>The ingestion pipeline — untouched.</li>
+<li><strong>The prompt's wording</strong> — rules moved verbatim. Rule 4 ("under 3 sentences") was a
+  testing constraint and <em>should</em> be revisited, but changing prompt <strong>content</strong> is PR-11's
+  responsibility. Moving text and rewriting text are two different concerns; bundling them
+  would make the diff unreviewable.</li>
+</ul>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+One responsibility per PR applies to refactors too. A diff that both moves and rewrites
+a thing cannot be reviewed for either.</p>
+</blockquote>
+<hr />
+<h3 id="production-failure-modes">Production Failure Modes<a class="headerlink" href="#production-failure-modes" title="Permanent link">&para;</a></h3>
+<p>The most dangerous bug in this PR never raised an exception.</p>
+<p>An intermediate version computed <code>context</code> correctly and then used a prompt that declared
+only <code>{user_input}</code>. Extra keys are <strong>silently ignored</strong>. The application would have run
+normally and returned confident, fluent answers built on <strong>no retrieved context at all</strong>.</p>
+<blockquote>
+<p>A crash is fixed in ten minutes. A silent quality regression ships, and you learn about it
+weeks later when someone says "the answers got worse."</p>
+</blockquote>
+<p>Other failure modes now understood:</p>
+<ul>
+<li><strong>Ollama unreachable</strong> — the chain raises; <code>ask()</code> has no <code>try/except</code> and the Streamlit
+  page will show a traceback. Deliberately left for Week 4 (PR-15, Error Handling), noted
+  rather than silently ignored.</li>
+<li><strong>Empty document list</strong> — <code>_format_documents([])</code> returns <code>""</code>, producing an empty
+  <code>&lt;context&gt;</code> block. Rule 2 should make the model refuse, but this depends on prompt
+  compliance rather than a hard guarantee. <code>validate_context()</code> catches the empty case
+  before generation, so the guardrail — not the prompt — is the real protection.</li>
+<li><strong>Prompt-template brace collision</strong> — <code>ChatPromptTemplate</code> treats <code>{...}</code> as a variable
+  slot. Braces inside prompt <em>text</em> would break template parsing. (Retrieved content is
+  injected as a <em>value</em> and is not re-parsed, so document text is safe.)</li>
+</ul>
+<hr />
+<h3 id="engineering-lessons">Engineering Lessons<a class="headerlink" href="#engineering-lessons" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Adopt a framework for a named problem, not for its popularity.</strong> The problem here was
+   an Open/Closed violation in <code>generate_answer</code>, not "my syntax is old."</li>
+<li><strong>A framework may own composition. It must not own policy.</strong></li>
+<li><strong>Composition and execution are separate steps.</strong> <code>|</code> wires; <code>.invoke()</code> runs.</li>
+<li><strong>A Runnable takes exactly one input.</strong> Every multi-value design follows from that
+   constraint.</li>
+<li><strong>If a method doesn't use <code>self</code> or <code>cls</code>, it isn't a method.</strong></li>
+<li><strong>Translate framework types into domain types at the boundary you own.</strong></li>
+<li><strong>Silent correctness bugs are worse than crashes.</strong> Prefer designs that fail loudly.</li>
+<li><strong>Split by reason to change</strong> — including prompts. That is SRP, not formatting taste.</li>
+<li><strong>The wrong attempt is the lesson.</strong> Mistakes 1 and 2 are exact opposites, and holding
+   both is what actually teaches the composition model.</li>
+<li><strong>A roadmap is a learning sequence, not a spec.</strong> Finding the code ahead of the plan is
+    an outcome, not an error.</li>
+</ol>
+<hr />
+<h3 id="interview-takeaways">Interview Takeaways<a class="headerlink" href="#interview-takeaways" title="Permanent link">&para;</a></h3>
+<p><strong>Why LCEL instead of calling the model yourself?</strong></p>
+<blockquote>
+<p>I hand-built the imperative version first and it worked. The problem was Open/Closed:
+every new <em>execution</em> concern — streaming, batching, retries, tracing — meant editing the
+same orchestration method for an unrelated reason. LCEL makes every step implement one
+interface, so execution modes belong to the composition rather than to each step. Because
+a chain of Runnables is itself a Runnable, <code>.stream()</code> and <code>.batch()</code> apply to the whole
+pipeline for free.</p>
+</blockquote>
+<p><strong>What is a Runnable, and why not a plain Python callable?</strong></p>
+<blockquote>
+<p>A callable standardizes one thing: calling it once, synchronously. <code>Runnable</code> standardizes
+<code>invoke</code>, <code>batch</code>, <code>stream</code>, their async forms, composition via <code>|</code>, plus retries,
+fallbacks, and tracing. That larger contract is what lets capabilities be added by
+composition instead of by editing each step.</p>
+</blockquote>
+<p><strong>What is <code>RunnableParallel</code> for?</strong></p>
+<blockquote>
+<p>A declarative fan-out of one input into a named dictionary. A Runnable accepts exactly one
+input, but my prompt needs two variables, so <code>RunnableParallel</code> builds the multi-key
+structure the prompt expects. Concurrency is a consequence the runtime may exploit, not
+the reason you reach for it.</p>
+</blockquote>
+<p><strong>Why didn't you use <code>StrOutputParser</code>?</strong></p>
+<blockquote>
+<p>It returns <code>message.content</code> and discards <code>response_metadata</code> and <code>usage_metadata</code>. My UI
+reports token usage and latency from those fields. More importantly, <code>GenerationResponse</code>
+is my domain type — I translate the framework's <code>AIMessage</code> into it at the service
+boundary rather than letting a chain produce my DTO.</p>
+</blockquote>
+<p><strong>Why aren't your guardrails Runnables?</strong></p>
+<blockquote>
+<p>They're business policy, not AI composition. <code>validate_input()</code> is a pure function over a
+string, testable with a plain assert and no framework imports. Making it a Runnable would
+couple domain policy to LangChain's execution model and buy nothing — the guardrails don't
+need streaming, batching, or tracing.</p>
+</blockquote>
+<p><strong>Why is retrieval outside the chain?</strong></p>
+<blockquote>
+<p><code>RetrievalService</code> is the Information Expert for retrieval — it owns the knowledge that
+dense search, sparse search, metadata filtering, and rank fusion must happen together.
+Putting it in the chain would leak that knowledge into a chain definition without buying
+anything, since the composition is internal to one service.</p>
+</blockquote>
+<p><strong>Why did you split the prompt into system and human messages?</strong></p>
+<blockquote>
+<p>They change for different reasons. Rules change when policy changes; context and question
+change every request. Beyond SRP, my original code passed one string to the model, which
+LangChain wraps as a single human message — so my rules were sitting in the user's turn,
+the same place untrusted input lives. Models weight system instructions more heavily and
+resist overriding them.</p>
+</blockquote>
+<hr />
+<h3 id="self-check">Self-Check<a class="headerlink" href="#self-check" title="Permanent link">&para;</a></h3>
+<p>Answer these without looking. If any is shaky, the corresponding section above is the fix.</p>
+<ol>
+<li>What is the Open/Closed violation this PR removed?</li>
+<li>What does <code>|</code> do, and what does it <em>not</em> do?</li>
+<li>Why can't a chain step receive two arguments?</li>
+<li>What does each branch of a <code>RunnableParallel</code> receive?</li>
+<li>Why is <code>StrOutputParser</code> absent from this chain?</li>
+<li>Why is <code>_format_documents</code> a module function rather than a classmethod?</li>
+<li>Why does retrieved context go in the human message and never the <code>ai</code> message?</li>
+<li>Which is more dangerous — an <code>AttributeError</code> on the chain, or a prompt that silently
+   drops <code>{context}</code>? Why?</li>
+<li>What is the second positional argument to <code>.invoke()</code>?</li>
+<li>Name three things this PR deliberately did not change, and why.</li>
+</ol>
+<hr />
+<h3 id="biggest-takeaway">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>LCEL did not make my code shorter. It moved a responsibility.</strong></p>
+</blockquote>
+<p>Before, <code>generate_answer</code> owned <em>what the steps are</em> <strong>and</strong> <em>how they execute</em>. After, it
+owns only the translation into my domain type — the chain owns execution.</p>
+<p>The measure of this PR is not the pipe operator. It is that streaming, batching, retries,
+and tracing can now be added <strong>without editing orchestration code</strong> — and that guardrails,
+retrieval, and ingestion remained plain Python, because none of them had that problem to
+begin with.</p>
+<hr />
+<p><strong>Next:</strong> PR-11 — Prompt Engineering. Central template, configurable prompts, citations,
+and the overdue conversation about Rule 4.</p>
+<h2 id="pr-11-discussion-citations">PR-11 Discussion — Citations<a class="headerlink" href="#pr-11-discussion-citations" title="Permanent link">&para;</a></h2>
+<h3 id="problem-statement_1">Problem Statement<a class="headerlink" href="#problem-statement_1" title="Permanent link">&para;</a></h3>
+<p><code>PR-Journey.md</code> lists four features under PR-11:</p>
+<div class="highlight"><pre><span></span><code>* Central prompt template
+* Configurable prompts
+* Better citations
+* Better formatting
+</code></pre></div>
+<p>Those are not one responsibility. They are two: <strong>where prompt text lives</strong> (a refactor, no
+user-visible change) and <strong>what the model returns</strong> (a feature). Bundling them makes the diff
+reviewable for neither — the same lesson PR-10 recorded under <em>"What This PR Deliberately Did
+Not Change."</em></p>
+<p>So PR-11 was split:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Scope</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>11b</strong></td>
+<td>Citations — labelled context, <code>CitedSource</code>, response field, UI</td>
+</tr>
+<tr>
+<td><strong>11c</strong></td>
+<td>Citation verification in output guardrails</td>
+</tr>
+<tr>
+<td><strong>11a</strong></td>
+<td>Prompt ownership — move prompts to their own module, resolve Rule 4 <em>(deferred)</em></td>
+</tr>
+</tbody>
+</table>
+<p><strong>11b was done first, not 11a.</strong> The prompt had to change for citations anyway, and
+centralising a prompt you are about to rewrite means moving it twice.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Make the change you know is coming, then tidy the house around it.</p>
+</blockquote>
+<hr />
+<h3 id="the-real-problem-one-line-destroys-identity">The Real Problem — One Line Destroys Identity<a class="headerlink" href="#the-real-problem-one-line-destroys-identity" title="Permanent link">&para;</a></h3>
+<p>[generation_service.py], before PR-11:</p>
+<div class="highlight"><pre><span></span><code><span class="k">return</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">page_content</span> <span class="k">for</span> <span class="n">document</span> <span class="ow">in</span> <span class="n">retrieved_documents</span><span class="p">)</span>
+</code></pre></div>
+<p>Trace what the system knows about a chunk <em>before</em> it reaches that line:</p>
+<ul>
+<li><code>fusion_service.py</code> keys the entire RRF algorithm on <code>doc.metadata["chunk_id"]</code></li>
+<li><code>retrieval_service.py</code> filters on <code>document_id</code></li>
+<li><code>app.py</code> displays <code>document_id</code>, <code>chunk_index</code>, and <code>chunk_id</code> per chunk</li>
+</ul>
+<p>Two entire PRs in Week 2 built chunk identity and a metadata catalog. Then this line throws
+all of it away. What the model actually received:</p>
+<div class="highlight"><pre><span></span><code>&lt;context&gt;
+Hybrid search combines dense and sparse retrieval.
+
+BM25 scores documents by term frequency and inverse document frequency.
+
+The RRF constant k is typically set to 60.
+&lt;/context&gt;
+</code></pre></div>
+<p>Two consequences, and the second is worse:</p>
+<ol>
+<li><strong>The model cannot cite.</strong> Not "cites badly" — it has no handles to cite <em>with</em>. Asking
+   for citations would make it invent them.</li>
+<li><strong>The model cannot tell where one source ends and the next begins.</strong> <code>\n\n</code> is a blank
+   line, which also appears inside prose. Chunk 1 from a PDF and chunk 3 from a different
+   file read as one continuous passage — so the model will synthesize a claim spanning two
+   unrelated documents and present it as one fact.</li>
+</ol>
+<blockquote>
+<p>The retrieval layer preserves identity all the way to the generation boundary, and then
+the generation layer discards it.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-7-level-1-citations-only">Design Decision #7 — Level 1 Citations Only<a class="headerlink" href="#design-decision-7-level-1-citations-only" title="Permanent link">&para;</a></h3>
+<p>Two products hide inside the word "citations":</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Needs</th>
+<th>Available?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Level 1</strong> — <em>"this claim came from <code>01-vision.md</code>, chunk 4"</em></td>
+<td>chunk metadata</td>
+<td>✅ already</td>
+</tr>
+<tr>
+<td><strong>Level 2</strong> — <em>"click to open the PDF at page 3"</em></td>
+<td>the original file on disk</td>
+<td>❌ deleted</td>
+</tr>
+</tbody>
+</table>
+<p>Both loaders write uploads to a temp file and delete it in a <code>finally</code> block, so the original
+PDF or Markdown is gone after ingestion. Level 2 is therefore <strong>not a prompt-engineering
+problem</strong> — it is a storage problem: where do uploads live, who cleans them up, what is the
+size cap, and are we permitted to retain user documents at all.</p>
+<p><strong>Chose Level 1.</strong> Level 2 deferred as new scope, not as a gap.</p>
+<p><strong>Latent defect found while investigating:</strong> <code>metadata_catalog.json</code> persists
+<code>"source": "/tmp/tmp1zu_iotv.pdf"</code> — a permanently dead path, because the temp file was
+deleted at ingestion. Logged, not fixed here.</p>
+<blockquote>
+<p>Missing data makes you go and find it. <strong>Misleading data makes you build on it.</strong></p>
+</blockquote>
+<hr />
+<h3 id="design-decision-8-free-text-markers-not-structured-output">Design Decision #8 — Free-Text Markers, Not Structured Output<a class="headerlink" href="#design-decision-8-free-text-markers-not-structured-output" title="Permanent link">&para;</a></h3>
+<p>Two ways to get structure out of a model:</p>
+<p><strong>(a)</strong> Free text with markers — <code>"...dense and sparse retrieval [1]."</code> — parsed afterwards.
+<strong>(b)</strong> Structured output — <code>{"answer": "...", "citations": [...]}</code> via Pydantic/JSON.</p>
+<p><strong>Chose (a)</strong>, for two independent reasons:</p>
+<ol>
+<li><strong>Streaming.</strong> Week 4 adds token streaming. Free text streams naturally; structured output
+   forces you to buffer the whole reply before it parses, destroying time-to-first-token.</li>
+<li><strong>Model capability.</strong> This runs <code>llama3.2</code> locally, not a frontier model. Structured output
+   is a <em>capability, not a given</em> — a small model produces malformed JSON often enough to need
+   retry logic, which costs more complexity than the parsing it was meant to avoid.</li>
+</ol>
+<p><strong>A streaming consequence discovered during the discussion:</strong> a marker does not arrive as a
+marker. It arrives as <code>[</code>, then <code>1</code>, then <code>]</code> — separate tokens, possibly in separate stream
+chunks. A per-token resolver sees a bare <code>[</code> and has nothing to match. <strong>Therefore markers are
+resolved after the stream completes</strong>, not during it.</p>
+<hr />
+<h3 id="design-decision-9-request-scoped-labels-with-a-materialized-mapping">Design Decision #9 — Request-Scoped Labels With a Materialized Mapping<a class="headerlink" href="#design-decision-9-request-scoped-labels-with-a-materialized-mapping" title="Permanent link">&para;</a></h3>
+<p>The hardest decision of the PR. Three candidates:</p>
+<table>
+<thead>
+<tr>
+<th>Marker</th>
+<th>Fails because</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Positional</strong> <code>[1] [2] [3]</code>, meaning <em>"index into <code>documents</code>"</em></td>
+<td>Meaning is <strong>implied by list order</strong>. Any re-sort, de-dup, or filter between generation and rendering silently attributes a claim to the wrong file. Fails silently and wrongly.</td>
+</tr>
+<tr>
+<td><strong><code>chunk_id</code></strong> <code>[03e94fc0-…::4]</code></td>
+<td>Order-independent and verifiable, but ~25 tokens per marker, and a 3B model cannot reliably copy a 36-character UUID. Bad copies get dropped, so the feature <em>works</em> while quietly discarding a large share of its citations.</td>
+</tr>
+<tr>
+<td><strong>Corpus-wide document index</strong> <code>[7] [412] [9004]</code></td>
+<td>Same copying-fidelity problem in milder form; uses a corpus-scoped identifier for a request-scoped need; and is per-<em>document</em>, losing chunk precision.</td>
+</tr>
+</tbody>
+</table>
+<p>The mistake in all three was collapsing two separate properties into one choice. Positional
+markers were rejected for being <strong>order-dependent</strong>, not for being <strong>short</strong>.</p>
+<p><strong>Chosen:</strong> short labels (<code>1</code>, <code>2</code>, <code>3</code>) assigned at prompt-build time, with the label→chunk
+pairing <strong>stored explicitly as data</strong> rather than inferred from position:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span><span class="p">(</span><span class="n">frozen</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">CitedSource</span><span class="p">:</span>
+    <span class="n">label</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">document</span><span class="p">:</span> <span class="n">Document</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>How it is obtained</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model copies it reliably</td>
+<td>one character, not thirty-six</td>
+</tr>
+<tr>
+<td>Order cannot corrupt it</td>
+<td>the pairing is materialized, not inferred</td>
+</tr>
+<tr>
+<td>Guardrail can verify it</td>
+<td>set membership over labels</td>
+</tr>
+<tr>
+<td>Chunk-precise</td>
+<td>one label per chunk, not per document</td>
+</tr>
+<tr>
+<td>Scales to any corpus</td>
+<td>never more than <code>TOP_K</code> labels exist</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+<strong>Scope an identifier to the scope of its use.</strong> The marker is only ever read inside one
+prompt and one response. It never needs to be unique beyond that.</p>
+</blockquote>
+<p><code>frozen=True</code> makes it immutable — a request-scoped pairing nothing downstream can quietly
+rewrite.</p>
+<p><strong>Rejected: store the label in <code>chunk.metadata["label"]</code>.</strong> No new type needed, and
+<code>documents</code> already reached the UI. Rejected because it <em>mutates objects the generation layer
+does not own</em>, and puts request-scoped data into a dict holding persistent document facts — a
+<code>Document</code> retrieved for a second question would carry a stale label from the first.</p>
+<hr />
+<h3 id="design-decision-10-labelling-is-a-business-decision-rendering-is-formatting">Design Decision #10 — Labelling Is a Business Decision, Rendering Is Formatting<a class="headerlink" href="#design-decision-10-labelling-is-a-business-decision-rendering-is-formatting" title="Permanent link">&para;</a></h3>
+<p>The blocking question was: <em>"how do I get the label→chunk mapping back </em><em>out</em><em> of the chain?"</em></p>
+<p>The answer was that it never needed to go <strong>in</strong>. The mapping is used by the service (to build
+the response) and by the UI (to render <code>[2]</code> as <code>01-vision.md</code>). Nothing inside the chain
+needs it. Threading it through would force the chain to return <code>{answer, mapping}</code> — dragging
+non-AI data through the AI composition layer and breaking PR-10's boundary.</p>
+<p>So <code>_format_documents</code> split into two functions that were always two jobs:</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Owns</th>
+<th>Lives in</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_label_sources</code></td>
+<td>assigning identity to chunks</td>
+<td>the <strong>service</strong> — plain Python</td>
+</tr>
+<tr>
+<td><code>_render_sources</code></td>
+<td>turning labelled sources into prompt text</td>
+<td>the <strong>chain</strong> — <code>RunnableLambda</code></td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>GenerationService.generate_answer(user_query, retrieved_documents)
+    │
+    │  ① LABEL — a business decision, made in the service
+    ▼
+sources = [ CitedSource(&quot;1&quot;, chunk0),
+            CitedSource(&quot;2&quot;, chunk1),
+            CitedSource(&quot;3&quot;, chunk2) ]
+    │
+    ├──────────────────────────────────────────┐
+    │  ② into the chain                        │  ④ straight into the response
+    ▼                                          │
+{&quot;sources&quot;: sources, &quot;user_query&quot;: &quot;...&quot;}      │
+    │                                          │
+    ▼   ┌──────────── _chain ──────────────┐   │
+        │ RunnableParallel                 │   │
+        │   context    ← _render_sources   │   │   ③ RENDER — prompt formatting,
+        │   user_query ← itemgetter        │   │      stays inside the chain
+        │            │                     │   │
+        │            ▼                     │   │
+        │      prompt | llm                │   │
+        └──────────────────────────────────┘   │
+    │                                          │
+    ▼  AIMessage                               │
+    └──────────────────┬───────────────────────┘
+                       ▼
+       GenerationResponse(answer=..., sources=sources, ...)
+</code></pre></div>
+<p><strong>One list, built once at ①, consumed at ② and ④.</strong> There is no synchronisation problem
+because there is nothing to synchronise. PR-10's Design Decision #3 survives intact — the
+chain still owns formatting. It simply no longer owns <em>identity</em>.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+When asked "how do I get this data out of X?", first ask whether it ever belonged in X.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-11-context-format-solves-the-boundary-problem">Design Decision #11 — Context Format Solves the Boundary Problem<a class="headerlink" href="#design-decision-11-context-format-solves-the-boundary-problem" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>&lt;source id=&quot;1&quot; file=&quot;01-vision.md&quot;&gt;
+Hybrid search combines dense and sparse retrieval.
+&lt;/source&gt;
+
+&lt;source id=&quot;2&quot; file=&quot;notes.pdf&quot;&gt;
+RRF uses a constant k, typically 60.
+&lt;/source&gt;
+</code></pre></div>
+<p>Chosen over the more verbose <code>&lt;label&gt;[1]&lt;/label&gt;:&lt;chunk&gt;…&lt;/chunk&gt;</code> — roughly half the tokens
+per chunk (two tags instead of four), and it fixes the <em>original</em> defect: the model can now
+see unambiguously where one source ends and the next begins.</p>
+<p>The filename is included deliberately. The UI does not need it there — it resolves <code>[1]</code> from
+the mapping — but it helps the model reason about which source is which.</p>
+<p>Two prompt rules were added. Rule 6 — <em>"only cite ids that appear in the <code>&lt;source&gt;</code> tags,
+never invent an id"</em> — is the instruction that PR-11c verifies.</p>
+<hr />
+<h3 id="design-decision-12-sanitize-dont-reject-pr-11c">Design Decision #12 — Sanitize, Don't Reject (PR-11c)<a class="headerlink" href="#design-decision-12-sanitize-dont-reject-pr-11c" title="Permanent link">&para;</a></h3>
+<p>A model <strong>will</strong> cite <code>[4]</code> when only three sources exist. Small models do this regularly.
+Three possible responses:</p>
+<table>
+<thead>
+<tr>
+<th>Behaviour</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Reject the whole answer</td>
+<td>Punishes the user for the model's sloppiness. The <em>answer</em> isn't wrong — one <em>attribution</em> is.</td>
+</tr>
+<tr>
+<td>Leave the bad marker</td>
+<td>Shows a citation that resolves to nothing. Actively misleading.</td>
+</tr>
+<tr>
+<td><strong>Strip the unverifiable marker, keep the answer</strong></td>
+<td>✅ Chosen</td>
+</tr>
+</tbody>
+</table>
+<p><strong>How to defend it to a PM:</strong> <em>a wrong source link is worse than no source link, but both are
+better than no answer.</em></p>
+<p>Verification needs <strong>no LLM at all</strong>. It is set membership — do the markers in the answer map
+to labels that were actually issued? Deterministic, instant, free, and 100% reliable.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Check what is structurally checkable with code. Reach for a model only for what genuinely
+requires judgment.</p>
+<p>Citation <em>existence</em> is code. Citation <em>supportiveness</em> — does chunk 2 actually back this
+claim — is judgment, and remains a stub.</p>
+</blockquote>
+<p><strong>This forced a distinction that had been lurking since the streaming discussion:</strong> the output
+guardrails module now contains two different <em>kinds</em> of thing.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Contract</th>
+<th>Signature</th>
+<th>Can it run mid-stream?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Validator</strong> — <code>_check_empty_response</code>, <code>_check_safety</code></td>
+<td>answers yes/no, rejects</td>
+<td>returns <code>GenerationResponse \| None</code></td>
+<td>❌ needs the whole answer</td>
+</tr>
+<tr>
+<td><strong>Sanitizer</strong> — <code>_strip_unverified_citations</code></td>
+<td>repairs in place, never rejects</td>
+<td>returns <code>None</code></td>
+<td>✅ only needs a complete marker</td>
+</tr>
+</tbody>
+</table>
+<p>Naming the sanitizer <code>_validate_relevance</code> — a <code>validate_*</code> name in a module of <code>validate_*</code>
+functions — would have meant a reader could not tell which contract they were getting.
+<code>_validate_relevance</code> stays as the stub for the future LLM judge; stripping got its own honest
+name.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Split by <strong>contract</strong>, not just by what the code touches. A function that repairs and a
+function that rejects do not belong under the same naming convention.</p>
+</blockquote>
+<hr />
+<h3 id="responsibilities-after-pr-11">Responsibilities After PR-11<a class="headerlink" href="#responsibilities-after-pr-11" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Owns</th>
+<th>Does NOT own</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CitedSource</code></td>
+<td>the label↔chunk pairing; knowing which metadata key holds the filename</td>
+<td>rendering, verification</td>
+</tr>
+<tr>
+<td><code>_label_sources</code></td>
+<td>assigning identity</td>
+<td>prompt text, framework types</td>
+</tr>
+<tr>
+<td><code>_render_sources</code></td>
+<td>how labelled context looks to the model</td>
+<td>identity</td>
+</tr>
+<tr>
+<td><code>GenerationService</code></td>
+<td>building sources once, using them twice</td>
+<td>verification, display</td>
+</tr>
+<tr>
+<td><code>_strip_unverified_citations</code></td>
+<td>repairing invented markers</td>
+<td>rejecting answers, judging relevance</td>
+</tr>
+<tr>
+<td><code>app.py</code></td>
+<td>resolving <code>[n]</code> → filename via the response</td>
+<td>any catalog lookup</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>MetadataCatalog</code> is deliberately not involved.</strong> It answers <em>"what documents exist in the
+corpus?"</em> — used by the filter multiselect. A citation asks <em>"what text supported </em><em>this</em><em>
+answer?"</em> Different question, different owner, different lifetime. Routing citations through
+the catalog would add a dependency and a failure mode to retrieve data already in hand.</p>
+<hr />
+<h3 id="mistakes-i-made_1">Mistakes I Made<a class="headerlink" href="#mistakes-i-made_1" title="Permanent link">&para;</a></h3>
+<h4 id="mistake-7-module-level-mutable-state-for-the-labels">Mistake 7 — Module-level mutable state for the labels<a class="headerlink" href="#mistake-7-module-level-mutable-state-for-the-labels" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="n">_doclabel</span> <span class="o">=</span> <span class="p">[]</span>          <span class="c1"># shared across every request</span>
+    <span class="n">_doclabel</span><span class="o">.</span><span class="n">empty</span><span class="p">()</span>   <span class="c1"># and cleared at the start of each one</span>
+</code></pre></div>
+<p>Two requests in flight and request B clears the list while request A is still rendering it —
+A cites documents it never retrieved. Streamlit hides this today because it is effectively
+single-user. The bug is real.</p>
+<p>It also created an invisible contract: <code>_format_documents</code> only worked if <code>_label_chunks</code> had
+run first, in the right order, with nothing in between.</p>
+<blockquote>
+<p><strong>Lesson:</strong> a global turned two pure functions into an ordering dependency. Passing the list
+as a parameter removed the global, the contract, and the concurrency bug in one change.</p>
+</blockquote>
+<h4 id="mistake-8-trying-to-mutate-a-string-parameter">Mistake 8 — Trying to mutate a string parameter<a class="headerlink" href="#mistake-8-trying-to-mutate-a-string-parameter" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_validate_relevance</span><span class="p">(</span><span class="n">response</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">sources</span><span class="p">):</span>
+    <span class="c1"># erase that cite from response.answer</span>
+</code></pre></div>
+<p>Two problems stacked: <code>response</code> was the answer <em>string</em>, which has no <code>.answer</code>; and Python
+strings are <strong>immutable</strong>, so no function can edit one in place. The fix was already five
+lines up in the same file — <code>_check_empty_response</code> mutates successfully because it receives
+the whole <code>GenerationResponse</code>, and a dataclass is mutable.</p>
+<blockquote>
+<p><strong>Lesson:</strong> whether a function can change its argument depends on the argument's <strong>type</strong>,
+not on how it is passed. <code>str</code>, <code>int</code>, <code>tuple</code> — immutable. <code>list</code>, <code>dict</code>, dataclasses —
+mutable.</p>
+</blockquote>
+<h4 id="mistake-9-storing-only-chunk_id-in-the-pairing">Mistake 9 — Storing only <code>chunk_id</code> in the pairing<a class="headerlink" href="#mistake-9-storing-only-chunk_id-in-the-pairing" title="Permanent link">&para;</a></h4>
+<p><code>CitedSource(label, chunk_id)</code> would have forced the UI to look the chunk up somewhere to find
+its filename — reintroducing the lookup the design had just removed — and would have broken
+the "Retrieved Chunks" panel, which needs <code>page_content</code>. Holding the <code>Document</code> and deriving
+<code>display_name</code> and <code>chunk_id</code> as properties keeps metadata-key knowledge in one place instead
+of scattered through <code>app.py</code>.</p>
+<h4 id="mistake-10-forgetting-what-was-already-built">Mistake 10 — Forgetting what was already built<a class="headerlink" href="#mistake-10-forgetting-what-was-already-built" title="Permanent link">&para;</a></h4>
+<p>I proposed persisting documents in the metadata catalog. <code>MetadataCatalog.register()</code> had been
+doing exactly that since PR-8.</p>
+<blockquote>
+<p><strong>Lesson:</strong> independently re-deriving your own design is a good signal about the design and
+a bad signal about how much of the codebase you can hold in your head. This document exists
+because of that.</p>
+</blockquote>
+<hr />
+<h3 id="production-failure-modes_1">Production Failure Modes<a class="headerlink" href="#production-failure-modes_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>The model cites <code>[4]</code> when three sources exist.</strong> Handled — stripped by the sanitizer.</li>
+<li><strong>The model omits citations entirely.</strong> Not handled. The answer is still correct, just
+  unattributed. Accepted: enforcing citation <em>presence</em> would mean rejecting valid answers.</li>
+<li><strong>The model cites correctly but the source doesn't support the claim.</strong> Not handled — that
+  is judgment, not structure, and needs the LLM judge still stubbed at <code>_validate_relevance</code>.</li>
+<li><strong><code>llama3.2</code> follows citation instructions inconsistently.</strong> Expected. This is a prompt and
+  model-capability limit, not a code defect.</li>
+<li><strong>Concurrency.</strong> All citation state is request-scoped and passed by parameter. No shared
+  mutable state was introduced.</li>
+</ul>
+<hr />
+<h3 id="interview-takeaways_1">Interview Takeaways<a class="headerlink" href="#interview-takeaways_1" title="Permanent link">&para;</a></h3>
+<p><strong>How do you attribute an LLM's answer to its sources?</strong></p>
+<blockquote>
+<p>Retrieval already knows chunk identity, so the job is to stop throwing it away at the prompt
+boundary. I label each retrieved chunk at prompt-build time, render the labels into the
+context inside <code>&lt;source&gt;</code> tags, and instruct the model to cite them. The label→chunk pairing
+is stored explicitly as data, so nothing downstream can reorder its way into a wrong
+attribution.</p>
+</blockquote>
+<p><strong>Why not use structured output for citations?</strong></p>
+<blockquote>
+<p>Two reasons. Streaming — free text with markers streams token by token, whereas JSON has to
+be buffered and parsed before anything can render, which destroys time-to-first-token. And
+model capability — I run a 3B local model, and reliable structured output is a capability
+not every model has. Chasing it would have meant retry logic costing more than the parsing
+it replaced.</p>
+</blockquote>
+<p><strong>How do you know the citations are real?</strong></p>
+<blockquote>
+<p>Deterministically. Verifying that a cited label was actually issued is set membership — no
+model needed, instant and exact. I only reach for an LLM judge for the part that genuinely
+requires judgment: whether the cited chunk actually <em>supports</em> the claim. Structure gets
+code; semantics gets a model.</p>
+</blockquote>
+<p><strong>What do you do when a citation is wrong?</strong></p>
+<blockquote>
+<p>Strip the marker, keep the answer. The answer isn't wrong — one attribution is. Rejecting
+the whole response punishes the user for the model's sloppiness, and leaving a marker that
+resolves to nothing is actively misleading. A wrong source link is worse than no source
+link, but both are better than no answer.</p>
+</blockquote>
+<p><strong>Why are your markers short numbers rather than chunk IDs?</strong></p>
+<blockquote>
+<p>A marker is only ever read inside one prompt and one response, so it only needs to be unique
+within that scope. A UUID costs ~25 tokens each time it appears and a small model can't copy
+it reliably. Short labels are copyable — and because the label→chunk pairing is stored
+explicitly rather than inferred from list position, they don't inherit the fragility of
+positional references.</p>
+</blockquote>
+<hr />
+<h3 id="self-check_1">Self-Check<a class="headerlink" href="#self-check_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Why can the model not cite when context is joined with <code>\n\n</code>?</li>
+<li>What is the difference between Level 1 and Level 2 citations, and why is Level 2 not a
+   prompt problem?</li>
+<li>Why do free-text markers beat structured output <em>in this system specifically</em>?</li>
+<li>Positional markers and short labels — what exactly is the difference?</li>
+<li>Why does the label→chunk mapping never enter the chain?</li>
+<li>Which is a validator and which is a sanitizer, and how do their signatures differ?</li>
+<li>Why does citation verification need no LLM, while relevance checking does?</li>
+<li>What breaks if <code>_label_sources</code> writes to a module-level list?</li>
+<li>Why does <code>CitedSource</code> hold a <code>Document</code> rather than a <code>chunk_id</code>?</li>
+<li>Why is <code>MetadataCatalog</code> deliberately absent from the citation path?</li>
+</ol>
+<hr />
+<h3 id="biggest-takeaway_1">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_1" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>The feature was never "make the model cite." It was "stop destroying identity at the
+prompt boundary."</strong></p>
+</blockquote>
+<p>Weeks 1 and 2 built chunk identity carefully and then a single <code>str.join</code> discarded it. The
+prompt rule asking for citations was the smallest part of this PR; the real work was deciding
+<em>what identity to hand the model</em>, <em>who owns assigning it</em>, and <em>what verifies it afterwards</em>.</p>
+<p>The second lesson is that an LLM feature is not finished when the model produces output. It is
+finished when something deterministic has checked the part of that output which can be
+checked.</p>
+<hr />
+<p><strong>Week 3 complete.</strong> Deferred deliberately: <strong>PR-11a</strong> — move prompts into their own module
+and resolve Rule 4's 3-sentence test constraint. <strong>Week 4</strong> opens with streaming, where the
+validator/sanitizer split above becomes load-bearing.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

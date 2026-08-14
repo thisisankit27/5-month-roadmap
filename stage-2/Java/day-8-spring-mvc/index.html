@@ -1,0 +1,4722 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Java/day-8-spring-mvc/">
+      
+      
+        <link rel="prev" href="../day-7-config-events/">
+      
+      
+        <link rel="next" href="../day-9-handler-mapping-adapters/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Spring MVC: HTTP, Servlets, Controllers & DispatcherServlet Internals - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spring-mvc-http-servlets-controllers-dispatcherservlet-internals" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http-is-a-stateless-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Is a Stateless Protocol
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTP Is a Stateless Protocol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-iterator-analogy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Iterator Analogy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pagination-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pagination Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cookies-simulating-state-on-top-of-a-stateless-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cookies — Simulating State on Top of a Stateless Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-distinction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Distinction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components-of-an-http-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components of an HTTP Request
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Components of an HTTP Request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spring-mvc-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring MVC Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components-of-an-http-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components of an HTTP Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Components of an HTTP Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spring-mvc-mapping_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring MVC Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servlets-and-servlet-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servlets and Servlet Containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Servlets and Servlet Containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-servlet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Is a Servlet?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#servlet-container-servlet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servlet Container ≠ Servlet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standalone-vs-embedded-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone vs. Embedded Servers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Standalone vs. Embedded Servers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-old-approach-traditional-deployment-external-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Old Approach — Traditional Deployment (External Server)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-modern-approach-spring-boot-embedded-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Modern Approach — Spring Boot (Embedded Server)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-vs-embedded-visualized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone vs. Embedded, Visualized
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-real-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Real Shift
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-servers-still-have-real-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone Servers Still Have Real Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controller-is-a-bean-component-scanning-applies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Controller Is a Bean — Component Scanning Applies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="@Controller Is a Bean — Component Scanning Applies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-minimal-rest-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Minimal REST Controller
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controller-is-discovered-like-any-other-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Controller Is Discovered Like Any Other Bean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controller-vs-restcontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Controller vs. @RestController
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spring-mvc-model-view-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring MVC — Model, View, Controller
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spring MVC — Model, View, Controller">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-data-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model (Data Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-presentation-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View (Presentation Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controller-request-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controller (Request Handler)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#telling-spring-this-is-data-not-a-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Telling Spring "This Is Data, Not a View"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-view-rendering-case-end-to-end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The View-Rendering Case, End to End
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-request-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading Request Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reading Request Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requestparam-extracting-query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @RequestParam — Extracting Query Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requestparamrequired-false-optional-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @RequestParam(required = false) — Optional Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request-params-vs-path-variables-when-to-use-which" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Params vs. Path Variables — When to Use Which
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passing-and-returning-objects-from-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passing and Returning Objects From Controllers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passing and Returning Objects From Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returning-an-object-serialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returning an Object — Serialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accepting-an-object-data-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accepting an Object — Data Binding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-negotiation-produces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content Negotiation — produces
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-architecture-of-a-web-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Architecture of a Web Request
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Architecture of a Web Request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actual-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actual Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-actually-happens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Actually Happens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interceptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interceptors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interceptors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-interceptors-are-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Interceptors Are For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-they-fit-in-the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where They Fit in the Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prehandle-before-the-controller-executes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        preHandle() — Before the Controller Executes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#posthandle-after-the-controller-before-the-response-is-sent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        postHandle() — After the Controller, Before the Response Is Sent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aftercompletion-after-the-complete-request-response-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        afterCompletion() — After the Complete Request-Response Cycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-interceptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering Interceptors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interceptorregistry-order-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InterceptorRegistry — Order Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-based-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path-Based Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dispatcherservlet-internals-handler-handlermapping-handleradapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DispatcherServlet Internals — Handler, HandlerMapping, HandlerAdapter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DispatcherServlet Internals — Handler, HandlerMapping, HandlerAdapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-handler-is-not-just-a-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Handler Is Not Just "a Controller"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-dispatcherservlet-finds-the-handler-handlermapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How DispatcherServlet Finds the Handler — HandlerMapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handlerexecutionchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HandlerExecutionChain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dodispatch-the-core-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        doDispatch() — the Core Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-the-handler-is-typed-as-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem — the Handler Is Typed as Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-solution-handleradapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Solution — HandlerAdapter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-full-internal-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Full Internal Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mental Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-does-http-need-cookies-if-its-stateless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does HTTP need cookies if it's stateless?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-pagination-server-side-or-client-side-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is pagination server-side or client-side state?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-a-war-and-a-jar-in-a-spring-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between a WAR and a JAR in a Spring context?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-problem-does-an-embedded-server-solve-that-a-shared-standalone-server-doesnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What problem does an embedded server solve that a shared standalone server doesn't?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-returning-a-string-from-a-bare-controller-method-not-send-that-string-as-the-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does returning a String from a bare @Controller method not send that string as the response?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-restcontroller-actually-do-differently-from-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does @RestController actually do differently from @Controller?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-must-requestparamrequired-false-use-integer-instead-of-int" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why must @RequestParam(required = false) use Integer instead of int?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-spring-serialize-a-returned-java-object-into-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does Spring serialize a returned Java object into JSON?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-data-binding-auto-binding-in-spring-mvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Data Binding / Auto Binding in Spring MVC?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-dispatcherservlets-role-in-one-sentence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is DispatcherServlet's role, in one sentence?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-are-interceptors-used-for-and-where-do-they-run-relative-to-the-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What are interceptors used for, and where do they run relative to the controller?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-interceptors-a-and-b-are-registered-in-that-order-whats-the-execution-order-for-prehandle-and-posthandle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If interceptors A and B are registered in that order, what's the execution order for preHandle and postHandle?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-a-spring-handler-typed-as-object-internally-and-what-fixes-the-problem-that-creates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is a Spring "Handler" typed as Object internally, and what fixes the problem that creates?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-two-things-does-a-handlerexecutionchain-bundle-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What two things does a HandlerExecutionChain bundle together?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#http-is-a-stateless-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HTTP Is a Stateless Protocol
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="HTTP Is a Stateless Protocol">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-core-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-iterator-analogy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Iterator Analogy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#pagination-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pagination Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cookies-simulating-state-on-top-of-a-stateless-protocol" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cookies — Simulating State on Top of a Stateless Protocol
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#key-distinction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Key Distinction
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components-of-an-http-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components of an HTTP Request
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Components of an HTTP Request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spring-mvc-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring MVC Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#components-of-an-http-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Components of an HTTP Response
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Components of an HTTP Response">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#spring-mvc-mapping_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring MVC Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#servlets-and-servlet-containers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servlets and Servlet Containers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Servlets and Servlet Containers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-servlet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Is a Servlet?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#servlet-container-servlet" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Servlet Container ≠ Servlet
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#standalone-vs-embedded-servers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone vs. Embedded Servers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Standalone vs. Embedded Servers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-old-approach-traditional-deployment-external-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Old Approach — Traditional Deployment (External Server)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-modern-approach-spring-boot-embedded-server" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Modern Approach — Spring Boot (Embedded Server)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-vs-embedded-visualized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone vs. Embedded, Visualized
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-real-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Real Shift
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#standalone-servers-still-have-real-benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Standalone Servers Still Have Real Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#controller-is-a-bean-component-scanning-applies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Controller Is a Bean — Component Scanning Applies
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="@Controller Is a Bean — Component Scanning Applies">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#a-minimal-rest-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Minimal REST Controller
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controller-is-discovered-like-any-other-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Controller Is Discovered Like Any Other Bean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controller-vs-restcontroller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @Controller vs. @RestController
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spring-mvc-model-view-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring MVC — Model, View, Controller
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spring MVC — Model, View, Controller">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#model-data-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Model (Data Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-presentation-layer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View (Presentation Layer)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#controller-request-handler" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Controller (Request Handler)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#view-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        View Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#telling-spring-this-is-data-not-a-view" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Telling Spring "This Is Data, Not a View"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-view-rendering-case-end-to-end" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The View-Rendering Case, End to End
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reading-request-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reading Request Parameters
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reading Request Parameters">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#requestparam-extracting-query-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @RequestParam — Extracting Query Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#requestparamrequired-false-optional-parameters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @RequestParam(required = false) — Optional Parameters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#request-params-vs-path-variables-when-to-use-which" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Request Params vs. Path Variables — When to Use Which
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#passing-and-returning-objects-from-controllers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Passing and Returning Objects From Controllers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Passing and Returning Objects From Controllers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returning-an-object-serialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Returning an Object — Serialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#accepting-an-object-data-binding" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Accepting an Object — Data Binding
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#content-negotiation-produces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Content Negotiation — produces
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-architecture-of-a-web-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Architecture of a Web Request
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Architecture of a Web Request">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#actual-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Actual Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-actually-happens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Actually Happens
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interceptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interceptors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interceptors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-interceptors-are-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Interceptors Are For
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-they-fit-in-the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where They Fit in the Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prehandle-before-the-controller-executes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        preHandle() — Before the Controller Executes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#posthandle-after-the-controller-before-the-response-is-sent" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        postHandle() — After the Controller, Before the Response Is Sent
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#aftercompletion-after-the-complete-request-response-cycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        afterCompletion() — After the Complete Request-Response Cycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#registering-interceptors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registering Interceptors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interceptorregistry-order-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        InterceptorRegistry — Order Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#path-based-mapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Path-Based Mapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-execution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Execution Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dispatcherservlet-internals-handler-handlermapping-handleradapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DispatcherServlet Internals — Handler, HandlerMapping, HandlerAdapter
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DispatcherServlet Internals — Handler, HandlerMapping, HandlerAdapter">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-big-picture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Big Picture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-handler-is-not-just-a-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Handler Is Not Just "a Controller"
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-dispatcherservlet-finds-the-handler-handlermapping" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How DispatcherServlet Finds the Handler — HandlerMapping
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handlerexecutionchain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        HandlerExecutionChain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dodispatch-the-core-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        doDispatch() — the Core Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-the-handler-is-typed-as-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem — the Handler Is Typed as Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-solution-handleradapter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Solution — HandlerAdapter
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-full-internal-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Full Internal Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mental Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-does-http-need-cookies-if-its-stateless" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does HTTP need cookies if it's stateless?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-pagination-server-side-or-client-side-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is pagination server-side or client-side state?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-a-war-and-a-jar-in-a-spring-context" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between a WAR and a JAR in a Spring context?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-problem-does-an-embedded-server-solve-that-a-shared-standalone-server-doesnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What problem does an embedded server solve that a shared standalone server doesn't?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-returning-a-string-from-a-bare-controller-method-not-send-that-string-as-the-response" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does returning a String from a bare @Controller method not send that string as the response?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-restcontroller-actually-do-differently-from-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does @RestController actually do differently from @Controller?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-must-requestparamrequired-false-use-integer-instead-of-int" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why must @RequestParam(required = false) use Integer instead of int?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-spring-serialize-a-returned-java-object-into-json" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does Spring serialize a returned Java object into JSON?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-data-binding-auto-binding-in-spring-mvc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Data Binding / Auto Binding in Spring MVC?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-dispatcherservlets-role-in-one-sentence" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is DispatcherServlet's role, in one sentence?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-are-interceptors-used-for-and-where-do-they-run-relative-to-the-controller" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What are interceptors used for, and where do they run relative to the controller?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-interceptors-a-and-b-are-registered-in-that-order-whats-the-execution-order-for-prehandle-and-posthandle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If interceptors A and B are registered in that order, what's the execution order for preHandle and postHandle?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-a-spring-handler-typed-as-object-internally-and-what-fixes-the-problem-that-creates" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is a Spring "Handler" typed as Object internally, and what fixes the problem that creates?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-two-things-does-a-handlerexecutionchain-bundle-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What two things does a HandlerExecutionChain bundle together?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="spring-mvc-http-servlets-controllers-dispatcherservlet-internals">Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals<a class="headerlink" href="#spring-mvc-http-servlets-controllers-dispatcherservlet-internals" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+This is not "here's <code>@GetMapping</code>." Spring MVC is a layer of translation: HTTP is stateless, text-based, and knows nothing about Java objects — Spring MVC's entire job is bridging that gap, from a raw socket read down to a typed method call, and back. The goal is to understand <em>what each layer of that bridge is actually doing</em> — the servlet container, <code>DispatcherServlet</code>, <code>HandlerMapping</code>, <code>HandlerAdapter</code>, interceptors — so <code>@RequestMapping</code> stops looking like magic string-matching and starts looking like the specific mechanism it is.</p>
+</blockquote>
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>Spring MVC translates a stateless HTTP request into a typed Java method call and back into an HTTP response, using a front controller (<code>DispatcherServlet</code>) that locates the right handler, wraps it with cross-cutting interceptors, and invokes it through a handler-type-agnostic adapter.</strong></p>
+<hr />
+<h2 id="http-is-a-stateless-protocol">HTTP Is a Stateless Protocol<a class="headerlink" href="#http-is-a-stateless-protocol" title="Permanent link">&para;</a></h2>
+<h3 id="the-core-idea">The Core Idea<a class="headerlink" href="#the-core-idea" title="Permanent link">&para;</a></h3>
+<p>HTTP is stateless: every request is independent, and the server does not remember anything about previous requests.</p>
+<div class="highlight"><pre><span></span><code>Request 1 → processed → response → server forgets
+Request 2 → treated as completely new
+</code></pre></div>
+<h3 id="the-iterator-analogy">The Iterator Analogy<a class="headerlink" href="#the-iterator-analogy" title="Permanent link">&para;</a></h3>
+<p>A <strong>stateful</strong> construct, like a Java <code>Iterator</code>, stores its position internally — <code>hasNext()</code> knows where it is, <code>next()</code> moves forward, and that state persists between calls.</p>
+<p><strong>Stateless</strong> HTTP has none of that: the server doesn't know the previous request, the current page, or prior user actions. The <strong>client</strong> must send the full context on every single request.</p>
+<h3 id="pagination-example">Pagination Example<a class="headerlink" href="#pagination-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>GET /search?q=shoes&amp;page=2
+</code></pre></div>
+<p>The server reads <code>page=2</code>, fetches results 31–60, and sends the response. It does <strong>not</strong> remember that the client visited page 1, or what they clicked before. <strong>Pagination is client-driven state</strong> — the client, not the server, tracks where it is.</p>
+<h3 id="cookies-simulating-state-on-top-of-a-stateless-protocol">Cookies — Simulating State on Top of a Stateless Protocol<a class="headerlink" href="#cookies-simulating-state-on-top-of-a-stateless-protocol" title="Permanent link">&para;</a></h3>
+<p>Cookies exist specifically to simulate state in a protocol that has none. A cookie is sent in <strong>headers</strong>, not the payload:</p>
+<div class="highlight"><pre><span></span><code>Cookie: sessionId=abc123
+</code></pre></div>
+<p>The server uses this to identify the user and fetch stored session data associated with that ID.</p>
+<p><strong>Real-life example (Netflix-style recommendations):</strong></p>
+<ol>
+<li>The server assigns a session/user ID via a cookie.</li>
+<li>That cookie is sent with every subsequent request: <code>Cookie: userId=xyz789</code>.</li>
+<li>The server maps that ID to watch history, preferences, liked content.</li>
+<li>Next visit: server reads the cookie, fetches the data, shows personalized recommendations — all without the client re-sending any of that history itself.</li>
+</ol>
+<h3 id="key-distinction">Key Distinction<a class="headerlink" href="#key-distinction" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>Who Maintains State</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Pagination</td>
+<td>Client</td>
+<td><code>?page=3</code></td>
+</tr>
+<tr>
+<td>Cookies</td>
+<td>Client + Server</td>
+<td><code>sessionId=abc123</code></td>
+</tr>
+<tr>
+<td>Session</td>
+<td>Server</td>
+<td>Stored user data, keyed by the cookie's ID</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="components-of-an-http-request">Components of an HTTP Request<a class="headerlink" href="#components-of-an-http-request" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Method (verb)</strong></td>
+<td>What action the client wants</td>
+<td><code>GET</code> fetch, <code>POST</code> create, <code>PUT</code> full update, <code>PATCH</code> partial update, <code>DELETE</code> remove</td>
+</tr>
+<tr>
+<td><strong>URI</strong></td>
+<td>Where the request is going</td>
+<td><code>/products?page=2</code> — <code>/products</code> is the resource, <code>?page=2</code> is a query parameter (client state)</td>
+</tr>
+<tr>
+<td><strong>HTTP Version</strong></td>
+<td>Protocol version</td>
+<td><code>HTTP/1.1</code>, <code>HTTP/2</code>, <code>HTTP/3</code></td>
+</tr>
+<tr>
+<td><strong>Headers</strong></td>
+<td>Metadata about the request</td>
+<td><code>Host</code>, <code>Content-Type</code>, <code>Authorization: Bearer token123</code>, <code>Cookie: sessionId=abc123</code> — used for auth, content type, cookies, caching</td>
+</tr>
+<tr>
+<td><strong>Body (payload)</strong></td>
+<td>Actual data sent — mainly <code>POST</code>/<code>PUT</code>/<code>PATCH</code></td>
+<td><code>{"name": "Shoes", "price": 2000}</code> — not used in most <code>GET</code> requests</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Full example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nf">POST</span> <span class="nn">/products</span> <span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span>
+<span class="na">Host</span><span class="o">:</span> <span class="l">example.com</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Cookie</span><span class="o">:</span> <span class="l">sessionId=abc123</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Shoes&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;price&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">2000</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>One-line memory hook:</strong> <em>Request = Method + URI + Version + Headers + Body.</em></p>
+<h3 id="spring-mvc-mapping">Spring MVC Mapping<a class="headerlink" href="#spring-mvc-mapping" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Request Component</th>
+<th>Spring Annotation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Method</td>
+<td><code>@GetMapping</code>, <code>@PostMapping</code>, ...</td>
+</tr>
+<tr>
+<td>URI params</td>
+<td><code>@RequestParam</code>, <code>@PathVariable</code></td>
+</tr>
+<tr>
+<td>Headers</td>
+<td><code>@RequestHeader</code></td>
+</tr>
+<tr>
+<td>Cookies</td>
+<td><code>@CookieValue</code></td>
+</tr>
+<tr>
+<td>Body</td>
+<td><code>@RequestBody</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="components-of-an-http-response">Components of an HTTP Response<a class="headerlink" href="#components-of-an-http-response" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Purpose</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Status Line</strong></td>
+<td>Tells the result of the request</td>
+<td><code>HTTP/1.1 200 OK</code> — version + status code + reason phrase</td>
+</tr>
+<tr>
+<td><strong>Headers</strong></td>
+<td>Metadata about the response</td>
+<td><code>Content-Type</code>, <code>Content-Length</code>, <code>Set-Cookie: sessionId=abc123</code>, <code>Cache-Control</code></td>
+</tr>
+<tr>
+<td><strong>Body</strong></td>
+<td>Actual data returned</td>
+<td>JSON (most common in APIs), HTML (web pages), XML, plain text</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Common status codes:</strong></p>
+<table>
+<thead>
+<tr>
+<th>Code</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>200 OK</code></td>
+<td>Success</td>
+</tr>
+<tr>
+<td><code>201 Created</code></td>
+<td>Resource created</td>
+</tr>
+<tr>
+<td><code>400 Bad Request</code></td>
+<td>Client error</td>
+</tr>
+<tr>
+<td><code>401 Unauthorized</code></td>
+<td>Auth required</td>
+</tr>
+<tr>
+<td><code>404 Not Found</code></td>
+<td>Resource not found</td>
+</tr>
+<tr>
+<td><code>500 Internal Server Error</code></td>
+<td>Server error</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Full example:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kr">HTTP</span><span class="o">/</span><span class="m">1.1</span> <span class="m">200</span> <span class="ne">OK</span>
+<span class="na">Content-Type</span><span class="o">:</span> <span class="l">application/json</span>
+<span class="na">Set-Cookie</span><span class="o">:</span> <span class="l">sessionId=abc123</span>
+
+<span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;id&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">101</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;name&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Shoes&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>One-line memory hook:</strong> <em>Response = Status Line + Headers + Body.</em></p>
+<h3 id="spring-mvc-mapping_1">Spring MVC Mapping<a class="headerlink" href="#spring-mvc-mapping_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Response Component</th>
+<th>Spring Mechanism</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Status</td>
+<td><code>@ResponseStatus</code>, <code>ResponseEntity</code></td>
+</tr>
+<tr>
+<td>Headers</td>
+<td><code>ResponseEntity</code> / <code>HttpHeaders</code></td>
+</tr>
+<tr>
+<td>Body</td>
+<td><code>@ResponseBody</code>, <code>@RestController</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="servlets-and-servlet-containers">Servlets and Servlet Containers<a class="headerlink" href="#servlets-and-servlet-containers" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-a-servlet">What Is a Servlet?<a class="headerlink" href="#what-is-a-servlet" title="Permanent link">&para;</a></h3>
+<p>A <strong>Servlet</strong> is a Java <strong>interface</strong> used to handle HTTP requests and responses — it acts as an entry point for web requests and runs inside a <strong>Servlet Container</strong>. Think: <em>"Servlet = request handler."</em></p>
+<p>Three key methods:</p>
+<ul>
+<li><strong><code>init()</code></strong> — initializes important parameters, dependencies, etc.</li>
+<li><strong><code>service()</code></strong> — accepts the request, sends it to the Spring app to handle, gets the response, translates it into an HTTP response, and sends it back down through the OS to the NIC to the internet.</li>
+<li><strong><code>destroy()</code></strong> — tears down the servlet.</li>
+</ul>
+<h3 id="servlet-container-servlet">Servlet Container ≠ Servlet<a class="headerlink" href="#servlet-container-servlet" title="Permanent link">&para;</a></h3>
+<p>The <strong>Servlet Container</strong> is the <em>environment</em> that runs servlets — Apache Tomcat, Jetty, etc. It's responsible for:</p>
+<ul>
+<li>managing servlet lifecycle,</li>
+<li>handling HTTP request/response,</li>
+<li>mapping URL → servlet,</li>
+<li>multi-threading, and</li>
+<li>security.</li>
+</ul>
+<hr />
+<h2 id="standalone-vs-embedded-servers">Standalone vs. Embedded Servers<a class="headerlink" href="#standalone-vs-embedded-servers" title="Permanent link">&para;</a></h2>
+<h3 id="the-old-approach-traditional-deployment-external-server">The Old Approach — Traditional Deployment (External Server)<a class="headerlink" href="#the-old-approach-traditional-deployment-external-server" title="Permanent link">&para;</a></h3>
+<p><strong>Step 1:</strong> Write your Spring MVC app (controllers, services, configs).</p>
+<p><strong>Step 2:</strong> Build a <strong>WAR</strong> file (<code>mvn clean install</code> → <code>myapp.war</code>). WAR = <strong>Web Archive</strong>, designed to run <em>inside</em> a server.</p>
+<p><strong>Step 3:</strong> Install and run a server separately (e.g. download Tomcat, <code>startup.sh</code>).</p>
+<p><strong>Step 4:</strong> Deploy the WAR into the server (<code>myapp.war → tomcat/webapps/</code>). Tomcat extracts the WAR, loads your app, creates servlets (including <code>DispatcherServlet</code>), and starts serving requests.</p>
+<p><strong>Runtime flow:</strong> <code>Client → Tomcat → Your App → Response</code>.</p>
+<p><strong>The real problems this creates:</strong></p>
+<ol>
+<li><strong>Version conflicts</strong> — App A needs Tomcat 8, App B needs Tomcat 10, but they share one server.</li>
+<li><strong>Manual deployment</strong> — build WAR, copy to server, restart server: slow and error-prone.</li>
+<li><strong>Config complexity</strong> — XML configs (<code>web.xml</code>), server configs, port configs — too many moving parts.</li>
+<li><strong>Single point of failure</strong> — five apps on one Tomcat instance; Tomcat crashes, all five go down.</li>
+<li><strong>Scaling pain</strong> — scaling one app means scaling the entire shared server.</li>
+</ol>
+<h3 id="the-modern-approach-spring-boot-embedded-server">The Modern Approach — Spring Boot (Embedded Server)<a class="headerlink" href="#the-modern-approach-spring-boot-embedded-server" title="Permanent link">&para;</a></h3>
+<p><strong>Step 1:</strong> Write your app the same way — but no external server is needed.</p>
+<p><strong>Step 2:</strong> Build a <strong>JAR</strong> (<code>mvn clean package</code> → <code>myapp.jar</code>).</p>
+<p><strong>Step 3:</strong> Run it directly: <code>java -jar myapp.jar</code>.</p>
+<p><strong>What's actually inside the JAR:</strong> an embedded Tomcat, already bundled, alongside your Spring app.</p>
+<p><strong>What happens when you run it:</strong></p>
+<ol>
+<li>JVM starts.</li>
+<li>Spring Boot starts.</li>
+<li>Embedded Tomcat starts.</li>
+<li><code>DispatcherServlet</code> is registered.</li>
+<li>App is ready.</li>
+</ol>
+<p><strong>Runtime flow:</strong> <code>Client → Embedded Tomcat (inside the app) → Controller → Response</code>.</p>
+<p><strong>Advantages:</strong></p>
+<ol>
+<li><strong>No separate server</strong> — the server <em>is</em> part of your app; no installation, no setup.</li>
+<li><strong>Easy deployment</strong> — <code>java -jar myapp.jar</code> and you're done. No copying, no config.</li>
+<li><strong>Isolation</strong> — each app has its own server and its own config, so there are no cross-app conflicts.</li>
+<li><strong>Microservices-friendly</strong> — each service is an independent unit (auth service on 8081, product service on 8082), scaled independently.</li>
+</ol>
+<h3 id="standalone-vs-embedded-visualized">Standalone vs. Embedded, Visualized<a class="headerlink" href="#standalone-vs-embedded-visualized" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Standalone Server (Old)          Embedded Server (Modern)
+
+     Tomcat                      App1 (Tomcat inside)
+   /   |   \                     App2 (Tomcat inside)
+ App1 App2 App3                  App3 (Tomcat inside)
+
+Shared environment                Fully independent
+Risky + rigid                     Flexible + scalable
+</code></pre></div>
+<h3 id="the-real-shift">The Real Shift<a class="headerlink" href="#the-real-shift" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>OLD:  Application depends on Server
+NEW:  Server is part of the Application
+</code></pre></div>
+<p><strong>One-line memory hook:</strong> <em>WAR → needs a server. JAR → has a server.</em></p>
+<h3 id="standalone-servers-still-have-real-benefits">Standalone Servers Still Have Real Benefits<a class="headerlink" href="#standalone-servers-still-have-real-benefits" title="Permanent link">&para;</a></h3>
+<p>Standalone isn't obsolete — it's context-dependent:</p>
+<ol>
+<li><strong>Resource sharing (cost-efficient)</strong> — multiple apps sharing one server means shared CPU/memory and lower infrastructure cost; useful for small companies or internal tools.</li>
+<li><strong>Centralized management</strong> — one place to manage security, SSL config, logging, monitoring — simpler DevOps when the number of apps is small.</li>
+<li><strong>Easier for traditional monoliths</strong> — a single large application with tightly coupled modules doesn't gain much from splitting into independently deployed servers.</li>
+<li><strong>Reusable infrastructure</strong> — connection pools, thread pools, caching are already configured once, and new apps can plug into the same environment.</li>
+</ol>
+<p><strong>The trade-offs, in the same order:</strong></p>
+<ol>
+<li><strong>Single point of failure</strong> — the server crashes, every app on it goes down.</li>
+<li><strong>Version conflicts</strong> — different apps needing different Java versions or library versions on the same server are hard to reconcile.</li>
+<li><strong>Limited flexibility</strong> — one server config serves every app, even when their resource needs (memory-heavy vs. lightweight) genuinely differ.</li>
+<li><strong>Scaling problem</strong> — scaling one app means scaling the whole shared server.</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Use Case</th>
+<th>Best Choice</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Small apps / internal tools</td>
+<td>Standalone</td>
+</tr>
+<tr>
+<td>Large scale / microservices</td>
+<td>Embedded (Spring Boot)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interview one-liner:</strong> <em>"Standalone servers provide shared infrastructure efficiency, while embedded servers provide isolation and scalability."</em></p>
+<hr />
+<h2 id="controller-is-a-bean-component-scanning-applies"><code>@Controller</code> Is a Bean — Component Scanning Applies<a class="headerlink" href="#controller-is-a-bean-component-scanning-applies" title="Permanent link">&para;</a></h2>
+<h3 id="a-minimal-rest-controller">A Minimal REST Controller<a class="headerlink" href="#a-minimal-rest-controller" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">com.example.controllers</span><span class="p">;</span>
+
+<span class="nd">@RestController</span><span class="w">   </span><span class="c1">// works with or without @ResponseBody — RestController assumes</span>
+<span class="w">                   </span><span class="c1">// every return value belongs in the HTTP response body</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/greet&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SimpleController</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="nd">@ResponseBody</span><span class="w">   </span><span class="c1">// method-level: signals &quot;include the result in the HTTP response body&quot;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">greet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Log: Received Greet()&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="controller-is-discovered-like-any-other-bean"><code>@Controller</code> Is Discovered Like Any Other Bean<a class="headerlink" href="#controller-is-discovered-like-any-other-bean" title="Permanent link">&para;</a></h3>
+<p><code>@Controller</code> is a Spring-managed bean, detected via <a href="../day-7-config-events/#component-scanning-what-spring-finds-and-what-it-doesnt">component scanning</a> — the same rules apply here as anywhere else: it must be inside the scan scope of your main class.</p>
+<div class="highlight"><pre><span></span><code>Main class in:  com.example
+Spring scans:   com.example.*
+</code></pre></div>
+<p>If your controller is outside that tree (<code>com.other.controllers</code>), Spring won't detect it, and the endpoint simply won't exist. The fix is the same as for any undiscovered bean:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@ComponentScan</span><span class="p">(</span><span class="n">basePackages</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="s">&quot;com.example.resources&quot;</span><span class="p">,</span>
+<span class="w">    </span><span class="s">&quot;com.example.controllers&quot;</span>
+<span class="p">})</span>
+</code></pre></div>
+<h3 id="controller-vs-restcontroller"><code>@Controller</code> vs. <code>@RestController</code><a class="headerlink" href="#controller-vs-restcontroller" title="Permanent link">&para;</a></h3>
+<p><strong><code>@Controller</code></strong> is for MVC (views like JSP/Thymeleaf) — its return value is treated as a <strong>view name</strong>, not sent as the response body by default.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Controller</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/greet&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">greet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;hello&quot;</span><span class="p">;</span><span class="w">   </span><span class="c1">// Spring looks for hello.html / hello.jsp — NOT the literal text &quot;hello&quot;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Returning <code>"Hello"</code> from a bare <code>@Controller</code> method does <strong>not</strong> send <code>"Hello"</code> as text — it tries to resolve a view named <code>"Hello"</code>, and fails if none exists.</p>
+<p><strong>Fix — add <code>@ResponseBody</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Controller</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/greet&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@ResponseBody</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">greet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span><span class="p">;</span><span class="w">   </span><span class="c1">// now sent as the HTTP response body</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong><code>@RestController</code></strong> is the shortcut: it's equivalent to <code>@Controller + @ResponseBody</code> on every method — every method's return value goes directly into the HTTP response body.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Result</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@Controller</code> only</td>
+<td>Not working</td>
+<td>Return value treated as a view name</td>
+</tr>
+<tr>
+<td><code>@Controller</code> + <code>@ResponseBody</code></td>
+<td>Works</td>
+<td>Explicitly sends the body</td>
+</tr>
+<tr>
+<td><code>@RestController</code></td>
+<td>Works</td>
+<td>Body sending is automatic</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="spring-mvc-model-view-controller">Spring MVC — Model, View, Controller<a class="headerlink" href="#spring-mvc-model-view-controller" title="Permanent link">&para;</a></h2>
+<h3 id="model-data-layer">Model (Data Layer)<a class="headerlink" href="#model-data-layer" title="Permanent link">&para;</a></h3>
+<p><strong>Model = data + state.</strong> It can come from a database, an in-memory cache, an external API, or objects constructed in code — e.g. <code>User user = userService.getUser();</code>.</p>
+<h3 id="view-presentation-layer">View (Presentation Layer)<a class="headerlink" href="#view-presentation-layer" title="Permanent link">&para;</a></h3>
+<p><strong>View = the UI representation of data</strong> — HTML (Thymeleaf, JSP) or JSON in REST APIs.</p>
+<p><strong>Important nuance:</strong> "the view should ideally return only data" isn't quite right. In <strong>traditional MVC</strong>, the view is HTML — a UI. In <strong>REST APIs</strong>, the view layer is skipped entirely, and data (JSON) is returned directly instead.</p>
+<h3 id="controller-request-handler">Controller (Request Handler)<a class="headerlink" href="#controller-request-handler" title="Permanent link">&para;</a></h3>
+<p><strong>Controller = the entry point of request handling.</strong> Responsibilities:</p>
+<ul>
+<li>map URL → method,</li>
+<li>accept input,</li>
+<li>call the service layer,</li>
+<li>return either a <strong>view name</strong> (MVC) or <strong>data</strong> (REST).</li>
+</ul>
+<h3 id="view-resolution">View Resolution<a class="headerlink" href="#view-resolution" title="Permanent link">&para;</a></h3>
+<p>When a controller returns a plain string in MVC mode, Spring tries to resolve it as a view:</p>
+<div class="highlight"><pre><span></span><code>Spring searches for: Hello.html / Hello.jsp / Hello (template)
+Locations checked:   /templates/ (Thymeleaf), /WEB-INF/, configured view resolvers
+</code></pre></div>
+<p>If nothing matches, you get a <strong>404 / Whitelabel Error Page</strong> — because Spring MVC follows the MVC pattern by default, where a controller's return value is a view name unless told otherwise:</p>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model</td>
+<td>Data</td>
+</tr>
+<tr>
+<td>View</td>
+<td>UI (HTML/JSP)</td>
+</tr>
+<tr>
+<td>Controller</td>
+<td>Handles the request</td>
+</tr>
+</tbody>
+</table>
+<h3 id="telling-spring-this-is-data-not-a-view">Telling Spring "This Is Data, Not a View"<a class="headerlink" href="#telling-spring-this-is-data-not-a-view" title="Permanent link">&para;</a></h3>
+<p><strong>Option 1 — <code>@ResponseBody</code>:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Controller</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">SimpleController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/greet&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@ResponseBody</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">greet</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Hello&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Option 2 — <code>@RestController</code> (preferred):</strong> automatically behaves like <code>@Controller + @ResponseBody</code> for every method.</p>
+<h3 id="the-view-rendering-case-end-to-end">The View-Rendering Case, End to End<a class="headerlink" href="#the-view-rendering-case-end-to-end" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;/view&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/VIEW&quot;</span><span class="p">})</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ViewReturningController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@GetMapping</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">render</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;arunkit&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="na">spring.thymeleaf.prefix</span><span class="o">=</span><span class="s">classpath:/templates/</span>
+<span class="na">spring.thymeleaf.suffix</span><span class="o">=</span><span class="s">.html</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>src/main/resources/templates/arunkit.html
+</code></pre></div>
+<p><strong>Flow:</strong> <code>DispatcherServlet → ViewReturningController → "arunkit" → Thymeleaf ViewResolver → /templates/arunkit.html → render HTML.</code></p>
+<p><strong>The key insight:</strong> returning <code>"arunkit"</code> isn't the final filename — Spring computes <code>prefix + "arunkit" + suffix = classpath:/templates/arunkit.html</code>.</p>
+<hr />
+<h2 id="reading-request-parameters">Reading Request Parameters<a class="headerlink" href="#reading-request-parameters" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@Controller</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/sendparam&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">RequestParamDemo</span><span class="w"> </span><span class="p">{</span>
+
+<span class="w">    </span><span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RequestMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/say&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="nd">@ResponseBody</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">checkStatParam</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;Hello &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello Guest&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RequestMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="n">path</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="s">&quot;/saypath&quot;</span><span class="p">,</span><span class="w"> </span><span class="s">&quot;/saypath/{id}&quot;</span><span class="p">})</span>
+<span class="w">    </span><span class="nd">@ResponseBody</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">checkStatPathVar</span><span class="p">(</span><span class="nd">@PathVariable</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;Hello &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello Guest&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="requestparam-extracting-query-parameters"><code>@RequestParam</code> — Extracting Query Parameters<a class="headerlink" href="#requestparam-extracting-query-parameters" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@RequestParam</span><span class="p">(</span><span class="s">&quot;identifier&quot;</span><span class="p">)</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">id</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>URL:    http://localhost:8080/sendparam/say?identifier=10
+Flow:   client sends ?identifier=10
+        → Spring maps identifier → id
+        → method executes, returns &quot;Hello 10&quot;
+</code></pre></div>
+<p><strong>Rules:</strong></p>
+<ul>
+<li>the parameter name must match: <code>@RequestParam("identifier")</code> matches <code>?identifier=</code>.</li>
+<li>default behavior is <code>required = true</code> — a missing parameter is an error.</li>
+</ul>
+<h3 id="requestparamrequired-false-optional-parameters"><code>@RequestParam(required = false)</code> — Optional Parameters<a class="headerlink" href="#requestparamrequired-false-optional-parameters" title="Permanent link">&para;</a></h3>
+<ul>
+<li>If present → value assigned.</li>
+<li>If missing → no error, the argument is simply <code>null</code>.</li>
+</ul>
+<p><strong>A rule that matters — use a non-primitive (wrapper) type:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">Integer</span><span class="w"> </span><span class="n">id</span><span class="w">   </span><span class="c1">// ✔ correct</span>
+<span class="kt">int</span><span class="w"> </span><span class="n">id</span><span class="w">       </span><span class="c1">// ✘ wrong</span>
+</code></pre></div>
+<p>A missing optional parameter resolves to <code>null</code> — and a primitive <code>int</code> cannot hold <code>null</code>, so using <code>int</code> here causes a startup/runtime error. <code>Integer</code> can hold <code>null</code>, so the wrapper type is required whenever <code>required = false</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">checkStat</span><span class="p">(</span><span class="nd">@RequestParam</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span><span class="w"> </span><span class="n">Integer</span><span class="w"> </span><span class="n">id</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="w"> </span><span class="o">?</span><span class="w"> </span><span class="s">&quot;Hello &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">id</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="s">&quot;Hello Guest&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="request-params-vs-path-variables-when-to-use-which">Request Params vs. Path Variables — When to Use Which<a class="headerlink" href="#request-params-vs-path-variables-when-to-use-which" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>example.com/courses?courseid=22    ← query parameter
+example.com/courses/22             ← path variable
+</code></pre></div>
+<p>General convention (not a mandate):</p>
+<ol>
+<li><strong>Filters, ratings, or any optional value</strong> → <code>@RequestParam</code>.</li>
+<li><strong>A large or complex key-value that would clutter a URL path</strong> → also better suited to <code>@RequestParam</code>, since a path is meant to stay readable.</li>
+</ol>
+<hr />
+<h2 id="passing-and-returning-objects-from-controllers">Passing and Returning Objects From Controllers<a class="headerlink" href="#passing-and-returning-objects-from-controllers" title="Permanent link">&para;</a></h2>
+<h3 id="returning-an-object-serialization">Returning an Object — Serialization<a class="headerlink" href="#returning-an-object-serialization" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ExamResult</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">phy</span><span class="p">,</span><span class="w"> </span><span class="n">chem</span><span class="p">,</span><span class="w"> </span><span class="n">maths</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">ExamResult</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">phy</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">chem</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">maths</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">phy</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">phy</span><span class="p">;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">chem</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">chem</span><span class="p">;</span><span class="w"> </span><span class="k">this</span><span class="p">.</span><span class="na">maths</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">maths</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@RestController</span>
+<span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/examresult&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ExamResultController</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RequestMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/view&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="n">ExamResult</span><span class="w"> </span><span class="nf">getResult</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ExamResult</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span><span class="w"> </span><span class="mi">0</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Returning the raw object like this <strong>won't work as expected</strong> until it can be serialized — Spring bundles <strong>Jackson</strong>, its built-in library for serializing/deserializing objects. Jackson is smart enough to find a class's getters and uses them to serialize:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getPhy</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">phy</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getChem</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">chem</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">getMaths</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="k">return</span><span class="w"> </span><span class="n">maths</span><span class="p">;</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>Spring uses Jackson to convert the Java object → JSON (via the getters) and sends it as the HTTP response:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;phy&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chem&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">18</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;maths&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">0</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="accepting-an-object-data-binding">Accepting an Object — Data Binding<a class="headerlink" href="#accepting-an-object-data-binding" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RequestMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/examine&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">examineResult</span><span class="p">(</span><span class="n">ExamResult</span><span class="w"> </span><span class="n">examResult</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">examResult</span><span class="p">.</span><span class="na">getPhy</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">examResult</span><span class="p">.</span><span class="na">getChem</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">90</span><span class="w"> </span><span class="o">&amp;&amp;</span><span class="w"> </span><span class="n">examResult</span><span class="p">.</span><span class="na">getMaths</span><span class="p">()</span><span class="w"> </span><span class="o">&gt;</span><span class="w"> </span><span class="mi">90</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Good Result&quot;</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="s">&quot;Bad Result&quot;</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Spring has a strong auto-binding capability: given <code>?phy=99&amp;chem=91&amp;maths=100</code>, it reads the query params and maps them directly onto the object's fields — this is called <strong>Data Binding / Auto Binding</strong>.</p>
+<h3 id="content-negotiation-produces">Content Negotiation — <code>produces</code><a class="headerlink" href="#content-negotiation-produces" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RequestMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/view&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">produces</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;application/json&quot;</span><span class="p">)</span><span class="w">   </span><span class="c1">// default, so optional</span>
+</code></pre></div>
+<p>For XML output, add the Jackson XML dependency:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>com.fasterxml.jackson.dataformat<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>jackson-dataformat-xml<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@RequestMapping</span><span class="p">(</span><span class="n">method</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">RequestMethod</span><span class="p">.</span><span class="na">GET</span><span class="p">,</span><span class="w"> </span><span class="n">value</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;/view&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">produces</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="s">&quot;application/xml&quot;</span><span class="p">)</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;ExamResult&gt;</span>
+<span class="w">    </span><span class="nt">&lt;phy&gt;</span>90<span class="nt">&lt;/phy&gt;</span>
+<span class="w">    </span><span class="nt">&lt;chem&gt;</span>18<span class="nt">&lt;/chem&gt;</span>
+<span class="w">    </span><span class="nt">&lt;maths&gt;</span>0<span class="nt">&lt;/maths&gt;</span>
+<span class="nt">&lt;/ExamResult&gt;</span>
+</code></pre></div>
+<hr />
+<h2 id="the-architecture-of-a-web-request">The Architecture of a Web Request<a class="headerlink" href="#the-architecture-of-a-web-request" title="Permanent link">&para;</a></h2>
+<p>When the server is "running on port 8080," it means the embedded servlet container (Tomcat) is listening on that port, handling incoming HTTP requests for the application.</p>
+<h3 id="actual-flow">Actual Flow<a class="headerlink" href="#actual-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Client
+  ↓
+Servlet Container (Tomcat)
+  ↓
+DispatcherServlet (Front Controller)
+  ↓
+HandlerMapping (finds the controller)
+  ↓
+Controller
+  ↓
+Service → Repository (optional)
+  ↓
+Response back via DispatcherServlet
+  ↓
+Client
+</code></pre></div>
+<h3 id="what-actually-happens">What Actually Happens<a class="headerlink" href="#what-actually-happens" title="Permanent link">&para;</a></h3>
+<p><strong>1. Application starts</strong> — Spring Boot starts, embedded Tomcat starts, <code>DispatcherServlet</code> is registered.</p>
+<p><strong>2. Request arrives</strong> — <code>Client → Tomcat</code>. Tomcat receives the HTTP request and finds the mapped servlet — <code>DispatcherServlet</code>.</p>
+<p><strong>3. <code>DispatcherServlet</code>'s core role</strong> — it acts as the <strong>Front Controller</strong>: central entry point, routes the request to the correct controller, coordinates the entire flow.</p>
+<div class="highlight"><pre><span></span><code>DispatcherServlet
+   ↓
+HandlerMapping → finds the controller
+   ↓
+HandlerAdapter → calls the method
+   ↓
+Controller executes
+</code></pre></div>
+<p><strong>Precise framing:</strong> <em>"<code>DispatcherServlet</code> acts as a front controller that receives all requests and delegates them to appropriate controllers using handler mappings."</em></p>
+<hr />
+<h2 id="interceptors">Interceptors<a class="headerlink" href="#interceptors" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<p>Cross-cutting concerns — logging, authentication, header validation, latency tracking — aren't part of any single controller's core business logic, but nearly every controller needs some subset of them. Duplicating that logic inside every controller method couples unrelated concerns together and makes each one harder to change independently.</p>
+<h3 id="what-interceptors-are-for">What Interceptors Are For<a class="headerlink" href="#what-interceptors-are-for" title="Permanent link">&para;</a></h3>
+<p>Used for <strong>cross-cutting concerns</strong> — things not part of core business logic: logging, authentication/authorization, header validation/modification, performance tracking (latency).</p>
+<h3 id="where-they-fit-in-the-flow">Where They Fit in the Flow<a class="headerlink" href="#where-they-fit-in-the-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Client
+  ↓
+Servlet Container (Tomcat)
+  ↓
+DispatcherServlet
+  ↓
+HandlerInterceptor (preHandle)
+  ↓
+Controller
+  ↓
+HandlerInterceptor (postHandle)
+  ↓
+View / Response
+  ↓
+HandlerInterceptor (afterCompletion)
+  ↓
+Client
+</code></pre></div>
+<p>Interceptors are <strong>invoked by <code>DispatcherServlet</code></strong>, not a separate layer of the stack.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">HandlerInterceptor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">preHandle</span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">handler</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">postHandle</span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">ModelAndView</span><span class="w"> </span><span class="n">modelAndView</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+<span class="w">    </span><span class="k">default</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">afterCompletion</span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="n">ex</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="prehandle-before-the-controller-executes"><code>preHandle()</code> — Before the Controller Executes<a class="headerlink" href="#prehandle-before-the-controller-executes" title="Permanent link">&para;</a></h3>
+<p>Use cases: logging, auth checks, modifying the request, initializing resources, and — uniquely among the three — <strong>it can block the request entirely</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span><span class="w">   </span><span class="c1">// stops execution before the controller ever runs</span>
+</code></pre></div>
+<p><strong>What the boolean means:</strong> <code>true</code> continues the request flow; <code>false</code> stops it immediately.</p>
+<p><strong>Real use case — authentication check:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">notLoggedIn</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">response</span><span class="p">.</span><span class="na">setStatus</span><span class="p">(</span><span class="mi">401</span><span class="p">);</span>
+<span class="w">    </span><span class="k">return</span><span class="w"> </span><span class="kc">false</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+</code></pre></div>
+<p>Also used for rejecting invalid headers, suspicious requests, or rate limiting.</p>
+<h3 id="posthandle-after-the-controller-before-the-response-is-sent"><code>postHandle()</code> — After the Controller, Before the Response Is Sent<a class="headerlink" href="#posthandle-after-the-controller-before-the-response-is-sent" title="Permanent link">&para;</a></h3>
+<p>Use cases: modifying the response, adding attributes.</p>
+<h3 id="aftercompletion-after-the-complete-request-response-cycle"><code>afterCompletion()</code> — After the Complete Request-Response Cycle<a class="headerlink" href="#aftercompletion-after-the-complete-request-response-cycle" title="Permanent link">&para;</a></h3>
+<p>Use cases: cleanup, logging total request time.</p>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>Where</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Logging</td>
+<td><code>preHandle</code> / <code>afterCompletion</code></td>
+</tr>
+<tr>
+<td>Header checks</td>
+<td><code>preHandle</code></td>
+</tr>
+<tr>
+<td>Default values</td>
+<td><code>preHandle</code></td>
+</tr>
+<tr>
+<td>Latency tracking</td>
+<td><code>preHandle</code> + <code>afterCompletion</code></td>
+</tr>
+<tr>
+<td>Drop request</td>
+<td><code>preHandle</code> (<code>return false</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="registering-interceptors">Registering Interceptors<a class="headerlink" href="#registering-interceptors" title="Permanent link">&para;</a></h3>
+<p>Defining an interceptor class isn't enough — <strong>you must register it with Spring</strong>, via <code>WebMvcConfigurer</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">WebMvcConfigurer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">addInterceptors</span><span class="p">(</span><span class="n">InterceptorRegistry</span><span class="w"> </span><span class="n">registry</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Spring calls this internally during startup.</p>
+<p><strong>Interceptor class:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyInterceptor1</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">HandlerInterceptor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">boolean</span><span class="w"> </span><span class="nf">preHandle</span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">handler</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;MyInterceptor1 preHandle&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="kc">true</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">postHandle</span><span class="p">(</span><span class="n">HttpServletRequest</span><span class="w"> </span><span class="n">request</span><span class="p">,</span><span class="w"> </span><span class="n">HttpServletResponse</span><span class="w"> </span><span class="n">response</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="w"> </span><span class="n">handler</span><span class="p">,</span><span class="w"> </span><span class="n">ModelAndView</span><span class="w"> </span><span class="n">modelAndView</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;MyInterceptor1 postHandle&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Configuration class:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">InterceptorConfig</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">WebMvcConfigurer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="n">MyInterceptor1</span><span class="w"> </span><span class="n">myInterceptor1</span><span class="p">;</span>
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="n">MyInterceptor2</span><span class="w"> </span><span class="n">myInterceptor2</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">addInterceptors</span><span class="p">(</span><span class="n">InterceptorRegistry</span><span class="w"> </span><span class="n">registry</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">registry</span><span class="p">.</span><span class="na">addInterceptor</span><span class="p">(</span><span class="n">myInterceptor1</span><span class="p">);</span>
+<span class="w">        </span><span class="n">registry</span><span class="p">.</span><span class="na">addInterceptor</span><span class="p">(</span><span class="n">myInterceptor2</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="interceptorregistry-order-matters"><code>InterceptorRegistry</code> — Order Matters<a class="headerlink" href="#interceptorregistry-order-matters" title="Permanent link">&para;</a></h3>
+<p>Think of it as a list managed by Spring, holding all interceptors in <strong>execution order</strong>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">registry</span><span class="p">.</span><span class="na">addInterceptor</span><span class="p">(</span><span class="n">A</span><span class="p">);</span>
+<span class="n">registry</span><span class="p">.</span><span class="na">addInterceptor</span><span class="p">(</span><span class="n">B</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>preHandle:  A → B
+postHandle: B → A   (reverse order, like closing nested resources)
+</code></pre></div>
+<h3 id="path-based-mapping">Path-Based Mapping<a class="headerlink" href="#path-based-mapping" title="Permanent link">&para;</a></h3>
+<p>Control exactly where an interceptor applies:</p>
+<div class="highlight"><pre><span></span><code><span class="n">registry</span><span class="p">.</span><span class="na">addInterceptor</span><span class="p">(</span><span class="n">myInterceptor1</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">addPathPatterns</span><span class="p">(</span><span class="s">&quot;/api/**&quot;</span><span class="p">)</span>
+<span class="w">        </span><span class="p">.</span><span class="na">excludePathPatterns</span><span class="p">(</span><span class="s">&quot;/login&quot;</span><span class="p">);</span>
+</code></pre></div>
+<h3 id="final-execution-flow">Final Execution Flow<a class="headerlink" href="#final-execution-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>DispatcherServlet
+   ↓
+Interceptor1 preHandle
+   ↓
+Interceptor2 preHandle
+   ↓
+Controller
+   ↓
+Interceptor2 postHandle
+   ↓
+Interceptor1 postHandle
+</code></pre></div>
+<p><strong>Interview one-liner:</strong> <em>"In Spring MVC, interceptors are registered using <code>WebMvcConfigurer</code>'s <code>addInterceptors</code> method, where we add them to the <code>InterceptorRegistry</code> and optionally define path patterns."</em></p>
+<hr />
+<h2 id="dispatcherservlet-internals-handler-handlermapping-handleradapter"><code>DispatcherServlet</code> Internals — Handler, HandlerMapping, HandlerAdapter<a class="headerlink" href="#dispatcherservlet-internals-handler-handlermapping-handleradapter" title="Permanent link">&para;</a></h2>
+<h3 id="the-big-picture">The Big Picture<a class="headerlink" href="#the-big-picture" title="Permanent link">&para;</a></h3>
+<p><code>DispatcherServlet</code> is the brain of Spring MVC. It does three core things:</p>
+<ol>
+<li><strong>Find who should handle the request</strong> → <code>HandlerMapping</code>.</li>
+<li><strong>Figure out how to call it</strong> → <code>HandlerAdapter</code>.</li>
+<li><strong>Execute it with interceptors wrapped around it</strong> → <code>HandlerExecutionChain</code>.</li>
+</ol>
+<h3 id="a-handler-is-not-just-a-controller">A Handler Is Not Just "a Controller"<a class="headerlink" href="#a-handler-is-not-just-a-controller" title="Permanent link">&para;</a></h3>
+<p>In Spring's terms, a <strong>Handler</strong> is <em>any</em> object capable of handling a request — in practice, that's almost always a controller method, but the abstraction is deliberately broader (Spring also supports things like <code>HttpRequestHandler</code>).</p>
+<p>Your controller method:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@GetMapping</span><span class="p">(</span><span class="s">&quot;/hello&quot;</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">sayHello</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p>...is internally wrapped as a <code>HandlerMethod</code> — a Spring class containing the controller object and a reference to the method. The JVM itself sees this as a reflective <code>Method</code> object.</p>
+<h3 id="how-dispatcherservlet-finds-the-handler-handlermapping">How <code>DispatcherServlet</code> Finds the Handler — <code>HandlerMapping</code><a class="headerlink" href="#how-dispatcherservlet-finds-the-handler-handlermapping" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Request (/hello) → HandlerMapping → HandlerMethod
+</code></pre></div>
+<p><code>HandlerMapping</code> matches the URL and returns a <code>HandlerExecutionChain</code>.</p>
+<h3 id="handlerexecutionchain"><code>HandlerExecutionChain</code><a class="headerlink" href="#handlerexecutionchain" title="Permanent link">&para;</a></h3>
+<p>Contains <strong>two things</strong>:</p>
+<div class="highlight"><pre><span></span><code>HandlerExecutionChain = [ List of Interceptors ] + Handler (controller method)
+</code></pre></div>
+<p>Internally, it exposes:</p>
+<ul>
+<li><code>applyPreHandle()</code> — runs interceptors, before the handler.</li>
+<li><code>applyPostHandle()</code> — runs interceptors, after the handler.</li>
+<li><code>getHandler()</code> — returns the actual handler.</li>
+</ul>
+<h3 id="dodispatch-the-core-flow"><code>doDispatch()</code> — the Core Flow<a class="headerlink" href="#dodispatch-the-core-flow" title="Permanent link">&para;</a></h3>
+<p>Inside <code>DispatcherServlet.doDispatch()</code>:</p>
+<ol>
+<li><code>getHandler(request)</code> — loops through every <code>HandlerMapping</code>, looking for a match.</li>
+<li>If nothing matches → <strong>404</strong>.</li>
+<li>Otherwise, retrieves the <code>HandlerExecutionChain</code> — handler plus its interceptors.</li>
+</ol>
+<h3 id="the-problem-the-handler-is-typed-as-object">The Problem — the Handler Is Typed as <code>Object</code><a class="headerlink" href="#the-problem-the-handler-is-typed-as-object" title="Permanent link">&para;</a></h3>
+<p>Inside <code>HandlerExecutionChain</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Object</span><span class="w"> </span><span class="n">handler</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Why <code>Object</code>?</strong> Because Spring supports many different handler types (controller methods, <code>HttpRequestHandler</code>, others) — a single concrete type couldn't represent all of them uniformly.</p>
+<h3 id="the-solution-handleradapter">The Solution — <code>HandlerAdapter</code><a class="headerlink" href="#the-solution-handleradapter" title="Permanent link">&para;</a></h3>
+<p><strong>Purpose:</strong> <em>"make any handler executable,"</em> regardless of its concrete type.</p>
+<div class="highlight"><pre><span></span><code><span class="n">handlerAdapter</span><span class="p">.</span><span class="na">supports</span><span class="p">(</span><span class="n">handler</span><span class="p">)</span>
+</code></pre></div>
+<p>If <code>true</code>, this particular adapter knows how to execute this handler — it then typecasts the handler and calls its method, ultimately via reflection.</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Solution</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Handler is typed as <code>Object</code></td>
+<td><code>HandlerAdapter</code></td>
+</tr>
+<tr>
+<td>Don't know how to invoke it generically</td>
+<td>The adapter knows, for its supported type</td>
+</tr>
+<tr>
+<td>Multiple handler types exist</td>
+<td>Multiple adapters exist, one per type</td>
+</tr>
+</tbody>
+</table>
+<h3 id="the-full-internal-flow">The Full Internal Flow<a class="headerlink" href="#the-full-internal-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Client
+  ↓
+DispatcherServlet
+  ↓
+getHandler() → HandlerExecutionChain
+  ↓
+applyPreHandle() (interceptors)
+  ↓
+HandlerAdapter.supports(handler)
+  ↓
+HandlerAdapter.handle()
+   → calls the controller method, via reflection
+  ↓
+applyPostHandle()
+  ↓
+Response
+</code></pre></div>
+<h3 id="mental-model">Mental Model<a class="headerlink" href="#mental-model" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong><code>HandlerMapping</code></strong> = Finder — locates the right handler for this URL.</li>
+<li><strong><code>HandlerExecutionChain</code></strong> = Package — bundles the handler with its interceptors.</li>
+<li><strong><code>HandlerAdapter</code></strong> = Executor — knows how to actually invoke a given handler type.</li>
+<li><strong><code>DispatcherServlet</code></strong> = Coordinator — orchestrates all of the above per request.</li>
+</ul>
+<p><strong>Interview-level answer:</strong> <em>"<code>DispatcherServlet</code> uses <code>HandlerMapping</code> to find the handler, wraps it in a <code>HandlerExecutionChain</code> with interceptors, and then uses a suitable <code>HandlerAdapter</code> to execute the handler method via reflection."</em></p>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>This entire pipeline is the same reflective-invocation mechanism from <a href="../day-4-reflection/">day-4-reflection.md</a>, applied at framework scale: Spring can't know your controller's concrete type at compile time, so it stores the handler as <code>Object</code> and uses reflection (mediated by <code>HandlerAdapter</code>) to invoke it anyway — exactly the "types unknown until runtime" problem reflection exists to solve.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="why-does-http-need-cookies-if-its-stateless">Why does HTTP need cookies if it's stateless?<a class="headerlink" href="#why-does-http-need-cookies-if-its-stateless" title="Permanent link">&para;</a></h3>
+<p>Because statelessness means the server retains nothing between requests — cookies simulate continuity by having the client resend an identifying token (like <code>sessionId</code>) with every request, which the server maps back to stored state on its side.</p>
+<h3 id="is-pagination-server-side-or-client-side-state">Is pagination server-side or client-side state?<a class="headerlink" href="#is-pagination-server-side-or-client-side-state" title="Permanent link">&para;</a></h3>
+<p>Client-side — the server doesn't remember which page you were on; the client resends <code>?page=N</code> on every request, and the server treats each one as independent.</p>
+<h3 id="whats-the-difference-between-a-war-and-a-jar-in-a-spring-context">What's the difference between a WAR and a JAR in a Spring context?<a class="headerlink" href="#whats-the-difference-between-a-war-and-a-jar-in-a-spring-context" title="Permanent link">&para;</a></h3>
+<p>A WAR (Web Archive) is built to be deployed <em>into</em> an external server like Tomcat — the app depends on a server that exists separately. A JAR built by Spring Boot bundles an embedded server inside the artifact itself — the server is <em>part of</em> the application, and you run it directly with <code>java -jar</code>.</p>
+<h3 id="what-problem-does-an-embedded-server-solve-that-a-shared-standalone-server-doesnt">What problem does an embedded server solve that a shared standalone server doesn't?<a class="headerlink" href="#what-problem-does-an-embedded-server-solve-that-a-shared-standalone-server-doesnt" title="Permanent link">&para;</a></h3>
+<p>Isolation and independent scaling — each app gets its own server instance and config, so one app's crash, version requirement, or scaling need doesn't affect any other app sharing the same physical server.</p>
+<h3 id="why-does-returning-a-string-from-a-bare-controller-method-not-send-that-string-as-the-response">Why does returning a String from a bare <code>@Controller</code> method not send that string as the response?<a class="headerlink" href="#why-does-returning-a-string-from-a-bare-controller-method-not-send-that-string-as-the-response" title="Permanent link">&para;</a></h3>
+<p>Because <code>@Controller</code> treats a returned String as a <strong>view name</strong> by default, not response content — Spring tries to resolve a matching view (<code>.html</code>/<code>.jsp</code>) and returns a 404/Whitelabel error if none exists. <code>@ResponseBody</code> (or <code>@RestController</code>) is what tells Spring to treat the return value as the response body instead.</p>
+<h3 id="what-does-restcontroller-actually-do-differently-from-controller">What does <code>@RestController</code> actually do differently from <code>@Controller</code>?<a class="headerlink" href="#what-does-restcontroller-actually-do-differently-from-controller" title="Permanent link">&para;</a></h3>
+<p>It's shorthand for <code>@Controller</code> + <code>@ResponseBody</code> applied to every method — every method's return value is sent directly as the HTTP response body, with no view resolution attempted.</p>
+<h3 id="why-must-requestparamrequired-false-use-integer-instead-of-int">Why must <code>@RequestParam(required = false)</code> use <code>Integer</code> instead of <code>int</code>?<a class="headerlink" href="#why-must-requestparamrequired-false-use-integer-instead-of-int" title="Permanent link">&para;</a></h3>
+<p>Because a missing optional parameter resolves to <code>null</code>, and a primitive <code>int</code> cannot represent <code>null</code> — only a wrapper type like <code>Integer</code> can hold that absence without error.</p>
+<h3 id="how-does-spring-serialize-a-returned-java-object-into-json">How does Spring serialize a returned Java object into JSON?<a class="headerlink" href="#how-does-spring-serialize-a-returned-java-object-into-json" title="Permanent link">&para;</a></h3>
+<p>Via Jackson (bundled by default), which inspects the object's getters and uses them to build the JSON representation — a class needs getters for its fields to serialize correctly.</p>
+<h3 id="what-is-data-binding-auto-binding-in-spring-mvc">What is Data Binding / Auto Binding in Spring MVC?<a class="headerlink" href="#what-is-data-binding-auto-binding-in-spring-mvc" title="Permanent link">&para;</a></h3>
+<p>Spring automatically matches incoming query parameters to a Java object's fields when that object type is used as a controller method parameter — no manual parsing code is required.</p>
+<h3 id="what-is-dispatcherservlets-role-in-one-sentence">What is <code>DispatcherServlet</code>'s role, in one sentence?<a class="headerlink" href="#what-is-dispatcherservlets-role-in-one-sentence" title="Permanent link">&para;</a></h3>
+<p>It's Spring MVC's Front Controller — the single entry point that receives every request and coordinates finding the right handler, running interceptors around it, and invoking it.</p>
+<h3 id="what-are-interceptors-used-for-and-where-do-they-run-relative-to-the-controller">What are interceptors used for, and where do they run relative to the controller?<a class="headerlink" href="#what-are-interceptors-used-for-and-where-do-they-run-relative-to-the-controller" title="Permanent link">&para;</a></h3>
+<p>Cross-cutting concerns (logging, auth, header checks, latency tracking) that don't belong inside individual controllers. <code>preHandle</code> runs before the controller (and can block the request by returning <code>false</code>), <code>postHandle</code> runs after the controller but before the response is finalized, and <code>afterCompletion</code> runs after the entire response cycle completes.</p>
+<h3 id="if-interceptors-a-and-b-are-registered-in-that-order-whats-the-execution-order-for-prehandle-and-posthandle">If interceptors A and B are registered in that order, what's the execution order for <code>preHandle</code> and <code>postHandle</code>?<a class="headerlink" href="#if-interceptors-a-and-b-are-registered-in-that-order-whats-the-execution-order-for-prehandle-and-posthandle" title="Permanent link">&para;</a></h3>
+<p><code>preHandle</code>: A then B. <code>postHandle</code>: B then A — the reverse, the same nesting discipline as closing resources in reverse order of opening.</p>
+<h3 id="why-is-a-spring-handler-typed-as-object-internally-and-what-fixes-the-problem-that-creates">Why is a Spring "Handler" typed as <code>Object</code> internally, and what fixes the problem that creates?<a class="headerlink" href="#why-is-a-spring-handler-typed-as-object-internally-and-what-fixes-the-problem-that-creates" title="Permanent link">&para;</a></h3>
+<p>Because Spring supports multiple kinds of handlers (controller methods, <code>HttpRequestHandler</code>, others) with no single common concrete type. <code>HandlerAdapter</code> fixes the resulting problem: each adapter's <code>supports(handler)</code> check identifies whether it knows how to invoke that specific handler type, then typecasts and invokes it (ultimately via reflection).</p>
+<h3 id="what-two-things-does-a-handlerexecutionchain-bundle-together">What two things does a <code>HandlerExecutionChain</code> bundle together?<a class="headerlink" href="#what-two-things-does-a-handlerexecutionchain-bundle-together" title="Permanent link">&para;</a></h3>
+<p>The matched handler (the controller method to invoke) and the ordered list of interceptors that should wrap its execution.</p>
+<hr />
+<p>❌ Cookies make HTTP stateful.</p>
+<p>✔ HTTP itself remains stateless — cookies just give the client something to resend that lets the server <em>simulate</em> continuity by looking up stored state on its own side.</p>
+<hr />
+<p>❌ A WAR and a JAR are just two build output formats — pick whichever is convenient.</p>
+<p>✔ They represent genuinely different architectures: a WAR needs an external server to run inside; a JAR built by Spring Boot has its own embedded server, with the isolation and independent-scaling consequences that follow from that.</p>
+<hr />
+<p>❌ <code>@Controller</code> and <code>@RestController</code> behave identically as long as you return a String.</p>
+<p>✔ <code>@Controller</code> treats a returned String as a view name to resolve; <code>@RestController</code> sends it directly as the response body. Mixing them up produces a 404/Whitelabel error instead of the expected text.</p>
+<hr />
+<p>❌ <code>@RequestParam(required = false) int id</code> is fine — Java will just use <code>0</code> if the parameter is missing.</p>
+<p>✔ It throws, because the missing value resolves to <code>null</code> first, and a primitive <code>int</code> cannot hold <code>null</code>. Use <code>Integer</code> for any optional request parameter.</p>
+<hr />
+<p>❌ Interceptors are a separate architectural layer sitting outside <code>DispatcherServlet</code>.</p>
+<p>✔ They're invoked <em>by</em> <code>DispatcherServlet</code> itself, as part of the <code>HandlerExecutionChain</code> it builds for each request — not an independent layer the request passes through on its own.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>HTTP                → stateless; client resends context every request
+Cookies              → simulate state via a token the server maps to
+                        stored session data
+
+Request              → Method + URI + Version + Headers + Body
+Response             → Status Line + Headers + Body
+
+WAR                  → needs an external server (old, standalone)
+JAR (Spring Boot)     → has an embedded server (modern, isolated)
+
+@Controller           → return value = view name, by default
+@RestController        → return value = response body, always
+                          (= @Controller + @ResponseBody everywhere)
+
+@RequestParam(required=false) → use wrapper types (Integer), never
+                                  primitives — missing value is null
+
+DispatcherServlet      → Front Controller: finds handler, wraps with
+                           interceptors, invokes via HandlerAdapter
+
+HandlerMapping          → Finder
+HandlerExecutionChain    → Package (handler + interceptors)
+HandlerAdapter            → Executor (typecasts + reflectively invokes)
+
+preHandle   → before controller, CAN block (return false)
+postHandle  → after controller, before response
+afterCompletion → after the full cycle, for cleanup/logging
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-1-checklist">Stage 2 · Week 1 Checklist<a class="headerlink" href="#stage-2-week-1-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain why HTTP is stateless, and how cookies simulate continuity on top of it</li>
+<li>[x] Name every component of an HTTP request and response, and its Spring MVC annotation counterpart</li>
+<li>[x] Explain the difference between a servlet and a servlet container</li>
+<li>[x] Explain the practical trade-offs between a standalone (WAR) and embedded (JAR) server architecture</li>
+<li>[x] Explain why <code>@Controller</code> alone doesn't return response text, and how <code>@RestController</code> fixes that</li>
+<li>[x] Explain why <code>@RequestParam(required = false)</code> requires a wrapper type, not a primitive</li>
+<li>[x] Explain how Spring serializes a returned object into JSON, and what auto-binding does for incoming params</li>
+<li>[x] Explain <code>DispatcherServlet</code>'s role as Front Controller, end to end</li>
+<li>[x] Explain what interceptors are for, their three lifecycle methods, and their execution order with multiple interceptors</li>
+<li>[x] Explain why a Spring Handler is typed as <code>Object</code> internally, and how <code>HandlerAdapter</code> resolves that</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

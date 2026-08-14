@@ -1,0 +1,3551 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Java/day-1-oop-fundamentals/">
+      
+      
+        <link rel="prev" href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/">
+      
+      
+        <link rel="next" href="../day-2-inheritance-composition/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Java OOP: Access Control, Static, Final & Polymorphism - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#java-oop-access-control-static-final-polymorphism" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Java OOP: Access Control, Static, Final &amp; Polymorphism
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encapsulation-and-access-modifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encapsulation and Access Modifiers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encapsulation and Access Modifiers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-access-modifiers-are-for-data-integrity-not-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Access Modifiers Are for Data Integrity, Not Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-protected-modifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The protected Modifier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The protected Modifier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Split?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-immutability-and-thread-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        final — Immutability and Thread Safety
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="final — Immutability and Thread Safety">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-final-prevents-race-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why final Prevents Race Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-class-level-state-and-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        static — Class-Level State and Behavior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="static — Class-Level State and Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-a-static-method-cant-access-non-static-members" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a Static Method Can't Access Non-Static Members
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interfaces-and-polymorphism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaces and Polymorphism
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interfaces and Polymorphism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-vs-interface-when-to-use-which" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class vs. Interface — When to Use Which
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inheritance-reference-type-vs-object-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inheritance — Reference Type vs. Object Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inheritance — Reference Type vs. Object Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-compile-time-reference-vs-runtime-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why: Compile-Time Reference vs. Runtime Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-split-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Split Exists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visibility-rules-for-top-level-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visibility Rules for Top-Level Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visibility Rules for Top-Level Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-java-disallows-private-on-top-level-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Java Disallows private on Top-Level Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-private-is-allowed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where private Is Allowed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visibility Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-outer-classes-cant-be-private" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Outer Classes Can't Be private
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#private-inner-classes-the-exception-that-proves-the-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private Inner Classes (the Exception That Proves the Rule)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-the-root-class-in-java" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object — The Root Class in Java
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Object — The Root Class in Java">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-main-is-static" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why main() Is static
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why main() Is static">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-reason" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Reason
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-main-were-not-static" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If main() Were Not Static?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-private-about-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is private about security?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-can-a-protected-member-be-accessed-by-any-class-in-the-same-package-not-just-subclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can a protected member be accessed by any class in the same package, not just subclasses?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-final-prevent-race-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does final prevent race conditions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-a-static-method-access-instance-variables-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't a static method access instance variables directly?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-you-have-an-object-of-an-interface-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can you have an object of an interface type?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-a-parent-type-reference-points-at-a-child-object-which-methods-can-you-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When a parent-type reference points at a child object, which methods can you call?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-java-disallow-private-on-a-top-level-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does Java disallow private on a top-level class?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-a-private-inner-class-legal-when-a-private-outer-class-isnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is a private inner class legal when a private outer class isn't?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-main-static" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is main() static?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-every-java-class-inherit-from-even-with-no-explicit-extends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does every Java class inherit from, even with no explicit extends?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#encapsulation-and-access-modifiers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Encapsulation and Access Modifiers
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Encapsulation and Access Modifiers">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-access-modifiers-are-for-data-integrity-not-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Access Modifiers Are for Data Integrity, Not Security
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-protected-modifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The protected Modifier
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The protected Modifier">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-split" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Split?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#final-immutability-and-thread-safety" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        final — Immutability and Thread Safety
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="final — Immutability and Thread Safety">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-final-prevents-race-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why final Prevents Race Conditions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#static-class-level-state-and-behavior" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        static — Class-Level State and Behavior
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="static — Class-Level State and Behavior">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-a-static-method-cant-access-non-static-members" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a Static Method Can't Access Non-Static Members
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interfaces-and-polymorphism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interfaces and Polymorphism
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interfaces and Polymorphism">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#class-vs-interface-when-to-use-which" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class vs. Interface — When to Use Which
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inheritance-reference-type-vs-object-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inheritance — Reference Type vs. Object Type
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inheritance — Reference Type vs. Object Type">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-compile-time-reference-vs-runtime-object" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why: Compile-Time Reference vs. Runtime Object
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-split-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Split Exists
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#visibility-rules-for-top-level-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visibility Rules for Top-Level Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Visibility Rules for Top-Level Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-java-disallows-private-on-top-level-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Java Disallows private on Top-Level Types
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-private-is-allowed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where private Is Allowed
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visibility-matrix" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visibility Matrix
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-outer-classes-cant-be-private" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Outer Classes Can't Be private
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#private-inner-classes-the-exception-that-proves-the-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Private Inner Classes (the Exception That Proves the Rule)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#object-the-root-class-in-java" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Object — The Root Class in Java
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Object — The Root Class in Java">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-main-is-static" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why main() Is static
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why main() Is static">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-reason" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Reason
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-if-main-were-not-static" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What If main() Were Not Static?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#is-private-about-security" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is private about security?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-can-a-protected-member-be-accessed-by-any-class-in-the-same-package-not-just-subclasses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can a protected member be accessed by any class in the same package, not just subclasses?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-final-prevent-race-conditions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does final prevent race conditions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-a-static-method-access-instance-variables-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't a static method access instance variables directly?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-you-have-an-object-of-an-interface-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can you have an object of an interface type?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-a-parent-type-reference-points-at-a-child-object-which-methods-can-you-call" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When a parent-type reference points at a child object, which methods can you call?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-java-disallow-private-on-a-top-level-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does Java disallow private on a top-level class?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-a-private-inner-class-legal-when-a-private-outer-class-isnt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is a private inner class legal when a private outer class isn't?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-main-static" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is main() static?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-every-java-class-inherit-from-even-with-no-explicit-extends" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does every Java class inherit from, even with no explicit extends?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="java-oop-access-control-static-final-polymorphism">Java OOP: Access Control, Static, Final &amp; Polymorphism<a class="headerlink" href="#java-oop-access-control-static-final-polymorphism" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+This is not a keyword glossary — <code>private</code>, <code>static</code>, and <code>final</code> are not syntax to memorize, they're the compiler's answer to specific engineering problems (data integrity, shared state, thread safety, dispatch ambiguity). The goal is to be able to say <em>why</em> each rule exists, not just <em>what</em> it does.</p>
+</blockquote>
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>Encapsulation, access control, <code>static</code>, <code>final</code>, and polymorphism are the mechanisms Java gives a class to control who can see its state, who can change it, and which implementation runs when a call is ambiguous.</strong></p>
+<hr />
+<h2 id="encapsulation-and-access-modifiers">Encapsulation and Access Modifiers<a class="headerlink" href="#encapsulation-and-access-modifiers" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<p>Without any access control, every field is directly mutable from anywhere in the codebase. Any caller can set an object into an invalid state — a negative balance, a null required field — with no chance for the class to reject it.</p>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p><strong>Data Hiding</strong> makes fields <code>private</code> and exposes controlled access through public <code>getters()</code>/<code>setters()</code>. The setter is the enforcement point — it can validate before mutating state.</p>
+<h3 id="why-access-modifiers-are-for-data-integrity-not-security">Why Access Modifiers Are for Data Integrity, Not Security<a class="headerlink" href="#why-access-modifiers-are-for-data-integrity-not-security" title="Permanent link">&para;</a></h3>
+<p>A <code>private</code> field is not a security boundary — anyone with the source (or reflection) can read it. What it <em>does</em> guarantee is that all mutation goes through one method, so the class can enforce its own invariants. That's an integrity guarantee, not a confidentiality one.</p>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>This is <strong>Information Hiding</strong> (Parnas) applied at the field level: the class exposes <em>what</em> callers can do (<code>setBalance(amount)</code>), not <em>how</em> state is stored — so the internal representation can change without breaking callers.</p>
+<hr />
+<h2 id="the-protected-modifier">The <code>protected</code> Modifier<a class="headerlink" href="#the-protected-modifier" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<p><code>public</code> exposes a member everywhere; <code>private</code> hides it everywhere. Neither models the common case of "a subclass should inherit this, but strangers shouldn't touch it" — that needs a modifier aware of the <em>inheritance relationship</em>, not just the package boundary.</p>
+<h3 id="definition_1">Definition<a class="headerlink" href="#definition_1" title="Permanent link">&para;</a></h3>
+<p><code>protected</code> accessibility depends on both package and class relationship:</p>
+<div class="highlight"><pre><span></span><code>Same Package
+├── Any class   → ✔ access
+└── Subclass    → ✔ access
+
+Different Package
+├── Subclass    → ✔ access
+└── Non-child   → ✘ no access
+</code></pre></div>
+<h3 id="why-the-split">Why the Split?<a class="headerlink" href="#why-the-split" title="Permanent link">&para;</a></h3>
+<p>Within the same package, Java already trusts every class equally (that's what package-private means), so <code>protected</code> behaves like <code>public</code> there. Across packages, the only trust relationship left is inheritance — so access narrows to subclasses only.</p>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p><code>protected</code> is Java's way of saying "this is part of the extension contract, not the public API" — it's for framework/base-class authors who want subclasses to reach into state that outside callers shouldn't.</p>
+<hr />
+<h2 id="final-immutability-and-thread-safety"><code>final</code> — Immutability and Thread Safety<a class="headerlink" href="#final-immutability-and-thread-safety" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>A <strong>race condition</strong> occurs when multiple threads access and modify shared data concurrently, and the final outcome depends on the timing or order of execution of those threads. Mutable shared state is what makes a race condition possible in the first place.</p>
+<h3 id="definition_2">Definition<a class="headerlink" href="#definition_2" title="Permanent link">&para;</a></h3>
+<p><code>final</code> prevents a variable from being reassigned after initialization (for references: the reference is fixed, not necessarily the referenced object's internal state).</p>
+<h3 id="why-final-prevents-race-conditions">Why <code>final</code> Prevents Race Conditions<a class="headerlink" href="#why-final-prevents-race-conditions" title="Permanent link">&para;</a></h3>
+<p>If a field can never be reassigned after construction, there's no write for a second thread to race against — reads from multiple threads of a value that never changes are inherently safe. <code>final</code> promotes immutability, making shared objects <strong>thread-safe by design</strong>.</p>
+<h3 id="engineering-insight_2">Engineering Insight<a class="headerlink" href="#engineering-insight_2" title="Permanent link">&para;</a></h3>
+<p>This is the same reasoning behind favoring immutable value objects generally: the cheapest way to make code thread-safe isn't better locking, it's removing the mutation that needed locking in the first place.</p>
+<hr />
+<h2 id="static-class-level-state-and-behavior"><code>static</code> — Class-Level State and Behavior<a class="headerlink" href="#static-class-level-state-and-behavior" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_3">Engineering Problem<a class="headerlink" href="#engineering-problem_3" title="Permanent link">&para;</a></h3>
+<p>Some data and behavior belongs to the <em>class</em>, not to any one instance — a counter of how many objects exist, a utility calculation that needs no object state. Forcing every caller to instantiate an object just to run a stateless calculation is unnecessary coupling.</p>
+<h3 id="definition_3">Definition<a class="headerlink" href="#definition_3" title="Permanent link">&para;</a></h3>
+<p>A <code>static</code> member belongs to the class itself; it exists and can be accessed without creating an object.</p>
+<h3 id="why-a-static-method-cant-access-non-static-members">Why a Static Method Can't Access Non-Static Members<a class="headerlink" href="#why-a-static-method-cant-access-non-static-members" title="Permanent link">&para;</a></h3>
+<p>A static method runs without any object — it's invoked as <code>ClassName.method()</code>, not <code>instance.method()</code>. Instance members only exist <em>because</em> an object was constructed, so there is no guaranteed instance for the static method to read from.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">Test</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">int</span><span class="w"> </span><span class="n">x</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">10</span><span class="p">;</span><span class="w">      </span><span class="c1">// instance variable</span>
+<span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">y</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="mi">20</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">show</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">x</span><span class="p">);</span><span class="w">        </span><span class="c1">// compile-time error — no instance to read x from</span>
+<span class="w">        </span><span class="n">Test</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Test</span><span class="p">();</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">obj</span><span class="p">.</span><span class="na">x</span><span class="p">);</span><span class="w">    </span><span class="c1">// OK — object exists</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">y</span><span class="p">);</span><span class="w">        </span><span class="c1">// OK — y belongs to the class, not an instance</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="engineering-insight_3">Engineering Insight<a class="headerlink" href="#engineering-insight_3" title="Permanent link">&para;</a></h3>
+<p>This is the same distinction as class-level vs. instance-level data anywhere: <code>static</code> is appropriate exactly when the data/behavior has no dependency on per-instance state. Reach for it too often, though, and you end up with global mutable state under a different name — the same coupling and testability problems as any other global.</p>
+<hr />
+<h2 id="interfaces-and-polymorphism">Interfaces and Polymorphism<a class="headerlink" href="#interfaces-and-polymorphism" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_4">Engineering Problem<a class="headerlink" href="#engineering-problem_4" title="Permanent link">&para;</a></h3>
+<p>Different classes need to be usable interchangeably by code that only cares about <em>what</em> they can do, not <em>how</em> they do it — e.g. any <code>PaymentProcessor</code>, regardless of whether it's Stripe or PayPal underneath. Without a shared contract, calling code has to know every concrete type it might receive.</p>
+<h3 id="definition_4">Definition<a class="headerlink" href="#definition_4" title="Permanent link">&para;</a></h3>
+<p>An <strong>Interface</strong> is a skeleton for classes — it specifies <em>what</em> a class must do, not <em>how</em>. A class <code>implements</code> one or more interfaces and must <code>@Override</code> and provide implementations for every abstract method the interface declares. This is enforced <strong>at compile time</strong>.</p>
+<p>You cannot instantiate an interface directly — only hold a reference to an object of an implementing class.</p>
+<h3 id="class-vs-interface-when-to-use-which">Class vs. Interface — When to Use Which<a class="headerlink" href="#class-vs-interface-when-to-use-which" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Use a Class</th>
+<th>Use an Interface</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>You need shared implementation/state between related types</td>
+<td>You only need to guarantee a contract/capability</td>
+</tr>
+<tr>
+<td>The "is-a" relationship is a true hierarchy</td>
+<td>Unrelated classes need the same capability (e.g. <code>Comparable</code>)</td>
+</tr>
+<tr>
+<td>Single inheritance is sufficient</td>
+<td>A type needs to satisfy multiple contracts at once</td>
+</tr>
+</tbody>
+</table>
+<h3 id="engineering-insight_4">Engineering Insight<a class="headerlink" href="#engineering-insight_4" title="Permanent link">&para;</a></h3>
+<p>Interfaces are what make <strong>polymorphism</strong> possible without inheritance: two classes with nothing in common except implementing the same interface can still be swapped for each other by any code that programs against the interface type.</p>
+<hr />
+<h2 id="inheritance-reference-type-vs-object-type">Inheritance — Reference Type vs. Object Type<a class="headerlink" href="#inheritance-reference-type-vs-object-type" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_5">Engineering Problem<a class="headerlink" href="#engineering-problem_5" title="Permanent link">&para;</a></h3>
+<p>When a parent-class reference points at a child-class object, which method set is the caller allowed to see — the parent's, or the (possibly extended) child's? Getting this wrong either breaks encapsulation or breaks the compiler's ability to catch mistakes early.</p>
+<h3 id="definition_5">Definition<a class="headerlink" href="#definition_5" title="Permanent link">&para;</a></h3>
+<p>When a parent class reference refers to a child class object, the reference can only call methods <strong>declared in the parent class</strong>. (If a method is <em>declared</em> in the parent and <em>overridden/defined</em> in the child, this works fine — that's normal polymorphism.)</p>
+<h3 id="why-compile-time-reference-vs-runtime-object">Why: Compile-Time Reference vs. Runtime Object<a class="headerlink" href="#why-compile-time-reference-vs-runtime-object" title="Permanent link">&para;</a></h3>
+<p>Method accessibility is checked at <strong>compile time</strong>, and the compiler looks at the <strong>reference type</strong>, not the object type:</p>
+<div class="highlight"><pre><span></span><code>Reference type → what methods you can call     (compile time)
+Object type    → which implementation runs     (runtime)
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>➡ Compile-time : method must exist on the declared (reference) type
+➡ Runtime      : the overridden method is dispatched dynamically
+</code></pre></div>
+<h3 id="why-this-split-exists">Why This Split Exists<a class="headerlink" href="#why-this-split-exists" title="Permanent link">&para;</a></h3>
+<p>If the compiler checked against the object's <em>runtime</em> type, it couldn't verify method calls until the program actually ran — defeating the point of static typing. Checking against the <em>reference</em> type lets the compiler catch invalid calls immediately, while dynamic dispatch still lets the correct override run.</p>
+<h3 id="engineering-insight_5">Engineering Insight<a class="headerlink" href="#engineering-insight_5" title="Permanent link">&para;</a></h3>
+<p>This is exactly <strong>why you code against interfaces/abstract types</strong>: the reference type is a contract the compiler enforces early, while the object type is free to vary — which is what makes polymorphism substitutable and testable (swap the object, keep the contract).</p>
+<hr />
+<h2 id="visibility-rules-for-top-level-types">Visibility Rules for Top-Level Types<a class="headerlink" href="#visibility-rules-for-top-level-types" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_6">Engineering Problem<a class="headerlink" href="#engineering-problem_6" title="Permanent link">&para;</a></h3>
+<p><code>private</code> works for fields and methods — but does "private to what?" even make sense for an entire top-level <code>class</code> or <code>interface</code>? Getting this wrong would mean either types can be hidden from their own package (breaking normal package-level collaboration) or the concept of "private type" is meaningless and shouldn't compile at all.</p>
+<h3 id="why-java-disallows-private-on-top-level-types">Why Java Disallows <code>private</code> on Top-Level Types<a class="headerlink" href="#why-java-disallows-private-on-top-level-types" title="Permanent link">&para;</a></h3>
+<p>A top-level type (class or interface) is already a package member — it lives directly inside a package, and the package boundary is already the <em>minimum</em> visibility scope Java offers. So Java asks: <strong>"private to what?"</strong> There is no enclosing class to hide it inside, so the modifier has nothing to attach to.</p>
+<h3 id="where-private-is-allowed">Where <code>private</code> <em>Is</em> Allowed<a class="headerlink" href="#where-private-is-allowed" title="Permanent link">&para;</a></h3>
+<p><code>private</code> is legal only <strong>inside a class</strong> — on a nested type, because a nested type has an enclosing scope to be private <em>to</em>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">Outer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">InnerContract</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kt">void</span><span class="w"> </span><span class="nf">doWork</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">class</span> <span class="nc">InnerImpl</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">InnerContract</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">doWork</span><span class="p">()</span><span class="w"> </span><span class="p">{}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><code>InnerContract</code> is private to <code>Outer</code> — this makes sense because <code>Outer</code> <em>is</em> the enclosing scope.</p>
+<h3 id="visibility-matrix">Visibility Matrix<a class="headerlink" href="#visibility-matrix" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Modifier</th>
+<th>Top-Level Types (class / interface)</th>
+<th>Members Inside a Class</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>public</code></td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><em>(nothing)</em> — package-private</td>
+<td>✔</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><code>protected</code></td>
+<td>✘</td>
+<td>✔</td>
+</tr>
+<tr>
+<td><code>private</code></td>
+<td>✘</td>
+<td>✔</td>
+</tr>
+</tbody>
+</table>
+<p>The gap is the point: <code>protected</code> and <code>private</code> are both meaningless at the top level because both need something narrower than "the package" to be relative to, and a top-level type has nothing narrower available.</p>
+<h3 id="why-outer-classes-cant-be-private">Why Outer Classes Can't Be <code>private</code><a class="headerlink" href="#why-outer-classes-cant-be-private" title="Permanent link">&para;</a></h3>
+<ul>
+<li>A top-level class already belongs to a package.</li>
+<li>Marking it <code>private</code> would make it inaccessible to <strong>every</strong> other class, including ones in its own package — there's no enclosing scope for "private" to mean anything less extreme than that.</li>
+<li>Hence Java disallows <code>private</code> for outer classes.</li>
+</ul>
+<h3 id="private-inner-classes-the-exception-that-proves-the-rule">Private Inner Classes (the Exception That Proves the Rule)<a class="headerlink" href="#private-inner-classes-the-exception-that-proves-the-rule" title="Permanent link">&para;</a></h3>
+<p>A private inner class <em>can</em> exist — because it has an enclosing class to be private to. It is accessible only within the enclosing class, and completely hidden from outside code:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PublicOuterClass</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">class</span> <span class="nc">PrivateInnerClass</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">;</span>
+<span class="w">        </span><span class="kd">public</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="n">id</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="engineering-insight_6">Engineering Insight<a class="headerlink" href="#engineering-insight_6" title="Permanent link">&para;</a></h3>
+<p>The rule generalizes: <strong>an access modifier is only meaningful relative to some enclosing scope.</strong> A package is the outermost scope Java has, so no modifier can be more restrictive than "the package" at that level — restriction requires something to be restricted <em>within</em>.</p>
+<hr />
+<h2 id="object-the-root-class-in-java"><code>Object</code> — The Root Class in Java<a class="headerlink" href="#object-the-root-class-in-java" title="Permanent link">&para;</a></h2>
+<h3 id="definition_6">Definition<a class="headerlink" href="#definition_6" title="Permanent link">&para;</a></h3>
+<p><code>java.lang.Object</code> is the superclass of all classes in Java. Every class implicitly extends <code>Object</code>; if a class does not explicitly extend another class, it automatically extends <code>Object</code>.</p>
+<h3 id="engineering-insight_7">Engineering Insight<a class="headerlink" href="#engineering-insight_7" title="Permanent link">&para;</a></h3>
+<p>This is what guarantees every Java object — regardless of type — has a baseline contract (<code>equals</code>, <code>hashCode</code>, <code>toString</code>, <code>getClass</code>, ...). Collections, reflection, and logging all lean on this guarantee; without a universal root type, generic containers like <code>ArrayList</code> couldn't hold arbitrary objects uniformly.</p>
+<hr />
+<h2 id="why-main-is-static">Why <code>main()</code> Is <code>static</code><a class="headerlink" href="#why-main-is-static" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_7">Engineering Problem<a class="headerlink" href="#engineering-problem_7" title="Permanent link">&para;</a></h3>
+<p>The JVM has to invoke your program's entry point before any of your code has run — which means before any object of your class exists. Something has to be callable with zero prior state.</p>
+<h3 id="core-reason">Core Reason<a class="headerlink" href="#core-reason" title="Permanent link">&para;</a></h3>
+<p><code>main()</code> is <code>static</code> so the JVM can invoke it without creating an object of the class first (<code>Main.main(args)</code>).</p>
+<h3 id="what-if-main-were-not-static">What If <code>main()</code> Were Not Static?<a class="headerlink" href="#what-if-main-were-not-static" title="Permanent link">&para;</a></h3>
+<p>The JVM would have to construct an instance first, and immediately hit unanswerable questions:</p>
+<ul>
+<li>Which constructor should it call?</li>
+<li>What if the constructor needs arguments?</li>
+<li>What if object creation has side effects?</li>
+</ul>
+<p>Too many unknowns — not allowed.</p>
+<h3 id="engineering-insight_8">Engineering Insight<a class="headerlink" href="#engineering-insight_8" title="Permanent link">&para;</a></h3>
+<p>This is the same reasoning as <code>static</code> generally, applied to the most fundamental case: <code>main()</code> has no natural instance to belong to, because instances don't exist yet when it needs to run.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="is-private-about-security">Is <code>private</code> about security?<a class="headerlink" href="#is-private-about-security" title="Permanent link">&para;</a></h3>
+<p>No — it's about data integrity. It guarantees all mutation goes through the class's own methods, which can enforce invariants; it does not stop determined access via reflection.</p>
+<h3 id="why-can-a-protected-member-be-accessed-by-any-class-in-the-same-package-not-just-subclasses">Why can a <code>protected</code> member be accessed by any class in the same package, not just subclasses?<a class="headerlink" href="#why-can-a-protected-member-be-accessed-by-any-class-in-the-same-package-not-just-subclasses" title="Permanent link">&para;</a></h3>
+<p>Because within a package, Java already treats all classes as trusted collaborators (that's the meaning of package-private). <code>protected</code> only narrows to "subclass only" once you cross a package boundary, where inheritance is the sole remaining trust relationship.</p>
+<h3 id="how-does-final-prevent-race-conditions">How does <code>final</code> prevent race conditions?<a class="headerlink" href="#how-does-final-prevent-race-conditions" title="Permanent link">&para;</a></h3>
+<p>A race condition requires a shared, mutable write that another thread can observe mid-change. <code>final</code> removes the write entirely after construction — with nothing left to mutate, concurrent reads are inherently safe.</p>
+<h3 id="why-cant-a-static-method-access-instance-variables-directly">Why can't a static method access instance variables directly?<a class="headerlink" href="#why-cant-a-static-method-access-instance-variables-directly" title="Permanent link">&para;</a></h3>
+<p>A static method can run without any object existing. Instance variables only exist once an object has been constructed, so there's no guaranteed instance for the static method to read from — it would need an explicit object reference instead.</p>
+<h3 id="can-you-have-an-object-of-an-interface-type">Can you have an object of an interface type?<a class="headerlink" href="#can-you-have-an-object-of-an-interface-type" title="Permanent link">&para;</a></h3>
+<p>No — you can only hold a <em>reference</em> of an interface type pointing at an object of an implementing class. The interface itself has no implementation to instantiate.</p>
+<h3 id="when-a-parent-type-reference-points-at-a-child-object-which-methods-can-you-call">When a parent-type reference points at a child object, which methods can you call?<a class="headerlink" href="#when-a-parent-type-reference-points-at-a-child-object-which-methods-can-you-call" title="Permanent link">&para;</a></h3>
+<p>Only the methods declared on the parent (reference) type — checked at compile time. Which <em>implementation</em> actually runs (parent's or the child's override) is resolved at runtime, based on the object's actual type.</p>
+<h3 id="why-does-java-disallow-private-on-a-top-level-class">Why does Java disallow <code>private</code> on a top-level class?<a class="headerlink" href="#why-does-java-disallow-private-on-a-top-level-class" title="Permanent link">&para;</a></h3>
+<p>Because <code>private</code> needs an enclosing scope to be private <em>to</em>, and a top-level type's enclosing scope is the package itself — the widest scope Java has, not a narrower one. There's nothing to restrict it within.</p>
+<h3 id="why-is-a-private-inner-class-legal-when-a-private-outer-class-isnt">Why is a private inner class legal when a private outer class isn't?<a class="headerlink" href="#why-is-a-private-inner-class-legal-when-a-private-outer-class-isnt" title="Permanent link">&para;</a></h3>
+<p>The inner class has an enclosing class (<code>Outer</code>) to be private to; the outer class's only "enclosing" context is the package, and hiding a type from its own package defeats the purpose of package membership.</p>
+<h3 id="why-is-main-static">Why is <code>main()</code> static?<a class="headerlink" href="#why-is-main-static" title="Permanent link">&para;</a></h3>
+<p>Because the JVM must invoke it before any object of the class exists — a non-static <code>main()</code> would require the JVM to first decide how to construct an instance, with no way to resolve which constructor, what arguments, or what side effects that construction should have.</p>
+<h3 id="what-does-every-java-class-inherit-from-even-with-no-explicit-extends">What does every Java class inherit from, even with no explicit <code>extends</code>?<a class="headerlink" href="#what-does-every-java-class-inherit-from-even-with-no-explicit-extends" title="Permanent link">&para;</a></h3>
+<p><code>java.lang.Object</code> — every class implicitly extends it unless it explicitly extends something else (which itself ultimately traces back to <code>Object</code>).</p>
+<hr />
+<p>❌ Access modifiers exist to keep data secure from malicious actors.</p>
+<p>✔ They exist for data integrity — enforcing that a class's own invariants are respected on every mutation. Reflection and decompilation can still bypass <code>private</code> entirely.</p>
+<hr />
+<p>❌ <code>protected</code> means "only subclasses can access this."</p>
+<p>✔ <code>protected</code> means "subclasses, plus anything in the same package" — package membership alone is enough within the same package.</p>
+<hr />
+<p>❌ <code>final</code> just stops you from reassigning a variable — it's a syntax convenience.</p>
+<p>✔ <code>final</code> is a concurrency tool: removing reassignment removes the write side of a race condition, making shared immutable state safe by construction.</p>
+<hr />
+<p>❌ A parent-type reference to a child object calls the child's <em>full</em> API.</p>
+<p>✔ It calls only what the parent type declares — the reference type gates <em>what</em> you can call at compile time; the object type only decides <em>which implementation</em> runs for methods that exist on the reference type.</p>
+<hr />
+<p>❌ You could make a top-level class <code>private</code> if you really wanted stricter hiding.</p>
+<p>✔ Java disallows it categorically — there's no enclosing scope narrower than the package for a top-level type to be private to.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Access modifiers        → data integrity, not security
+protected                → package OR subclass
+final                    → no reassignment → no race condition
+static                   → belongs to the class, not any instance
+Interface                → contract, enforced at compile time, no direct instantiation
+Reference type           → what you can call   (compile time)
+Object type              → what actually runs  (runtime)
+private on a type        → only legal when there&#39;s an enclosing class to be private to
+main() is static         → the JVM calls it before any object exists
+Every class               → implicitly extends java.lang.Object
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-1-checklist">Stage 2 · Week 1 Checklist<a class="headerlink" href="#stage-2-week-1-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain why access modifiers are for data integrity, not security</li>
+<li>[x] Explain why <code>protected</code> grants access to the whole package, not just subclasses</li>
+<li>[x] Explain how <code>final</code> prevents race conditions</li>
+<li>[x] Explain why a static method can't directly access instance members</li>
+<li>[x] Explain why you can't instantiate an interface, only reference one</li>
+<li>[x] Explain the difference between reference type (compile time) and object type (runtime) in method dispatch</li>
+<li>[x] Explain why Java disallows <code>private</code> on top-level classes/interfaces</li>
+<li>[x] Explain why a private <em>inner</em> class is legal when a private <em>outer</em> class isn't</li>
+<li>[x] Explain why <code>main()</code> must be <code>static</code></li>
+<li>[x] State what every Java class implicitly extends</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

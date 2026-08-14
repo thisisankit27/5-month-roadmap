@@ -1,0 +1,2964 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Network/day-1-dns-fundamentals/">
+      
+      
+        <link rel="prev" href="../../Java/day-9-handler-mapping-adapters/">
+      
+      
+        <link rel="next" href="../day-2-dns-advanced-practical/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>DNS Fundamentals: Domains, Records & Resolution - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dns-fundamentals-domains-records-resolution" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DNS Fundamentals: Domains, Records &amp; Resolution
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-dns-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why DNS Exists
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why DNS Exists">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anatomy-of-a-domain-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anatomy of a Domain Name
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anatomy of a Domain Name">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#subdomains-are-not-a-separate-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subdomains Are Not a Separate Product
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-dns-hierarchy-resolution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The DNS Hierarchy &amp; Resolution Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The DNS Hierarchy &amp; Resolution Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-resolution-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Resolution Chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-caching-makes-this-fast-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Caching Makes This Fast in Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-record-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Record Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNS Record Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cname-cant-coexist-with-other-records-on-the-same-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why CNAME Can't Coexist With Other Records on the Same Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registrar-vs-registry-vs-dns-host-three-different-businesses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar vs Registry vs DNS Host — Three Different Businesses
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registrar vs Registry vs DNS Host — Three Different Businesses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#domain-dns-pricing-what-youre-actually-paying-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain &amp; DNS Pricing — What You're Actually Paying For
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Domain &amp; DNS Pricing — What You&#39;re Actually Paying For">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-registration-pricing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain Registration Pricing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-hosting-pricing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Hosting Pricing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subdomains-always-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subdomains: Always Free
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-is-dns-hierarchical-instead-of-one-central-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is DNS hierarchical instead of one central database?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-a-recursive-query-and-an-iterative-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between a recursive query and an iterative query?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-a-registrar-a-registry-and-a-dns-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between a registrar, a registry, and a DNS host?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-adding-a-subdomain-cost-anything-or-require-registry-involvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does adding a subdomain cost anything or require registry involvement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-the-apexroot-domain-examplecom-typically-be-a-cname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't the apex/root domain (example.com) typically be a CNAME?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-ttl-control-and-whats-the-trade-off-in-setting-it-low-vs-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does TTL control, and what's the trade-off in setting it low vs high?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-a-domain-fails-to-resolve-what-are-the-three-layers-youd-check-in-order-of-likelihood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If a domain fails to resolve, what are the three layers you'd check, in order of likelihood?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-2-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 2 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-dns-exists" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why DNS Exists
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why DNS Exists">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#anatomy-of-a-domain-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Anatomy of a Domain Name
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Anatomy of a Domain Name">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#subdomains-are-not-a-separate-product" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subdomains Are Not a Separate Product
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-dns-hierarchy-resolution-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The DNS Hierarchy &amp; Resolution Flow
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The DNS Hierarchy &amp; Resolution Flow">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-resolution-chain" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Resolution Chain
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-caching-makes-this-fast-in-practice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Caching Makes This Fast in Practice
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-record-types" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Record Types
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNS Record Types">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cname-cant-coexist-with-other-records-on-the-same-name" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why CNAME Can't Coexist With Other Records on the Same Name
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#registrar-vs-registry-vs-dns-host-three-different-businesses" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Registrar vs Registry vs DNS Host — Three Different Businesses
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Registrar vs Registry vs DNS Host — Three Different Businesses">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#domain-dns-pricing-what-youre-actually-paying-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain &amp; DNS Pricing — What You're Actually Paying For
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Domain &amp; DNS Pricing — What You&#39;re Actually Paying For">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#domain-registration-pricing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Domain Registration Pricing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#dns-hosting-pricing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS Hosting Pricing
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#subdomains-always-free" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Subdomains: Always Free
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-is-dns-hierarchical-instead-of-one-central-database" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is DNS hierarchical instead of one central database?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-a-recursive-query-and-an-iterative-query" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between a recursive query and an iterative query?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-a-registrar-a-registry-and-a-dns-host" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between a registrar, a registry, and a DNS host?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-adding-a-subdomain-cost-anything-or-require-registry-involvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does adding a subdomain cost anything or require registry involvement?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-the-apexroot-domain-examplecom-typically-be-a-cname" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't the apex/root domain (example.com) typically be a CNAME?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-ttl-control-and-whats-the-trade-off-in-setting-it-low-vs-high" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does TTL control, and what's the trade-off in setting it low vs high?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-a-domain-fails-to-resolve-what-are-the-three-layers-youd-check-in-order-of-likelihood" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If a domain fails to resolve, what are the three layers you'd check, in order of likelihood?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-2-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 2 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="dns-fundamentals-domains-records-resolution">DNS Fundamentals: Domains, Records &amp; Resolution<a class="headerlink" href="#dns-fundamentals-domains-records-resolution" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+This is not "here's how to buy a domain on GoDaddy." DNS is a distributed, hierarchical, heavily-cached lookup system — the goal is to understand <em>why</em> it's shaped as a tree of authorities instead of one giant lookup table, what each record type actually delegates or points to, and where money changes hands in the domain ecosystem (registrar vs registry vs DNS host are three different businesses, not one). Get this model right and every "why won't my domain resolve" or "why is this taking 24 hours" question stops being mysterious.</p>
+</blockquote>
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>DNS (Domain Name System) is a distributed, hierarchical database that translates human-readable domain names into the machine data (IP addresses, mail servers, and other records) that computers need to route requests — resolved via a chain of delegated authorities, not a single central lookup.</strong></p>
+<hr />
+<h2 id="why-dns-exists">Why DNS Exists<a class="headerlink" href="#why-dns-exists" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<p>Computers route traffic using IP addresses (<code>142.250.183.14</code>), not names. Without DNS, using the internet means memorizing IP addresses for every service, and every time a server's IP changes (scaling, migration, provider switch), every client that hardcoded that IP breaks.</p>
+<p>The earliest fix — a single flat file (<code>HOSTS.TXT</code>) maintained by one organization (Stanford Research Institute, in the pre-DNS ARPANET era) and copied to every machine — worked at a few hundred hosts. It fails at internet scale for three concrete reasons:</p>
+<ul>
+<li><strong>Single point of failure / update bottleneck</strong> — every new host means one team edits one file and every machine on the network re-downloads it.</li>
+<li><strong>No delegation</strong> — one organization can't reasonably know about, or be trusted to manage, every name for every organization on earth.</li>
+<li><strong>No horizontal scaling of ownership</strong> — a company should be able to manage its own subdomains without asking a central authority to edit a shared file.</li>
+</ul>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>DNS's actual innovation isn't "name → IP mapping" — a flat file already does that. It's <strong>hierarchical delegation of authority</strong>: no single server holds the whole internet's records; instead, each level of the domain tree delegates responsibility for the level below it to a different, independently-operated server. This is the same idea as a package/namespace hierarchy in code — a root doesn't need to know every leaf, it only needs to know who to ask next.</p>
+<hr />
+<h2 id="anatomy-of-a-domain-name">Anatomy of a Domain Name<a class="headerlink" href="#anatomy-of-a-domain-name" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>        https://api.staging.example.com/v1/users
+                 │      │       │    │
+                 │      │       │    └── TLD  (Top-Level Domain)
+                 │      │       └─────── SLD  (Second-Level / registered domain)
+                 │      └─────────────── Subdomain (label)
+                 └────────────────────── Subdomain (label, nested)
+</code></pre></div>
+<p>Read right to left — that's the actual delegation order:</p>
+<table>
+<thead>
+<tr>
+<th>Term</th>
+<th>Example</th>
+<th>What it is</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TLD</strong> (Top-Level Domain)</td>
+<td><code>.com</code>, <code>.io</code>, <code>.dev</code></td>
+<td>Managed by a <strong>registry</strong> (e.g. Verisign runs <code>.com</code>)</td>
+</tr>
+<tr>
+<td><strong>SLD / registered domain</strong></td>
+<td><code>example.com</code></td>
+<td>The name you actually register and pay for — <code>example</code> is the SLD, <code>.com</code> is the TLD</td>
+</tr>
+<tr>
+<td><strong>Subdomain</strong></td>
+<td><code>api.example.com</code>, <code>staging.example.com</code></td>
+<td>A label prepended to the registered domain — free, unlimited, controlled entirely by whoever owns <code>example.com</code></td>
+</tr>
+<tr>
+<td><strong>FQDN</strong> (Fully Qualified Domain Name)</td>
+<td><code>api.staging.example.com.</code></td>
+<td>The complete, unambiguous name including the (usually hidden) trailing root dot</td>
+</tr>
+</tbody>
+</table>
+<p><strong>The trailing dot matters conceptually even though browsers hide it.</strong> <code>example.com.</code> is the fully qualified form — the empty label after the final dot represents the DNS <strong>root zone</strong>, the top of the entire tree. Every domain is implicitly a child of the root.</p>
+<h3 id="subdomains-are-not-a-separate-product">Subdomains Are Not a Separate Product<a class="headerlink" href="#subdomains-are-not-a-separate-product" title="Permanent link">&para;</a></h3>
+<p>This is the detail people trip on: a subdomain is <strong>not purchased separately</strong> and does not need registry involvement. Once you own <code>example.com</code>, you fully control its DNS zone — adding <code>anything.example.com</code> is just adding a record in your own zone file, free and instant (modulo TTL/propagation, covered in Day 2). This is why companies run <code>app.</code>, <code>api.</code>, <code>blog.</code>, <code>staging.</code> subdomains liberally: they cost nothing beyond the one SLD registration.</p>
+<hr />
+<h2 id="the-dns-hierarchy-resolution-flow">The DNS Hierarchy &amp; Resolution Flow<a class="headerlink" href="#the-dns-hierarchy-resolution-flow" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<p>Given a name like <code>api.example.com</code>, some machine has to figure out, in order: <em>who runs <code>.com</code>? who runs <code>example.com</code> within <code>.com</code>? who runs <code>api</code> within <code>example.com</code>?</em> Answering that efficiently — without every device on earth talking directly to root servers for every lookup — is the actual distributed-systems problem DNS solves.</p>
+<h3 id="the-resolution-chain">The Resolution Chain<a class="headerlink" href="#the-resolution-chain" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Browser                Recursive Resolver         Root Server        TLD Server (.com)      Authoritative Server
+   │  &quot;api.example.com?&quot;       │                       │                    │                     │
+   ├──────────────────────────▶│                       │                    │                     │
+   │                           │  &quot;who handles .com?&quot;  │                    │                     │
+   │                           ├──────────────────────▶│                    │                     │
+   │                           │◀── refers to .com TLD ┤                    │                     │
+   │                           │                       │                    │                     │
+   │                           │  &quot;who handles example.com?&quot;                │                     │
+   │                           ├────────────────────────────────────────────▶│                    │
+   │                           │◀── refers to example.com&#39;s nameservers ─────┤                    │
+   │                           │                                                                   │
+   │                           │  &quot;what&#39;s the A record for api.example.com?&quot;                       │
+   │                           ├──────────────────────────────────────────────────────────────────▶│
+   │                           │◀──────────────────────────── returns IP address ───────────────────┤
+   │◀── returns IP to browser ─┤                                                                    │
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Actor</th>
+<th>Role</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Recursive resolver</strong></td>
+<td>The client-facing server (your ISP's, or <code>8.8.8.8</code> / <code>1.1.1.1</code>) that does the multi-hop work on the client's behalf and <strong>caches</strong> the result</td>
+</tr>
+<tr>
+<td><strong>Root server</strong></td>
+<td>Knows only which server is authoritative for each TLD (<code>.com</code>, <code>.org</code>, <code>.io</code>, …) — there are 13 logical root server addresses, globally anycast</td>
+</tr>
+<tr>
+<td><strong>TLD server</strong></td>
+<td>Knows which nameservers are authoritative for each registered domain under that TLD</td>
+</tr>
+<tr>
+<td><strong>Authoritative nameserver</strong></td>
+<td>Holds the actual DNS zone file for the domain — the actual source of truth for <code>example.com</code>'s records (this is what your DNS host, e.g. Cloudflare or Route 53, runs)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Iterative vs recursive, precisely:</strong> the browser makes one <strong>recursive</strong> query to the resolver ("give me the final answer, I don't want to talk to root/TLD/authoritative myself"). The resolver then makes a series of <strong>iterative</strong> queries up the chain, each server answering "I don't know, but here's who to ask next," until it reaches the authoritative server holding the real record.</p>
+<h3 id="why-caching-makes-this-fast-in-practice">Why Caching Makes This Fast in Practice<a class="headerlink" href="#why-caching-makes-this-fast-in-practice" title="Permanent link">&para;</a></h3>
+<p>Every response carries a <strong>TTL (Time To Live)</strong>, in seconds — how long the resolver is allowed to cache that answer before re-querying. In steady state, almost no lookup actually walks the full root → TLD → authoritative chain; the recursive resolver (or even the OS/browser cache) already has a cached, unexpired answer. The full chain only runs on a cold cache. This is the same trade-off as any caching layer: correctness (fresh data) traded against cost (query load, latency) — TTL is that trade-off's dial, covered in depth in Day 2.</p>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p>DNS resolution is a real-world instance of a <strong>trie / prefix-tree lookup with delegated ownership at each node</strong>, plus a caching layer bolted on for performance. Each node in the domain tree (root → TLD → SLD → subdomain) only needs to know its immediate children's authorities, not the whole tree — exactly the same locality principle that makes routing tables, trie-based autocomplete, and filesystem path resolution tractable at scale.</p>
+<hr />
+<h2 id="dns-record-types">DNS Record Types<a class="headerlink" href="#dns-record-types" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>A domain isn't just "one name → one IP." The same name needs to resolve differently depending on <em>what kind of thing is asking</em> — a browser wants an IP, a mail server wants a mail exchange target, a certificate authority wants proof-of-ownership text, another DNS zone wants an alias, not a raw IP. One record type per concern is exactly this: separating <em>what data this name maps to</em> by the consumer's need, instead of overloading one field.</p>
+<table>
+<thead>
+<tr>
+<th>Record</th>
+<th>Maps a name to</th>
+<th>Typical use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>IPv4 address</td>
+<td><code>example.com → 93.184.216.34</code></td>
+</tr>
+<tr>
+<td><strong>AAAA</strong></td>
+<td>IPv6 address</td>
+<td><code>example.com → 2606:2800:220:1::</code></td>
+</tr>
+<tr>
+<td><strong>CNAME</strong></td>
+<td>Another domain name (an alias)</td>
+<td><code>www.example.com → example.com</code>, or <code>app.example.com → my-app.vercel.app</code></td>
+</tr>
+<tr>
+<td><strong>MX</strong></td>
+<td>Mail server hostname + priority</td>
+<td>Routes email for the domain to a mail provider (Google Workspace, etc.)</td>
+</tr>
+<tr>
+<td><strong>TXT</strong></td>
+<td>Arbitrary text</td>
+<td>Domain ownership verification, SPF/DKIM/DMARC (Day 2)</td>
+</tr>
+<tr>
+<td><strong>NS</strong></td>
+<td>Authoritative nameservers for the zone (or a delegated subzone)</td>
+<td>Tells the world <em>who</em> to ask for this domain's records</td>
+</tr>
+<tr>
+<td><strong>SOA</strong></td>
+<td>Zone metadata (primary nameserver, admin email, serial, refresh/retry/expire timers)</td>
+<td>One per zone — describes the zone itself, not a resource</td>
+</tr>
+<tr>
+<td><strong>PTR</strong></td>
+<td>IP → name (reverse of A/AAAA)</td>
+<td>Reverse DNS lookups, used in email deliverability/spam scoring</td>
+</tr>
+<tr>
+<td><strong>CAA</strong></td>
+<td>Which Certificate Authorities may issue TLS certs for this domain</td>
+<td>Security control — restricts who can issue a valid cert for you</td>
+</tr>
+<tr>
+<td><strong>SRV</strong></td>
+<td>Service location: host + port for a specific protocol</td>
+<td>Used by protocols like SIP, XMPP, or service discovery in some infra tools</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-cname-cant-coexist-with-other-records-on-the-same-name">Why CNAME Can't Coexist With Other Records on the Same Name<a class="headerlink" href="#why-cname-cant-coexist-with-other-records-on-the-same-name" title="Permanent link">&para;</a></h3>
+<p>A CNAME says "this name is <em>entirely</em> an alias for that other name" — so if <code>www</code> is a CNAME, DNS can't also answer an MX or TXT query for <code>www</code> directly, because the spec treats a CNAME as the <em>only</em> record allowed at that name. This is why the root/apex domain (<code>example.com</code> itself, not <code>www.example.com</code>) traditionally <strong>cannot</strong> be a CNAME — it needs to simultaneously hold NS, MX, TXT, and other records, which a CNAME's "alias only" rule forbids. (The workaround — ALIAS/ANAME/CNAME-flattening — is a Day 2 topic.)</p>
+<h3 id="engineering-insight_2">Engineering Insight<a class="headerlink" href="#engineering-insight_2" title="Permanent link">&para;</a></h3>
+<p>This is the same design principle as a well-normalized schema or a discriminated union: rather than one overloaded record answering every question ambiguously, each record type has one job and one shape, and a resolver asks specifically for the type it needs (<code>dig example.com A</code> vs <code>dig example.com MX</code>). Adding a new capability to DNS over the decades (CAA for cert authorization, SRV for service discovery) meant adding a new record type, not redefining an existing one — an Open/Closed-style extension.</p>
+<hr />
+<h2 id="registrar-vs-registry-vs-dns-host-three-different-businesses">Registrar vs Registry vs DNS Host — Three Different Businesses<a class="headerlink" href="#registrar-vs-registry-vs-dns-host-three-different-businesses" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_3">Engineering Problem<a class="headerlink" href="#engineering-problem_3" title="Permanent link">&para;</a></h3>
+<p>"Buying a domain" is casually described as one transaction, but it actually involves three separable roles that can be — and often are — three different companies. Conflating them is why people get confused about where pricing comes from and why changing "who hosts my DNS" doesn't mean changing "who I bought the domain from."</p>
+<div class="highlight"><pre><span></span><code>┌─────────────────────┐        ┌──────────────────────┐        ┌───────────────────────┐
+│      Registry         │        │      Registrar          │        │      DNS Host              │
+│  Owns/operates a TLD   │◀──────│  Sells domains to you,  │◀──────│  Hosts the actual zone     │
+│  e.g. Verisign (.com), │ wholesale│  accredited by ICANN   │  you   │  file / answers queries    │
+│  PIR (.org)             │  rate  │  e.g. Namecheap,        │ point  │  e.g. Cloudflare, Route 53,│
+│                         │        │  GoDaddy, Google Domains│  NS to │  the registrar itself      │
+└─────────────────────┘        └──────────────────────┘        └───────────────────────┘
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Role</th>
+<th>What it does</th>
+<th>Who's an example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Registry</strong></td>
+<td>Owns and operates a TLD, maintains the authoritative TLD-level database, sets wholesale pricing</td>
+<td>Verisign (<code>.com</code>/<code>.net</code>), Public Interest Registry (<code>.org</code>), Identity Digital (<code>.dev</code>, many gTLDs)</td>
+</tr>
+<tr>
+<td><strong>Registrar</strong></td>
+<td>ICANN-accredited reseller — the interface you actually buy from; pays the registry a wholesale fee, adds markup</td>
+<td>Namecheap, GoDaddy, Cloudflare Registrar, Google Domains (now Squarespace)</td>
+</tr>
+<tr>
+<td><strong>DNS Host</strong></td>
+<td>Runs the authoritative nameservers that actually answer queries for your zone — can be the registrar's default, or a separate provider entirely</td>
+<td>Cloudflare, AWS Route 53, the registrar's built-in DNS</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Why you'd split registrar and DNS host:</strong> many engineers register through one company (often for price or UX) but point the domain's <strong>NS records</strong> at a different provider's nameservers for better tooling — e.g. Cloudflare's proxy/CDN/analytics, or Route 53 for tight AWS integration. This is purely a matter of "who answers DNS queries for my zone," completely independent of "who did I pay to reserve the name."</p>
+<hr />
+<h2 id="domain-dns-pricing-what-youre-actually-paying-for">Domain &amp; DNS Pricing — What You're Actually Paying For<a class="headerlink" href="#domain-dns-pricing-what-youre-actually-paying-for" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_4">Engineering Problem<a class="headerlink" href="#engineering-problem_4" title="Permanent link">&para;</a></h3>
+<p>Pricing looks opaque ("why is <code>.com</code> $12 but <code>.ai</code> $70?") until you see it's driven by exactly two layers: what the <strong>registry</strong> charges the <strong>registrar</strong> wholesale for that TLD, and what the <strong>registrar</strong> marks it up to. DNS <em>hosting</em> is a separate, usually free-tier cost.</p>
+<h3 id="domain-registration-pricing">Domain Registration Pricing<a class="headerlink" href="#domain-registration-pricing" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Cost driver</th>
+<th>Explanation</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>TLD wholesale price</strong></td>
+<td>Set by the registry per TLD. Legacy gTLDs (<code>.com</code>, <code>.net</code>) are ICANN price-capped and cheap (~$9–13/yr wholesale). Newer/niche gTLDs (<code>.ai</code>, <code>.io</code>, <code>.dev</code>) have no such cap and can run $30–90+/yr — registries price based on perceived demand, not delivery cost.</td>
+</tr>
+<tr>
+<td><strong>Registrar markup</strong></td>
+<td>Registrars compete on this margin — same <code>.com</code> domain can be $9 at one registrar, $20 at another. First-year "promo" pricing is common; <strong>renewal price is the real number to check</strong>, it's often 2–4x the first-year promo.</td>
+</tr>
+<tr>
+<td><strong>Renewal</strong></td>
+<td>Charged annually (or for however many years you pre-pay) to keep the registration active. Missing renewal after the grace period can put the domain into a redemption/auction phase — someone else can register it.</td>
+</tr>
+<tr>
+<td><strong>Privacy protection (WHOIS privacy)</strong></td>
+<td>ICANN requires registrant contact info to be published in WHOIS; registrars offer (often free, sometimes paid) a proxy service so your personal info isn't public.</td>
+</tr>
+<tr>
+<td><strong>Transfer fee</strong></td>
+<td>Moving a domain to a different registrar typically costs one renewal-year's price and re-locks the domain for a year — a switching cost, not a technical necessity.</td>
+</tr>
+<tr>
+<td><strong>Premium / aftermarket domains</strong></td>
+<td>Short, dictionary-word, or previously-registered domains are sold by resellers or the registry itself at prices with no relation to the standard wholesale rate — pure scarcity pricing.</td>
+</tr>
+</tbody>
+</table>
+<h3 id="dns-hosting-pricing">DNS Hosting Pricing<a class="headerlink" href="#dns-hosting-pricing" title="Permanent link">&para;</a></h3>
+<p>Hosting your <em>zone</em> (the actual records) is a <strong>separate cost from registration</strong>, and for the vast majority of use cases it's free:</p>
+<ul>
+<li>Most registrars include free basic DNS hosting with registration.</li>
+<li>Cloudflare's free tier includes full DNS hosting, DDoS-protected authoritative nameservers, and a CDN/proxy layer, independent of who you registered through.</li>
+<li>Paid DNS tiers (Route 53, Cloudflare paid plans, NS1) exist for <strong>volume</strong> (very high query counts), <strong>advanced routing</strong> (GeoDNS, latency-based, weighted failover — Day 2), and <strong>SLA guarantees</strong>, not for basic name resolution.</li>
+</ul>
+<h3 id="subdomains-always-free">Subdomains: Always Free<a class="headerlink" href="#subdomains-always-free" title="Permanent link">&para;</a></h3>
+<p>Worth stating explicitly since it's a common point of confusion: <strong>there is no per-subdomain fee.</strong> A subdomain is just a DNS record inside a zone you already control. <code>app.example.com</code>, <code>api.example.com</code>, <code>staging.example.com</code> cost nothing beyond the one <code>example.com</code> registration — the constraint is operational (keeping records organized, TTL/propagation, cert coverage), never billing.</p>
+<h3 id="engineering-insight_3">Engineering Insight<a class="headerlink" href="#engineering-insight_3" title="Permanent link">&para;</a></h3>
+<p>The registry/registrar/DNS-host split is a textbook example of <strong>separation of concerns across independent vendors mediated by a protocol</strong> (the WHOIS/RDAP + registrar-registry EPP protocol layer), not a single company's product. Understanding <em>which</em> layer a cost or an outage belongs to is exactly the kind of "who owns this" reasoning that maps to production incident triage: "domain not resolving" could be a registry outage (rare), a registrar/NS misconfiguration, or your own DNS host being down — three completely different fixes.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="why-is-dns-hierarchical-instead-of-one-central-database">Why is DNS hierarchical instead of one central database?<a class="headerlink" href="#why-is-dns-hierarchical-instead-of-one-central-database" title="Permanent link">&para;</a></h3>
+<p>A single flat file doesn't scale past a few hundred hosts — it's a single point of failure, an update bottleneck, and gives no organization the ability to manage its own names independently. DNS delegates authority level by level (root → TLD → domain → subdomain) so each zone owner controls only their own slice.</p>
+<h3 id="whats-the-difference-between-a-recursive-query-and-an-iterative-query">What's the difference between a recursive query and an iterative query?<a class="headerlink" href="#whats-the-difference-between-a-recursive-query-and-an-iterative-query" title="Permanent link">&para;</a></h3>
+<p>A client makes one recursive query to its resolver, asking for a final answer. The resolver then performs a series of iterative queries up the chain (root → TLD → authoritative), where each server responds "I don't know, ask this other server" until the authoritative answer is found.</p>
+<h3 id="whats-the-difference-between-a-registrar-a-registry-and-a-dns-host">What's the difference between a registrar, a registry, and a DNS host?<a class="headerlink" href="#whats-the-difference-between-a-registrar-a-registry-and-a-dns-host" title="Permanent link">&para;</a></h3>
+<p>The registry owns and operates a TLD (e.g. Verisign runs <code>.com</code>) and sets wholesale pricing. The registrar is the ICANN-accredited reseller you actually buy the domain from (Namecheap, GoDaddy). The DNS host runs the authoritative nameservers that answer queries for your zone — it can be the registrar's default service or a completely separate provider like Cloudflare or Route 53.</p>
+<h3 id="does-adding-a-subdomain-cost-anything-or-require-registry-involvement">Does adding a subdomain cost anything or require registry involvement?<a class="headerlink" href="#does-adding-a-subdomain-cost-anything-or-require-registry-involvement" title="Permanent link">&para;</a></h3>
+<p>No. Once you own the SLD (e.g. <code>example.com</code>), a subdomain is just a new DNS record in your own zone — free, unlimited, and entirely under your control. No registrar or registry interaction is needed.</p>
+<h3 id="why-cant-the-apexroot-domain-examplecom-typically-be-a-cname">Why can't the apex/root domain (<code>example.com</code>) typically be a CNAME?<a class="headerlink" href="#why-cant-the-apexroot-domain-examplecom-typically-be-a-cname" title="Permanent link">&para;</a></h3>
+<p>A CNAME means "this name is <em>entirely</em> an alias for another name," and DNS only allows a CNAME to be the sole record type at that name. The apex domain needs to simultaneously hold NS, MX, and other records, which conflicts with CNAME's "alias-only" constraint — hence the need for ALIAS/ANAME/CNAME-flattening workarounds.</p>
+<h3 id="what-does-ttl-control-and-whats-the-trade-off-in-setting-it-low-vs-high">What does TTL control, and what's the trade-off in setting it low vs high?<a class="headerlink" href="#what-does-ttl-control-and-whats-the-trade-off-in-setting-it-low-vs-high" title="Permanent link">&para;</a></h3>
+<p>TTL is how long a resolver may cache a DNS answer before re-querying. Low TTL means faster propagation of changes but more query load and latency for cache misses; high TTL means better caching/performance but slower propagation if the record needs to change (e.g. during a migration).</p>
+<h3 id="if-a-domain-fails-to-resolve-what-are-the-three-layers-youd-check-in-order-of-likelihood">If a domain fails to resolve, what are the three layers you'd check, in order of likelihood?<a class="headerlink" href="#if-a-domain-fails-to-resolve-what-are-the-three-layers-youd-check-in-order-of-likelihood" title="Permanent link">&para;</a></h3>
+<p>Your own DNS host/zone configuration (most likely — a misconfigured or missing record), the registrar/NS delegation (are the domain's NS records actually pointing at your DNS host?), and the registry/root infrastructure (extremely rare to be the cause, but technically the third layer).</p>
+<hr />
+<p>❌ Buying a domain means one company owns the whole pipeline from registration to resolution.</p>
+<p>✔ It's three separable roles — registry (owns the TLD), registrar (sells you the name), DNS host (answers queries for your zone) — and you can freely mix providers across them.</p>
+<hr />
+<p>❌ Subdomains need to be purchased or registered separately from the main domain.</p>
+<p>✔ A subdomain is just a record inside a zone you already control — free and instant to add, no registry or registrar involvement.</p>
+<hr />
+<p>❌ <code>mvnrepository.com</code>-style confusion, DNS edition: the registrar you bought from must also be where your DNS is hosted.</p>
+<p>✔ NS records can point anywhere — it's common and often better (CDN, tooling, DDoS protection) to register at one company and host DNS at another (e.g. Cloudflare).</p>
+<hr />
+<p>❌ A <code>.com</code> costing $9 and a <code>.ai</code> costing $70 reflects different delivery costs.</p>
+<p>✔ It reflects registry wholesale pricing policy — legacy gTLDs are ICANN price-capped, newer/niche gTLDs are priced on perceived demand with no cap.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>DNS                  → distributed, hierarchical, cached name → data lookup
+                        (not a single flat table — delegation is the whole point)
+
+Domain anatomy        → subdomain.subdomain.SLD.TLD.  (root dot implicit)
+                        subdomains are free, unlimited, zone-owner controlled
+
+Resolution chain      → client → recursive resolver → root → TLD → authoritative
+                        one recursive query, many iterative queries behind it
+                        TTL controls cache lifetime → propagation speed trade-off
+
+Record types           → A/AAAA (IP), CNAME (alias), MX (mail), TXT (text/verification),
+                          NS (delegation), SOA (zone metadata), CAA (cert authorization)
+                          CNAME can&#39;t coexist with other records at the same name
+
+Three businesses       → Registry (owns TLD) → Registrar (sells domain) → DNS Host (answers queries)
+                          independently swappable
+
+Pricing                → TLD wholesale (registry) + markup (registrar) = registration cost
+                          DNS hosting is usually free, separate from registration
+                          subdomains: always free
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-2-checklist">Stage 2 · Week 2 Checklist<a class="headerlink" href="#stage-2-week-2-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain why DNS is hierarchical instead of a single flat lookup table</li>
+<li>[x] Break down a domain name into TLD, SLD, and subdomain, and explain why subdomains are free</li>
+<li>[x] Walk through the full resolution chain from browser to authoritative nameserver, naming each actor</li>
+<li>[x] Explain the difference between a recursive query and an iterative query</li>
+<li>[x] Name at least six DNS record types and what each one maps a name to</li>
+<li>[x] Explain why a CNAME can't coexist with other records at the same name</li>
+<li>[x] Explain the difference between a registry, a registrar, and a DNS host, with real examples of each</li>
+<li>[x] Explain what drives domain pricing differences between TLDs, and why renewal price often differs from first-year price</li>
+<li>[x] Explain what TTL controls and the trade-off between low and high values</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

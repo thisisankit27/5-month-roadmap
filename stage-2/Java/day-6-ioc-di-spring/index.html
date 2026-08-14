@@ -1,0 +1,4113 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Java/day-6-ioc-di-spring/">
+      
+      
+        <link rel="prev" href="../day-5-maven/">
+      
+      
+        <link rel="next" href="../day-7-config-events/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Spring IoC: Dependency Injection, Containers, Beans & Autowiring - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#spring-ioc-dependency-injection-containers-beans-autowiring" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-injection-mavens-meaning-vs-springs-meaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Injection: Maven's Meaning vs. Spring's Meaning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-actually-wrong-with-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Actually Wrong With new?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Actually Wrong With new?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-testing-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Testing Breaks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-mocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition — Mocking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-new-blocks-mocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why new Blocks Mocking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-fix-dependency-injection-manual-before-spring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Fix — Dependency Injection (Manual, Before Spring)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Fix — Dependency Injection (Manual, Before Spring)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-remove-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Remove new
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-becomes-easy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Becomes Easy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-spring-comes-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Spring Comes In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mocking-in-real-life-junit-mockito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mocking in Real Life — JUnit + Mockito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-key-mental-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Key Mental Switch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inversion-of-control-ioc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inversion of Control (IoC)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inversion of Control (IoC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ioc-container-beans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IoC Container &amp; Beans
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IoC Container &amp; Beans">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-ioc-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition — IoC Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition — Bean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scope-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope &amp; Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interdependent-beans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interdependent Beans
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spring-boot-convention-over-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring Boot — Convention Over Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spring Boot — Convention Over Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-auto-configuration-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Auto-Configuration Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-boot-decides-what-to-configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Boot Decides What to Configure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#important-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#making-objects-discoverable-component-and-the-bootstrap-annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Making Objects Discoverable — @Component and the Bootstrap Annotations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Making Objects Discoverable — @Component and the Bootstrap Annotations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution — @Component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationcontext-the-name-for-the-ioc-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ApplicationContext = the Name for the IoC Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#springbootapplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @SpringBootApplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-a-bean-explicitly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming a Bean Explicitly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-gotchas-worth-remembering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Gotchas Worth Remembering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#field-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-drawback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Drawback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-design-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Design Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ambiguous-autowiring-qualifier-and-named-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ambiguous Autowiring — @Qualifier and Named Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ambiguous Autowiring — @Qualifier and Named Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix-qualifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix — @Qualifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#named-autowiring-the-implicit-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Named Autowiring — the Implicit Alternative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-qualifier-kill-runtime-polymorphism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does @Qualifier Kill Runtime Polymorphism?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setter-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setter Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setter Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-setter-injection-is-genuinely-useful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Setter Injection Is Genuinely Useful
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons-of-setter-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons of Setter Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructor-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-a-polymorphic-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With a Polymorphic Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-better-than-setter-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Better Than Setter Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-setter-injection-is-still-acceptable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Setter Injection Is Still Acceptable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#senior-level-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Senior-Level Mental Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optionalt-in-constructor-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional&lt;T&gt; in Constructor Autowiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-does-dependency-differ-in-meaning-between-maven-and-spring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does "dependency" differ in meaning between Maven and Spring?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-concretely-wrong-with-writing-new-paymentgateway-inside-orderservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's concretely wrong with writing new PaymentGateway() inside OrderService?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-mocking-and-why-does-new-block-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is mocking, and why does new block it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-inversion-of-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Inversion of Control?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-spring-bean-and-what-does-the-ioc-container-manage-about-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Spring Bean, and what does the IoC container manage about it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-default-spring-bean-scope-and-what-does-it-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the default Spring bean scope, and what does it mean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-spring-boots-convention-over-configuration-actually-check-before-creating-a-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does Spring Boot's "convention over configuration" actually check before creating a bean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-component-on-an-interface-have-no-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does @Component on an interface have no effect?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-you-call-new-databaseaccessor-yourself-instead-of-getting-it-from-applicationcontext-what-happens-to-its-autowired-field-and-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If you call new DatabaseAccessor() yourself instead of getting it from ApplicationContext, what happens to its @Autowired field, and why?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-main-risk-with-field-autowiring-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the main risk with field autowiring specifically?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-two-beans-implement-the-same-interface-how-does-spring-know-which-to-inject" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If two beans implement the same interface, how does Spring know which to inject?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-using-qualifier-on-one-injection-point-break-polymorphism-elsewhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does using @Qualifier on one injection point break polymorphism elsewhere?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-is-setter-injection-actually-the-right-choice-over-constructor-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When is setter injection actually the right choice over constructor injection?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-constructor-injection-considered-the-modern-spring-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is constructor injection considered the modern Spring default?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-can-a-constructor-injected-bean-still-support-one-optional-dependency-without-falling-back-to-setter-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How can a constructor-injected bean still support one optional dependency without falling back to setter injection?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-injection-mavens-meaning-vs-springs-meaning" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Injection: Maven's Meaning vs. Spring's Meaning
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#whats-actually-wrong-with-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Actually Wrong With new?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What&#39;s Actually Wrong With new?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-testing-breaks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Testing Breaks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-mocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition — Mocking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-new-blocks-mocking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why new Blocks Mocking
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-fix-dependency-injection-manual-before-spring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Fix — Dependency Injection (Manual, Before Spring)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Fix — Dependency Injection (Manual, Before Spring)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#step-1-remove-new" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Step 1: Remove new
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#testing-becomes-easy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Testing Becomes Easy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-spring-comes-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Spring Comes In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#mocking-in-real-life-junit-mockito" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Mocking in Real Life — JUnit + Mockito
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-key-mental-switch" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Key Mental Switch
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inversion-of-control-ioc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inversion of Control (IoC)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inversion of Control (IoC)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ioc-container-beans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        IoC Container &amp; Beans
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="IoC Container &amp; Beans">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition-ioc-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition — IoC Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition — Bean
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#scope-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Scope &amp; Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interdependent-beans" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interdependent Beans
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#spring-boot-convention-over-configuration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring Boot — Convention Over Configuration
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Spring Boot — Convention Over Configuration">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#philosophy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Philosophy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-auto-configuration-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Auto-Configuration Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#starters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Starters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-boot-decides-what-to-configure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Boot Decides What to Configure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#important-clarification" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Important Clarification
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#making-objects-discoverable-component-and-the-bootstrap-annotations" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Making Objects Discoverable — @Component and the Bootstrap Annotations
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Making Objects Discoverable — @Component and the Bootstrap Annotations">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solution-component" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solution — @Component
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#applicationcontext-the-name-for-the-ioc-container" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ApplicationContext = the Name for the IoC Container
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#springbootapplication" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        @SpringBootApplication
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#naming-a-bean-explicitly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Naming a Bean Explicitly
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-gotchas-worth-remembering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Gotchas Worth Remembering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#field-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Field Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Field Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-drawback" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Drawback
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-design-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Design Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#ambiguous-autowiring-qualifier-and-named-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ambiguous Autowiring — @Qualifier and Named Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Ambiguous Autowiring — @Qualifier and Named Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#fix-qualifier" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Fix — @Qualifier
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#named-autowiring-the-implicit-alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Named Autowiring — the Implicit Alternative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-qualifier-kill-runtime-polymorphism" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does @Qualifier Kill Runtime Polymorphism?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#setter-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Setter Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Setter Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-setter-injection-is-genuinely-useful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Setter Injection Is Genuinely Useful
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#cons-of-setter-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Cons of Setter Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#constructor-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Constructor Autowiring
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Constructor Autowiring">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#with-a-polymorphic-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        With a Polymorphic Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-better-than-setter-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Better Than Setter Injection
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-setter-injection-is-still-acceptable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Setter Injection Is Still Acceptable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#senior-level-mental-model" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Senior-Level Mental Model
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#optionalt-in-constructor-autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Optional&lt;T&gt; in Constructor Autowiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#how-does-dependency-differ-in-meaning-between-maven-and-spring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does "dependency" differ in meaning between Maven and Spring?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-concretely-wrong-with-writing-new-paymentgateway-inside-orderservice" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's concretely wrong with writing new PaymentGateway() inside OrderService?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-mocking-and-why-does-new-block-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is mocking, and why does new block it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-inversion-of-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is Inversion of Control?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-spring-bean-and-what-does-the-ioc-container-manage-about-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Spring Bean, and what does the IoC container manage about it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-default-spring-bean-scope-and-what-does-it-mean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the default Spring bean scope, and what does it mean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-spring-boots-convention-over-configuration-actually-check-before-creating-a-bean" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does Spring Boot's "convention over configuration" actually check before creating a bean?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-component-on-an-interface-have-no-effect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does @Component on an interface have no effect?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-you-call-new-databaseaccessor-yourself-instead-of-getting-it-from-applicationcontext-what-happens-to-its-autowired-field-and-why" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If you call new DatabaseAccessor() yourself instead of getting it from ApplicationContext, what happens to its @Autowired field, and why?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-main-risk-with-field-autowiring-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the main risk with field autowiring specifically?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-two-beans-implement-the-same-interface-how-does-spring-know-which-to-inject" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If two beans implement the same interface, how does Spring know which to inject?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-using-qualifier-on-one-injection-point-break-polymorphism-elsewhere" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does using @Qualifier on one injection point break polymorphism elsewhere?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-is-setter-injection-actually-the-right-choice-over-constructor-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When is setter injection actually the right choice over constructor injection?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-constructor-injection-considered-the-modern-spring-default" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is constructor injection considered the modern Spring default?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-can-a-constructor-injected-bean-still-support-one-optional-dependency-without-falling-back-to-setter-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How can a constructor-injected bean still support one optional dependency without falling back to setter injection?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="spring-ioc-dependency-injection-containers-beans-autowiring">Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring<a class="headerlink" href="#spring-ioc-dependency-injection-containers-beans-autowiring" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+This is not "here's the <code>@Autowired</code> annotation." The whole chapter answers one question: <strong>who decides which concrete object a class gets to work with — the class itself, or something external to it?</strong> Every mechanism here (constructor injection, <code>@Qualifier</code>, the IoC container) is a different answer to that one question, and the answer determines whether your code is testable, or hard-wired to concrete classes you can never swap out.</p>
+</blockquote>
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>Inversion of Control means a class no longer decides how its dependencies are created — an external container creates them and hands them in. Dependency Injection is the specific technique Spring uses to do that handing-in: constructor, setter, or field.</strong></p>
+<hr />
+<h2 id="dependency-injection-mavens-meaning-vs-springs-meaning">Dependency Injection: Maven's Meaning vs. Spring's Meaning<a class="headerlink" href="#dependency-injection-mavens-meaning-vs-springs-meaning" title="Permanent link">&para;</a></h2>
+<p>The phrase "dependency" means something different in each tool:</p>
+<div class="highlight"><pre><span></span><code>Maven&#39;s &quot;dependency&quot;   → a dependency on a PACKAGE   (compile/build-time concern)
+Spring&#39;s &quot;dependency&quot;  → a dependency on an OBJECT    (runtime concern)
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">A</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">A</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">B</span><span class="p">(),</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">C</span><span class="p">());</span>
+</code></pre></div>
+<p>Here, <code>B</code> and <code>C</code> are dependencies <strong>of</strong> <code>A</code> — this is Spring's sense of the word. Writing <code>new</code> yourself means <em>your code</em> decides exactly which concrete objects <code>A</code> gets. Spring exists to let you write this without ever calling <code>new</code> for <code>B</code> or <code>C</code> yourself.</p>
+<hr />
+<h2 id="whats-actually-wrong-with-new">What's Actually Wrong With <code>new</code>?<a class="headerlink" href="#whats-actually-wrong-with-new" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">OrderService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentGateway</span><span class="p">();</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">placeOrder</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">gateway</span><span class="p">.</span><span class="na">pay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This isn't a style complaint — it's a concrete set of problems:</p>
+<ol>
+<li><code>OrderService</code> is <strong>locked</strong> to <code>PaymentGateway</code> — no other implementation can ever be substituted.</li>
+<li>You <strong>cannot replace</strong> <code>PaymentGateway</code> without editing <code>OrderService</code>'s source.</li>
+<li><strong>Testing becomes painful.</strong></li>
+</ol>
+<h3 id="why-testing-breaks">Why Testing Breaks<a class="headerlink" href="#why-testing-breaks" title="Permanent link">&para;</a></h3>
+<p>You want to test: <em>does <code>placeOrder()</code> call payment?</em> — <strong>not</strong> <em>does it actually charge real money?</em> But <code>new PaymentGateway()</code> connects to a real payment system: a real network call, real money deducted. The test becomes slow, unsafe, or outright impossible to run in CI.</p>
+<h3 id="definition-mocking">Definition — Mocking<a class="headerlink" href="#definition-mocking" title="Permanent link">&para;</a></h3>
+<p><strong>Mocking</strong> means using a fake object instead of the real one during testing — fake behavior, no real DB, no real payment, no real network.</p>
+<h3 id="why-new-blocks-mocking">Why <code>new</code> Blocks Mocking<a class="headerlink" href="#why-new-blocks-mocking" title="Permanent link">&para;</a></h3>
+<p>Because you hardcoded the dependency. <code>new PaymentGateway()</code> says <em>"ONLY use this exact concrete class"</em> — you left no room to swap it for a fake at test time.</p>
+<hr />
+<h2 id="the-fix-dependency-injection-manual-before-spring">The Fix — Dependency Injection (Manual, Before Spring)<a class="headerlink" href="#the-fix-dependency-injection-manual-before-spring" title="Permanent link">&para;</a></h2>
+<h3 id="step-1-remove-new">Step 1: Remove <code>new</code><a class="headerlink" href="#step-1-remove-new" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">OrderService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">gateway</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">OrderService</span><span class="p">(</span><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">gateway</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gateway</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">placeOrder</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">gateway</span><span class="p">.</span><span class="na">pay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now <code>OrderService</code> says: <em>"I don't care HOW payment happens. Just give me something that can pay."</em></p>
+<h3 id="testing-becomes-easy">Testing Becomes Easy<a class="headerlink" href="#testing-becomes-easy" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">FakePaymentGateway</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">PaymentGateway</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">pay</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">amount</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Fake payment of &quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">amount</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">PaymentGateway</span><span class="w"> </span><span class="n">fake</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FakePaymentGateway</span><span class="p">();</span>
+<span class="n">OrderService</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OrderService</span><span class="p">(</span><span class="n">fake</span><span class="p">);</span>
+<span class="n">service</span><span class="p">.</span><span class="na">placeOrder</span><span class="p">();</span>
+</code></pre></div>
+<p>No real payment. Fast. Safe. Controlled behavior — this <strong>is</strong> mocking.</p>
+<h3 id="where-spring-comes-in">Where Spring Comes In<a class="headerlink" href="#where-spring-comes-in" title="Permanent link">&para;</a></h3>
+<p>Doing this manually everywhere doesn't scale. Spring automates it: creates objects, injects dependencies, and lets you swap real → mock easily in tests.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Service</span>
+<span class="kd">class</span> <span class="nc">OrderService</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">gateway</span><span class="p">;</span>
+
+<span class="w">    </span><span class="n">OrderService</span><span class="p">(</span><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">gateway</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gateway</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Spring creates <code>PaymentGateway</code>, injects it into <code>OrderService</code>, and in tests injects a mock instead. <strong>You never write <code>new</code>.</strong></p>
+<h3 id="mocking-in-real-life-junit-mockito">Mocking in Real Life — JUnit + Mockito<a class="headerlink" href="#mocking-in-real-life-junit-mockito" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">mockGateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">mock</span><span class="p">(</span><span class="n">PaymentGateway</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="n">OrderService</span><span class="w"> </span><span class="n">service</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">OrderService</span><span class="p">(</span><span class="n">mockGateway</span><span class="p">);</span>
+<span class="n">service</span><span class="p">.</span><span class="na">placeOrder</span><span class="p">();</span>
+
+<span class="n">verify</span><span class="p">(</span><span class="n">mockGateway</span><span class="p">).</span><span class="na">pay</span><span class="p">(</span><span class="mi">100</span><span class="p">);</span>
+</code></pre></div>
+<p>This checks <em>"did my code behave correctly?"</em> — not <em>"did payment actually happen?"</em></p>
+<h3 id="the-key-mental-switch">The Key Mental Switch<a class="headerlink" href="#the-key-mental-switch" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Using new                → &quot;I decide what object to use&quot;
+Dependency Injection      → &quot;I receive what object to use&quot;
+</code></pre></div>
+<p>That's the whole thing.</p>
+<p><strong>One-line interview explanation:</strong> <em>"Using <code>new</code> tightly couples classes and makes mocking difficult; dependency injection allows replacing real objects with mocks during testing."</em></p>
+<hr />
+<h2 id="inversion-of-control-ioc">Inversion of Control (IoC)<a class="headerlink" href="#inversion-of-control-ioc" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">PaymentGateway</span><span class="p">();</span>
+</code></pre></div>
+<p>The <code>new</code> for this dependency lives inside your class — if that component has an issue (fails to construct, needs config you don't have), <strong>your class won't even compile or run.</strong> Object-creation failures are baked into the class that shouldn't need to care about them.</p>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p>Move to constructor injection instead:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">gateway</span><span class="p">;</span>
+
+<span class="n">OrderService</span><span class="p">(</span><span class="n">PaymentGateway</span><span class="w"> </span><span class="n">gateway</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">gateway</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">gateway</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Now the control of object creation sits at the <strong>client (caller) side</strong> — every failure or exception from constructing the dependency is handled there, not inside <code>OrderService</code>. This is called <strong>Inversion of Control</strong>: control over <em>how</em> and <em>when</em> a dependency is created is inverted away from the class that uses it. Spring uses IoC extensively — a Spring app doesn't call <code>new</code> for its own beans; the framework does.</p>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>The name is literal, not clever branding: control that would normally sit inside the dependent class (deciding what to construct, and dealing with construction failures) is <em>inverted</em> — pushed outward to the caller, and ultimately to the framework. Dependency Injection is simply the mechanism Spring uses to perform that inversion.</p>
+<hr />
+<h2 id="ioc-container-beans">IoC Container &amp; Beans<a class="headerlink" href="#ioc-container-beans" title="Permanent link">&para;</a></h2>
+<h3 id="definition-ioc-container">Definition — IoC Container<a class="headerlink" href="#definition-ioc-container" title="Permanent link">&para;</a></h3>
+<p>The <strong>IoC Container</strong> is the Spring runtime that creates objects, manages their lifecycle, and injects dependencies. <code>ApplicationContext</code> is the most commonly used IoC container in Spring.</p>
+<h3 id="definition-bean">Definition — Bean<a class="headerlink" href="#definition-bean" title="Permanent link">&para;</a></h3>
+<p>A <strong>Bean</strong> is a Java object managed by the Spring IoC container. Spring controls its creation, its wiring (dependency injection), and its lifecycle (init, destroy). Typical examples: a database accessor, a network/connection pool, service classes, configuration objects.</p>
+<h3 id="scope-lifecycle">Scope &amp; Lifecycle<a class="headerlink" href="#scope-lifecycle" title="Permanent link">&para;</a></h3>
+<p>The container holds bean instances with a defined <strong>scope</strong>:</p>
+<ul>
+<li><strong>Default scope: <code>singleton</code></strong> — one instance per <code>ApplicationContext</code>.</li>
+<li>Other scopes exist (<code>prototype</code>, <code>request</code>, <code>session</code>, ...).</li>
+</ul>
+<p>Spring manages when the instance is created, when it's destroyed, and how long it lives.</p>
+<h3 id="interdependent-beans">Interdependent Beans<a class="headerlink" href="#interdependent-beans" title="Permanent link">&para;</a></h3>
+<p>Beans can depend on other beans, and Spring resolves those dependencies automatically:</p>
+<div class="highlight"><pre><span></span><code>OrderService → PaymentService → Logger
+</code></pre></div>
+<p>Spring builds a dependency graph, instantiates beans in the correct order, and injects required dependencies — the same graph-resolution mechanics used elsewhere in Spring's autowiring.</p>
+<p><strong>Interview answer:</strong> <em>"The Spring IoC container, typically <code>ApplicationContext</code>, manages beans — Java objects whose lifecycle and dependencies are controlled by Spring. These beans are usually singleton-scoped and can depend on each other, with Spring resolving and injecting dependencies automatically."</em></p>
+<hr />
+<h2 id="spring-boot-convention-over-configuration">Spring Boot — Convention Over Configuration<a class="headerlink" href="#spring-boot-convention-over-configuration" title="Permanent link">&para;</a></h2>
+<h3 id="philosophy">Philosophy<a class="headerlink" href="#philosophy" title="Permanent link">&para;</a></h3>
+<p>Reduce manual setup, provide sensible defaults, and let the developer override only when needed: <em>"Spring Boot auto-configures common infrastructure based on classpath."</em></p>
+<h3 id="what-auto-configuration-does">What Auto-Configuration Does<a class="headerlink" href="#what-auto-configuration-does" title="Permanent link">&para;</a></h3>
+<p>Spring Boot automatically creates beans, based on:</p>
+<ul>
+<li>classes present on the classpath,</li>
+<li>existing user-defined beans, and</li>
+<li>properties.</li>
+</ul>
+<p>It uses conditional annotations like <code>@ConditionalOnClass</code>, <code>@ConditionalOnMissingBean</code>, and <code>@ConditionalOnProperty</code>.</p>
+<p><strong>Key rule:</strong> Boot configures only if you <strong>haven't already</strong> configured it — it will <strong>not</strong> override your custom bean.</p>
+<h3 id="starters">Starters<a class="headerlink" href="#starters" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;artifactId&gt;</span>spring-boot-starter-web<span class="nt">&lt;/artifactId&gt;</span>
+</code></pre></div>
+<p>A <strong>starter</strong> is a curated dependency bundle — it pulls in required libraries, auto-config support, and sensible defaults, all at once.</p>
+<h3 id="how-boot-decides-what-to-configure">How Boot Decides What to Configure<a class="headerlink" href="#how-boot-decides-what-to-configure" title="Permanent link">&para;</a></h3>
+<p>Classpath-driven configuration:</p>
+<ul>
+<li>Web classes present → configure <code>DispatcherServlet</code>.</li>
+<li>JDBC driver present → configure a <code>DataSource</code>.</li>
+<li>Jackson present → configure an <code>ObjectMapper</code>.</li>
+</ul>
+<h3 id="important-clarification">Important Clarification<a class="headerlink" href="#important-clarification" title="Permanent link">&para;</a></h3>
+<p>Boot is not "intelligent guessing." It checks conditions, applies configuration only if those conditions match, and fails if a requirement is missing.</p>
+<p><strong>Interview one-liner:</strong> <em>"Spring Boot uses conditional auto-configuration to create default beans based on the classpath, reducing manual configuration while allowing full override."</em></p>
+<hr />
+<h2 id="making-objects-discoverable-component-and-the-bootstrap-annotations">Making Objects Discoverable — <code>@Component</code> and the Bootstrap Annotations<a class="headerlink" href="#making-objects-discoverable-component-and-the-bootstrap-annotations" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>If Spring needs to know which classes should become beans, a naming convention (<code>&lt;ClassName&gt;Bean</code>?) is fragile — <code>Bean</code>, <code>bean</code>, <code>Been</code>, <code>BEAN</code> all invite typos and inconsistency across a codebase. Something more reliable than string-matching a class name is needed.</p>
+<h3 id="solution-component">Solution — <code>@Component</code><a class="headerlink" href="#solution-component" title="Permanent link">&para;</a></h3>
+<p><code>@Component</code> marks a class as a Spring bean candidate, so Spring can instantiate and manage its object lifecycle.</p>
+<h3 id="applicationcontext-the-name-for-the-ioc-container"><code>ApplicationContext</code> = the Name for the IoC Container<a class="headerlink" href="#applicationcontext-the-name-for-the-ioc-container" title="Permanent link">&para;</a></h3>
+<p>Just terminology: when you see <code>ApplicationContext</code>, that <em>is</em> the IoC container instance for your app.</p>
+<h3 id="springbootapplication"><code>@SpringBootApplication</code><a class="headerlink" href="#springbootapplication" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@SpringBootConfiguration</span>
+<span class="nd">@EnableAutoConfiguration</span>
+<span class="nd">@ComponentScan</span><span class="p">(</span>
+<span class="w">    </span><span class="n">excludeFilters</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nd">@Filter</span><span class="p">(</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FilterType</span><span class="p">.</span><span class="na">CUSTOM</span><span class="p">,</span><span class="w"> </span><span class="n">classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">TypeExcludeFilter</span><span class="p">.</span><span class="na">class</span><span class="p">}),</span>
+<span class="w">        </span><span class="nd">@Filter</span><span class="p">(</span><span class="n">type</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">FilterType</span><span class="p">.</span><span class="na">CUSTOM</span><span class="p">,</span><span class="w"> </span><span class="n">classes</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="n">AutoConfigurationExcludeFilter</span><span class="p">.</span><span class="na">class</span><span class="p">})</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="nd">@interface</span><span class="w"> </span><span class="n">SpringBootApplication</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Annotation</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@SpringBootConfiguration</code></td>
+<td>A specialized <code>@Configuration</code> — this class defines Spring bean configuration for the app</td>
+</tr>
+<tr>
+<td><code>@EnableAutoConfiguration</code></td>
+<td>Enables Spring Boot's auto-configuration mechanism, based on classpath and existing beans</td>
+</tr>
+<tr>
+<td><code>@ComponentScan</code></td>
+<td>Scans the package (and sub-packages) for Spring components (<code>@Component</code>, <code>@Service</code>, ...) and registers them as beans</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Ultra-short mental model:</strong> <code>@SpringBootApplication</code> = <strong>Config + Auto-config + Component scan</strong>, in one annotation.</p>
+<h3 id="naming-a-bean-explicitly">Naming a Bean Explicitly<a class="headerlink" href="#naming-a-bean-explicitly" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span><span class="p">(</span><span class="s">&quot;thisWillBeTheNameOfThisBean&quot;</span><span class="p">)</span>
+</code></pre></div>
+<h3 id="two-gotchas-worth-remembering">Two Gotchas Worth Remembering<a class="headerlink" href="#two-gotchas-worth-remembering" title="Permanent link">&para;</a></h3>
+<p><strong>1. <code>@Component</code> on an interface or abstract class does nothing.</strong> It doesn't throw an error, but it has no effect — and any class implementing/extending that interface/abstract class (or any superclass) does <strong>not</strong> inherit the annotation. Each concrete class needs its own <code>@Component</code>.</p>
+<p><strong>2. <code>SpringApplication.run(...)</code> is what actually performs bean management, injection, and autowiring — a manually <code>new</code>'d object bypasses all of it:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">ApplicationContext</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">MyFirstSpringProjectApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="n">DatabaseAccessor</span><span class="w"> </span><span class="n">databaseAccessor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">DatabaseAccessor</span><span class="p">)</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="s">&quot;databaseAccessor&quot;</span><span class="p">);</span>
+<span class="n">databaseAccessor</span><span class="p">.</span><span class="na">talkToDB</span><span class="p">();</span><span class="w">   </span><span class="c1">// works — Spring wired the Logger in</span>
+
+<span class="n">DatabaseAccessor</span><span class="w"> </span><span class="n">dba</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">DatabaseAccessor</span><span class="p">();</span>
+<span class="n">dba</span><span class="p">.</span><span class="na">talkToDB</span><span class="p">();</span><span class="w">                </span><span class="c1">// ✘ NPE — Spring never touched this instance,</span>
+<span class="w">                                </span><span class="c1">//   its Logger field was never set</span>
+</code></pre></div>
+<p>Autowiring only happens for objects the <strong>container</strong> created. Instantiate the class yourself, and you've opted out of every wiring guarantee Spring would otherwise provide.</p>
+<hr />
+<h2 id="autowiring">Autowiring<a class="headerlink" href="#autowiring" title="Permanent link">&para;</a></h2>
+<h3 id="definition_1">Definition<a class="headerlink" href="#definition_1" title="Permanent link">&para;</a></h3>
+<p><strong>Autowiring</strong> is Spring's mechanism for automatically resolving and injecting bean dependencies at runtime. If a bean <code>DBAccessor</code> depends on another bean <code>Logger</code>, Spring — using the application context — locates a suitable <code>Logger</code> bean and injects it into <code>DBAccessor</code>, via constructor, field, or setter injection.</p>
+<p>For a dependency to be found, it must itself be a bean — otherwise Spring has nothing in the container to inject.</p>
+<hr />
+<h2 id="field-autowiring">Field Autowiring<a class="headerlink" href="#field-autowiring" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Logger</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">log</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;#######--Logging--#######&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DatabaseAccessor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Autowired</span><span class="w">   </span><span class="c1">// field autowiring</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Logger</span><span class="w"> </span><span class="n">logger</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">talkToDB</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;#######--Talkin--To--Database--#######&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">logger</span><span class="p">.</span><span class="na">log</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="nd">@SpringBootApplication</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyFirstSpringProjectApplication</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">ClassNotFoundException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ApplicationContext</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">MyFirstSpringProjectApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="w">        </span><span class="n">DatabaseAccessor</span><span class="w"> </span><span class="n">databaseAccessor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">DatabaseAccessor</span><span class="p">)</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="s">&quot;databaseAccessor&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">databaseAccessor</span><span class="p">.</span><span class="na">talkToDB</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// Output:</span>
+<span class="c1">// #######--Talkin--To--Database--#######</span>
+<span class="c1">// #######--Logging--#######</span>
+</code></pre></div>
+<h3 id="the-drawback">The Drawback<a class="headerlink" href="#the-drawback" title="Permanent link">&para;</a></h3>
+<p><strong>Field autowiring is a ticking time bomb for <code>NullPointerException</code>.</strong> When Spring creates the object, everything works fine — but if a developer or test manually instantiates the class with <code>new</code> and forgets to set the hidden dependency, calling a method that uses it throws an NPE. Nothing in the class signature warns you the dependency exists.</p>
+<h3 id="core-design-problem">Core Design Problem<a class="headerlink" href="#core-design-problem" title="Permanent link">&para;</a></h3>
+<p>Field injection:</p>
+<ul>
+<li>hides required dependencies (nothing visible from outside the class body),</li>
+<li>breaks immutability (the field can't be <code>final</code>),</li>
+<li>makes manual testing harder (you need reflection or a framework to set it), and</li>
+<li>violates the <em>explicit dependency</em> principle.</li>
+</ul>
+<p><strong>Interview one-liner:</strong> <em>"Field injection hides required dependencies and can cause runtime NullPointerExceptions when objects are instantiated outside the Spring container."</em></p>
+<hr />
+<h2 id="ambiguous-autowiring-qualifier-and-named-autowiring">Ambiguous Autowiring — <code>@Qualifier</code> and Named Autowiring<a class="headerlink" href="#ambiguous-autowiring-qualifier-and-named-autowiring" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_3">Engineering Problem<a class="headerlink" href="#engineering-problem_3" title="Permanent link">&para;</a></h3>
+<p>When a bean's type is an <strong>interface</strong> with multiple implementations, Spring has no way to know which one to inject by type alone:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">interface</span> <span class="nc">Game</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">play</span><span class="p">();</span>
+<span class="p">}</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Chess</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">play</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;#####--Playing--Chess--#####&quot;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Ludo</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">play</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;#####--Playing--Ludo--#####&quot;</span><span class="p">);</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GameManager</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">manage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">game</span><span class="p">.</span><span class="na">play</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>Field game in com.example.demo.GameManager required a single bean, but 2 were found:
+- chess
+- ludo
+
+Action: Consider marking one of the beans as @Primary, updating the consumer to
+accept multiple beans, or using @Qualifier to identify the bean that should be consumed
+</code></pre></div>
+<h3 id="fix-qualifier">Fix — <code>@Qualifier</code><a class="headerlink" href="#fix-qualifier" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GameManager</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;ludo&quot;</span><span class="p">)</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="p">;</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">manage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">game</span><span class="p">.</span><span class="na">play</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// Output: #####--Playing--Ludo--#####</span>
+</code></pre></div>
+<h3 id="named-autowiring-the-implicit-alternative">Named Autowiring — the Implicit Alternative<a class="headerlink" href="#named-autowiring-the-implicit-alternative" title="Permanent link">&para;</a></h3>
+<p>The same disambiguation can happen <strong>without</strong> <code>@Qualifier</code>, purely from the field's name:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GameManager</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">chess</span><span class="p">;</span><span class="w">   </span><span class="c1">// Spring uses reflection to read the field name and matches it to a bean</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">manage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">chess</span><span class="p">.</span><span class="na">play</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// Output: #####--Playing--Chess--#####</span>
+</code></pre></div>
+<p>This isn't magic — Spring uses reflection to inspect the field name, and falls back to matching it against bean names when the type alone is ambiguous.</p>
+<h3 id="does-qualifier-kill-runtime-polymorphism">Does <code>@Qualifier</code> Kill Runtime Polymorphism?<a class="headerlink" href="#does-qualifier-kill-runtime-polymorphism" title="Permanent link">&para;</a></h3>
+<p><strong>No.</strong> <code>@Qualifier(...)</code> is only honored by the specific client (<code>GameManager</code>, here) that declares it. A different client can hold its own distinct <code>Game game</code> field with no qualifier, or a different qualifier entirely — each caller's wiring choice is independent, so polymorphism at the <code>Game</code> interface level is untouched; only <em>this particular injection point's</em> choice is pinned.</p>
+<hr />
+<h2 id="setter-autowiring">Setter Autowiring<a class="headerlink" href="#setter-autowiring" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GameManager</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setGame</span><span class="p">(</span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;chess&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">game</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">game</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">manage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">game</span><span class="p">.</span><span class="na">play</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="when-setter-injection-is-genuinely-useful">When Setter Injection Is Genuinely Useful<a class="headerlink" href="#when-setter-injection-is-genuinely-useful" title="Permanent link">&para;</a></h3>
+<p><strong>1. Optional dependencies</strong> — the primary use case:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Autowired</span><span class="p">(</span><span class="n">required</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">false</span><span class="p">)</span>
+<span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">setLogger</span><span class="p">(</span><span class="n">Logger</span><span class="w"> </span><span class="n">logger</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">this</span><span class="p">.</span><span class="na">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logger</span><span class="p">;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>If a <code>Logger</code> bean exists, it's injected; if not, there's no failure — the bean is still created. <strong>Constructor injection cannot support optional dependencies this cleanly.</strong></p>
+<p><strong>2. Late / reconfigurable dependencies</strong> — setter injection allows changing a dependency after object creation, or replacing a bean in advanced scenarios. Less common, but valid.</p>
+<h3 id="cons-of-setter-injection">Cons of Setter Injection<a class="headerlink" href="#cons-of-setter-injection" title="Permanent link">&para;</a></h3>
+<p><strong>Mutability</strong> — <code>gameManager.setLogger(newLogger)</code> means the dependency can change after construction; the object is not immutable, and its state becomes harder to reason about. This violates the "fully initialized after construction" principle.</p>
+<p><strong>Potential race conditions (nuance)</strong> — in singleton beans (the default scope), Spring creates the bean single-threaded during startup; multiple threads may access it afterward. If the setter is public and something mutates the dependency at runtime, one thread may observe the old reference while another observes the new one — unpredictable behavior. <strong>However:</strong> Spring itself injects dependencies before the bean is exposed to the application, so this risk only materializes if <em>you</em> mutate the bean later.</p>
+<p><strong>Hidden required-dependency risk</strong> — if a setter-injected dependency is optional (or the setter is never called), the object may end up partially initialized. Constructor injection prevents this by construction.</p>
+<p><strong>Interview one-liner:</strong> <em>"Setter injection is useful for optional dependencies or when dependencies may change after object creation, but constructor injection is preferred for mandatory dependencies."</em></p>
+<hr />
+<h2 id="constructor-autowiring">Constructor Autowiring<a class="headerlink" href="#constructor-autowiring" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">DatabaseAccessor</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Logger</span><span class="w"> </span><span class="n">logger</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span><span class="w">   </span><span class="c1">// constructor autowiring</span>
+<span class="w">    </span><span class="n">DatabaseAccessor</span><span class="p">(</span><span class="n">Logger</span><span class="w"> </span><span class="n">l</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">l</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">talkToDB</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;#######--Talkin--To--Database--#######&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">logger</span><span class="p">.</span><span class="na">log</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Spring scans <code>@Component</code> classes, checks whether they have a constructor annotated <code>@Autowired</code> (or a single constructor at all), and injects the dependency there — this is what prevents the field-autowiring NPE risk entirely: the object simply <strong>cannot exist</strong> without its <code>Logger</code>.</p>
+<h3 id="with-a-polymorphic-dependency">With a Polymorphic Dependency<a class="headerlink" href="#with-a-polymorphic-dependency" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GameManager</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="n">GameManager</span><span class="p">(</span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;chess&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">g</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">game</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">g</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">manage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">game</span><span class="p">.</span><span class="na">play</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="why-this-is-better-than-setter-injection">Why This Is Better Than Setter Injection<a class="headerlink" href="#why-this-is-better-than-setter-injection" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>Object is fully initialized at creation</strong> — no partially constructed state is possible.</li>
+<li><strong>Dependencies are explicit</strong> — everything required is visible just by looking at the constructor signature.</li>
+<li><strong>Immutability possible</strong> — fields can be <code>final</code>.</li>
+<li><strong>No mutation after construction</strong> — setter injection allows late modification; constructor injection doesn't.</li>
+</ul>
+<h3 id="when-setter-injection-is-still-acceptable">When Setter Injection Is Still Acceptable<a class="headerlink" href="#when-setter-injection-is-still-acceptable" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Truly optional configuration.</li>
+<li>Rare circular-dependency scenarios.</li>
+<li>Legacy code.</li>
+</ul>
+<p>But modern Spring practice defaults to <strong>constructor injection</strong>.</p>
+<h3 id="senior-level-mental-model">Senior-Level Mental Model<a class="headerlink" href="#senior-level-mental-model" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Constructor Injection</th>
+<th>Setter Injection</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Object is complete, immutable, thread-safe by design</td>
+<td>Object is configurable but potentially unstable</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Senior-level one-liner:</strong> <em>"Constructor injection makes dependencies explicit and immutable; optional dependencies can be modeled using <code>Optional&lt;T&gt;</code> without resorting to setter injection."</em></p>
+<h3 id="optionalt-in-constructor-autowiring"><code>Optional&lt;T&gt;</code> in Constructor Autowiring<a class="headerlink" href="#optionalt-in-constructor-autowiring" title="Permanent link">&para;</a></h3>
+<p>Combining a mandatory (qualified) dependency with a genuinely optional one, without falling back to setter injection at all:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">GameManager</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="p">;</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Logger</span><span class="w"> </span><span class="n">logger</span><span class="p">;</span>
+
+<span class="w">    </span><span class="nd">@Autowired</span>
+<span class="w">    </span><span class="n">GameManager</span><span class="p">(</span><span class="nd">@Qualifier</span><span class="p">(</span><span class="s">&quot;chess&quot;</span><span class="p">)</span><span class="w"> </span><span class="n">Game</span><span class="w"> </span><span class="n">game</span><span class="p">,</span><span class="w"> </span><span class="n">Optional</span><span class="o">&lt;</span><span class="n">Logger</span><span class="o">&gt;</span><span class="w"> </span><span class="n">logger</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">game</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">game</span><span class="p">;</span>
+<span class="w">        </span><span class="k">this</span><span class="p">.</span><span class="na">logger</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">logger</span><span class="p">.</span><span class="na">orElse</span><span class="p">(</span><span class="kc">null</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">manage</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">game</span><span class="p">.</span><span class="na">play</span><span class="p">();</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">logger</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">logger</span><span class="p">.</span><span class="na">log</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">ApplicationContext</span><span class="w"> </span><span class="n">ctx</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">SpringApplication</span><span class="p">.</span><span class="na">run</span><span class="p">(</span><span class="n">MyFirstSpringProjectApplication</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+<span class="n">GameManager</span><span class="w"> </span><span class="n">gameManager</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">(</span><span class="n">GameManager</span><span class="p">)</span><span class="w"> </span><span class="n">ctx</span><span class="p">.</span><span class="na">getBean</span><span class="p">(</span><span class="s">&quot;gameManager&quot;</span><span class="p">);</span>
+<span class="n">gameManager</span><span class="p">.</span><span class="na">manage</span><span class="p">();</span>
+
+<span class="n">GameManager</span><span class="w"> </span><span class="n">gm</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">GameManager</span><span class="p">(</span><span class="k">new</span><span class="w"> </span><span class="n">Ludo</span><span class="p">(),</span><span class="w"> </span><span class="n">Optional</span><span class="p">.</span><span class="na">empty</span><span class="p">());</span>
+<span class="n">gm</span><span class="p">.</span><span class="na">manage</span><span class="p">();</span>
+
+<span class="c1">// Output:</span>
+<span class="c1">// #####--Playing--Chess--#####</span>
+<span class="c1">// #####--Playing--Ludo--#####</span>
+</code></pre></div>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p>Constructor injection is the same reasoning as <a href="../day-1-oop-fundamentals/"><code>final</code> and immutability</a> applied to object wiring: a <code>final</code> field set only in the constructor can't drift after construction, which is exactly what makes a bean safe to share across threads without synchronization. Setter injection reopens that door deliberately — acceptable only when the dependency is genuinely optional or reconfigurable, never as the default.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="how-does-dependency-differ-in-meaning-between-maven-and-spring">How does "dependency" differ in meaning between Maven and Spring?<a class="headerlink" href="#how-does-dependency-differ-in-meaning-between-maven-and-spring" title="Permanent link">&para;</a></h3>
+<p>Maven's dependency is a dependency on a package — a compile/build-time concern. Spring's dependency is a dependency on an object — a runtime concern, resolved and injected by the IoC container.</p>
+<h3 id="whats-concretely-wrong-with-writing-new-paymentgateway-inside-orderservice">What's concretely wrong with writing <code>new PaymentGateway()</code> inside <code>OrderService</code>?<a class="headerlink" href="#whats-concretely-wrong-with-writing-new-paymentgateway-inside-orderservice" title="Permanent link">&para;</a></h3>
+<p>It locks <code>OrderService</code> to one concrete implementation, makes that implementation impossible to swap, and blocks mocking in tests — since <code>new</code> always constructs the real object, tests using it would hit a real network call and real side effects.</p>
+<h3 id="what-is-mocking-and-why-does-new-block-it">What is mocking, and why does <code>new</code> block it?<a class="headerlink" href="#what-is-mocking-and-why-does-new-block-it" title="Permanent link">&para;</a></h3>
+<p>Mocking is substituting a fake object for the real one during a test. <code>new</code> blocks it because it hardcodes exactly which concrete class gets constructed — there's no injection point left for a caller to substitute a fake.</p>
+<h3 id="what-is-inversion-of-control">What is Inversion of Control?<a class="headerlink" href="#what-is-inversion-of-control" title="Permanent link">&para;</a></h3>
+<p>Moving the responsibility for creating and configuring a dependency out of the class that uses it, and into an external caller or framework — so failures in constructing that dependency are handled at the client/framework side, not baked into the dependent class.</p>
+<h3 id="what-is-a-spring-bean-and-what-does-the-ioc-container-manage-about-it">What is a Spring Bean, and what does the IoC container manage about it?<a class="headerlink" href="#what-is-a-spring-bean-and-what-does-the-ioc-container-manage-about-it" title="Permanent link">&para;</a></h3>
+<p>A Bean is a Java object whose creation, dependency wiring, and lifecycle (init/destroy) are controlled by the Spring IoC container (<code>ApplicationContext</code>), rather than by application code calling <code>new</code>.</p>
+<h3 id="whats-the-default-spring-bean-scope-and-what-does-it-mean">What's the default Spring bean scope, and what does it mean?<a class="headerlink" href="#whats-the-default-spring-bean-scope-and-what-does-it-mean" title="Permanent link">&para;</a></h3>
+<p>Singleton — one instance per <code>ApplicationContext</code>. Note this is scoped to the container, not the JVM: multiple <code>ApplicationContext</code>s can each hold their own separate instance.</p>
+<h3 id="what-does-spring-boots-convention-over-configuration-actually-check-before-creating-a-bean">What does Spring Boot's "convention over configuration" actually check before creating a bean?<a class="headerlink" href="#what-does-spring-boots-convention-over-configuration-actually-check-before-creating-a-bean" title="Permanent link">&para;</a></h3>
+<p>Conditions — via annotations like <code>@ConditionalOnClass</code>, <code>@ConditionalOnMissingBean</code>, <code>@ConditionalOnProperty</code> — based on what's on the classpath, what beans already exist, and configured properties. It's condition-checking, not "intelligent guessing," and it never overrides a bean you've already defined yourself.</p>
+<h3 id="why-does-component-on-an-interface-have-no-effect">Why does <code>@Component</code> on an interface have no effect?<a class="headerlink" href="#why-does-component-on-an-interface-have-no-effect" title="Permanent link">&para;</a></h3>
+<p>Because Spring instantiates concrete classes, and annotations are not inherited by implementing/extending classes — each concrete class needs its own <code>@Component</code> (or equivalent stereotype annotation).</p>
+<h3 id="if-you-call-new-databaseaccessor-yourself-instead-of-getting-it-from-applicationcontext-what-happens-to-its-autowired-field-and-why">If you call <code>new DatabaseAccessor()</code> yourself instead of getting it from <code>ApplicationContext</code>, what happens to its <code>@Autowired</code> field, and why?<a class="headerlink" href="#if-you-call-new-databaseaccessor-yourself-instead-of-getting-it-from-applicationcontext-what-happens-to-its-autowired-field-and-why" title="Permanent link">&para;</a></h3>
+<p>It stays unset, because autowiring only happens for objects the Spring container itself creates during <code>SpringApplication.run(...)</code>. A manually constructed instance never goes through that wiring process, so calling a method relying on the field throws <code>NullPointerException</code>.</p>
+<h3 id="whats-the-main-risk-with-field-autowiring-specifically">What's the main risk with field autowiring specifically?<a class="headerlink" href="#whats-the-main-risk-with-field-autowiring-specifically" title="Permanent link">&para;</a></h3>
+<p>If the object is ever manually instantiated outside the Spring container (in a test, or by a developer forgetting the framework manages it), the field is never set — and using it throws an NPE with no compile-time warning, because the dependency requirement is invisible from the constructor.</p>
+<h3 id="if-two-beans-implement-the-same-interface-how-does-spring-know-which-to-inject">If two beans implement the same interface, how does Spring know which to inject?<a class="headerlink" href="#if-two-beans-implement-the-same-interface-how-does-spring-know-which-to-inject" title="Permanent link">&para;</a></h3>
+<p>It doesn't, by type alone — you either disambiguate explicitly with <code>@Qualifier("beanName")</code>, or rely on Named Autowiring, where Spring uses reflection to match the field/parameter name itself against a bean name.</p>
+<h3 id="does-using-qualifier-on-one-injection-point-break-polymorphism-elsewhere">Does using <code>@Qualifier</code> on one injection point break polymorphism elsewhere?<a class="headerlink" href="#does-using-qualifier-on-one-injection-point-break-polymorphism-elsewhere" title="Permanent link">&para;</a></h3>
+<p>No — <code>@Qualifier</code> is only honored at the specific injection point that declares it. Other clients of the same interface can hold entirely different, unqualified or differently-qualified references; each wiring decision is local to its own call site.</p>
+<h3 id="when-is-setter-injection-actually-the-right-choice-over-constructor-injection">When is setter injection actually the right choice over constructor injection?<a class="headerlink" href="#when-is-setter-injection-actually-the-right-choice-over-constructor-injection" title="Permanent link">&para;</a></h3>
+<p>For genuinely optional dependencies (<code>@Autowired(required = false)</code>), for dependencies that may legitimately change after construction, for some circular-dependency workarounds, or in legacy code — not as a general default.</p>
+<h3 id="why-is-constructor-injection-considered-the-modern-spring-default">Why is constructor injection considered the modern Spring default?<a class="headerlink" href="#why-is-constructor-injection-considered-the-modern-spring-default" title="Permanent link">&para;</a></h3>
+<p>It guarantees the object is fully initialized at creation with no partially-constructed state, makes every dependency explicit in the constructor signature, allows <code>final</code> fields (immutability), and forbids any mutation after construction — all of which setter injection allows to happen.</p>
+<h3 id="how-can-a-constructor-injected-bean-still-support-one-optional-dependency-without-falling-back-to-setter-injection">How can a constructor-injected bean still support one optional dependency without falling back to setter injection?<a class="headerlink" href="#how-can-a-constructor-injected-bean-still-support-one-optional-dependency-without-falling-back-to-setter-injection" title="Permanent link">&para;</a></h3>
+<p>By taking <code>Optional&lt;T&gt;</code> as a constructor parameter — Spring injects <code>Optional.empty()</code> if no matching bean exists, and the constructor resolves it explicitly (e.g. <code>logger.orElse(null)</code>), keeping the class immutable and its optionality visible in the signature.</p>
+<hr />
+<p>❌ Dependency Injection just means "Spring creates my objects for me" — it's a convenience feature.</p>
+<p>✔ It's specifically what makes classes swappable and testable — the actual engineering payoff is decoupling <em>what</em> a class needs from <em>which concrete implementation</em> satisfies it, which is what makes mocking possible in the first place.</p>
+<hr />
+<p>❌ A Spring singleton bean means one instance exists in the whole JVM.</p>
+<p>✔ It means one instance per <code>ApplicationContext</code> (container) — multiple containers in the same JVM can each hold their own instance.</p>
+<hr />
+<p>❌ Putting <code>@Component</code> on an interface makes every implementation of it a bean automatically.</p>
+<p>✔ <code>@Component</code> is not inherited — every concrete implementing class needs its own <code>@Component</code> (or equivalent) annotation; the one on the interface has no effect at all.</p>
+<hr />
+<p>❌ If a class is annotated <code>@Component</code>, calling <code>new</code> on it manually still gets you a fully-wired object.</p>
+<p>✔ Autowiring only happens for objects the Spring container itself constructs during <code>SpringApplication.run(...)</code>. A manually <code>new</code>'d instance never goes through that process — its <code>@Autowired</code> fields stay unset.</p>
+<hr />
+<p>❌ <code>@Qualifier</code> on one field means every use of that interface across the app now resolves to that specific bean.</p>
+<p>✔ <code>@Qualifier</code> only applies to the specific injection point that declares it — other clients of the same interface are free to wire a different implementation, or none at all.</p>
+<hr />
+<p>❌ Setter injection is strictly worse than constructor injection and should never be used.</p>
+<p>✔ It's the correct tool specifically for optional or late-changing dependencies (<code>@Autowired(required = false)</code>) — the objection is to using it as the <em>default</em> for mandatory dependencies, not to its existence.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Maven &quot;dependency&quot;    → a package (compile/build-time)
+Spring &quot;dependency&quot;    → an object (runtime)
+
+new                    → &quot;I decide what object to use&quot;  (tight coupling,
+                          blocks mocking)
+Dependency Injection    → &quot;I receive what object to use&quot; (swappable, testable)
+
+Inversion of Control    → object-creation responsibility moves from the
+                           dependent class to an external caller/framework
+
+IoC Container (ApplicationContext) → creates beans, injects dependencies,
+                                       manages lifecycle
+Bean scope (default)                → singleton, one per ApplicationContext
+
+@Component               → makes a class a bean candidate; NOT inherited,
+                            has no effect on interfaces/abstract classes
+SpringApplication.run()  → the only path through which autowiring happens;
+                            manual `new` bypasses it entirely
+
+Field injection    → hides deps, breaks immutability, NPE risk if `new`&#39;d manually
+Setter injection    → mutable, but the right fit for optional/late-bound deps
+Constructor injection → explicit, immutable, no NPE risk — the modern default
+
+Multiple beans, same interface → disambiguate with @Qualifier or
+                                   Named Autowiring (field-name match)
+Optional&lt;T&gt; in a constructor    → models an optional dependency WITHOUT
+                                   giving up constructor injection
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-1-checklist">Stage 2 · Week 1 Checklist<a class="headerlink" href="#stage-2-week-1-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain why constructing dependencies with <code>new</code> blocks mocking and unit testing</li>
+<li>[x] Explain Inversion of Control in your own words, using the "control moves to the caller" framing</li>
+<li>[x] Explain what an IoC container and a Spring Bean are, and the default bean scope</li>
+<li>[x] Explain Spring Boot's convention-over-configuration philosophy and why it never overrides your own beans</li>
+<li>[x] Explain why <code>@Component</code> on an interface has no effect</li>
+<li>[x] Explain why manually calling <code>new</code> on a <code>@Component</code>-annotated class produces an unwired object</li>
+<li>[x] Explain the difference between field, setter, and constructor autowiring, and rank them by safety</li>
+<li>[x] Explain how <code>@Qualifier</code> and Named Autowiring resolve ambiguous bean injection</li>
+<li>[x] Explain why constructor injection is the modern default, and when setter injection is still the right call</li>
+<li>[x] Explain how <code>Optional&lt;T&gt;</code> lets constructor injection model an optional dependency</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

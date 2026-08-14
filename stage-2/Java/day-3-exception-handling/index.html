@@ -1,0 +1,4538 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Java/day-3-exception-handling/">
+      
+      
+        <link rel="prev" href="../day-2-inheritance-composition/">
+      
+      
+        <link rel="next" href="../day-4-reflection/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Java Exception Handling: Propagation, Cleanup & Design - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#java-exception-handling-propagation-cleanup-design" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Java Exception Handling: Propagation, Cleanup &amp; Design
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-exception-hierarchy-throwable-exception-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Exception Hierarchy — Throwable, Exception, Error
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Exception Hierarchy — Throwable, Exception, Error">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-split-checked-from-unchecked-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Split Checked from Unchecked at All?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#propagation-how-an-uncaught-exception-kills-a-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Propagation — How an Uncaught Exception Kills a Program
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Propagation — How an Uncaught Exception Kills a Program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handling-stops-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Stops Propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#catching-by-type-parent-vs-child" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catching by Type — Parent vs. Child
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Catching by Type — Parent vs. Child">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordering-rule-for-multiple-catch-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering Rule for Multiple Catch Blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instanceof-branching-vs-multiple-catch-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        instanceof Branching vs. Multiple Catch Blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-defined-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User-Defined Exceptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User-Defined Exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-canonical-constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four Canonical Constructors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-message-vs-cause-why-both-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Message vs. Cause — Why Both Exist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Message vs. Cause — Why Both Exist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Chaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-keeping-them-separate-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Keeping Them Separate Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serialization-and-serialversionuid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serialization and serialVersionUID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serialization and serialVersionUID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-versioning-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Versioning Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-serialversionuid-fixes-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How serialVersionUID Fixes This
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-finally-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The finally Block
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The finally Block">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-code-after-finally-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Code After finally Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-null-check-gotcha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Null-Check Gotcha
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nested-try-catch-finally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nested Try-Catch(-Finally)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nested Try-Catch(-Finally)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-not-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Not to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-the-outer-catch-also-catch-what-the-inner-catch-already-caught" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does the Outer Catch Also Catch What the Inner Catch Already Caught?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-masking-the-problem-with-finally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Masking — The Problem With finally
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Masking — The Problem With finally">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-failure-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Failure Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-happens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Happens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Dangerous
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-workaround" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Workaround
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-with-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try-With-Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Try-With-Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autocloseable-vs-closeable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AutoCloseable vs. Closeable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-resources-initialization-and-closing-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Resources — Initialization and Closing Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-translation-checked-to-unchecked-at-interface-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Translation — Checked to Unchecked at Interface Boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Translation — Checked to Unchecked at Interface Boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-java-forbids-widening-the-throws-clause-on-override" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Java Forbids Widening the Throws Clause on Override
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-a-swallow-the-exception-bad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — Swallow the Exception (Bad)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-wrap-into-an-unchecked-exception-good" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — Wrap Into an Unchecked Exception (Good)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-senior-level-refinement-dont-throw-raw-runtimeexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Senior-Level Refinement — Don't Throw Raw RuntimeException
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-unchecked-exceptions-are-the-right-fit-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Unchecked Exceptions Are the Right Fit Here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stack-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stack Traces
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stack Traces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-useful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Useful
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#can-a-function-that-declares-throws-parentexception-also-throw-a-child-of-that-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can a function that declares throws ParentException also throw a child of that exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-must-multiple-catch-blocks-be-ordered-specific-to-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why must multiple catch blocks be ordered specific-to-general?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-checking-instanceof-inside-a-single-catch-block-discouraged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is checking instanceof inside a single catch block discouraged?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-custom-exceptions-usually-made-checked-rather-than-unchecked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are custom exceptions usually made checked rather than unchecked?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-are-the-four-canonical-constructors-on-a-custom-exception-and-why-have-all-four" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What are the four canonical constructors on a custom exception, and why have all four?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-the-exceptions-message-and-its-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between the exception's message and its cause?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-serialversionuid-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is serialVersionUID for?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#under-what-conditions-does-code-after-a-try-catch-finally-block-not-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Under what conditions does code after a try-catch-finally block NOT run?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-must-resource-cleanup-in-finally-be-null-checked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why must resource cleanup in finally be null-checked?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-an-outer-catch-block-also-catch-an-exception-already-caught-by-an-inner-catch-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does an outer catch block also catch an exception already caught by an inner catch block?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-exception-masking-and-why-is-it-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is exception masking, and why is it dangerous?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-try-with-resources-avoid-exception-masking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does try-with-resources avoid exception masking?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-what-order-are-multiple-try-with-resources-closed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In what order are multiple try-with-resources closed?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-an-interface-method-implementation-add-a-new-checked-exception-the-interface-doesnt-declare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't an interface method implementation add a new checked exception the interface doesn't declare?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#given-that-constraint-how-should-a-checked-exception-from-an-implementation-detail-be-surfaced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Given that constraint, how should a checked exception from an implementation detail be surfaced?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-unchecked-exceptions-the-right-fit-for-wrapping-environmental-failures-like-io-errors-at-an-interface-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are unchecked exceptions the right fit for wrapping environmental failures like I/O errors at an interface boundary?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-exception-hierarchy-throwable-exception-error" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Exception Hierarchy — Throwable, Exception, Error
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Exception Hierarchy — Throwable, Exception, Error">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-split-checked-from-unchecked-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Split Checked from Unchecked at All?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#propagation-how-an-uncaught-exception-kills-a-program" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Propagation — How an Uncaught Exception Kills a Program
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Propagation — How an Uncaught Exception Kills a Program">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#handling-stops-propagation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Handling Stops Propagation
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#catching-by-type-parent-vs-child" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Catching by Type — Parent vs. Child
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Catching by Type — Parent vs. Child">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#ordering-rule-for-multiple-catch-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Ordering Rule for Multiple Catch Blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#instanceof-branching-vs-multiple-catch-blocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        instanceof Branching vs. Multiple Catch Blocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#user-defined-exceptions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        User-Defined Exceptions
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="User-Defined Exceptions">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-four-canonical-constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Four Canonical Constructors
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-message-vs-cause-why-both-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Message vs. Cause — Why Both Exist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Message vs. Cause — Why Both Exist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#exception-chaining" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Chaining
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-keeping-them-separate-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Keeping Them Separate Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#serialization-and-serialversionuid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Serialization and serialVersionUID
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Serialization and serialVersionUID">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-versioning-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Versioning Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-serialversionuid-fixes-this" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How serialVersionUID Fixes This
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-finally-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The finally Block
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The finally Block">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-code-after-finally-runs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Code After finally Runs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-null-check-gotcha" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Null-Check Gotcha
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#nested-try-catch-finally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Nested Try-Catch(-Finally)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Nested Try-Catch(-Finally)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#alternative" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Alternative
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-not-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Not to Use
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-the-outer-catch-also-catch-what-the-inner-catch-already-caught" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does the Outer Catch Also Catch What the Inner Catch Already Caught?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-masking-the-problem-with-finally" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Masking — The Problem With finally
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Masking — The Problem With finally">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-failure-mode" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Failure Mode
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-happens" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Happens
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Dangerous
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#manual-workaround" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Manual Workaround
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#try-with-resources" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Try-With-Resources
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Try-With-Resources">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autocloseable-vs-closeable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        AutoCloseable vs. Closeable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#multiple-resources-initialization-and-closing-order" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Multiple Resources — Initialization and Closing Order
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#exception-translation-checked-to-unchecked-at-interface-boundaries" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Exception Translation — Checked to Unchecked at Interface Boundaries
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Exception Translation — Checked to Unchecked at Interface Boundaries">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_10" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-java-forbids-widening-the-throws-clause-on-override" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Java Forbids Widening the Throws Clause on Override
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-a-swallow-the-exception-bad" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option A — Swallow the Exception (Bad)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#option-b-wrap-into-an-unchecked-exception-good" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Option B — Wrap Into an Unchecked Exception (Good)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-senior-level-refinement-dont-throw-raw-runtimeexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Senior-Level Refinement — Don't Throw Raw RuntimeException
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-unchecked-exceptions-are-the-right-fit-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Unchecked Exceptions Are the Right Fit Here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stack-traces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stack Traces
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Stack Traces">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#definition_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-useful" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Useful
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#can-a-function-that-declares-throws-parentexception-also-throw-a-child-of-that-exception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can a function that declares throws ParentException also throw a child of that exception?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-must-multiple-catch-blocks-be-ordered-specific-to-general" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why must multiple catch blocks be ordered specific-to-general?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-checking-instanceof-inside-a-single-catch-block-discouraged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is checking instanceof inside a single catch block discouraged?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-custom-exceptions-usually-made-checked-rather-than-unchecked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are custom exceptions usually made checked rather than unchecked?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-are-the-four-canonical-constructors-on-a-custom-exception-and-why-have-all-four" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What are the four canonical constructors on a custom exception, and why have all four?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-the-exceptions-message-and-its-cause" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between the exception's message and its cause?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-serialversionuid-for" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is serialVersionUID for?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#under-what-conditions-does-code-after-a-try-catch-finally-block-not-run" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Under what conditions does code after a try-catch-finally block NOT run?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-must-resource-cleanup-in-finally-be-null-checked" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why must resource cleanup in finally be null-checked?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#does-an-outer-catch-block-also-catch-an-exception-already-caught-by-an-inner-catch-block" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does an outer catch block also catch an exception already caught by an inner catch block?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-exception-masking-and-why-is-it-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is exception masking, and why is it dangerous?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-try-with-resources-avoid-exception-masking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does try-with-resources avoid exception masking?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#in-what-order-are-multiple-try-with-resources-closed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        In what order are multiple try-with-resources closed?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-an-interface-method-implementation-add-a-new-checked-exception-the-interface-doesnt-declare" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't an interface method implementation add a new checked exception the interface doesn't declare?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#given-that-constraint-how-should-a-checked-exception-from-an-implementation-detail-be-surfaced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Given that constraint, how should a checked exception from an implementation detail be surfaced?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-unchecked-exceptions-the-right-fit-for-wrapping-environmental-failures-like-io-errors-at-an-interface-boundary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are unchecked exceptions the right fit for wrapping environmental failures like I/O errors at an interface boundary?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="java-exception-handling-propagation-cleanup-design">Java Exception Handling: Propagation, Cleanup &amp; Design<a class="headerlink" href="#java-exception-handling-propagation-cleanup-design" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+This is not "here's the try-catch syntax." Every rule in this chapter exists to answer one question: <strong>who is responsible for recovering from a failure, and who is responsible for cleaning up after it</strong> — the function that detected the problem, or some caller further up the stack? Get that ownership question right and the syntax is trivial; get it wrong and you get swallowed exceptions, leaked resources, and misleading logs in production.</p>
+</blockquote>
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>An exception is Java's mechanism for interrupting normal control flow when an operation cannot complete — the failure propagates up the call stack, frame by frame, until something handles it or it reaches <code>main()</code> and terminates the program.</strong></p>
+<hr />
+<h2 id="the-exception-hierarchy-throwable-exception-error">The Exception Hierarchy — <code>Throwable</code>, <code>Exception</code>, <code>Error</code><a class="headerlink" href="#the-exception-hierarchy-throwable-exception-error" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<p>Not all failures deserve the same response. A missing file is recoverable — retry, prompt the user, fall back. Running out of heap memory is not — no amount of catch-block logic fixes <code>OutOfMemoryError</code>. Treating both the same way either wastes effort trying to recover from the unrecoverable, or silently swallows failures that genuinely needed handling.</p>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Throwable
+├── Exception   → can be handled
+└── Error       → almost nothing we can do (OutOfMemoryError, StackOverflowError, ...)
+</code></pre></div>
+<p><code>Exception</code> itself splits further:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Checked Exception</th>
+<th>Unchecked Exception</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Also called</td>
+<td>Compile-time exception</td>
+<td>Runtime exception</td>
+</tr>
+<tr>
+<td>Must declare <code>throws</code>?</td>
+<td><strong>Yes</strong> — compiler-enforced</td>
+<td>No — but should still try to handle where recovery is possible</td>
+</tr>
+<tr>
+<td>Example</td>
+<td><code>IOException</code></td>
+<td><code>NullPointerException</code>, <code>NumberFormatException</code></td>
+</tr>
+<tr>
+<td>Represents</td>
+<td>Conditions the caller can reasonably anticipate and recover from</td>
+<td>Programmer errors or environment failures that usually can't be recovered inline</td>
+</tr>
+</tbody>
+</table>
+<p>A function must <strong>declare</strong> (<code>throws</code> clause) or <strong>handle</strong> (<code>try-catch</code>) every checked exception it can throw. Unchecked exceptions don't require this — but "not required" isn't the same as "should be ignored."</p>
+<h3 id="why-split-checked-from-unchecked-at-all">Why Split Checked from Unchecked at All?<a class="headerlink" href="#why-split-checked-from-unchecked-at-all" title="Permanent link">&para;</a></h3>
+<p>Checked exceptions put a compile-time contract on the caller: "this can fail, and you must decide what to do about it." That's appropriate for conditions the caller can genuinely act on (file missing → prompt for a different path). Forcing the same discipline onto <code>NullPointerException</code> would mean wrapping nearly every method call in the language in a try-catch — the exception would stop signaling anything meaningful.</p>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>The checked/unchecked split is the type system encoding a <strong>recovery expectation</strong>, not a severity ranking. "Checked" doesn't mean "worse" — it means "the compiler believes the caller has a reasonable chance to do something about this."</p>
+<hr />
+<h2 id="propagation-how-an-uncaught-exception-kills-a-program">Propagation — How an Uncaught Exception Kills a Program<a class="headerlink" href="#propagation-how-an-uncaught-exception-kills-a-program" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<p>When a deeply nested function fails, something has to decide what happens next — does execution continue, does it abort just that function, or does the whole program die? Without a defined propagation rule, every function would need its own ad-hoc failure-signaling convention.</p>
+<h3 id="definition_1">Definition<a class="headerlink" href="#definition_1" title="Permanent link">&para;</a></h3>
+<p>Exceptions are thrown in a stack frame. A function that doesn't handle an exception throws it to its caller — and so on, ultimately reaching <code>main()</code> (the bottom of the call stack). Since nothing calls <code>main()</code>, the program dies there if the exception is still unhandled.</p>
+<div class="highlight"><pre><span></span><code>deepFunction() throws
+        │
+        ▼
+   callerFunction() — doesn&#39;t catch it, propagates further
+        │
+        ▼
+      main() — nothing calls main(), so the program terminates here
+</code></pre></div>
+<h3 id="handling-stops-propagation">Handling Stops Propagation<a class="headerlink" href="#handling-stops-propagation" title="Permanent link">&para;</a></h3>
+<p><code>try-catch</code> breaks this chain — the program doesn't die. Inside a catch block you can:</p>
+<ul>
+<li><strong>handle</strong> the exception (resolve it, continue normally), or</li>
+<li><strong>transform it</strong> into a different exception and re-throw:</li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span><span class="w">   </span><span class="c1">// unchecked — no &quot;throws&quot; needed on the enclosing method</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>ensure cleanup activity still happens (covered under <code>finally</code> below).</li>
+</ul>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p>Propagation is just the call stack unwinding in reverse — a <code>Throwable</code> isn't magic, it's a control-flow signal that says "abandon the rest of this frame and let the caller decide." That's exactly why an <em>uncaught</em> exception in <code>main()</code> kills the program: there's no caller left to decide anything.</p>
+<hr />
+<h2 id="catching-by-type-parent-vs-child">Catching by Type — Parent vs. Child<a class="headerlink" href="#catching-by-type-parent-vs-child" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>A caller often wants to handle a category of failures (<code>IOException</code>) the same way, while still being able to single out one specific case (<code>FileNotFoundException</code>) for special treatment. The catch mechanism needs to respect the exception's type hierarchy for this to work.</p>
+<h3 id="definition_2">Definition<a class="headerlink" href="#definition_2" title="Permanent link">&para;</a></h3>
+<p>A function that can throw <code>&lt;Parent_Exception&gt;</code> is also capable of throwing its <code>&lt;Child_Exception&gt;</code> — but not the reverse. Symmetrically, a <code>catch</code> block catches everything assignable to its declared parameter type: <strong>catching the parent also catches every child</strong>, but catching a child does not catch its parent.</p>
+<h3 id="ordering-rule-for-multiple-catch-blocks">Ordering Rule for Multiple Catch Blocks<a class="headerlink" href="#ordering-rule-for-multiple-catch-blocks" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Always catch more <strong>specific</strong> (child) exceptions <strong>first</strong>.</li>
+<li>Catch more <strong>general</strong> (parent) exceptions <strong>later</strong>.</li>
+</ul>
+<p><strong>Reason:</strong> if the parent is caught first, the child's catch block becomes unreachable code — every exception the child block would have handled is already absorbed by the parent block above it. The Java compiler rejects unreachable catch blocks outright.</p>
+<h3 id="instanceof-branching-vs-multiple-catch-blocks"><code>instanceof</code> Branching vs. Multiple Catch Blocks<a class="headerlink" href="#instanceof-branching-vs-multiple-catch-blocks" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="c1">// Discouraged: relies on reflection-style type-checking inside one catch block</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// something that throws IOException or TooManyRequestException</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">IOException</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">e</span><span class="w"> </span><span class="k">instanceof</span><span class="w"> </span><span class="n">TooManyRequestException</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="c1">//</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="c1">// Preferred: let the language&#39;s own dispatch do the branching</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// something that throws IOException or TooManyRequestException</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">TooManyRequestException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">//</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="engineering-insight_2">Engineering Insight<a class="headerlink" href="#engineering-insight_2" title="Permanent link">&para;</a></h3>
+<p>The <code>instanceof</code> chain is manual dispatch bolted onto a mechanism (multiple catch blocks) that already does type-based dispatch natively. Preferring the specific-then-general catch chain is the same principle as preferring polymorphic dispatch over a chain of <code>if (type == X)</code> checks anywhere else in OOP.</p>
+<hr />
+<h2 id="user-defined-exceptions">User-Defined Exceptions<a class="headerlink" href="#user-defined-exceptions" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_3">Engineering Problem<a class="headerlink" href="#engineering-problem_3" title="Permanent link">&para;</a></h3>
+<p>The built-in exception types (<code>IOException</code>, <code>NumberFormatException</code>, ...) describe <em>technical</em> failure modes. Domain failures — <code>InvalidPhoneNoException</code>, <code>InsufficientBalanceException</code> — need their own vocabulary so callers and logs can reason about <em>business</em> failures directly, instead of translating a generic exception's message every time.</p>
+<h3 id="definition_3">Definition<a class="headerlink" href="#definition_3" title="Permanent link">&para;</a></h3>
+<p>To create a custom exception, extend either:</p>
+<ul>
+<li><code>Exception</code> (or any of its subclasses) → a <strong>checked</strong> exception, or</li>
+<li><code>RuntimeException</code> → an <strong>unchecked</strong> exception.</li>
+</ul>
+<p>Custom exceptions are usually made <strong>checked</strong> because you want the caller/client to explicitly handle them — this enforces correctness at compile time, for failures the caller genuinely has a shot at recovering from.</p>
+<h3 id="the-four-canonical-constructors">The Four Canonical Constructors<a class="headerlink" href="#the-four-canonical-constructors" title="Permanent link">&para;</a></h3>
+<p>When creating a custom exception, you generally provide four constructors to match the ones available on <code>Throwable</code>/<code>Exception</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">A</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">A</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w">                                    </span><span class="c1">// Default constructor</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">A</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">                      </span><span class="c1">// Message constructor</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">message</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">A</span><span class="p">(</span><span class="n">Throwable</span><span class="w"> </span><span class="n">cause</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">                     </span><span class="c1">// Cause constructor</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">cause</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+
+<span class="w">    </span><span class="n">A</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">Throwable</span><span class="w"> </span><span class="n">cause</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">      </span><span class="c1">// Message + cause constructor</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">cause</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Constructor</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>A()</code></td>
+<td>Exception without details</td>
+</tr>
+<tr>
+<td><code>A(String)</code></td>
+<td>Human-readable error message</td>
+</tr>
+<tr>
+<td><code>A(Throwable)</code></td>
+<td>Exception chaining — wrap another exception</td>
+</tr>
+<tr>
+<td><code>A(String, Throwable)</code></td>
+<td>Message + root cause together</td>
+</tr>
+</tbody>
+</table>
+<h3 id="engineering-insight_3">Engineering Insight<a class="headerlink" href="#engineering-insight_3" title="Permanent link">&para;</a></h3>
+<p>Providing all four isn't boilerplate for its own sake — each constructor exists because callers of your exception class need different amounts of context depending on <em>how</em> they discovered the failure: sometimes just a signal, sometimes a message, sometimes another exception to wrap and preserve.</p>
+<hr />
+<h2 id="exception-message-vs-cause-why-both-exist">Exception Message vs. Cause — Why Both Exist<a class="headerlink" href="#exception-message-vs-cause-why-both-exist" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_4">Engineering Problem<a class="headerlink" href="#engineering-problem_4" title="Permanent link">&para;</a></h3>
+<p>A failure has two different audiences: the end user (or a log line) who needs to know <em>what</em> went wrong in plain language, and the developer who needs to know <em>why</em>, down to the stack trace. Collapsing both into one string either exposes internal details to users, or loses the debugging trail entirely.</p>
+<h3 id="definition_4">Definition<a class="headerlink" href="#definition_4" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Exception Message (String)      → what the user should know
+Throwable / Cause (Throwable)   → what the developer needs to fix
+</code></pre></div>
+<p><strong>Message</strong> — a high-level, human-readable explanation, intended for users, support teams, and logs/error responses. Explains <em>what</em> went wrong, not <em>how</em>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">InvalidAgeException</span><span class="p">(</span><span class="s">&quot;Age must be 18 or above&quot;</span><span class="p">);</span>
+</code></pre></div>
+<p><strong>Cause</strong> — the actual root cause, intended for developers debugging the issue. Contains the stack trace, execution path, and low-level technical details.</p>
+<h3 id="exception-chaining">Exception Chaining<a class="headerlink" href="#exception-chaining" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">Integer</span><span class="p">.</span><span class="na">parseInt</span><span class="p">(</span><span class="s">&quot;abc&quot;</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">NumberFormatException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">InvalidAgeException</span><span class="p">(</span><span class="s">&quot;Invalid input&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span><span class="w">   </span><span class="c1">// e is preserved as the cause</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This preserves the original stack trace and helps debugging — it's exactly why constructors accepting a <code>Throwable cause</code> exist.</p>
+<h3 id="why-keeping-them-separate-matters">Why Keeping Them Separate Matters<a class="headerlink" href="#why-keeping-them-separate-matters" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Avoids exposing internal implementation details to end users.</li>
+<li>Preserves full debugging information for developers, instead of discarding it once a human-friendly message is chosen.</li>
+</ul>
+<h3 id="engineering-insight_4">Engineering Insight<a class="headerlink" href="#engineering-insight_4" title="Permanent link">&para;</a></h3>
+<p>This is the same Single Responsibility split as the message/cause distinction anywhere in error handling: one field serves <em>communication</em>, the other serves <em>diagnosis</em> — conflating them serves neither audience well.</p>
+<hr />
+<h2 id="serialization-and-serialversionuid">Serialization and <code>serialVersionUID</code><a class="headerlink" href="#serialization-and-serialversionuid" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_5">Engineering Problem<a class="headerlink" href="#engineering-problem_5" title="Permanent link">&para;</a></h3>
+<p><code>Throwable</code> (and therefore every exception) is <code>Serializable</code>. If a class's structure changes between when an object was serialized and when it's deserialized, the JVM has no inherent way to know whether the two versions are compatible.</p>
+<h3 id="definition_5">Definition<a class="headerlink" href="#definition_5" title="Permanent link">&para;</a></h3>
+<p><strong>Serialization</strong> converts an object into a byte stream. <strong>Deserialization</strong> converts that byte stream back into an object.</p>
+<h3 id="the-versioning-problem">The Versioning Problem<a class="headerlink" href="#the-versioning-problem" title="Permanent link">&para;</a></h3>
+<p>Suppose version 1 of a class has one field, and version 2 evolves to have multiple fields. If an object serialized under the old version is deserialized using the new class version, the JVM may not be able to match the class structure correctly — leading to unpredictable behavior or errors.</p>
+<h3 id="how-serialversionuid-fixes-this">How <code>serialVersionUID</code> Fixes This<a class="headerlink" href="#how-serialversionuid-fixes-this" title="Permanent link">&para;</a></h3>
+<p>Java uses a version identifier, declared as:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">private</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="kt">long</span><span class="w"> </span><span class="n">serialVersionUID</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="o">-</span><span class="mi">89823645623L</span><span class="p">;</span>
+</code></pre></div>
+<p><strong>Purpose:</strong> ensures the serialized and deserialized class versions match. If versions differ, the JVM throws <code>InvalidClassException</code> instead of silently misreading the byte stream.</p>
+<p><strong>One-line interview answer:</strong> <em><code>serialVersionUID</code> is used to ensure version compatibility during serialization and deserialization of objects.</em></p>
+<hr />
+<h2 id="the-finally-block">The <code>finally</code> Block<a class="headerlink" href="#the-finally-block" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_6">Engineering Problem<a class="headerlink" href="#engineering-problem_6" title="Permanent link">&para;</a></h3>
+<p>It's your responsibility to close allocated physical resources (a <code>FileReader</code>, a socket, ...) — the garbage collector won't do it for you. Closing at the end of a block works when nothing goes wrong, but when an exception is thrown mid-block, that close call is skipped — leaking the resource and potentially triggering a <em>second</em> failure downstream (e.g. "too many open files"). Duplicating the close call into every catch block works, but it's redundant, error-prone code.</p>
+<h3 id="definition_6">Definition<a class="headerlink" href="#definition_6" title="Permanent link">&para;</a></h3>
+<p><code>finally</code> executes <strong>always</strong> — whether an exception was thrown or not, and whether it was caught or not. It ensures resource cleanup and eliminates the redundant close-call duplication.</p>
+<h3 id="when-code-after-finally-runs">When Code After <code>finally</code> Runs<a class="headerlink" href="#when-code-after-finally-runs" title="Permanent link">&para;</a></h3>
+<p>Code after <code>try-catch-finally</code> (or <code>try-finally</code>) executes normally, even if an exception was thrown, <strong>as long as the exception is handled or doesn't terminate the program</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Case</th>
+<th>Code after <code>finally</code> runs?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Exception thrown and handled</td>
+<td>✔ Yes</td>
+</tr>
+<tr>
+<td>No exception thrown</td>
+<td>✔ Yes</td>
+</tr>
+<tr>
+<td>Exception thrown but <strong>not</strong> handled</td>
+<td>✘ No</td>
+</tr>
+</tbody>
+</table>
+<p>Code after <code>finally</code> will <strong>not</strong> run only if:</p>
+<ul>
+<li>the exception is not caught,</li>
+<li><code>System.exit()</code> is called,</li>
+<li>the JVM crashes, or</li>
+<li>a fatal error occurs (e.g. <code>OutOfMemoryError</code>).</li>
+</ul>
+<h3 id="the-null-check-gotcha">The Null-Check Gotcha<a class="headerlink" href="#the-null-check-gotcha" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">FileReader</span><span class="w"> </span><span class="n">fr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">fr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FileReader</span><span class="p">(</span><span class="s">&quot;missing.txt&quot;</span><span class="p">);</span><span class="w">   </span><span class="c1">// throws exception</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">FileNotFoundException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;File not found&quot;</span><span class="p">);</span>
+<span class="p">}</span><span class="w"> </span><span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">fr</span><span class="p">.</span><span class="na">close</span><span class="p">();</span><span class="w">   </span><span class="c1">// NullPointerException</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>What happened:</strong> <code>fr</code> was declared, but initialization failed, so <code>fr</code> remains <code>null</code>. <code>finally</code> still executes unconditionally — and <code>fr.close()</code> on a <code>null</code> reference throws an <code>NullPointerException</code>, masking the fact that the real problem was a missing file. <code>finally</code> must always guard resource cleanup with a null check (<code>if (fr != null) fr.close();</code>).</p>
+<h3 id="engineering-insight_5">Engineering Insight<a class="headerlink" href="#engineering-insight_5" title="Permanent link">&para;</a></h3>
+<p><code>finally</code>'s unconditional-execution guarantee is exactly why it exists for cleanup rather than for business logic — it's the one place in the language explicitly documented to run regardless of <em>how</em> the try block exits, which is precisely the property resource cleanup needs.</p>
+<hr />
+<h2 id="nested-try-catch-finally">Nested Try-Catch(-Finally)<a class="headerlink" href="#nested-try-catch-finally" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_7">Engineering Problem<a class="headerlink" href="#engineering-problem_7" title="Permanent link">&para;</a></h3>
+<p>Sometimes one resource depends on another, and different operations within the same block can fail for genuinely different reasons — collapsing them into one flat catch loses the ability to say exactly which step failed.</p>
+<h3 id="when-to-use">When to Use<a class="headerlink" href="#when-to-use" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Resource-dependent operations.</li>
+<li>Step-by-step failure handling.</li>
+<li>Need for specific error context per operation.</li>
+</ul>
+<h3 id="alternative">Alternative<a class="headerlink" href="#alternative" title="Permanent link">&para;</a></h3>
+<p>Multiple catch blocks can also separate failure types, but nested try-catch gives more localized handling — the failure context is scoped to exactly the operation that produced it.</p>
+<h3 id="when-not-to-use">When <em>Not</em> to Use<a class="headerlink" href="#when-not-to-use" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Over-nesting hurts readability.</li>
+<li>Prefer <code>try-with-resources</code> when possible (see below).</li>
+</ul>
+<h3 id="does-the-outer-catch-also-catch-what-the-inner-catch-already-caught">Does the Outer Catch Also Catch What the Inner Catch Already Caught?<a class="headerlink" href="#does-the-outer-catch-also-catch-what-the-inner-catch-already-caught" title="Permanent link">&para;</a></h3>
+<p><strong>No.</strong> Once an exception is caught and handled, it's considered resolved and does <strong>not</strong> propagate to the outer try-catch.</p>
+<p>The outer catch executes <strong>only</strong> if:</p>
+<ul>
+<li>the inner catch doesn't exist for that exception type, <strong>or</strong></li>
+<li>the inner catch explicitly rethrows the exception.</li>
+</ul>
+<h3 id="engineering-insight_6">Engineering Insight<a class="headerlink" href="#engineering-insight_6" title="Permanent link">&para;</a></h3>
+<p>This is the same "handled means handled" rule that governs any layered error-handling system: a catch block is a boundary, not a checkpoint everything passes through regardless.</p>
+<hr />
+<h2 id="exception-masking-the-problem-with-finally">Exception Masking — The Problem With <code>finally</code><a class="headerlink" href="#exception-masking-the-problem-with-finally" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_8">Engineering Problem<a class="headerlink" href="#engineering-problem_8" title="Permanent link">&para;</a></h3>
+<p>If code inside <code>finally</code> itself throws, what happens to the exception that was already propagating from <code>try</code> or <code>catch</code>?</p>
+<h3 id="the-failure-mode">The Failure Mode<a class="headerlink" href="#the-failure-mode" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IOException</span><span class="p">(</span><span class="s">&quot;IO failed&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">e</span><span class="p">;</span>
+<span class="p">}</span>
+<span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">fr</span><span class="p">.</span><span class="na">close</span><span class="p">();</span><span class="w">   </span><span class="c1">// if this throws FileNotFoundException</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Result:</strong> the exception from <code>finally</code> is what propagates. The original <code>IOException("IO failed")</code> is <strong>lost</strong>. Debugging becomes misleading — this is called <strong>exception masking</strong>.</p>
+<h3 id="why-this-happens">Why This Happens<a class="headerlink" href="#why-this-happens" title="Permanent link">&para;</a></h3>
+<p>The JVM allows only <strong>one</strong> exception to propagate at a time. Whichever exception is thrown <em>last</em> (from <code>finally</code>) wins; the earlier one is silently discarded.</p>
+<h3 id="why-this-is-dangerous">Why This Is Dangerous<a class="headerlink" href="#why-this-is-dangerous" title="Permanent link">&para;</a></h3>
+<ul>
+<li>The root cause is hidden.</li>
+<li>Logs show a misleading error — the symptom (<code>FileNotFoundException</code> on close) instead of the actual failure (<code>IOException</code>).</li>
+<li>Production debugging becomes very hard.</li>
+</ul>
+<h3 id="manual-workaround">Manual Workaround<a class="headerlink" href="#manual-workaround" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Exception</span><span class="w"> </span><span class="n">primaryException</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="kc">null</span><span class="p">;</span>
+<span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">IOException</span><span class="p">(</span><span class="s">&quot;IO failed&quot;</span><span class="p">);</span>
+<span class="p">}</span>
+<span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">primaryException</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">e</span><span class="p">;</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="n">e</span><span class="p">;</span><span class="w">   </span><span class="c1">// rethrow original exception</span>
+<span class="p">}</span>
+<span class="k">finally</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fr</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">fr</span><span class="p">.</span><span class="na">close</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">closeEx</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">primaryException</span><span class="w"> </span><span class="o">==</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">closeEx</span><span class="p">;</span><span class="w">   </span><span class="c1">// no earlier exception → propagate the cleanup failure</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="c1">// else: suppress / log the cleanup exception, don&#39;t let it mask the original</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="engineering-insight_7">Engineering Insight<a class="headerlink" href="#engineering-insight_7" title="Permanent link">&para;</a></h3>
+<p>Exception masking is a case of one failure signal silently overwriting another — the exact class of bug <code>try-with-resources</code> (next section) was designed to eliminate by keeping <em>both</em> exceptions instead of discarding one.</p>
+<hr />
+<h2 id="try-with-resources">Try-With-Resources<a class="headerlink" href="#try-with-resources" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_9">Engineering Problem<a class="headerlink" href="#engineering-problem_9" title="Permanent link">&para;</a></h3>
+<p>The manual workaround above (tracking a <code>primaryException</code>, nested try-finally for cleanup) is correct but verbose, and easy to get wrong by hand every time a resource needs closing.</p>
+<h3 id="definition_7">Definition<a class="headerlink" href="#definition_7" title="Permanent link">&para;</a></h3>
+<p><code>try-with-resources</code> automatically closes resources at the end of the try block, for any class implementing <code>AutoCloseable</code> (or its sub-interface <code>Closeable</code>). <code>close()</code> is called even if an exception is thrown inside the try block.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">MyResource</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">AutoCloseable</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">close</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;came to exception close()&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">FileNotFoundException</span><span class="p">();</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TryWithResources</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">MyResource</span><span class="w"> </span><span class="n">mr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">MyResource</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;came in try&quot;</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="kc">true</span><span class="p">)</span>
+<span class="w">                </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="k">throw</span><span class="w"> </span><span class="n">e</span><span class="p">;</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Output:</strong></p>
+<div class="highlight"><pre><span></span><code>came in try
+came to exception close()
+Exception in thread &quot;main&quot; java.lang.RuntimeException
+    at ExceptionHandling.TryWithResources.main(TryWithResources.java:9)
+    Suppressed: java.io.FileNotFoundException
+        at ExceptionHandling.MyResource.close(MyResource.java:11)
+        at ExceptionHandling.TryWithResources.main(TryWithResources.java:10)
+</code></pre></div>
+<p>The <strong>primary exception</strong> (<code>RuntimeException</code>, from the try block) is what's thrown. The <strong><code>close()</code> exception</strong> (<code>FileNotFoundException</code>) is <strong>suppressed, not lost</strong> — it's attached to the primary exception and still visible in the stack trace.</p>
+<h3 id="autocloseable-vs-closeable"><code>AutoCloseable</code> vs. <code>Closeable</code><a class="headerlink" href="#autocloseable-vs-closeable" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>AutoCloseable
+     ↑
+ Closeable
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th></th>
+<th><code>AutoCloseable</code></th>
+<th><code>Closeable</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Signature</td>
+<td><code>void close() throws Exception;</code></td>
+<td><code>void close() throws IOException;</code></td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>Very broad — any checked exception, any resource</td>
+<td>Narrower — I/O-related exceptions only</td>
+</tr>
+<tr>
+<td>Typical use</td>
+<td>Any kind of resource</td>
+<td>Streams, readers, writers</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Interview-perfect answer:</strong> <em><code>Closeable</code> is a sub-interface of <code>AutoCloseable</code> designed specifically for I/O resources and restricts <code>close()</code> to throwing <code>IOException</code>, whereas <code>AutoCloseable</code> is more general and allows any exception.</em></p>
+<h3 id="multiple-resources-initialization-and-closing-order">Multiple Resources — Initialization and Closing Order<a class="headerlink" href="#multiple-resources-initialization-and-closing-order" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">(</span><span class="n">Resource1</span><span class="w"> </span><span class="n">r1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Resource1</span><span class="p">();</span>
+<span class="w">     </span><span class="n">Resource2</span><span class="w"> </span><span class="n">r2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Resource2</span><span class="p">();</span>
+<span class="w">     </span><span class="n">Resource3</span><span class="w"> </span><span class="n">r3</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Resource3</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// use resources</span>
+<span class="p">}</span>
+</code></pre></div>
+<ul>
+<li>All resources must implement <code>AutoCloseable</code> (or <code>Closeable</code>).</li>
+<li><strong>Initialization order:</strong> left → right — <code>r1 → r2 → r3</code>.</li>
+<li><strong>Closing order (important):</strong> right → left, the <strong>reverse</strong> — <code>r3 → r2 → r1</code>. This ensures dependencies are closed safely (a resource is never closed while something built on top of it is still open).</li>
+<li><strong>No <code>finally</code> needed</strong> — the JVM guarantees cleanup. No null checks, no resource leaks.</li>
+</ul>
+<h3 id="engineering-insight_8">Engineering Insight<a class="headerlink" href="#engineering-insight_8" title="Permanent link">&para;</a></h3>
+<p>Try-with-resources is the language codifying the exact discipline the manual <code>primaryException</code> workaround was hand-rolling: guaranteed cleanup, reverse-order closing, and <em>suppression</em> instead of <em>masking</em> when cleanup itself fails. It's a strict improvement over <code>finally</code>-based cleanup wherever the resource type allows it.</p>
+<hr />
+<h2 id="exception-translation-checked-to-unchecked-at-interface-boundaries">Exception Translation — Checked to Unchecked at Interface Boundaries<a class="headerlink" href="#exception-translation-checked-to-unchecked-at-interface-boundaries" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_10">Engineering Problem<a class="headerlink" href="#engineering-problem_10" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">interface</span> <span class="nc">Task</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kt">void</span><span class="w"> </span><span class="nf">start</span><span class="p">();</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>If an implementation needs to do I/O:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">FileTask</span><span class="w"> </span><span class="kd">implements</span><span class="w"> </span><span class="n">Task</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nd">@Override</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">start</span><span class="p">()</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">IOException</span><span class="w"> </span><span class="p">{</span><span class="w">   </span><span class="c1">// ✘ not allowed</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Java forbids this. Why?</p>
+<h3 id="why-java-forbids-widening-the-throws-clause-on-override">Why Java Forbids Widening the Throws Clause on Override<a class="headerlink" href="#why-java-forbids-widening-the-throws-clause-on-override" title="Permanent link">&para;</a></h3>
+<ul>
+<li>An <strong>interface is a contract</strong>: <code>Task.start()</code> promises callers it throws no checked exceptions.</li>
+<li>The caller of <code>Task.start()</code> must not be surprised by a new checked exception appearing only because a <em>particular implementation</em> happens to do I/O — that would break every existing caller written against the interface.</li>
+<li>This is the <strong>Liskov Substitution Principle</strong> in action: a subtype (here, an implementation) must be usable anywhere the supertype (interface) is expected, without the caller needing to know which concrete implementation it received.</li>
+</ul>
+<p>So Java is enforcing the <em>right</em> constraint here — the two remaining questions are what <code>FileTask.start()</code> should do with the <code>IOException</code> it actually encounters.</p>
+<h3 id="option-a-swallow-the-exception-bad">Option A — Swallow the Exception (Bad)<a class="headerlink" href="#option-a-swallow-the-exception-bad" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">readFile</span><span class="p">();</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="c1">// ignore</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Almost always bad: the failure is hidden, debugging becomes very hard, and the system can enter an inconsistent state silently. Swallowing is only acceptable when you're <strong>100% sure</strong> the failure is irrelevant, or you explicitly log it and degrade gracefully.</p>
+<h3 id="option-b-wrap-into-an-unchecked-exception-good">Option B — Wrap Into an Unchecked Exception (Good)<a class="headerlink" href="#option-b-wrap-into-an-unchecked-exception-good" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">readFile</span><span class="p">();</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">RuntimeException</span><span class="p">(</span><span class="n">e</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>This works because unchecked exceptions don't need to be declared — the interface contract remains intact, and the failure still propagates instead of being silently swallowed. This isn't a workaround; it's a deliberate escape hatch Java's designers built in.</p>
+<h3 id="the-senior-level-refinement-dont-throw-raw-runtimeexception">The Senior-Level Refinement — Don't Throw Raw <code>RuntimeException</code><a class="headerlink" href="#the-senior-level-refinement-dont-throw-raw-runtimeexception" title="Permanent link">&para;</a></h3>
+<p>Instead, create a domain-specific unchecked exception:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TaskExecutionException</span><span class="w"> </span><span class="kd">extends</span><span class="w"> </span><span class="n">RuntimeException</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="nf">TaskExecutionException</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">Throwable</span><span class="w"> </span><span class="n">cause</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="kd">super</span><span class="p">(</span><span class="n">message</span><span class="p">,</span><span class="w"> </span><span class="n">cause</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="k">try</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">readFile</span><span class="p">();</span>
+<span class="p">}</span><span class="w"> </span><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">IOException</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">throw</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">TaskExecutionException</span><span class="p">(</span><span class="s">&quot;Failed to start FileTask&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">e</span><span class="p">);</span>
+<span class="p">}</span>
+</code></pre></div>
+<p><strong>Why this is better:</strong></p>
+<ul>
+<li>Preserves semantic meaning — <code>TaskExecutionException</code> says <em>what kind</em> of failure this is, not just "something threw."</li>
+<li>The stack trace keeps the original cause (<code>e</code>).</li>
+<li>Callers can optionally catch <code>TaskExecutionException</code> specifically if they want to.</li>
+<li>Logs become self-explanatory instead of showing a generic <code>RuntimeException</code>.</li>
+</ul>
+<p>This is how mainstream frameworks (Spring, Hibernate, ...) handle exactly this situation.</p>
+<h3 id="why-unchecked-exceptions-are-the-right-fit-here">Why Unchecked Exceptions Are the Right Fit Here<a class="headerlink" href="#why-unchecked-exceptions-are-the-right-fit-here" title="Permanent link">&para;</a></h3>
+<p>Unchecked exceptions are ideal when:</p>
+<ul>
+<li>the caller cannot reasonably recover,</li>
+<li>the failure is environmental (I/O, DB, network) rather than a business condition, and</li>
+<li>you want to avoid polluting the interface with technical implementation details.</li>
+</ul>
+<p><code>Task.start()</code> is a <strong>behavioral</strong> contract, not a technical one. Forcing <code>IOException</code> into the interface would leak an implementation detail (this particular <code>Task</code> happens to read a file) into a contract meant to describe <em>behavior</em>, not mechanism. Wrapping into unchecked is good design here, not a compromise.</p>
+<h3 id="engineering-insight_9">Engineering Insight<a class="headerlink" href="#engineering-insight_9" title="Permanent link">&para;</a></h3>
+<p>This whole pattern — <strong>throw early, catch/translate later</strong> — means the intermediate layer wraps (translates) a low-level, leaf exception and forwards a higher-level one up the call stack. It's the same idea as an Adapter: the technical failure detail stays at the boundary where it was detected, and callers further up only ever see a contract they were promised.</p>
+<hr />
+<h2 id="stack-traces">Stack Traces<a class="headerlink" href="#stack-traces" title="Permanent link">&para;</a></h2>
+<h3 id="definition_8">Definition<a class="headerlink" href="#definition_8" title="Permanent link">&para;</a></h3>
+<p><code>printStackTrace()</code> is a method on <code>Throwable</code> (available on every exception, since all exceptions extend <code>Throwable</code>). For structured, per-frame access, <code>getStackTrace()</code> returns a <code>StackTraceElement[]</code>, where each element exposes:</p>
+<ul>
+<li><code>getClassName()</code></li>
+<li><code>getMethodName()</code></li>
+<li><code>getLineNumber()</code></li>
+<li><code>getFileName()</code></li>
+<li><code>isNativeMethod()</code></li>
+</ul>
+<div class="highlight"><pre><span></span><code><span class="k">catch</span><span class="w"> </span><span class="p">(</span><span class="n">Exception</span><span class="w"> </span><span class="n">e</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">StackTraceElement</span><span class="w"> </span><span class="n">ste</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">e</span><span class="p">.</span><span class="na">getStackTrace</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span>
+<span class="w">            </span><span class="n">ste</span><span class="p">.</span><span class="na">getClassName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; | &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="n">ste</span><span class="p">.</span><span class="na">getMethodName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; | &quot;</span><span class="w"> </span><span class="o">+</span>
+<span class="w">            </span><span class="n">ste</span><span class="p">.</span><span class="na">getLineNumber</span><span class="p">()</span>
+<span class="w">        </span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Example output:</p>
+<div class="highlight"><pre><span></span><code>com.example.service.FileService | readData | 42
+com.example.controller.Main      | start    | 18
+</code></pre></div>
+<h3 id="why-this-is-useful">Why This Is Useful<a class="headerlink" href="#why-this-is-useful" title="Permanent link">&para;</a></h3>
+<p>Compact, human-readable, easy to pipe into structured logs — much cleaner than dumping a full <code>printStackTrace()</code> when you only need the failure's location, not its entire formatted text block.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="can-a-function-that-declares-throws-parentexception-also-throw-a-child-of-that-exception">Can a function that declares <code>throws ParentException</code> also throw a child of that exception?<a class="headerlink" href="#can-a-function-that-declares-throws-parentexception-also-throw-a-child-of-that-exception" title="Permanent link">&para;</a></h3>
+<p>Yes — a function capable of throwing a parent exception type can throw any of its children too. The reverse doesn't hold: declaring a child exception type doesn't authorize throwing the parent.</p>
+<h3 id="why-must-multiple-catch-blocks-be-ordered-specific-to-general">Why must multiple catch blocks be ordered specific-to-general?<a class="headerlink" href="#why-must-multiple-catch-blocks-be-ordered-specific-to-general" title="Permanent link">&para;</a></h3>
+<p>Because catching a parent type also catches all its children. If the parent's catch block came first, the child's catch block beneath it would never be reachable — every exception it was written to handle is already absorbed above it. The compiler rejects this as unreachable code.</p>
+<h3 id="why-is-checking-instanceof-inside-a-single-catch-block-discouraged">Why is checking <code>instanceof</code> inside a single catch block discouraged?<a class="headerlink" href="#why-is-checking-instanceof-inside-a-single-catch-block-discouraged" title="Permanent link">&para;</a></h3>
+<p>Because it re-implements, by hand, the type-based dispatch that multiple catch blocks already provide natively — the same reasoning as preferring polymorphism over manual type checks anywhere else.</p>
+<h3 id="why-are-custom-exceptions-usually-made-checked-rather-than-unchecked">Why are custom exceptions usually made checked rather than unchecked?<a class="headerlink" href="#why-are-custom-exceptions-usually-made-checked-rather-than-unchecked" title="Permanent link">&para;</a></h3>
+<p>Because you want the caller/client to be forced to explicitly handle them — checked exceptions enforce that decision at compile time, which is appropriate when the failure is one the caller can reasonably recover from.</p>
+<h3 id="what-are-the-four-canonical-constructors-on-a-custom-exception-and-why-have-all-four">What are the four canonical constructors on a custom exception, and why have all four?<a class="headerlink" href="#what-are-the-four-canonical-constructors-on-a-custom-exception-and-why-have-all-four" title="Permanent link">&para;</a></h3>
+<p>No-arg, <code>(String message)</code>, <code>(Throwable cause)</code>, and <code>(String message, Throwable cause)</code> — matching <code>Throwable</code>'s own constructors. Different call sites discover failures with different amounts of context (just a signal, a message, or another exception to wrap), and each constructor serves one of those cases.</p>
+<h3 id="whats-the-difference-between-the-exceptions-message-and-its-cause">What's the difference between the exception's message and its cause?<a class="headerlink" href="#whats-the-difference-between-the-exceptions-message-and-its-cause" title="Permanent link">&para;</a></h3>
+<p>The message is a high-level, human-readable explanation for users/logs/support. The cause is the actual root <code>Throwable</code>, carrying the stack trace and technical detail, intended for developers. Keeping them separate avoids leaking internals to users while preserving full debugging information.</p>
+<h3 id="what-is-serialversionuid-for">What is <code>serialVersionUID</code> for?<a class="headerlink" href="#what-is-serialversionuid-for" title="Permanent link">&para;</a></h3>
+<p>It ensures version compatibility during serialization and deserialization of objects — if the serialized and deserializing class versions don't match, the JVM throws <code>InvalidClassException</code> instead of silently misreading the byte stream.</p>
+<h3 id="under-what-conditions-does-code-after-a-try-catch-finally-block-not-run">Under what conditions does code <em>after</em> a <code>try-catch-finally</code> block NOT run?<a class="headerlink" href="#under-what-conditions-does-code-after-a-try-catch-finally-block-not-run" title="Permanent link">&para;</a></h3>
+<p>Only if the exception isn't caught, <code>System.exit()</code> is called, the JVM crashes, or a fatal error like <code>OutOfMemoryError</code> occurs. Otherwise — handled exception or no exception at all — execution continues normally after <code>finally</code>.</p>
+<h3 id="why-must-resource-cleanup-in-finally-be-null-checked">Why must resource cleanup in <code>finally</code> be null-checked?<a class="headerlink" href="#why-must-resource-cleanup-in-finally-be-null-checked" title="Permanent link">&para;</a></h3>
+<p>Because if the resource's initialization itself threw (e.g. <code>new FileReader(...)</code> failed), the reference is still <code>null</code> when <code>finally</code> runs — <code>finally</code> executes unconditionally, so calling <code>.close()</code> on a null reference throws a <code>NullPointerException</code> that masks the real failure.</p>
+<h3 id="does-an-outer-catch-block-also-catch-an-exception-already-caught-by-an-inner-catch-block">Does an outer catch block also catch an exception already caught by an inner catch block?<a class="headerlink" href="#does-an-outer-catch-block-also-catch-an-exception-already-caught-by-an-inner-catch-block" title="Permanent link">&para;</a></h3>
+<p>No. Once an exception is caught and handled by the inner catch, it's resolved and does not propagate outward. The outer catch only runs if the inner catch doesn't exist for that exception type, or if the inner catch explicitly rethrows.</p>
+<h3 id="what-is-exception-masking-and-why-is-it-dangerous">What is exception masking, and why is it dangerous?<a class="headerlink" href="#what-is-exception-masking-and-why-is-it-dangerous" title="Permanent link">&para;</a></h3>
+<p>If <code>finally</code> itself throws, that exception overrides whatever was already propagating from <code>try</code>/<code>catch</code> — the JVM only lets one exception propagate at a time, and the last one thrown wins. The original root cause is silently lost, which makes logs misleading and production debugging very hard.</p>
+<h3 id="how-does-try-with-resources-avoid-exception-masking">How does try-with-resources avoid exception masking?<a class="headerlink" href="#how-does-try-with-resources-avoid-exception-masking" title="Permanent link">&para;</a></h3>
+<p>If both the try block and the resource's <code>close()</code> throw, the primary exception (from the try block) is what propagates, and the <code>close()</code> exception is attached as a <strong>suppressed</strong> exception rather than discarding either one — both remain visible in the final stack trace.</p>
+<h3 id="in-what-order-are-multiple-try-with-resources-closed">In what order are multiple try-with-resources closed?<a class="headerlink" href="#in-what-order-are-multiple-try-with-resources-closed" title="Permanent link">&para;</a></h3>
+<p>Reverse of initialization order — right to left. If <code>r1</code>, <code>r2</code>, <code>r3</code> were opened in that order, they close as <code>r3</code>, <code>r2</code>, <code>r1</code>, so a resource is never closed while something built on top of it is still open.</p>
+<h3 id="why-cant-an-interface-method-implementation-add-a-new-checked-exception-the-interface-doesnt-declare">Why can't an interface method implementation add a new checked exception the interface doesn't declare?<a class="headerlink" href="#why-cant-an-interface-method-implementation-add-a-new-checked-exception-the-interface-doesnt-declare" title="Permanent link">&para;</a></h3>
+<p>Because the interface is a contract callers rely on — the Liskov Substitution Principle requires that any implementation be usable wherever the interface is expected, without surprising the caller with exceptions the contract never promised.</p>
+<h3 id="given-that-constraint-how-should-a-checked-exception-from-an-implementation-detail-be-surfaced">Given that constraint, how should a checked exception from an implementation detail be surfaced?<a class="headerlink" href="#given-that-constraint-how-should-a-checked-exception-from-an-implementation-detail-be-surfaced" title="Permanent link">&para;</a></h3>
+<p>Wrap it into an unchecked exception — ideally a domain-specific one (e.g. <code>TaskExecutionException extends RuntimeException</code>) rather than a raw <code>RuntimeException</code>, so the semantic meaning is preserved, the original cause is chained, and the interface's contract stays intact.</p>
+<h3 id="why-are-unchecked-exceptions-the-right-fit-for-wrapping-environmental-failures-like-io-errors-at-an-interface-boundary">Why are unchecked exceptions the right fit for wrapping environmental failures like I/O errors at an interface boundary?<a class="headerlink" href="#why-are-unchecked-exceptions-the-right-fit-for-wrapping-environmental-failures-like-io-errors-at-an-interface-boundary" title="Permanent link">&para;</a></h3>
+<p>Because the caller usually can't recover from them anyway, the failure is environmental rather than a business condition the caller should branch on, and forcing the checked type into the interface would leak an implementation detail into what should be a purely behavioral contract.</p>
+<hr />
+<p>❌ Checked exceptions are "more serious" than unchecked ones.</p>
+<p>✔ The split isn't about severity — it's about whether the compiler believes the caller has a reasonable chance to recover. Unchecked failures (like <code>OutOfMemoryError</code>'s sibling class, or a bad cast) can be just as serious.</p>
+<hr />
+<p>❌ <code>finally</code> runs "usually," as long as things go roughly to plan.</p>
+<p>✔ It runs unconditionally on every path out of the try block except <code>System.exit()</code>, a JVM crash, a fatal error, or an exception that's never caught at all.</p>
+<hr />
+<p>❌ If an inner try-catch handles an exception, the outer catch still gets a chance to see it too, "just in case."</p>
+<p>✔ A handled exception is resolved — it does not propagate outward unless the inner catch explicitly rethrows it.</p>
+<hr />
+<p>❌ If <code>finally</code> throws, both the original and the <code>finally</code> exception are reported.</p>
+<p>✔ Without try-with-resources, only the <em>last</em> exception thrown (from <code>finally</code>) propagates — the original is silently discarded. This is exception masking, and it's exactly what try-with-resources's suppressed-exception mechanism was built to avoid.</p>
+<hr />
+<p>❌ You should never let an implementation detail like <code>IOException</code> escape an interface method — just swallow it.</p>
+<p>✔ Swallowing hides real failures. The correct move is translating it into an unchecked exception (ideally a domain-specific one) so the interface contract stays intact <em>and</em> the failure still propagates.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Throwable
+├── Exception  → can be handled (checked: must declare/handle; unchecked: should still try)
+└── Error      → don&#39;t bother trying to recover
+
+Catch order    → specific (child) before general (parent), or it won&#39;t compile
+
+finally        → runs always; guard resource cleanup with a null check
+
+Nested catch   → handled means handled; doesn&#39;t leak to the outer catch
+                 unless explicitly rethrown
+
+finally throws → masks (discards) whatever was already propagating
+try-with-resources → suppresses instead of masking; closes in reverse order
+
+Interface method → cannot widen checked exceptions on override (Liskov)
+Fix              → wrap the checked exception into a domain-specific
+                    unchecked exception, preserve the cause
+
+Message  → for humans (what)
+Cause    → for developers (why) — preserve it, always
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-1-checklist">Stage 2 · Week 1 Checklist<a class="headerlink" href="#stage-2-week-1-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain the difference between checked and unchecked exceptions, and why the split exists</li>
+<li>[x] Explain how an uncaught exception propagates up the call stack and terminates a program</li>
+<li>[x] Explain why catch blocks must be ordered specific-to-general</li>
+<li>[x] Explain why the four canonical custom-exception constructors exist</li>
+<li>[x] Explain the difference between an exception's message and its cause, and why both matter</li>
+<li>[x] Explain what <code>serialVersionUID</code> is for</li>
+<li>[x] Explain why <code>finally</code> needs a null check before closing a resource</li>
+<li>[x] Explain exception masking, and how try-with-resources avoids it</li>
+<li>[x] Explain the initialization and closing order for multiple try-with-resources</li>
+<li>[x] Explain why an interface implementation can't add new checked exceptions, and how to work around it correctly</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

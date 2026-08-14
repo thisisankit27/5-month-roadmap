@@ -1,0 +1,5306 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/Product%20Engineering/week-1-AI-Assistant/">
+      
+      
+        <link rel="prev" href="../../AI%20Learning/LCEL/day-4-streaming/">
+      
+      
+        <link rel="next" href="../week-2-AI-Assistent/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Thinking Like a Senior Engineer.v1 - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#thinking-like-a-senior-engineerv1" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Thinking Like a Senior Engineer.v1
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#principle-1-design-before-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 1 — Design Before Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-1-discussion-project-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-1 Discussion — Project Foundation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-1 Discussion — Project Foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-separate-modules-instead-of-everything-in-apppy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Separate Modules Instead of Everything in app.py?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-we-replace-faiss-with-qdrant-how-many-files-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If We Replace FAISS with Qdrant, How Many Files Change?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-many-small-pull-requests-instead-of-one-huge-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Many Small Pull Requests Instead of One Huge PR?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-extensibility-problem-in-loaderspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Extensibility Problem in loaders.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-principles-accidentally-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles Accidentally Learned
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-questions-carried-into-pr-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions Carried into PR-2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-2-discussion-designing-an-extensible-loader-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-2 Discussion — Designing an Extensible Loader Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-2 Discussion — Designing an Extensible Loader Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#question-1-what-methods-should-the-parent-loader-define" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 1 — What Methods Should the Parent Loader Define?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Question 1 — What Methods Should the Parent Loader Define?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-not-define-more-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Define More Methods?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2-should-loaderfactory-return-pdfloader-or-loader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 2 — Should LoaderFactory Return PdfLoader or Loader?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Question 2 — Should LoaderFactory Return PdfLoader or Loader?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returning-concrete-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Returning Concrete Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returning-the-parent-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Returning the Parent Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-3-adding-excelloader-how-many-files-should-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 3 — Adding ExcelLoader: How Many Files Should Change?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Question 3 — Adding ExcelLoader: How Many Files Should Change?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-valuable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Valuable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-3-discussion-chunking-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-3 Discussion — Chunking Engine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-3 Discussion — Chunking Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#should-apppy-know-about-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Should app.py Know About Chunking?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-have-an-ingestion-pipeline-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Have an Ingestion Pipeline at All?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#should-chunking-use-the-strategy-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Should Chunking Use the Strategy Pattern?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Should Chunking Use the Strategy Pattern?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#factory-vs-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory vs Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-recursivecharactertextsplitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why RecursiveCharacterTextSplitter?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-split-by-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Split by Pages?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-chunk-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Chunk at All?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-overlap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Overlap?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-should-chunk-size-be-chosen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Should Chunk Size Be Chosen?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata-survives-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Survives Chunking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pipeline-carries-one-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pipeline Carries One Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-3-deep-dive-design-patterns-that-emerged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-3 Deep Dive — Design Patterns That Emerged
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-3 Deep Dive — Design Patterns That Emerged">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-strategy-pattern-became-necessary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Strategy Pattern Became Necessary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-strategy-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Strategy Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#factory-and-strategy-solve-different-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory and Strategy Solve Different Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-choose-the-strategy-per-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Choose the Strategy Per Document?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-split_documents-instead-of-split_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why split_documents() Instead of split_text()?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-flyweight-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Flyweight Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Flyweight Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-it-works-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why It Works Here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-flyweight-would-not-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Flyweight Would Not Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-implement-it-anyway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Implement It Anyway?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-principles-applied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles Applied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-4-discussion-embedding-pipeline-designing-for-pr-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-4 Discussion — Embedding Pipeline &amp; Designing for PR-5
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-4 Discussion — Embedding Pipeline &amp; Designing for PR-5">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-the-pipeline-stands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the Pipeline Stands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-an-embeddingservice-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why an EmbeddingService at All?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#should-the-strategy-pattern-be-used-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Should the Strategy Pattern Be Used Here?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Should the Strategy Pattern Be Used Here?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-strategy-would-become-justified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Strategy Would Become Justified
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-a-factory-is-also-unnecessary-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a Factory Is Also Unnecessary Here
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-service-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Service Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Service Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-not-return-vector-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Return Vector Objects?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-documents-and-embeddings-stay-associated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Documents and Embeddings Stay Associated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-embeddingservice-must-not-know-faiss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why EmbeddingService Must Not Know FAISS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why EmbeddingService Must Not Know FAISS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#does-the-vector-database-determine-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does the Vector Database Determine Dimensions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-embed-pdfs-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Embed PDFs Directly?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pipeline-after-pr-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pipeline After PR-5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-principles-applied_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles Applied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-improvement_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Self-Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-week-1-actually-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Week 1 Actually Built
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#principle-1-design-before-code" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Principle 1 — Design Before Code
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-1-discussion-project-foundation" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-1 Discussion — Project Foundation
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-1 Discussion — Project Foundation">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#goal" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Goal
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-separate-modules-instead-of-everything-in-apppy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Separate Modules Instead of Everything in app.py?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#if-we-replace-faiss-with-qdrant-how-many-files-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        If We Replace FAISS with Qdrant, How Many Files Change?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-many-small-pull-requests-instead-of-one-huge-pr" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Many Small Pull Requests Instead of One Huge PR?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#module-responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Module Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-extensibility-problem-in-loaderspy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Extensibility Problem in loaders.py
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-principles-accidentally-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles Accidentally Learned
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#open-questions-carried-into-pr-2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Open Questions Carried into PR-2
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-2-discussion-designing-an-extensible-loader-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-2 Discussion — Designing an Extensible Loader Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-2 Discussion — Designing an Extensible Loader Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#question-1-what-methods-should-the-parent-loader-define" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 1 — What Methods Should the Parent Loader Define?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Question 1 — What Methods Should the Parent Loader Define?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-not-define-more-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Define More Methods?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-2-should-loaderfactory-return-pdfloader-or-loader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 2 — Should LoaderFactory Return PdfLoader or Loader?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Question 2 — Should LoaderFactory Return PdfLoader or Loader?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#returning-concrete-classes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ❌ Returning Concrete Classes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#returning-the-parent-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        ✔ Returning the Parent Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#question-3-adding-excelloader-how-many-files-should-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Question 3 — Adding ExcelLoader: How Many Files Should Change?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Question 3 — Adding ExcelLoader: How Many Files Should Change?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-valuable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Valuable
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#visual-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Visual Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-3-discussion-chunking-engine" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-3 Discussion — Chunking Engine
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-3 Discussion — Chunking Engine">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#pipeline-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipeline Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#should-apppy-know-about-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Should app.py Know About Chunking?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-have-an-ingestion-pipeline-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Have an Ingestion Pipeline at All?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#should-chunking-use-the-strategy-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Should Chunking Use the Strategy Pattern?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Should Chunking Use the Strategy Pattern?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#factory-vs-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory vs Strategy
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-recursivecharactertextsplitter" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why RecursiveCharacterTextSplitter?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-split-by-pages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Split by Pages?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-chunk-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Chunk at All?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-overlap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Overlap?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-should-chunk-size-be-chosen" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Should Chunk Size Be Chosen?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#metadata-survives-chunking" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Metadata Survives Chunking
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pipeline-carries-one-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pipeline Carries One Type
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-3-deep-dive-design-patterns-that-emerged" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-3 Deep Dive — Design Patterns That Emerged
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-3 Deep Dive — Design Patterns That Emerged">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#project-evolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Project Evolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-the-strategy-pattern-became-necessary" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why the Strategy Pattern Became Necessary
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-strategy-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Strategy Pattern
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#factory-and-strategy-solve-different-problems" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Factory and Strategy Solve Different Problems
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-choose-the-strategy-per-document" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Choose the Strategy Per Document?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-split_documents-instead-of-split_text" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why split_documents() Instead of split_text()?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-flyweight-pattern" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Flyweight Pattern
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Flyweight Pattern">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-it-works-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why It Works Here
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-flyweight-would-not-work" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Flyweight Would Not Work
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-implement-it-anyway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Implement It Anyway?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-improvement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-principles-applied" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles Applied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-4-discussion-embedding-pipeline-designing-for-pr-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-4 Discussion — Embedding Pipeline &amp; Designing for PR-5
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-4 Discussion — Embedding Pipeline &amp; Designing for PR-5">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-the-pipeline-stands" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where the Pipeline Stands
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-an-embeddingservice-at-all" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why an EmbeddingService at All?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#should-the-strategy-pattern-be-used-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Should the Strategy Pattern Be Used Here?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Should the Strategy Pattern Be Used Here?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#when-strategy-would-become-justified" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Strategy Would Become Justified
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-a-factory-is-also-unnecessary-here" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why a Factory Is Also Unnecessary Here
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-service-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Service Contract
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Service Contract">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-not-return-vector-objects" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Return Vector Objects?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-documents-and-embeddings-stay-associated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Documents and Embeddings Stay Associated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-embeddingservice-must-not-know-faiss" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why EmbeddingService Must Not Know FAISS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why EmbeddingService Must Not Know FAISS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#does-the-vector-database-determine-dimensions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Does the Vector Database Determine Dimensions?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-embed-pdfs-directly" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Embed PDFs Directly?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-pipeline-after-pr-5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Pipeline After PR-5
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-principles-applied_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Principles Applied
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#future-improvement_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Future Improvement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Self-Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-week-1-actually-built" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Week 1 Actually Built
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="thinking-like-a-senior-engineerv1">Thinking Like a Senior Engineer.v1<a class="headerlink" href="#thinking-like-a-senior-engineerv1" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>These notes are not about AI or LangChain.</p>
+<p>They are lessons learned while designing the Knowledge Assistant project — an attempt to
+learn <em>how experienced engineers think</em> before writing code.</p>
+</blockquote>
+<p>Week 1 builds the ingestion half of a RAG system: load, chunk, embed, and prepare for
+storage. Almost none of the difficulty turned out to be in the libraries. It was in
+answering one question over and over, at every layer:</p>
+<blockquote>
+<p>Who owns this responsibility — and how much has to change when the requirements change?</p>
+</blockquote>
+<hr />
+<h2 id="principle-1-design-before-code">Principle 1 — Design Before Code<a class="headerlink" href="#principle-1-design-before-code" title="Permanent link">&para;</a></h2>
+<p>Before writing anything, four questions:</p>
+<ul>
+<li>What problem am I solving?</li>
+<li>What responsibilities exist?</li>
+<li>Which components should own those responsibilities?</li>
+<li>Can this design scale in the future?</li>
+</ul>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Good software is designed first and implemented second.</p>
+</blockquote>
+<hr />
+<h2 id="pr-1-discussion-project-foundation">PR-1 Discussion — Project Foundation<a class="headerlink" href="#pr-1-discussion-project-foundation" title="Permanent link">&para;</a></h2>
+<h3 id="goal">Goal<a class="headerlink" href="#goal" title="Permanent link">&para;</a></h3>
+<p>Create a clean project foundation.</p>
+<p>Not a RAG system. Not a polished SaaS. Simply a project that another engineer can clone and
+immediately understand.</p>
+<p>That is a deliberately small goal, and treating it as a real deliverable — rather than
+scaffolding to rush through — is what made every later PR cheap.</p>
+<hr />
+<h3 id="why-separate-modules-instead-of-everything-in-apppy">Why Separate Modules Instead of Everything in <code>app.py</code>?<a class="headerlink" href="#why-separate-modules-instead-of-everything-in-apppy" title="Permanent link">&para;</a></h3>
+<p><strong>My answer at the time:</strong> Separation of Concerns. The architecture should be plug-and-play.
+Each module exposes a contract, so implementations can change without affecting other
+modules.</p>
+<div class="highlight"><pre><span></span><code>Today                Tomorrow
+─────                ────────
+FAISS      ──────►   Qdrant
+</code></pre></div>
+<p>Only the implementation changes. The rest of the application is unaffected.</p>
+<p><strong>The sharper version of the same answer</strong> — the one that belongs in an interview:</p>
+<blockquote>
+<p>Each module has a single responsibility and exposes a clear contract. That allows
+implementations to be replaced — FAISS to Qdrant — without touching the orchestration
+layer, because the application depends on abstractions rather than concrete
+implementations.</p>
+</blockquote>
+<p>Same idea. The second version names the mechanism instead of describing the feeling.</p>
+<hr />
+<h3 id="if-we-replace-faiss-with-qdrant-how-many-files-change">If We Replace FAISS with Qdrant, How Many Files Change?<a class="headerlink" href="#if-we-replace-faiss-with-qdrant-how-many-files-change" title="Permanent link">&para;</a></h3>
+<p><strong>My initial answer:</strong> two files — <code>embeddings.py</code> and <code>vectorstore.py</code>.</p>
+<p><strong>The correction:</strong> only <code>vectorstore.py</code>.</p>
+<p>The embedding model has no knowledge of where vectors are stored. Its responsibility is
+exactly one transformation:</p>
+<div class="highlight"><pre><span></span><code>Text  ──►  Embedding Vector
+</code></pre></div>
+<p>Storage is somebody else's problem. Once that boundary is real, swapping the vector database
+cannot reach into embedding code, because embedding code was never told the database exists.</p>
+<p>Including <code>embeddings.py</code> in the answer was the tell: I had assumed a coupling that the
+design did not actually require.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Never let one module know unnecessary implementation details about another. The number of
+files a change touches is a direct measurement of how well the boundaries were drawn.</p>
+</blockquote>
+<hr />
+<h3 id="why-many-small-pull-requests-instead-of-one-huge-pr">Why Many Small Pull Requests Instead of One Huge PR?<a class="headerlink" href="#why-many-small-pull-requests-instead-of-one-huge-pr" title="Permanent link">&para;</a></h3>
+<p><strong>My answer:</strong> easier collaboration, manageable reviews, better testing, incremental
+delivery, quicker feedback, sprint-based development.</p>
+<p><strong>The lesson underneath it</strong> — imagine a bug appears:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>7000 changed lines</th>
+<th><code>PR-09 — Introduced Guardrails</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Review</td>
+<td>practically impossible</td>
+<td>a single reviewable idea</td>
+</tr>
+<tr>
+<td>Rollback</td>
+<td>reverts everything</td>
+<td>reverts one capability</td>
+</tr>
+<tr>
+<td>Debug</td>
+<td>which of 40 changes did it?</td>
+<td>the surface is already named</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Each PR should represent one engineering milestone — not simply "more code."</p>
+</blockquote>
+<hr />
+<h3 id="module-responsibilities">Module Responsibilities<a class="headerlink" href="#module-responsibilities" title="Permanent link">&para;</a></h3>
+<p>The initial design:</p>
+<div class="highlight"><pre><span></span><code>loaders.py       →  Load documents
+splitter.py      →  Split documents
+embeddings.py    →  Generate embeddings
+vectorstore.py   →  Store and retrieve vectors
+rag.py           →  Orchestrate everything
+</code></pre></div>
+<p>The discussion that followed surfaced something the file list hides: <strong>uploading documents
+and answering questions are two completely different workflows</strong>, and they share almost
+nothing but data types.</p>
+<p><strong>Workflow 1 — Knowledge Ingestion:</strong></p>
+<div class="highlight"><pre><span></span><code>PDF
+ │
+ ▼
+Loader
+ │
+ ▼
+Splitter
+ │
+ ▼
+Embeddings
+ │
+ ▼
+Vector Store
+</code></pre></div>
+<p><strong>Workflow 2 — Question Answering:</strong></p>
+<div class="highlight"><pre><span></span><code>Question
+ │
+ ▼
+Retriever
+ │
+ ▼
+Prompt
+ │
+ ▼
+LLM
+ │
+ ▼
+Answer
+</code></pre></div>
+<p>Recognising this early is what later allowed indexing and retrieval to evolve on independent
+lifecycles instead of tangling.</p>
+<hr />
+<h3 id="the-extensibility-problem-in-loaderspy">The Extensibility Problem in <code>loaders.py</code><a class="headerlink" href="#the-extensibility-problem-in-loaderspy" title="Permanent link">&para;</a></h3>
+<p>Today <code>loaders.py</code> supports PDF. Tomorrow it needs PDF, Word, Markdown, Website, and
+PowerPoint.</p>
+<p>Should the code keep growing this?</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">pdf</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">elif</span> <span class="n">docx</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">elif</span> <span class="n">md</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">elif</span> <span class="n">website</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>No. Every new format edits the same block for an unrelated reason, and the block is reachable
+from anywhere that loads a file.</p>
+<p><strong>My initial idea:</strong> a parent class, child classes, and Inversion of Control — with the
+frontend determining the appropriate loader and passing it to the backend.</p>
+<p><strong>The correction:</strong> the frontend should never know backend implementation details.</p>
+<p>The frontend uploads <code>resume.pdf</code>. That is the entirety of what it knows. The backend decides
+everything else:</p>
+<div class="highlight"><pre><span></span><code>Uploaded File
+      │
+      ▼
+  Extension
+      │
+      ▼
+LoaderFactory
+      │
+      ▼
+  PdfLoader
+      │
+      ▼
+   load()
+</code></pre></div>
+<p><strong>Better design:</strong></p>
+<div class="highlight"><pre><span></span><code>                   Uploaded File
+                         │
+                         ▼
+                   LoaderFactory
+                         │
+                         ▼
+                  DocumentLoader
+                         ▲
+        ┌────────────────┼────────────────┐
+        │                │                │
+   PdfLoader        DocxLoader        WebLoader
+</code></pre></div>
+<p>The frontend knows one verb: <strong>upload</strong>. Everything else is backend responsibility.</p>
+<hr />
+<h3 id="design-principles-accidentally-learned">Design Principles Accidentally Learned<a class="headerlink" href="#design-principles-accidentally-learned" title="Permanent link">&para;</a></h3>
+<p>Without setting out to study design patterns, this one discussion produced:</p>
+<ul>
+<li>Separation of Concerns</li>
+<li>Single Responsibility Principle</li>
+<li>Dependency Inversion thinking</li>
+<li>Open/Closed Principle</li>
+<li>Polymorphism</li>
+<li>Factory Pattern (conceptually)</li>
+</ul>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Don't memorize design patterns. Build enough projects and you'll rediscover them yourself.
+Learning the official names afterwards turns memorization into recognition.</p>
+</blockquote>
+<hr />
+<h3 id="interview-takeaways">Interview Takeaways<a class="headerlink" href="#interview-takeaways" title="Permanent link">&para;</a></h3>
+<p><strong>Why use a Factory instead of writing <code>if extension == "pdf"</code> everywhere?</strong></p>
+<blockquote>
+<p>A Factory centralizes object creation. Adding support for a new document type means
+creating a new implementation and registering it, rather than modifying multiple parts of
+the application. That is the Open/Closed Principle in practice.</p>
+</blockquote>
+<p><strong>Why separate modules instead of one <code>app.py</code>?</strong></p>
+<blockquote>
+<p>Each module has a single responsibility and exposes a clear contract, so implementations
+can be replaced without affecting the orchestration layer. The application depends on
+abstractions, not concrete implementations.</p>
+</blockquote>
+<p><strong>Why should the frontend not choose the loader?</strong></p>
+<blockquote>
+<p>Because that would make the UI depend on backend implementation details. The frontend's
+only knowledge should be that a file was uploaded; deciding <em>how</em> to read it is a backend
+responsibility that changes far more often.</p>
+</blockquote>
+<hr />
+<h3 id="open-questions-carried-into-pr-2">Open Questions Carried into PR-2<a class="headerlink" href="#open-questions-carried-into-pr-2" title="Permanent link">&para;</a></h3>
+<p>Three questions were left deliberately unanswered, to be reasoned about before any code was
+written:</p>
+<ol>
+<li>What methods should the parent <code>Loader</code> define — only <code>load()</code>, or more?</li>
+<li>Should <code>LoaderFactory</code> return <code>PdfLoader</code> or <code>Loader</code>? Why?</li>
+<li>When <code>ExcelLoader</code> is added tomorrow, how many existing files should require modification?</li>
+</ol>
+<p>If the answer to (3) is <em>"one registration point"</em> or close to it, the architecture is
+becoming extensible.</p>
+<hr />
+<h3 id="biggest-takeaway">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>"If the requirements change tomorrow, how much of my code will I need to rewrite?"</strong></p>
+</blockquote>
+<p>The best software is not the one that works today. The best software is the one that is
+easiest to change tomorrow.</p>
+<hr />
+<h2 id="pr-2-discussion-designing-an-extensible-loader-architecture">PR-2 Discussion — Designing an Extensible Loader Architecture<a class="headerlink" href="#pr-2-discussion-designing-an-extensible-loader-architecture" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>These answers come from engineering principles — <strong>SOLID</strong>, Separation of Concerns, the
+Open/Closed Principle — rather than from what makes the code "work."</p>
+</blockquote>
+<h3 id="question-1-what-methods-should-the-parent-loader-define">Question 1 — What Methods Should the Parent <code>Loader</code> Define?<a class="headerlink" href="#question-1-what-methods-should-the-parent-loader-define" title="Permanent link">&para;</a></h3>
+<p><strong>Initial thought:</strong> every loader only needs one method.</p>
+<div class="highlight"><pre><span></span><code><span class="n">load</span><span class="p">()</span>
+</code></pre></div>
+<p>After all, a PDF loader loads PDFs, a Word loader loads Word documents, a Markdown loader
+loads Markdown files — and all of them ultimately return LangChain <code>Document</code> objects.</p>
+<p><strong>That instinct was correct, and it is worth knowing <em>why</em> it was correct.</strong></p>
+<p>The parent class should define <strong>only the behaviour every loader is guaranteed to support</strong>.
+For this project, that is exactly <code>load()</code>.</p>
+<div class="highlight"><pre><span></span><code>Loader
+│
+├── load()
+│
+├── PdfLoader
+├── DocxLoader
+├── MarkdownLoader
+└── WebLoader
+</code></pre></div>
+<p>Every child knows <strong>how</strong> to load its own document type. The parent guarantees only <strong>that</strong>
+it can be loaded.</p>
+<h4 id="why-not-define-more-methods">Why Not Define More Methods?<a class="headerlink" href="#why-not-define-more-methods" title="Permanent link">&para;</a></h4>
+<p>Suppose the parent also declared:</p>
+<div class="highlight"><pre><span></span><code><span class="n">validate</span><span class="p">()</span>
+<span class="n">extract_images</span><span class="p">()</span>
+<span class="n">extract_tables</span><span class="p">()</span>
+</code></pre></div>
+<p>The problem appears immediately:</p>
+<table>
+<thead>
+<tr>
+<th>Loader</th>
+<th>The method that makes no sense</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>WebLoader</code></td>
+<td><code>extract_images()</code> — may not support image extraction</td>
+</tr>
+<tr>
+<td><code>MarkdownLoader</code></td>
+<td><code>extract_tables()</code> — may contain no tables</td>
+</tr>
+<tr>
+<td><code>TxtLoader</code></td>
+<td><code>validate()</code> — may require no validation</td>
+</tr>
+</tbody>
+</table>
+<p>Every child is now forced to implement methods that are meaningless for it — usually as an
+empty body or a raised exception, both of which are lies about the contract.</p>
+<p>That is a violation of the <strong>Interface Segregation Principle</strong>.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+A parent class should define only the common contract shared by every implementation. If
+every loader can guarantee exactly one operation, then one operation is enough — don't
+force child classes to implement methods they don't need.</p>
+</blockquote>
+<hr />
+<h3 id="question-2-should-loaderfactory-return-pdfloader-or-loader">Question 2 — Should <code>LoaderFactory</code> Return <code>PdfLoader</code> or <code>Loader</code>?<a class="headerlink" href="#question-2-should-loaderfactory-return-pdfloader-or-loader" title="Permanent link">&para;</a></h3>
+<p>The Factory should always return the <strong>parent type</strong>, <code>Loader</code>.</p>
+<h4 id="returning-concrete-classes">❌ Returning Concrete Classes<a class="headerlink" href="#returning-concrete-classes" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>                Uploaded File
+                      │
+                      ▼
+              LoaderFactory.create()
+                      │
+          ┌───────────┴───────────┐
+          ▼                       ▼
+     PdfLoader               DocxLoader
+          │                       │
+          ▼                       ▼
+     Client Code            Client Code
+</code></pre></div>
+<p>The client now has to know every implementation:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">PdfLoader</span><span class="p">):</span>
+    <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+
+<span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">loader</span><span class="p">,</span> <span class="n">DocxLoader</span><span class="p">):</span>
+    <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</code></pre></div>
+<p>Note how absurd this is: <strong>both branches call the same method.</strong> The type check buys nothing
+and costs a client edit for every new loader ever added.</p>
+<h4 id="returning-the-parent-type">✔ Returning the Parent Type<a class="headerlink" href="#returning-the-parent-type" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>                Uploaded File
+                      │
+                      ▼
+              LoaderFactory.create()
+                      │
+                      ▼
+                 Loader (reference)
+                      │
+      ┌───────────────┼────────────────┐
+      ▼               ▼                ▼
+ PdfLoader      DocxLoader      ExcelLoader
+      │               │                │
+      └───────────────┴────────────────┘
+                      │
+                      ▼
+                   load()
+</code></pre></div>
+<p>The client never learns the actual implementation:</p>
+<div class="highlight"><pre><span></span><code><span class="n">loader</span> <span class="o">=</span> <span class="n">LoaderFactory</span><span class="o">.</span><span class="n">create</span><span class="p">(</span><span class="n">file</span><span class="p">)</span>
+<span class="n">documents</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">load</span><span class="p">()</span>
+</code></pre></div>
+<h4 id="why-this-matters">Why This Matters<a class="headerlink" href="#why-this-matters" title="Permanent link">&para;</a></h4>
+<p>Suppose <code>PdfLoader</code> is replaced by, or joined by, <code>BetterPdfLoader</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Does it change?</th>
+<th>Answer</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Client code</td>
+<td>No</td>
+</tr>
+<tr>
+<td>The Factory</td>
+<td>Only enough to know about the new loader — or not even that, with auto-registration</td>
+</tr>
+</tbody>
+</table>
+<p>This is what <strong>programming to abstractions rather than implementations</strong> actually buys.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Depend on abstractions, not concrete classes. That is the core of the <strong>Dependency
+Inversion Principle</strong>.</p>
+</blockquote>
+<hr />
+<h3 id="question-3-adding-excelloader-how-many-files-should-change">Question 3 — Adding <code>ExcelLoader</code>: How Many Files Should Change?<a class="headerlink" href="#question-3-adding-excelloader-how-many-files-should-change" title="Permanent link">&para;</a></h3>
+<p>As close to <strong>one</strong> as possible.</p>
+<p>If adding a new document type required editing <code>loader.py</code>, <code>rag.py</code>, <code>app.py</code>,
+<code>splitter.py</code>, and <code>embeddings.py</code>, the architecture would be tightly coupled — and the
+coupling would compound with every format added.</p>
+<p>Instead, adding a feature should be:</p>
+<ol>
+<li>create a new implementation (<code>ExcelLoader</code>)</li>
+<li>register it with the Factory</li>
+</ol>
+<p>Everything else continues working.</p>
+<div class="highlight"><pre><span></span><code>Before                     Tomorrow
+──────                     ────────
+Loader                     Loader
+│                          │
+├── PdfLoader              ├── PdfLoader
+├── DocxLoader             ├── DocxLoader
+└── MarkdownLoader         ├── MarkdownLoader
+                           └── ExcelLoader
+</code></pre></div>
+<h4 id="why-this-is-valuable">Why This Is Valuable<a class="headerlink" href="#why-this-is-valuable" title="Permanent link">&para;</a></h4>
+<p>Imagine six months out, with the product supporting PDF, Word, Markdown, PowerPoint, Excel,
+CSV, HTML, and websites. If each of those eight formats had required changing five existing
+files, the project would already be unmaintainable.</p>
+<p>Instead, every new format should be:</p>
+<blockquote>
+<p><strong>Add a class. Register it. Done.</strong></p>
+<p><strong>Engineering Principle — Open/Closed</strong>
+Software entities should be <strong>open for extension</strong> but <strong>closed for modification</strong>. We
+extend the application by adding new classes, not by constantly modifying existing ones.</p>
+</blockquote>
+<h4 id="visual-architecture">Visual Architecture<a class="headerlink" href="#visual-architecture" title="Permanent link">&para;</a></h4>
+<div class="highlight"><pre><span></span><code>                 Uploaded File
+                       │
+                       ▼
+                 LoaderFactory
+                       │
+                       ▼
+                Loader (abstract)
+                       ▲
+       ┌───────────┬───┴───────┬───────────┐
+       │           │           │           │
+  PdfLoader   DocxLoader  MarkdownLoader  ExcelLoader
+</code></pre></div>
+<p>The application communicates only with the parent type. Every concrete loader is hidden
+behind the Factory.</p>
+<hr />
+<h3 id="interview-takeaways_1">Interview Takeaways<a class="headerlink" href="#interview-takeaways_1" title="Permanent link">&para;</a></h3>
+<p><strong>Why should the parent <code>Loader</code> expose only <code>load()</code>?</strong></p>
+<blockquote>
+<p>Because it should define only the behaviour common to every loader. Adding extra methods
+forces child classes to implement responsibilities they may not support — a <code>WebLoader</code>
+with <code>extract_images()</code>, a <code>MarkdownLoader</code> with <code>extract_tables()</code> — which violates the
+Interface Segregation Principle.</p>
+</blockquote>
+<p><strong>Why should the Factory return <code>Loader</code> instead of <code>PdfLoader</code>?</strong></p>
+<blockquote>
+<p>Because client code should depend on abstractions rather than concrete implementations.
+Returning the concrete type pushes <code>isinstance</code> checks into the client and forces a client
+edit for every new loader, even though every branch calls the same method.</p>
+</blockquote>
+<p><strong>How many files should change when adding <code>ExcelLoader</code>?</strong></p>
+<blockquote>
+<p>One new class, plus one registration in the Factory — or even zero registration with
+auto-discovery. Everything else should continue working without modification.</p>
+</blockquote>
+<hr />
+<h3 id="biggest-takeaway_1">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_1" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>The goal of good architecture is not to reduce the amount of code.</strong>
+It is to reduce the amount of <em>existing</em> code that must change when requirements evolve.</p>
+</blockquote>
+<p>The easiest code to maintain is the code you don't have to touch.</p>
+<hr />
+<h2 id="pr-3-discussion-chunking-engine">PR-3 Discussion — Chunking Engine<a class="headerlink" href="#pr-3-discussion-chunking-engine" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>The engineering discussions, design decisions, interview answers, and architectural
+reasoning behind the Chunking Engine.</p>
+</blockquote>
+<h3 id="pipeline-evolution">Pipeline Evolution<a class="headerlink" href="#pipeline-evolution" title="Permanent link">&para;</a></h3>
+<p><strong>After PR-2:</strong></p>
+<div class="highlight"><pre><span></span><code>PDF
+ │
+ ▼
+Loader
+ │
+ ▼
+List&lt;Document&gt;
+</code></pre></div>
+<p><strong>After PR-3:</strong></p>
+<div class="highlight"><pre><span></span><code>PDF
+ │
+ ▼
+Loader
+ │
+ ▼
+List&lt;Document&gt;
+ │
+ ▼
+Chunking Engine
+ │
+ ▼
+List&lt;Document&gt; (Chunks)
+</code></pre></div>
+<p>Notice what did <strong>not</strong> happen: the pipeline grew, and <code>app.py</code> was never modified.
+<code>ingestion.py</code> absorbs each additional stage.</p>
+<hr />
+<h3 id="should-apppy-know-about-chunking">Should <code>app.py</code> Know About Chunking?<a class="headerlink" href="#should-apppy-know-about-chunking" title="Permanent link">&para;</a></h3>
+<p>No. <code>app.py</code> should remain completely unaware of the internal pipeline. It calls one thing:</p>
+<div class="highlight"><pre><span></span><code><span class="n">documents</span> <span class="o">=</span> <span class="n">ingest_documents</span><span class="p">(</span><span class="n">uploaded_files</span><span class="p">)</span>
+</code></pre></div>
+<p>Meanwhile the pipeline behind that call keeps growing:</p>
+<div class="highlight"><pre><span></span><code>Today        Tomorrow        Later           Eventually
+─────        ────────        ─────           ──────────
+Load         Load            Load            Load
+             ↓               ↓               ↓
+             Chunk           Chunk           Chunk
+                             ↓               ↓
+                             Embed           Embed
+                                             ↓
+                                             Vector Store
+</code></pre></div>
+<p><strong>The caller never changes.</strong> That is one of the biggest responsibilities of an orchestration
+layer.</p>
+<hr />
+<h3 id="why-have-an-ingestion-pipeline-at-all">Why Have an Ingestion Pipeline at All?<a class="headerlink" href="#why-have-an-ingestion-pipeline-at-all" title="Permanent link">&para;</a></h3>
+<p>Think of it as a workflow orchestrator with a very clear division of knowledge:</p>
+<div class="highlight"><pre><span></span><code>app.py           &quot;I have files.&quot;
+   │
+   ▼
+ingestion.py     &quot;I know exactly how to process them.&quot;
+</code></pre></div>
+<p>The orchestration layer coordinates all stages while keeping the UI completely decoupled from
+implementation details.</p>
+<hr />
+<h3 id="should-chunking-use-the-strategy-pattern">Should Chunking Use the Strategy Pattern?<a class="headerlink" href="#should-chunking-use-the-strategy-pattern" title="Permanent link">&para;</a></h3>
+<p><strong>Initial thought:</strong> yes — introduce an abstract <code>Splitter</code> so different splitting algorithms
+could be swapped without affecting the rest of the application.</p>
+<div class="highlight"><pre><span></span><code>Splitter (abstract)
+        ▲
+        │
+RecursiveSplitter
+</code></pre></div>
+<p>Possible future strategies: <code>RecursiveCharacterTextSplitter</code>, <code>MarkdownHeaderTextSplitter</code>,
+<code>PythonCodeTextSplitter</code>, <code>HTMLHeaderTextSplitter</code>, <code>SemanticChunker</code>. All share the same
+goal — <code>List&lt;Document&gt; → Chunks</code> — and differ only in algorithm. Textbook Strategy Pattern.</p>
+<p><strong>Why not do it today?</strong> The project supports exactly one splitter,
+<code>RecursiveCharacterTextSplitter</code>. There is no runtime decision to make. Adding the
+abstraction now would add complexity without solving an existing problem.</p>
+<p>So PR-3 kept it direct:</p>
+<div class="highlight"><pre><span></span><code>splitter.py  →  split_documents(documents)
+</code></pre></div>
+<p>Later, when multiple chunking algorithms genuinely exist, refactor to Strategy.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Design for extension. Implement for today's requirements.</p>
+</blockquote>
+<p><em>(This deferral did not last long — see the next section, where a real requirement made
+Strategy necessary within the same PR.)</em></p>
+<h4 id="factory-vs-strategy">Factory vs Strategy<a class="headerlink" href="#factory-vs-strategy" title="Permanent link">&para;</a></h4>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Question it answers</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Factory</strong></td>
+<td><em>Which object should I create?</em></td>
+<td><code>UploadedFile → LoaderFactory → PdfLoader</code></td>
+</tr>
+<tr>
+<td><strong>Strategy</strong></td>
+<td><em>Which algorithm should I execute?</em></td>
+<td><code>Documents → Chunk Strategy → Recursive Splitter</code></td>
+</tr>
+</tbody>
+</table>
+<p>Factory creates objects. Strategy chooses algorithms.</p>
+<hr />
+<h3 id="why-recursivecharactertextsplitter">Why <code>RecursiveCharacterTextSplitter</code>?<a class="headerlink" href="#why-recursivecharactertextsplitter" title="Permanent link">&para;</a></h3>
+<p>Many developers assume it simply splits by character count. It actually tries to preserve
+<strong>semantic boundaries</strong>, falling back through separators in order:</p>
+<div class="highlight"><pre><span></span><code>Paragraph  (\n\n)
+    │  fails to fit?
+    ▼
+Line       (\n)
+    │  fails to fit?
+    ▼
+Space      (&quot; &quot;)
+    │  fails to fit?
+    ▼
+Character
+</code></pre></div>
+<p>It only moves to a smaller boundary when a larger one fails, which minimises broken sentences
+and incomplete thoughts.</p>
+<hr />
+<h3 id="why-not-split-by-pages">Why Not Split by Pages?<a class="headerlink" href="#why-not-split-by-pages" title="Permanent link">&para;</a></h3>
+<p>Page splitting looks attractive because a page usually contains related information. But
+<strong>pages are presentation boundaries, not semantic boundaries</strong>.</p>
+<div class="highlight"><pre><span></span><code>Page 17                             Page 18
+────────────────────────────        ────────────────────────────
+Spring Boot provides dependency ──► ...Injection and IoC...
+</code></pre></div>
+<p>One logical concept now spans two chunks, and retrieval quality drops. The problem cuts both
+ways:</p>
+<ul>
+<li>one page may contain many unrelated topics</li>
+<li>one topic may span multiple pages</li>
+</ul>
+<p>Therefore page boundaries should not define chunk boundaries.</p>
+<hr />
+<h3 id="why-chunk-at-all">Why Chunk at All?<a class="headerlink" href="#why-chunk-at-all" title="Permanent link">&para;</a></h3>
+<p>Embedding an entire document produces a single semantic representation of the whole thing.</p>
+<table>
+<thead>
+<tr>
+<th>Problem</th>
+<th>Consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Retrieval becomes coarse</td>
+<td>you get "the document", not "the answer"</td>
+</tr>
+<tr>
+<td>Embedding is an average of meanings</td>
+<td>specific topics get washed out</td>
+</tr>
+<tr>
+<td>Context window may overflow</td>
+<td>the whole document must be sent to the LLM</td>
+</tr>
+<tr>
+<td>Higher token cost</td>
+<td>you pay for text the question never needed</td>
+</tr>
+<tr>
+<td>Lower answer precision</td>
+<td>the model has to find the answer inside noise</td>
+</tr>
+</tbody>
+</table>
+<p>Chunking replaces <em>retrieve the entire book</em> with <em>retrieve the relevant sections</em>, producing
+smaller prompts, lower token usage, better retrieval precision, and more focused answers.</p>
+<hr />
+<h3 id="why-overlap">Why Overlap?<a class="headerlink" href="#why-overlap" title="Permanent link">&para;</a></h3>
+<p>Consider a concept that lands exactly on a boundary:</p>
+<div class="highlight"><pre><span></span><code>Chunk 1                              Chunk 2
+──────────────────────────────       ──────────────────────────────
+Spring Boot provides dependency      injection, allowing loose coupling...
+</code></pre></div>
+<p>"Dependency injection" has been split in half. Similarity search may fail to match either
+chunk, because neither one contains the concept.</p>
+<p>Overlap duplicates a small portion of adjacent chunks:</p>
+<div class="highlight"><pre><span></span><code>Chunk 1                              Chunk 2
+──────────────────────────────       ──────────────────────────────
+...dependency injection              dependency injection allows...
+</code></pre></div>
+<p>Now either chunk carries enough context to be retrieved. Overlap preserves semantic
+continuity across chunk boundaries.</p>
+<hr />
+<h3 id="how-should-chunk-size-be-chosen">How Should Chunk Size Be Chosen?<a class="headerlink" href="#how-should-chunk-size-be-chosen" title="Permanent link">&para;</a></h3>
+<p>There is no universally correct value. Chunk size is a balance of competing pressures:</p>
+<table>
+<thead>
+<tr>
+<th>Factor</th>
+<th>Pushes chunks smaller</th>
+<th>Pushes chunks larger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>LLM context window</td>
+<td>smaller prompts fit more chunks</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Retrieval precision</td>
+<td>more precise matches</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Context preservation</td>
+<td>—</td>
+<td>fewer truncated ideas</td>
+</tr>
+<tr>
+<td>Token cost</td>
+<td>lower prompt cost</td>
+<td>—</td>
+</tr>
+<tr>
+<td>Embedding model</td>
+<td>some models favour short text</td>
+<td>others preserve context better when longer</td>
+</tr>
+</tbody>
+</table>
+<p>And the documents themselves change the answer entirely:</p>
+<table>
+<thead>
+<tr>
+<th>Document type</th>
+<th>Split after</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python code</td>
+<td>classes, methods, functions — never inside a method</td>
+</tr>
+<tr>
+<td>Markdown</td>
+<td>headings, sections</td>
+</tr>
+<tr>
+<td>HTML</td>
+<td>DOM sections, headers</td>
+</tr>
+<tr>
+<td>Plain text</td>
+<td><code>RecursiveCharacterTextSplitter</code> is generally suitable</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="metadata-survives-chunking">Metadata Survives Chunking<a class="headerlink" href="#metadata-survives-chunking" title="Permanent link">&para;</a></h3>
+<p><strong>Before chunking:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">Document</span><span class="p">(</span>
+    <span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+<p><strong>After chunking:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">Document</span><span class="p">(</span>
+    <span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;Smaller chunk...&quot;</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="mi">5</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+</code></pre></div>
+<p>The <strong><code>Document</code> type does not change</strong>. Only <code>page_content</code> becomes smaller; metadata is
+inherited.</p>
+<p>Metadata can also become richer over time:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+<span class="w">  </span><span class="nt">&quot;source&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;spring.pdf&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;page&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;chunk&quot;</span><span class="p">:</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;section&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Dependency Injection&quot;</span><span class="p">,</span>
+<span class="w">  </span><span class="nt">&quot;language&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;en&quot;</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>which is what later enables filtering, tracing, debugging, citation, and advanced retrieval.</p>
+<hr />
+<h3 id="the-pipeline-carries-one-type">The Pipeline Carries One Type<a class="headerlink" href="#the-pipeline-carries-one-type" title="Permanent link">&para;</a></h3>
+<p>Throughout the pipeline the same <code>Document</code> object flows forward. Only its contents evolve:</p>
+<div class="highlight"><pre><span></span><code>Document
+   │
+   ▼
+Loaded Document
+   │
+   ▼
+Chunked Document
+   │
+   ▼
+Embedded Document
+   │
+   ▼
+Stored Vector
+</code></pre></div>
+<p>Keeping the type consistent is what makes each downstream stage simple — no stage has to
+translate between shapes before it can do its own work.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+A stable data contract between pipeline stages is worth more than a perfectly specialised
+type at each stage.</p>
+</blockquote>
+<hr />
+<h3 id="interview-takeaways_2">Interview Takeaways<a class="headerlink" href="#interview-takeaways_2" title="Permanent link">&para;</a></h3>
+<p><strong>Why <code>RecursiveCharacterTextSplitter</code>?</strong></p>
+<blockquote>
+<p>It preserves semantic boundaries by recursively trying progressively smaller separators —
+paragraph, line, space, character — before falling back to raw character splitting. That
+produces more meaningful chunks than fixed-size splitting.</p>
+</blockquote>
+<p><strong>Why overlap?</strong></p>
+<blockquote>
+<p>Overlap duplicates context near chunk boundaries into adjacent chunks, so a concept split
+across a boundary still appears whole in at least one chunk and remains retrievable.</p>
+</blockquote>
+<p><strong>How do you choose chunk size?</strong></p>
+<blockquote>
+<p>It is a tradeoff between retrieval precision, context preservation, embedding quality, the
+LLM context window, token cost, and the structure of the underlying documents. There is no
+universally optimal value.</p>
+</blockquote>
+<p><strong>Why not chunk by page?</strong></p>
+<blockquote>
+<p>Pages are presentation boundaries, not semantic ones. A single topic can span two pages and
+a single page can hold several unrelated topics, so page boundaries systematically cut
+concepts in half.</p>
+</blockquote>
+<hr />
+<h3 id="biggest-takeaway_2">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_2" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>A production RAG pipeline is not about LangChain APIs. It is about information flowing
+through well-separated stages.</strong></p>
+</blockquote>
+<div class="highlight"><pre><span></span><code>Upload  →  Load  →  Chunk  →  Embed  →  Store  →  Retrieve  →  Generate
+</code></pre></div>
+<p>Each stage should have a single responsibility and expose a stable interface to the next.</p>
+<hr />
+<h2 id="pr-3-deep-dive-design-patterns-that-emerged">PR-3 Deep Dive — Design Patterns That Emerged<a class="headerlink" href="#pr-3-deep-dive-design-patterns-that-emerged" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>The engineering decisions behind introducing the <strong>Strategy Pattern</strong> and <strong>Flyweight
+Pattern</strong> in the ingestion pipeline.</p>
+<p>The goal is <strong>not</strong> to memorize design patterns. It is to understand <strong>why</strong> they naturally
+emerge while solving software engineering problems.</p>
+</blockquote>
+<h3 id="project-evolution">Project Evolution<a class="headerlink" href="#project-evolution" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>PR-1                PR-2                        PR-3
+────                ────                        ────
+User                User                        User
+ │                   │                           │
+ ▼                   ▼                           ▼
+UI                 Upload                      Upload
+                     │                           │
+                     ▼                           ▼
+              Loader Factory                  Loader
+                     │                           │
+                     ▼                           ▼
+                 PdfLoader                   Documents
+                     │                           │
+                     ▼                           ▼
+                 Documents                  Chunk Service
+                                                 │
+                                                 ▼
+                                            Chunk Strategy
+                                                 │
+                                                 ▼
+                                              Chunks
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>PR</th>
+<th>Introduced</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PR-2</td>
+<td>Factory Pattern, Polymorphism, Abstract Classes</td>
+</tr>
+<tr>
+<td>PR-3</td>
+<td>Strategy Pattern, Flyweight Pattern, better Separation of Concerns</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="why-the-strategy-pattern-became-necessary">Why the Strategy Pattern Became Necessary<a class="headerlink" href="#why-the-strategy-pattern-became-necessary" title="Permanent link">&para;</a></h3>
+<p>Initially the project supported only PDFs, and one splitter was enough:</p>
+<div class="highlight"><pre><span></span><code>PDF  →  RecursiveCharacterTextSplitter
+</code></pre></div>
+<p>Then the requirement changed: the application should support PDF, Markdown, Python, HTML, and
+TXT. Should every file use <code>RecursiveCharacterTextSplitter</code>?</p>
+<p>No. <strong>Different document types require different chunking algorithms.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Document type</th>
+<th>Preferred chunking</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>PDF</td>
+<td><code>RecursiveCharacterTextSplitter</code></td>
+</tr>
+<tr>
+<td>Markdown</td>
+<td><code>MarkdownHeaderTextSplitter</code></td>
+</tr>
+<tr>
+<td>Python</td>
+<td><code>PythonCodeTextSplitter</code></td>
+</tr>
+<tr>
+<td>HTML</td>
+<td><code>HTMLHeaderTextSplitter</code></td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>behaviour varies at runtime</strong>. That is exactly the condition Strategy solves — and it is
+exactly the condition that was <em>absent</em> when Strategy was deferred earlier in this PR. The
+pattern did not become correct because it is famous; it became correct because a real
+requirement made behaviour vary.</p>
+<hr />
+<h3 id="the-strategy-pattern">The Strategy Pattern<a class="headerlink" href="#the-strategy-pattern" title="Permanent link">&para;</a></h3>
+<p>Instead of scattering this through the project:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;.pdf&quot;</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">elif</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;.py&quot;</span><span class="p">:</span>
+    <span class="o">...</span>
+<span class="k">elif</span> <span class="n">extension</span> <span class="o">==</span> <span class="s2">&quot;.md&quot;</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>each algorithm is encapsulated in its own class behind one interface:</p>
+<div class="highlight"><pre><span></span><code>                 Strategy (abstract)
+                         ▲
+      ┌──────────────────┼──────────────────┐
+      │                  │                  │
+RecursiveStrategy  PythonStrategy   MarkdownStrategy
+</code></pre></div>
+<p>Every strategy exposes exactly the same method:</p>
+<div class="highlight"><pre><span></span><code><span class="n">chunk</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>
+</code></pre></div>
+<p>The caller never knows which implementation runs.</p>
+<p><strong>Without Strategy</strong>, every new algorithm modifies existing code:</p>
+<div class="highlight"><pre><span></span><code>Chunk Service
+     │
+     ├── if PDF        →  Recursive
+     ├── else if .py   →  Python Splitter
+     └── else if .md   →  ...
+</code></pre></div>
+<p><strong>With Strategy</strong>, the Chunk Service never changes:</p>
+<div class="highlight"><pre><span></span><code>Chunk Service
+     │
+     ▼
+Strategy Factory
+     │
+     ▼
+Correct Strategy
+     │
+     ▼
+chunk(document)
+</code></pre></div>
+<hr />
+<h3 id="factory-and-strategy-solve-different-problems">Factory and Strategy Solve Different Problems<a class="headerlink" href="#factory-and-strategy-solve-different-problems" title="Permanent link">&para;</a></h3>
+<p>This project uses <strong>both</strong>, and confusing them is a common interview failure.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Question</th>
+<th>Responsible for</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Factory</strong></td>
+<td>Which object should I create?</td>
+<td>object creation</td>
+<td><code>Uploaded File → LoaderFactory → PdfLoader</code></td>
+</tr>
+<tr>
+<td><strong>Strategy</strong></td>
+<td>Which algorithm should execute?</td>
+<td>behaviour</td>
+<td><code>Document → StrategyFactory → RecursiveChunkStrategy → chunk()</code></td>
+</tr>
+</tbody>
+</table>
+<p>They compose naturally:</p>
+<div class="highlight"><pre><span></span><code>Chunk Service
+     │
+     ▼
+Strategy Factory      ← chooses the appropriate strategy
+     │
+     ▼
+Strategy              ← executes the algorithm
+     │
+     ▼
+LangChain Splitters
+</code></pre></div>
+<hr />
+<h3 id="responsibilities">Responsibilities<a class="headerlink" href="#responsibilities" title="Permanent link">&para;</a></h3>
+<p><strong>Chunk Service</strong> owns orchestration only:</p>
+<table>
+<thead>
+<tr>
+<th>Owns</th>
+<th>Explicitly does NOT own</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iterating over <code>Document</code>s</td>
+<td>knowing chunking algorithms</td>
+</tr>
+<tr>
+<td>asking the Factory for the right strategy</td>
+<td>performing splitting</td>
+</tr>
+<tr>
+<td>aggregating chunks</td>
+<td>inspecting file types</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Strategy Factory</strong> owns one mapping: given a <code>Document</code>, return the correct chunk strategy.</p>
+<div class="highlight"><pre><span></span><code>.pdf  →  RecursiveChunkStrategy
+.py   →  PythonChunkStrategy
+.md   →  RecursiveChunkStrategy
+</code></pre></div>
+<p>Note the third row. <strong>Multiple document types may reuse the same strategy</strong> — the factory
+maps to <em>algorithms</em>, not to document types. Those are different things, and conflating them
+would create a strategy class per extension for no reason.</p>
+<hr />
+<h3 id="why-choose-the-strategy-per-document">Why Choose the Strategy Per Document?<a class="headerlink" href="#why-choose-the-strategy-per-document" title="Permanent link">&para;</a></h3>
+<p>A user may upload:</p>
+<div class="highlight"><pre><span></span><code>resume.pdf
+main.py
+README.md
+</code></pre></div>
+<p>in a single batch. Each needs a different chunking algorithm.</p>
+<div class="highlight"><pre><span></span><code>ChunkService
+     │
+     ▼
+for each Document
+     │
+     ▼
+StrategyFactory
+     │
+     ▼
+Correct Strategy
+</code></pre></div>
+<p>If the strategy were selected once per upload batch, mixed uploads would be impossible.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Choose the strategy at the <strong>smallest unit where behaviour actually varies</strong>. Here that
+unit is one <code>Document</code>, not one upload.</p>
+</blockquote>
+<hr />
+<h3 id="why-split_documents-instead-of-split_text">Why <code>split_documents()</code> Instead of <code>split_text()</code>?<a class="headerlink" href="#why-split_documents-instead-of-split_text" title="Permanent link">&para;</a></h3>
+<p>The first instinct was:</p>
+<div class="highlight"><pre><span></span><code><span class="n">split_text</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">page_content</span><span class="p">)</span>
+</code></pre></div>
+<p><strong>Problem:</strong> metadata would be lost. <code>split_text</code> takes a string and returns strings — the
+<code>Document</code> wrapper, and everything it carried, is discarded at the boundary.</p>
+<div class="highlight"><pre><span></span><code><span class="n">split_documents</span><span class="p">([</span><span class="n">document</span><span class="p">])</span>   <span class="c1"># returns List[Document]</span>
+</code></pre></div>
+<p>Each chunk inherits its parent's metadata automatically:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before</span>
+<span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;...&quot;</span><span class="p">,</span>          <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;spring.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">})</span>
+
+<span class="c1"># After chunking</span>
+<span class="n">Document</span><span class="p">(</span><span class="n">page_content</span><span class="o">=</span><span class="s2">&quot;Smaller chunk&quot;</span><span class="p">,</span> <span class="n">metadata</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;spring.pdf&quot;</span><span class="p">,</span> <span class="s2">&quot;page&quot;</span><span class="p">:</span> <span class="mi">7</span><span class="p">})</span>
+</code></pre></div>
+<p>That metadata is what later makes traceability, filtering, and citation possible. Reaching
+for <code>page_content</code> would have silently thrown it away at the very first stage.</p>
+<hr />
+<h3 id="the-flyweight-pattern">The Flyweight Pattern<a class="headerlink" href="#the-flyweight-pattern" title="Permanent link">&para;</a></h3>
+<p>Once Strategy was implemented, a second observation followed: <code>StrategyFactory.create()</code> was
+constructing a fresh object for every single document.</p>
+<div class="highlight"><pre><span></span><code>Document 1  →  RecursiveChunkStrategy()
+Document 2  →  RecursiveChunkStrategy()
+Document 3  →  RecursiveChunkStrategy()
+</code></pre></div>
+<p>That is unnecessary, because <strong>the strategy stores no state</strong>.</p>
+<p><strong>Flyweight solution</strong> — the Factory owns reusable instances and hands out the same object:</p>
+<div class="highlight"><pre><span></span><code>StrategyFactory
+│
+├── RecursiveChunkStrategy    ← one instance, shared
+├── PythonChunkStrategy
+└── MarkdownChunkStrategy
+</code></pre></div>
+<h4 id="why-it-works-here">Why It Works Here<a class="headerlink" href="#why-it-works-here" title="Permanent link">&para;</a></h4>
+<p>The strategy takes everything it needs as an argument:</p>
+<div class="highlight"><pre><span></span><code><span class="n">chunk</span><span class="p">(</span><span class="n">document</span><span class="p">)</span>        <span class="c1"># not  self.document</span>
+</code></pre></div>
+<p>With no mutable instance state, the same object can safely process PDF A, then PDF B, then
+PDF C — including concurrently.</p>
+<h4 id="when-flyweight-would-not-work">When Flyweight Would <em>Not</em> Work<a class="headerlink" href="#when-flyweight-would-not-work" title="Permanent link">&para;</a></h4>
+<p>Suppose the strategy stored configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="bp">self</span><span class="o">.</span><span class="n">chunk_size</span> <span class="o">=</span> <span class="mi">500</span>
+</code></pre></div>
+<p>and another request changed it to <code>1000</code>. Every user now shares one mutable object, and
+behaviour becomes non-deterministic in a way that is extremely hard to reproduce.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Flyweight requires shared objects to be effectively immutable or stateless. Sharing a
+stateful object is not an optimisation; it is a race condition.</p>
+</blockquote>
+<h4 id="why-implement-it-anyway">Why Implement It Anyway?<a class="headerlink" href="#why-implement-it-anyway" title="Permanent link">&para;</a></h4>
+<p>Honestly: in production this is probably unnecessary. Creating one strategy object is
+extremely cheap, and the memory saved is negligible.</p>
+<p>This project is primarily for learning, and implementing Flyweight taught object sharing,
+stateless service design, object lifecycle, and memory optimisation patterns — plus the far
+more valuable inverse lesson above about when sharing becomes dangerous.</p>
+<hr />
+<h3 id="future-improvement">Future Improvement<a class="headerlink" href="#future-improvement" title="Permanent link">&para;</a></h3>
+<p>The extension-to-strategy mapping is currently hardcoded:</p>
+<div class="highlight"><pre><span></span><code>.pdf  →  Recursive Strategy
+</code></pre></div>
+<p>It could instead be configuration:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">chunking</span><span class="p">:</span>
+<span class="w">  </span><span class="nt">pdf</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recursive</span>
+<span class="w">  </span><span class="nt">md</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">recursive</span>
+<span class="w">  </span><span class="nt">py</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">python</span>
+<span class="w">  </span><span class="nt">html</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">html</span>
+</code></pre></div>
+<p>The Factory would read the mapping rather than hardcode it, and supporting a new file type
+would require no source code change at all.</p>
+<hr />
+<h3 id="design-principles-applied">Design Principles Applied<a class="headerlink" href="#design-principles-applied" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>How it shows up here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Single Responsibility</strong></td>
+<td>Chunk Service orchestrates, Strategy chunks, Factory creates strategies — one reason to change each</td>
+</tr>
+<tr>
+<td><strong>Open/Closed</strong></td>
+<td>Adding <code>SemanticChunkStrategy</code> means one new class plus a Factory entry; existing strategies are untouched</td>
+</tr>
+<tr>
+<td><strong>Dependency Inversion</strong></td>
+<td>Chunk Service depends on <code>Strategy</code>, never on <code>RecursiveChunkStrategy</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="final-architecture">Final Architecture<a class="headerlink" href="#final-architecture" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>                     Upload
+                        │
+                        ▼
+                 Loader Factory
+                        │
+                        ▼
+                    Documents
+                        │
+                        ▼
+                  Chunk Service
+                        │
+                        ▼
+                 Strategy Factory
+                        │
+          ┌─────────────┴─────────────┐
+          ▼                           ▼
+RecursiveChunkStrategy      PythonChunkStrategy
+          │                           │
+          └─────────────┬─────────────┘
+                        ▼
+                LangChain Splitters
+                        │
+                        ▼
+                     Chunks
+</code></pre></div>
+<hr />
+<h3 id="engineering-lessons">Engineering Lessons<a class="headerlink" href="#engineering-lessons" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Factory creates objects. Strategy encapsulates algorithms. Flyweight reuses stateless
+   objects.</strong> Three patterns, three distinct problems.</li>
+<li><strong>Services orchestrate workflows</strong> — and orchestrators should not contain the logic they
+   orchestrate.</li>
+<li><strong>The pipeline keeps carrying <code>Document</code> objects.</strong> A stable type between stages is a
+   design decision, not an accident.</li>
+<li><strong>Metadata should never be discarded.</strong> <code>split_text</code> versus <code>split_documents</code> is a
+   one-word choice that determines whether citation is possible later.</li>
+<li><strong>Choose the strategy at the smallest unit where behaviour varies</strong> — per <code>Document</code>, not
+   per upload.</li>
+<li><strong>Flyweight requires statelessness.</strong> Sharing a mutable object trades allocation cost for
+   correctness.</li>
+<li><strong>Patterns should be introduced when a requirement makes behaviour vary</strong> — which is why
+   Strategy was correctly deferred earlier in this same PR and correctly adopted later.</li>
+</ol>
+<hr />
+<h3 id="interview-takeaways_3">Interview Takeaways<a class="headerlink" href="#interview-takeaways_3" title="Permanent link">&para;</a></h3>
+<p><strong>Why did you introduce the Strategy Pattern?</strong></p>
+<blockquote>
+<p>Different document types require different chunking algorithms. Strategy encapsulates each
+algorithm behind a common interface so the Chunk Service stays independent of any
+implementation, and adding an algorithm doesn't edit the service.</p>
+</blockquote>
+<p><strong>Why use a Factory <em>with</em> Strategy?</strong></p>
+<blockquote>
+<p>They answer different questions. The Factory selects the appropriate strategy based on
+document metadata; the Strategy performs the chunking. Factory chooses <strong>which object</strong>,
+Strategy defines <strong>what behaviour</strong>.</p>
+</blockquote>
+<p><strong>Why process one <code>Document</code> at a time?</strong></p>
+<blockquote>
+<p>Because a single upload can mix PDF, Markdown, and Python files, each needing a different
+algorithm. Selecting the strategy per document is what makes mixed uploads work at all.</p>
+</blockquote>
+<p><strong>Why <code>split_documents()</code> rather than <code>split_text()</code>?</strong></p>
+<blockquote>
+<p><code>split_text</code> returns plain strings and drops the <code>Document</code> wrapper, discarding metadata.
+<code>split_documents</code> preserves LangChain <code>Document</code> objects with their metadata intact, which
+is what enables traceability, filtering, and downstream retrieval.</p>
+</blockquote>
+<p><strong>Why implement Flyweight?</strong></p>
+<blockquote>
+<p>Chunking strategies are stateless, so a single shared instance is safe and avoids
+unnecessary object creation. In this project the optimisation is primarily educational —
+the more useful lesson is the constraint: the moment a strategy held mutable state, sharing
+it would become a bug.</p>
+</blockquote>
+<hr />
+<h3 id="biggest-takeaway_3">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_3" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Design patterns should never be introduced because they are famous. They should emerge
+naturally when solving real software engineering problems.</strong></p>
+</blockquote>
+<p>In this project: Factory solved object creation, Strategy solved algorithm variation, and
+Flyweight solved object reuse. Each one arrived <em>after</em> the problem it answers.</p>
+<hr />
+<h2 id="pr-4-discussion-embedding-pipeline-designing-for-pr-5">PR-4 Discussion — Embedding Pipeline &amp; Designing for PR-5<a class="headerlink" href="#pr-4-discussion-embedding-pipeline-designing-for-pr-5" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p>The objective is <strong>not</strong> simply generating embeddings. It is understanding <strong>how
+responsibilities are distributed across services</strong> in a scalable RAG architecture.</p>
+</blockquote>
+<h3 id="where-the-pipeline-stands">Where the Pipeline Stands<a class="headerlink" href="#where-the-pipeline-stands" title="Permanent link">&para;</a></h3>
+<p><strong>After PR-3:</strong></p>
+<div class="highlight"><pre><span></span><code>Upload → Loader Factory → Documents → Chunk Service → Chunks (List&lt;Document&gt;)
+</code></pre></div>
+<p><strong>After PR-4:</strong></p>
+<div class="highlight"><pre><span></span><code>Upload → Loader Factory → Documents → Chunk Service → Chunks → Embedding Service → Embeddings
+</code></pre></div>
+<p>Notice what is still missing: the Vector Database. <strong>Embeddings exist before they are
+stored</strong>, and keeping those two facts separate is the entire subject of this PR.</p>
+<hr />
+<h3 id="why-an-embeddingservice-at-all">Why an <code>EmbeddingService</code> at All?<a class="headerlink" href="#why-an-embeddingservice-at-all" title="Permanent link">&para;</a></h3>
+<p>Should <code>ingestion.py</code> simply call the model directly?</p>
+<div class="highlight"><pre><span></span><code><span class="n">embedding_model</span><span class="o">.</span><span class="n">embed_documents</span><span class="p">(</span><span class="o">...</span><span class="p">)</span>
+</code></pre></div>
+<p>No. <code>ingestion.py</code> is an <strong>orchestration layer</strong>. It coordinates the workflow and must never
+know implementation details. Its knowledge is limited to the sequence:</p>
+<div class="highlight"><pre><span></span><code>Load  →  Chunk  →  Embed  →  Store  →  Retrieve
+</code></pre></div>
+<p>Putting the model call inside it would mean that changing embedding providers edits the
+orchestrator — a component with no stake in that decision.</p>
+<p><strong><code>EmbeddingService</code> owns:</strong></p>
+<ul>
+<li>selecting the embedding model</li>
+<li>generating embeddings</li>
+<li>batching requests <em>(future)</em></li>
+<li>measuring embedding performance</li>
+<li>hiding LangChain implementation details</li>
+</ul>
+<p><strong>It must not know about:</strong> vector databases, FAISS, retrieval, or the UI.</p>
+<p>Its entire job is one transformation:</p>
+<div class="highlight"><pre><span></span><code>Text  ──►  Vectors
+</code></pre></div>
+<hr />
+<h3 id="should-the-strategy-pattern-be-used-here">Should the Strategy Pattern Be Used Here?<a class="headerlink" href="#should-the-strategy-pattern-be-used-here" title="Permanent link">&para;</a></h3>
+<p>At first glance yes, because embedding models genuinely vary:</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Dimensions</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BAAI/bge-small-en-v1.5</code></td>
+<td>384</td>
+</tr>
+<tr>
+<td>OpenAI <code>text-embedding-3-small</code></td>
+<td>1536</td>
+</tr>
+<tr>
+<td>Nomic Embed</td>
+<td>768</td>
+</tr>
+</tbody>
+</table>
+<p>Different models, different dimensions, different retrieval quality.</p>
+<p><strong>But today the application supports exactly one model.</strong> There is no runtime decision, so
+Strategy would be abstraction without a problem — the same conclusion reached (and initially
+reached) for chunking in PR-3.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Design for extension. Implement for today's requirements.</p>
+</blockquote>
+<h4 id="when-strategy-would-become-justified">When Strategy Would Become Justified<a class="headerlink" href="#when-strategy-would-become-justified" title="Permanent link">&para;</a></h4>
+<p>Suppose premium users get OpenAI embeddings and free users get HuggingFace embeddings. Now
+behaviour varies at runtime and Strategy emerges naturally.</p>
+<p>The important detail is <strong>what</strong> varies:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Variation axis</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Chunking (PR-3)</td>
+<td>Document Type</td>
+</tr>
+<tr>
+<td>Embedding (hypothetical)</td>
+<td>User Tier</td>
+</tr>
+</tbody>
+</table>
+<p>This is a key architectural insight: <strong>always identify what actually varies before
+introducing Strategy.</strong> Two Strategy implementations in the same codebase can key off
+completely different things, and getting the axis wrong produces an abstraction that fits
+nothing.</p>
+<h4 id="why-a-factory-is-also-unnecessary-here">Why a Factory Is Also Unnecessary Here<a class="headerlink" href="#why-a-factory-is-also-unnecessary-here" title="Permanent link">&para;</a></h4>
+<p>During loading, different document types required different loader <strong>objects</strong>, so the
+Factory answered "which object should I create?"</p>
+<p>During embedding, every input is already a <code>Document</code>. There is no object creation decision
+to make, so a Factory would add a layer with nothing to decide.</p>
+<hr />
+<h3 id="the-service-contract">The Service Contract<a class="headerlink" href="#the-service-contract" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Input</th>
+<th>Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ChunkService</code></td>
+<td><code>List[Document]</code></td>
+<td><code>List[Document]</code></td>
+</tr>
+<tr>
+<td><code>EmbeddingService</code></td>
+<td><code>List[Document]</code></td>
+<td><code>List[List[float]]</code></td>
+</tr>
+<tr>
+<td><code>VectorStore</code></td>
+<td><code>documents</code>, <code>embeddings</code></td>
+<td><em>storage</em></td>
+</tr>
+</tbody>
+</table>
+<p>Every service owns exactly one transformation, and the responsibility of <code>EmbeddingService</code>
+ends the moment vectors are produced.</p>
+<h4 id="why-not-return-vector-objects">Why Not Return Vector Objects?<a class="headerlink" href="#why-not-return-vector-objects" title="Permanent link">&para;</a></h4>
+<p>A richer return type was considered:</p>
+<div class="highlight"><pre><span></span><code><span class="n">EmbeddingResult</span> <span class="p">{</span>
+    <span class="n">document</span><span class="p">,</span>
+    <span class="n">chunk</span><span class="p">,</span>
+    <span class="n">metadata</span><span class="p">,</span>
+    <span class="n">embedding</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>It is a reasonable-looking design, so the deciding question is: <strong>who actually needs this
+structure?</strong></p>
+<p>Only the Vector Database. Which means <code>EmbeddingService</code> would be assembling a shape for a
+component it is not supposed to know exists — doing work that belongs elsewhere and acquiring
+a dependency it was specifically designed to avoid.</p>
+<hr />
+<h3 id="how-documents-and-embeddings-stay-associated">How Documents and Embeddings Stay Associated<a class="headerlink" href="#how-documents-and-embeddings-stay-associated" title="Permanent link">&para;</a></h3>
+<p>If <code>EmbeddingService</code> returns only vectors, how does the application know which embedding
+belongs to which <code>Document</code>?</p>
+<p><strong>Ordering.</strong></p>
+<div class="highlight"><pre><span></span><code>Documents        Embeddings
+─────────        ──────────
+Chunk1     ───►  Vector1
+Chunk2     ───►  Vector2
+Chunk3     ───►  Vector3
+</code></pre></div>
+<p>Both lists preserve the same order, so the <em>n</em>th embedding always corresponds to the <em>n</em>th
+document. The relationship is maintained without an intermediate object.</p>
+<p>The mapping then happens where the knowledge is needed — inside <code>VectorStore</code>:</p>
+<div class="highlight"><pre><span></span><code><span class="n">store</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">)</span>
+
+<span class="c1"># internally</span>
+<span class="k">for</span> <span class="n">document</span><span class="p">,</span> <span class="n">embedding</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">documents</span><span class="p">,</span> <span class="n">embeddings</span><span class="p">):</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p><code>zip()</code> iterates two collections simultaneously, pairing each document with its embedding. No
+DTO is required, and <code>EmbeddingService</code> stays completely independent of storage.</p>
+<blockquote>
+<p><strong>Engineering Principle — Information Expert (GRASP)</strong>
+Give a responsibility to the component that already possesses the knowledge required to
+carry it out. The component that owns storage should be the one that combines documents
+with their embeddings.</p>
+</blockquote>
+<hr />
+<h3 id="why-embeddingservice-must-not-know-faiss">Why <code>EmbeddingService</code> Must Not Know FAISS<a class="headerlink" href="#why-embeddingservice-must-not-know-faiss" title="Permanent link">&para;</a></h3>
+<p><code>EmbeddingService</code> should know nothing about FAISS, Chroma, Pinecone, or Qdrant. It converts:</p>
+<div class="highlight"><pre><span></span><code>Chunk  ──►  Vector
+</code></pre></div>
+<p>Storage concerns belong exclusively to the Vector Database layer. This is the same boundary
+identified back in PR-1, when the question "how many files change when FAISS becomes Qdrant?"
+had the answer <strong>one</strong>. That answer only stays true if this boundary is never crossed.</p>
+<h4 id="does-the-vector-database-determine-dimensions">Does the Vector Database Determine Dimensions?<a class="headerlink" href="#does-the-vector-database-determine-dimensions" title="Permanent link">&para;</a></h4>
+<p>No. <strong>The embedding model determines dimensionality:</strong></p>
+<div class="highlight"><pre><span></span><code>BAAI    →  384
+OpenAI  →  1536
+Nomic   →  768
+</code></pre></div>
+<p>The Vector Database merely <strong>validates</strong> that every inserted vector has the expected
+dimension. It does not choose it.</p>
+<blockquote>
+<p><strong>Rule</strong>
+One Vector Database index should contain vectors generated by a single embedding model — or
+by models with the same output dimensionality and representation.</p>
+</blockquote>
+<hr />
+<h3 id="why-not-embed-pdfs-directly">Why Not Embed PDFs Directly?<a class="headerlink" href="#why-not-embed-pdfs-directly" title="Permanent link">&para;</a></h3>
+<p>Embedding models operate on <strong>text</strong>, not on binary document formats. Hence the pipeline:</p>
+<div class="highlight"><pre><span></span><code>PDF  →  Loader  →  Text  →  Chunking  →  Embeddings
+</code></pre></div>
+<p>Chunking is not an optional optimisation in that chain. Embedding an entire document would
+produce generic embeddings, reduce retrieval precision, increase token usage, waste context
+window, and reduce answer quality. Only semantically relevant chunks should ever reach the
+LLM.</p>
+<hr />
+<h3 id="the-pipeline-after-pr-5">The Pipeline After PR-5<a class="headerlink" href="#the-pipeline-after-pr-5" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Chunks
+   │
+   ▼
+Embedding Service
+   │
+   ▼
+Embeddings
+   │
+   ▼
+Vector Store
+   │
+   ▼
+Similarity Search
+   │
+   ▼
+Retrieved Chunks
+   │
+   ▼
+LLM
+</code></pre></div>
+<p><code>EmbeddingService</code> finishes before retrieval begins — and it has no idea retrieval exists.</p>
+<p><strong>Full ingestion + query architecture:</strong></p>
+<div class="highlight"><pre><span></span><code>Upload  →  Loader Factory  →  Documents  →  Chunk Service  →  Chunks
+                                                                │
+                                                                ▼
+                                                       Embedding Service
+                                                                │
+                                                                ▼
+                                                           Embeddings
+                                                                │
+                                                                ▼
+                                                          Vector Store
+                                                                │
+                                                                ▼
+                                                            Retriever
+                                                                │
+                                                                ▼
+                                                               LLM
+</code></pre></div>
+<hr />
+<h3 id="rejected-alternatives">Rejected Alternatives<a class="headerlink" href="#rejected-alternatives" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Why rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ingestion.py</code> calls the embedding model directly</td>
+<td>Orchestration would own an implementation detail; changing providers would edit the orchestrator</td>
+</tr>
+<tr>
+<td><code>EmbeddingService</code> returns an <code>EmbeddingResult</code> DTO</td>
+<td>Only the Vector Database needs that shape; building it means doing another component's work</td>
+</tr>
+<tr>
+<td>Strategy Pattern for embedding models</td>
+<td>Only one model exists today — abstraction without a runtime decision</td>
+</tr>
+<tr>
+<td>Factory for embedding models</td>
+<td>Every input is already a <code>Document</code>; there is no object-creation decision to make</td>
+</tr>
+<tr>
+<td><code>EmbeddingService</code> writes to the vector store</td>
+<td>Generation and storage are independent responsibilities; coupling them blocks swapping the database</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="design-principles-applied_1">Design Principles Applied<a class="headerlink" href="#design-principles-applied_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Principle</th>
+<th>How it shows up here</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Single Responsibility</strong></td>
+<td>Each service performs exactly one transformation</td>
+</tr>
+<tr>
+<td><strong>Separation of Concerns</strong></td>
+<td>Embedding generation stays independent of storage</td>
+</tr>
+<tr>
+<td><strong>Open/Closed</strong></td>
+<td>New embedding models can be introduced without changing orchestration</td>
+</tr>
+<tr>
+<td><strong>Information Expert (GRASP)</strong></td>
+<td>The component that owns storage owns the document↔embedding mapping</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="future-improvement_1">Future Improvement<a class="headerlink" href="#future-improvement_1" title="Permanent link">&para;</a></h3>
+<p>When multiple embedding providers genuinely exist, the abstraction earns its place:</p>
+<div class="highlight"><pre><span></span><code>Embedding Service
+        │
+        ▼
+Embedding Strategy
+        │
+   ┌────┴────────────────┬──────────────┐
+   ▼                     ▼              ▼
+OpenAI Strategy   HuggingFace     Nomic Strategy
+</code></pre></div>
+<p>Only then does Strategy become justified.</p>
+<hr />
+<h3 id="interview-takeaways_4">Interview Takeaways<a class="headerlink" href="#interview-takeaways_4" title="Permanent link">&para;</a></h3>
+<p><strong>Why introduce an <code>EmbeddingService</code>?</strong></p>
+<blockquote>
+<p>To isolate embedding logic from orchestration. It keeps the application extensible and
+hides LangChain implementation details behind one transformation — text to vectors.</p>
+</blockquote>
+<p><strong>Why doesn't <code>ingestion.py</code> call LangChain directly?</strong></p>
+<blockquote>
+<p>Because ingestion is responsible only for coordinating pipeline stages, not implementing
+them. If it called the model directly, swapping embedding providers would become an
+orchestration change.</p>
+</blockquote>
+<p><strong>Why not use Strategy immediately?</strong></p>
+<blockquote>
+<p>Only one embedding model currently exists, so there is no runtime decision to encapsulate.
+Strategy should be introduced when multiple interchangeable algorithms genuinely exist —
+and the trigger here would be user tier, not document type.</p>
+</blockquote>
+<p><strong>Why not return vector objects?</strong></p>
+<blockquote>
+<p><code>EmbeddingService</code> should only transform text into vectors. A combined structure of
+document, chunk, metadata, and embedding is needed by exactly one component — the Vector
+Database — so building it in the embedding layer would mean doing another layer's work.</p>
+</blockquote>
+<p><strong>Why preserve ordering instead of returning a mapping?</strong></p>
+<blockquote>
+<p>The <em>n</em>th embedding always corresponds to the <em>n</em>th document, so the Vector Database can
+combine them with <code>zip(documents, embeddings)</code>. The relationship is maintained without
+introducing a DTO that couples embedding to storage.</p>
+</blockquote>
+<p><strong>Why shouldn't <code>EmbeddingService</code> know FAISS?</strong></p>
+<blockquote>
+<p>Embedding generation and storage are independent responsibilities. Keeping them separate is
+what makes it possible to swap vector databases without touching embedding logic — the
+answer to PR-1's original "how many files change?" question.</p>
+</blockquote>
+<p><strong>Does the vector database choose the embedding dimension?</strong></p>
+<blockquote>
+<p>No. The embedding model determines dimensionality — 384 for BAAI, 1536 for OpenAI, 768 for
+Nomic. The database only validates that inserted vectors match the expected dimension, which
+is why one index should hold vectors from a single model.</p>
+</blockquote>
+<hr />
+<h3 id="biggest-takeaway_4">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_4" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Software architecture is not about creating more classes. It is about giving every
+component exactly one responsibility.</strong></p>
+</blockquote>
+<p>The cleanest architecture emerged from repeatedly asking:</p>
+<blockquote>
+<p><strong>"Who actually owns this responsibility?"</strong></p>
+</blockquote>
+<p>instead of:</p>
+<blockquote>
+<p><strong>"Where can I put this code?"</strong></p>
+</blockquote>
+<hr />
+<h2 id="self-check">Self-Check<a class="headerlink" href="#self-check" title="Permanent link">&para;</a></h2>
+<p>Answer these without looking. If any is shaky, the corresponding section above is the fix.</p>
+<ol>
+<li>If FAISS is replaced by Qdrant, which files change — and why is <code>embeddings.py</code> not one of
+   them?</li>
+<li>Why should the parent <code>Loader</code> expose only <code>load()</code>?</li>
+<li>Why should a Factory return <code>Loader</code> rather than <code>PdfLoader</code>, given both branches of the
+   <code>isinstance</code> check call the same method?</li>
+<li>What is the measurable test of an extensible architecture when <code>ExcelLoader</code> is added?</li>
+<li>Why are pages a bad chunk boundary?</li>
+<li>What does overlap actually prevent, and give the example.</li>
+<li>What changes about a <code>Document</code> during chunking, and what does not?</li>
+<li>Why was Strategy <em>deferred</em> for chunking and then <em>adopted</em> in the same PR?</li>
+<li>What does <code>split_text</code> silently throw away that <code>split_documents</code> keeps?</li>
+<li>Under what condition does Flyweight become a bug rather than an optimisation?</li>
+<li>Why does <code>EmbeddingService</code> return <code>List[List[float]]</code> rather than an <code>EmbeddingResult</code>?</li>
+<li>Who owns the mapping between documents and embeddings, and what principle decides that?</li>
+<li>Which component chooses vector dimensionality — the model or the database?</li>
+</ol>
+<hr />
+<h3 id="what-week-1-actually-built">What Week 1 Actually Built<a class="headerlink" href="#what-week-1-actually-built" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Upload
+   │
+   ▼ LoaderFactory     ← Factory Pattern, polymorphism      (PR-1, PR-2)
+   │
+   ▼ ChunkService      ← Strategy + Flyweight               (PR-3)
+   │
+   ▼ EmbeddingService  ← one transformation, no storage     (PR-4)
+   │
+   ▼ (Vector Store)                                          → PR-5
+</code></pre></div>
+<p>Four PRs, and the recurring result is the same in each: <code>app.py</code> never changed, and every new
+capability was added by writing a new class rather than editing an old one.</p>
+<p>The patterns — Factory, Strategy, Flyweight, Information Expert — were never the goal. Each
+one was the shape left behind after asking who owns a responsibility and how much has to
+change when requirements do.</p>
+<hr />
+<p><strong>Next:</strong> PR-5 — the Vector Store: persistence, similarity search, and the layer every other
+component in Week 1 was deliberately built not to know about.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

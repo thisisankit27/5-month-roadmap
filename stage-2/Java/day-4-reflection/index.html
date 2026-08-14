@@ -1,0 +1,3908 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Java/day-4-reflection/">
+      
+      
+        <link rel="prev" href="../day-3-exception-handling/">
+      
+      
+        <link rel="next" href="../day-5-maven/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Java Reflection: Runtime Introspection, Serialization & Dependency Injection - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#java-reflection-runtime-introspection-serialization-dependency-injection" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-problem-does-reflection-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Problem Does Reflection Solve?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Problem Does Reflection Solve?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-meta-class-classt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Meta-Class: Class&lt;T&gt;
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Meta-Class: Class&lt;T&gt;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspecting-structure-fields-methods-constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting Structure — Fields, Methods, Constructors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inspecting Structure — Fields, Methods, Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#walking-the-class-hierarchy-getsuperclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walking the Class Hierarchy — getSuperclass()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-interfaces-arent-returned-by-getsuperclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Interfaces Aren't Returned by getSuperclass()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-reflection-is-powerful-and-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Reflection Is Powerful (and Dangerous)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Reflection Is Powerful (and Dangerous)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invoking-methods-via-reflection-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoking Methods via Reflection — Access Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Invoking Methods via Reflection — Access Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-failure-access-checks-still-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Failure — Access Checks Still Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-fix-setaccessibletrue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Fix — setAccessible(true)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Dangerous
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-aspect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Aspect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specifying-parameter-types-primitive-class-literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specifying Parameter Types — Primitive Class Literals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Specifying Parameter Types — Primitive Class Literals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#int-is-not-a-class-but-java-provides-primitive-class-literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        int Is Not a Class — But Java Provides Primitive Class Literals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invoking-the-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoking the Method
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#side-note-why-a-primitive-array-doesnt-satisfy-a-varargs-generic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Side Note — Why a Primitive Array Doesn't Satisfy a Varargs Generic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reflection-use-case-1-serialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflection Use Case 1 — Serialization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reflection Use Case 1 — Serialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-we-need-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why We Need It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-reflection-fits-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Reflection Fits In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-serialization-is-complicated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Serialization Is Complicated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-minimal-hand-rolled-serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Minimal Hand-Rolled Serializer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-a-senior-dev-immediately-guards-against" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a Senior Dev Immediately Guards Against
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reflection-use-case-2-deserialization-runtime-class-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflection Use Case 2 — Deserialization &amp; Runtime Class Loading
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reflection Use Case 2 — Deserialization &amp; Runtime Class Loading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compile-time-classpath-vs-runtime-classpath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile-Time Classpath vs. Runtime Classpath
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deserialization-key-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deserialization — Key Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classforname-dynamic-class-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class.forName() — Dynamic Class Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-an-object-at-runtime-reflection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating an Object at Runtime (Reflection)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relation-to-deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relation to Deserialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-interview-errors-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Interview Errors to Avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reflection-use-case-3-dependency-injection-spring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflection Use Case 3 — Dependency Injection (Spring)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reflection Use Case 3 — Dependency Injection (Spring)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spring-singleton-jvm-singleton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring Singleton ≠ JVM Singleton
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autowiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behind-the-scenes-reflection-graph-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behind the Scenes — Reflection + Graph Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-problem-does-reflection-actually-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What problem does reflection actually solve?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-getdeclaredfieldsgetdeclaredmethods-and-getfieldsgetmethods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between getDeclaredFields()/getDeclaredMethods() and getFields()/getMethods()?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-doesnt-getsuperclass-return-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why doesn't getSuperclass() return interfaces?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-getdeclaredmethod-find-a-private-method-but-invoke-on-it-throw-illegalaccessexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does getDeclaredMethod() find a private method, but invoke() on it throw IllegalAccessException?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-setaccessibletrue-actually-do-and-why-is-it-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does setAccessible(true) actually do, and why is it dangerous?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-do-primitive-class-literals-like-intclass-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why do primitive class literals like int.class exist?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-printarrayint-behave-differently-from-printarraystring-when-printarray-is-declared-as-t-void-printarrayt-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does printArray(int[]) behave differently from printArray(String[]) when printArray is declared as &lt;T&gt; void printArray(T... a)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-role-does-reflection-play-in-serialization-libraries-like-jackson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What role does reflection play in serialization libraries like Jackson?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-compile-time-classpath-insufficient-for-deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is compile-time classpath insufficient for deserialization?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-classforname-do-and-when-would-you-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does Class.forName() do, and when would you use it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-a-spring-singleton-and-a-jvm-classic-singleton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between a Spring singleton and a JVM (classic) singleton?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-spring-resolve-which-bean-to-inject-when-autowiring-by-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does Spring resolve which bean to inject when autowiring by type?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-spring-use-reflection-and-graph-algorithms-together-for-dependency-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does Spring use reflection and graph algorithms together for dependency injection?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-problem-does-reflection-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Problem Does Reflection Solve?
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Problem Does Reflection Solve?">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-meta-class-classt" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Meta-Class: Class&lt;T&gt;
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Meta-Class: Class&lt;T&gt;">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#core-idea" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Idea
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#inspecting-structure-fields-methods-constructors" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Inspecting Structure — Fields, Methods, Constructors
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Inspecting Structure — Fields, Methods, Constructors">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#walking-the-class-hierarchy-getsuperclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Walking the Class Hierarchy — getSuperclass()
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-interfaces-arent-returned-by-getsuperclass" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Interfaces Aren't Returned by getSuperclass()
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-reflection-is-powerful-and-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Reflection Is Powerful (and Dangerous)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Reflection Is Powerful (and Dangerous)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#invoking-methods-via-reflection-access-control" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoking Methods via Reflection — Access Control
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Invoking Methods via Reflection — Access Control">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-failure-access-checks-still-apply" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Failure — Access Checks Still Apply
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-fix-setaccessibletrue" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Fix — setAccessible(true)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-is-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Is Dangerous
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#security-aspect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Security Aspect
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#specifying-parameter-types-primitive-class-literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Specifying Parameter Types — Primitive Class Literals
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Specifying Parameter Types — Primitive Class Literals">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#method-signature" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Method Signature
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#int-is-not-a-class-but-java-provides-primitive-class-literals" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        int Is Not a Class — But Java Provides Primitive Class Literals
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#invoking-the-method" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Invoking the Method
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#side-note-why-a-primitive-array-doesnt-satisfy-a-varargs-generic" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Side Note — Why a Primitive Array Doesn't Satisfy a Varargs Generic
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reflection-use-case-1-serialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflection Use Case 1 — Serialization
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reflection Use Case 1 — Serialization">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-we-need-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why We Need It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#where-reflection-fits-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Reflection Fits In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-serialization-is-complicated" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Serialization Is Complicated
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-minimal-hand-rolled-serializer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Minimal Hand-Rolled Serializer
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-a-senior-dev-immediately-guards-against" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What a Senior Dev Immediately Guards Against
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reflection-use-case-2-deserialization-runtime-class-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflection Use Case 2 — Deserialization &amp; Runtime Class Loading
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reflection Use Case 2 — Deserialization &amp; Runtime Class Loading">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#compile-time-classpath-vs-runtime-classpath" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Compile-Time Classpath vs. Runtime Classpath
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#deserialization-key-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Deserialization — Key Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#classforname-dynamic-class-loading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Class.forName() — Dynamic Class Loading
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#creating-an-object-at-runtime-reflection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Creating an Object at Runtime (Reflection)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#relation-to-deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Relation to Deserialization
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-interview-errors-to-avoid" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Interview Errors to Avoid
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#reflection-use-case-3-dependency-injection-spring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Reflection Use Case 3 — Dependency Injection (Spring)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Reflection Use Case 3 — Dependency Injection (Spring)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#spring-singleton-jvm-singleton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Spring Singleton ≠ JVM Singleton
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#autowiring" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Autowiring
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#behind-the-scenes-reflection-graph-resolution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Behind the Scenes — Reflection + Graph Resolution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-problem-does-reflection-actually-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What problem does reflection actually solve?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-getdeclaredfieldsgetdeclaredmethods-and-getfieldsgetmethods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between getDeclaredFields()/getDeclaredMethods() and getFields()/getMethods()?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-doesnt-getsuperclass-return-interfaces" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why doesn't getSuperclass() return interfaces?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-getdeclaredmethod-find-a-private-method-but-invoke-on-it-throw-illegalaccessexception" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does getDeclaredMethod() find a private method, but invoke() on it throw IllegalAccessException?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-setaccessibletrue-actually-do-and-why-is-it-dangerous" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does setAccessible(true) actually do, and why is it dangerous?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-do-primitive-class-literals-like-intclass-exist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why do primitive class literals like int.class exist?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-printarrayint-behave-differently-from-printarraystring-when-printarray-is-declared-as-t-void-printarrayt-a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does printArray(int[]) behave differently from printArray(String[]) when printArray is declared as &lt;T&gt; void printArray(T... a)?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-role-does-reflection-play-in-serialization-libraries-like-jackson" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What role does reflection play in serialization libraries like Jackson?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-compile-time-classpath-insufficient-for-deserialization" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is compile-time classpath insufficient for deserialization?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-classforname-do-and-when-would-you-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does Class.forName() do, and when would you use it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-a-spring-singleton-and-a-jvm-classic-singleton" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between a Spring singleton and a JVM (classic) singleton?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-spring-resolve-which-bean-to-inject-when-autowiring-by-type" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does Spring resolve which bean to inject when autowiring by type?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-spring-use-reflection-and-graph-algorithms-together-for-dependency-injection" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does Spring use reflection and graph algorithms together for dependency injection?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="java-reflection-runtime-introspection-serialization-dependency-injection">Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection<a class="headerlink" href="#java-reflection-runtime-introspection-serialization-dependency-injection" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+This is not "here's the <code>java.lang.reflect</code> API." Reflection is the mechanism that lets frameworks do things your own code structurally can't — inspect a class it has never seen before, at runtime, and act on it. The goal is to understand <em>why</em> frameworks need this escape hatch from the type system, and why it stays an escape hatch rather than something you reach for in business logic.</p>
+</blockquote>
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>Reflection lets Java inspect and manipulate classes, fields, methods, and constructors at runtime, even when none of that structure was known at compile time.</strong></p>
+<hr />
+<h2 id="what-problem-does-reflection-solve">What Problem Does Reflection Solve?<a class="headerlink" href="#what-problem-does-reflection-solve" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<p>Normally in Java you know class names, methods, and fields, and everything is checked at compile time. But sometimes you genuinely don't know <strong>which class will be loaded</strong>, <strong>which methods exist</strong>, or <strong>which fields exist</strong> until runtime — a plugin system loading a class by name from config, a serializer handed an arbitrary object, a framework instantiating whatever class you annotated. Compile-time-only tooling has no way to act on types it has never seen.</p>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p>Reflection lets Java <strong>inspect itself at runtime</strong> — treat a class, its fields, and its methods as data you can query and invoke programmatically, instead of only writing code against them directly.</p>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>Reflection trades the compiler's static guarantees for runtime flexibility. That trade is exactly why it belongs at framework boundaries (where the framework genuinely can't know your types in advance) and not inside business logic (where the types are always known, and the compiler's checks are a feature, not an obstacle).</p>
+<hr />
+<h2 id="the-meta-class-classt">The Meta-Class: <code>Class&lt;T&gt;</code><a class="headerlink" href="#the-meta-class-classt" title="Permanent link">&para;</a></h2>
+<h3 id="core-idea">Core Idea<a class="headerlink" href="#core-idea" title="Permanent link">&para;</a></h3>
+<p>Objects have data. Classes <em>also</em> have data — their own structure — and that data is represented by an object of type <code>Class</code>.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="n">String</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">String</span><span class="p">();</span>
+<span class="w">    </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">getClass</span><span class="p">();</span>
+<span class="w">    </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">cls</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span>
+<span class="p">}</span>
+<span class="c1">// Output: java.lang.String</span>
+</code></pre></div>
+<h3 id="definition_1">Definition<a class="headerlink" href="#definition_1" title="Permanent link">&para;</a></h3>
+<p><code>Class&lt;?&gt; cls = obj.getClass();</code> returns an object representing the <strong>structure</strong> of the class — it knows the class name, fields, methods, constructors, and modifiers. <code>Class</code> is just a normal Java class, not magic:</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Object</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">final</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="nf">getClass</span><span class="p">()</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">...</span><span class="w"> </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Every class extends <code>Object</code> — therefore every object has <code>getClass()</code>.</p>
+<ul>
+<li><code>.getName()</code> → returns the fully qualified class name.</li>
+</ul>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p>Every object carries a reference to a description of its own type, reachable through one universal method. That's what makes reflection possible in the first place: the metadata isn't bolted on externally, it's part of what <code>Object</code> guarantees to every class in the language.</p>
+<hr />
+<h2 id="inspecting-structure-fields-methods-constructors">Inspecting Structure — Fields, Methods, Constructors<a class="headerlink" href="#inspecting-structure-fields-methods-constructors" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Call</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>cls.getDeclaredFields()</code></td>
+<td>Only fields <strong>declared in this class</strong> — includes <code>private</code>/<code>protected</code>/<code>public</code>, <strong>excludes</strong> inherited fields</td>
+</tr>
+<tr>
+<td><code>cls.getDeclaredMethods()</code></td>
+<td>Same as fields — declared in this class only, all access levels, no inherited methods</td>
+</tr>
+<tr>
+<td><code>cls.getMethods()</code></td>
+<td><strong>All public methods</strong> of the current class, all superclasses, and all implemented interfaces — including inherited ones like <code>toString()</code>, <code>equals()</code>, <code>hashCode()</code> from <code>Object</code></td>
+</tr>
+<tr>
+<td><code>cls.getDeclaredConstructors()</code></td>
+<td>Constructors declared in this class</td>
+</tr>
+</tbody>
+</table>
+<h3 id="walking-the-class-hierarchy-getsuperclass">Walking the Class Hierarchy — <code>getSuperclass()</code><a class="headerlink" href="#walking-the-class-hierarchy-getsuperclass" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">parent</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getSuperclass</span><span class="p">();</span>
+</code></pre></div>
+<p>Returns the <strong>direct (immediate)</strong> parent class of the given class.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ReflectionDemo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">ReflectionDemo</span><span class="w"> </span><span class="n">s</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">ReflectionDemo</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">s</span><span class="p">.</span><span class="na">getClass</span><span class="p">();</span>
+<span class="w">        </span><span class="k">while</span><span class="w"> </span><span class="p">(</span><span class="n">cls</span><span class="w"> </span><span class="o">!=</span><span class="w"> </span><span class="kc">null</span><span class="p">)</span><span class="w"> </span><span class="p">{</span><span class="w">   </span><span class="c1">// after reaching Object, the next getSuperclass() is null</span>
+<span class="w">            </span><span class="n">Method</span><span class="o">[]</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethods</span><span class="p">();</span>
+<span class="w">            </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;\n&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getName</span><span class="p">());</span>
+<span class="w">            </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Method</span><span class="w"> </span><span class="n">method</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">m</span><span class="p">)</span>
+<span class="w">                </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">method</span><span class="p">);</span>
+<span class="w">            </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getSuperclass</span><span class="p">();</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="why-interfaces-arent-returned-by-getsuperclass">Why Interfaces Aren't Returned by <code>getSuperclass()</code><a class="headerlink" href="#why-interfaces-arent-returned-by-getsuperclass" title="Permanent link">&para;</a></h3>
+<p>Java allows only <strong>one</strong> superclass — <code>getSuperclass()</code> walks a single chain. Interfaces are a separate relationship entirely, retrieved with <code>cls.getInterfaces()</code>.</p>
+<hr />
+<h2 id="why-reflection-is-powerful-and-dangerous">Why Reflection Is Powerful (and Dangerous)<a class="headerlink" href="#why-reflection-is-powerful-and-dangerous" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Power</th>
+<th>Danger</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Frameworks (Spring, Hibernate)</td>
+<td>Breaks encapsulation</td>
+</tr>
+<tr>
+<td>Dependency Injection</td>
+<td>Slower than normal calls</td>
+</tr>
+<tr>
+<td>Serialization</td>
+<td>Compile-time safety lost</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>Harder to debug</td>
+</tr>
+<tr>
+<td>Test frameworks (JUnit)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
+<h3 id="engineering-insight_2">Engineering Insight<a class="headerlink" href="#engineering-insight_2" title="Permanent link">&para;</a></h3>
+<p>This is exactly why <strong>reflection is used by frameworks, not daily business code</strong> — frameworks accept the cost because they're solving a genuinely generic problem (act on types you don't know yet); business code almost always knows its types at compile time, so paying reflection's cost there buys nothing.</p>
+<hr />
+<h2 id="invoking-methods-via-reflection-access-control">Invoking Methods via Reflection — Access Control<a class="headerlink" href="#invoking-methods-via-reflection-access-control" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<p><code>getDeclaredMethod()</code> can <em>locate</em> a private method — but locating isn't the same as being allowed to call it. If reflection could bypass <code>private</code> for free, access modifiers would mean nothing at runtime.</p>
+<h3 id="definition_2">Definition<a class="headerlink" href="#definition_2" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Method</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&quot;methodName&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">paramTypes</span><span class="p">...);</span>
+</code></pre></div>
+<ul>
+<li>Returns a method <strong>declared in the class itself</strong>, including <code>private</code>, <code>protected</code>, default, and <code>public</code>.</li>
+<li>Does <strong>not</strong> include inherited methods.</li>
+<li><strong>Access checks are still enforced by default.</strong></li>
+</ul>
+<h3 id="the-failure-access-checks-still-apply">The Failure — Access Checks Still Apply<a class="headerlink" href="#the-failure-access-checks-still-apply" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">Secret</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">hiddenMethod</span><span class="p">()</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="s">&quot;Hidden method executed&quot;</span><span class="p">);</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">TestReflection</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Secret</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Secret</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj</span><span class="p">.</span><span class="na">getClass</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Method</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&quot;hiddenMethod&quot;</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span><span class="w">   </span><span class="c1">// ✘ fails</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+<span class="c1">// Runtime Error: java.lang.IllegalAccessException</span>
+</code></pre></div>
+<p><strong>Reason:</strong> Java does not allow invoking private members reflectively by default — you can <em>find</em> a private method, but you cannot <em>invoke</em> it without one more step.</p>
+<h3 id="the-fix-setaccessibletrue">The Fix — <code>setAccessible(true)</code><a class="headerlink" href="#the-fix-setaccessibletrue" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Method</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&quot;hiddenMethod&quot;</span><span class="p">);</span>
+<span class="n">m</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span><span class="w">   </span><span class="c1">// override access checks</span>
+<span class="n">m</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span><span class="w">           </span><span class="c1">// now it works</span>
+<span class="c1">// Output: Hidden method executed</span>
+</code></pre></div>
+<p><strong>What <code>setAccessible(true)</code> really does:</strong></p>
+<ul>
+<li>Disables Java language access checks.</li>
+<li>Allows access to private methods, private fields, private constructors.</li>
+<li>Works at <strong>runtime only</strong> — the compiler's own checks are untouched.</li>
+<li>Bypasses encapsulation.</li>
+</ul>
+<h3 id="why-this-is-dangerous">Why This Is Dangerous<a class="headerlink" href="#why-this-is-dangerous" title="Permanent link">&para;</a></h3>
+<p>Reflection with <code>setAccessible(true)</code>:</p>
+<ul>
+<li>breaks encapsulation,</li>
+<li>can access sensitive data,</li>
+<li>can violate class invariants,</li>
+<li>makes code fragile and unsafe,</li>
+<li>is harder to debug, and</li>
+<li>is slower than normal calls.</li>
+</ul>
+<p>That's why reflection — especially with <code>setAccessible(true)</code> — is used by frameworks, not business logic.</p>
+<h3 id="security-aspect">Security Aspect<a class="headerlink" href="#security-aspect" title="Permanent link">&para;</a></h3>
+<p><code>setAccessible(true)</code> can throw <code>SecurityException</code> when a <code>SecurityManager</code> is installed or the environment forbids reflective access — common in secure JVMs, application servers, and sandboxed environments.</p>
+<p><strong>Interview one-liner:</strong> <em><code>getDeclaredMethod()</code> retrieves methods declared in a class, but private methods require <code>setAccessible(true)</code> to bypass access checks, which can throw <code>SecurityException</code> and is potentially unsafe.</em></p>
+<hr />
+<h2 id="specifying-parameter-types-primitive-class-literals">Specifying Parameter Types — Primitive Class Literals<a class="headerlink" href="#specifying-parameter-types-primitive-class-literals" title="Permanent link">&para;</a></h2>
+<h3 id="method-signature">Method Signature<a class="headerlink" href="#method-signature" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Method</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">name</span><span class="p">,</span><span class="w"> </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="p">...</span><span class="w"> </span><span class="n">parameterTypes</span><span class="p">);</span>
+</code></pre></div>
+<ul>
+<li>First argument → the method name.</li>
+<li>Second argument → one <code>Class</code> object per parameter, <strong>in order</strong> — order must match exactly.</li>
+</ul>
+<h3 id="int-is-not-a-class-but-java-provides-primitive-class-literals"><code>int</code> Is Not a Class — But Java Provides Primitive Class Literals<a class="headerlink" href="#int-is-not-a-class-but-java-provides-primitive-class-literals" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kt">int</span><span class="p">.</span><span class="na">class</span>
+<span class="kt">double</span><span class="p">.</span><span class="na">class</span>
+<span class="kt">boolean</span><span class="p">.</span><span class="na">class</span>
+</code></pre></div>
+<p>These are special JVM-backed <code>Class</code> objects, not wrapper classes — they let you describe a primitive parameter type to a reflective API that otherwise only deals in <code>Class&lt;?&gt;</code> objects.</p>
+<div class="highlight"><pre><span></span><code><span class="kd">class</span> <span class="nc">Calculator</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="nf">add</span><span class="p">(</span><span class="kt">int</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="w">    </span><span class="kd">private</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">concat</span><span class="p">(</span><span class="n">String</span><span class="w"> </span><span class="n">a</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="w"> </span><span class="n">b</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">a</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">b</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+
+<span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Calculator</span><span class="p">.</span><span class="na">class</span><span class="p">;</span>
+
+<span class="n">Method</span><span class="w"> </span><span class="n">m1</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&quot;add&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">        </span><span class="c1">// matches add(int, int)</span>
+<span class="n">Method</span><span class="w"> </span><span class="n">m2</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&quot;concat&quot;</span><span class="p">,</span><span class="w"> </span><span class="n">String</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">.</span><span class="na">class</span><span class="p">);</span><span class="w">  </span><span class="c1">// order and types must match exactly</span>
+</code></pre></div>
+<h3 id="invoking-the-method">Invoking the Method<a class="headerlink" href="#invoking-the-method" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Object</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">target</span><span class="p">,</span><span class="w"> </span><span class="n">Object</span><span class="p">...</span><span class="w"> </span><span class="n">args</span><span class="p">);</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">Calculator</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Calculator</span><span class="p">();</span>
+<span class="n">Object</span><span class="w"> </span><span class="n">res</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m1</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">);</span>
+<span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">res</span><span class="p">);</span><span class="w">   </span><span class="c1">// 7</span>
+</code></pre></div>
+<p><strong>Important details:</strong></p>
+<ul>
+<li>Arguments are passed as <code>Object</code>s — Java automatically boxes primitives (<code>3</code> → <code>Integer.valueOf(3)</code>) at <strong>compile time</strong>, before your program ever runs.</li>
+<li>The return value is always <code>Object</code> — cast it if you need the concrete type.</li>
+</ul>
+<p><strong>Working example, end to end:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">ReflectionDemo</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">main</span><span class="p">(</span><span class="n">String</span><span class="o">[]</span><span class="w"> </span><span class="n">args</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">Calculator</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="k">new</span><span class="w"> </span><span class="n">Calculator</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj</span><span class="p">.</span><span class="na">getClass</span><span class="p">();</span>
+<span class="w">        </span><span class="n">Method</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&quot;add&quot;</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">.</span><span class="na">class</span><span class="p">,</span><span class="w"> </span><span class="kt">int</span><span class="p">.</span><span class="na">class</span><span class="p">);</span>
+<span class="w">        </span><span class="n">m</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">        </span><span class="n">Object</span><span class="w"> </span><span class="n">result</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">m</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">,</span><span class="w"> </span><span class="mi">7</span><span class="p">);</span>
+<span class="w">        </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">println</span><span class="p">(</span><span class="n">result</span><span class="p">);</span><span class="w">   </span><span class="c1">// 12</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<h3 id="side-note-why-a-primitive-array-doesnt-satisfy-a-varargs-generic">Side Note — Why a Primitive Array Doesn't Satisfy a Varargs Generic<a class="headerlink" href="#side-note-why-a-primitive-array-doesnt-satisfy-a-varargs-generic" title="Permanent link">&para;</a></h3>
+<p>The same autoboxing/erasure mechanics that make <code>invoke(Object target, Object... args)</code> work also explain a common surprise elsewhere:</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@SafeVarargs</span>
+<span class="kd">static</span><span class="w"> </span><span class="o">&lt;</span><span class="n">T</span><span class="o">&gt;</span><span class="w"> </span><span class="kt">void</span><span class="w"> </span><span class="nf">printArray</span><span class="p">(</span><span class="n">T</span><span class="p">...</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">T</span><span class="w"> </span><span class="n">t</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">a</span><span class="p">)</span><span class="w"> </span><span class="n">System</span><span class="p">.</span><span class="na">out</span><span class="p">.</span><span class="na">print</span><span class="p">(</span><span class="n">t</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot; &quot;</span><span class="p">);</span>
+<span class="p">}</span>
+
+<span class="kt">int</span><span class="o">[]</span><span class="w"> </span><span class="n">arr</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="p">{</span><span class="mi">1</span><span class="p">,</span><span class="w"> </span><span class="mi">2</span><span class="p">,</span><span class="w"> </span><span class="mi">3</span><span class="p">,</span><span class="w"> </span><span class="mi">4</span><span class="p">,</span><span class="w"> </span><span class="mi">5</span><span class="p">};</span>
+<span class="n">printArray</span><span class="p">(</span><span class="n">arr</span><span class="p">);</span><span class="w">   </span><span class="c1">// does NOT print 1 2 3 4 5</span>
+</code></pre></div>
+<p><strong>Rule:</strong> generics work when the <em>elements</em> are reference types, not when the <em>container</em> is a reference type. <code>int[]</code> is itself a reference type — so Java infers <code>T = int[]</code>, and the whole array becomes a <strong>single element</strong>, not five. A <code>String[]</code> doesn't have this problem, because its elements (<code>String</code>) are already reference types.</p>
+<p><strong>Final mental model:</strong></p>
+<div class="highlight"><pre><span></span><code>Generics force reference types.
+Varargs only bundle same-type values into an array.
+Autoboxing happens at compile time, not runtime.
+Runtime only sees objects, due to type erasure.
+
+Varargs decide how many, generics decide what kind,
+and autoboxing happens before runtime.
+</code></pre></div>
+<hr />
+<h2 id="reflection-use-case-1-serialization">Reflection Use Case 1 — Serialization<a class="headerlink" href="#reflection-use-case-1-serialization" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>An object living in JVM heap memory is useless to a REST API, a cache, or another microservice — none of them can read Java heap objects directly. Something has to convert an object into a transferable format, and convert it back.</p>
+<h3 id="definition_3">Definition<a class="headerlink" href="#definition_3" title="Permanent link">&para;</a></h3>
+<p><strong>Serialization</strong> converts an object into a transferable format:</p>
+<div class="highlight"><pre><span></span><code>Java Object → JSON → bytes (over network / file)
+</code></pre></div>
+<p><strong>Deserialization</strong> is the reverse: <code>bytes / JSON → Java Object</code>.</p>
+<h3 id="why-we-need-it">Why We Need It<a class="headerlink" href="#why-we-need-it" title="Permanent link">&para;</a></h3>
+<ul>
+<li>APIs (REST)</li>
+<li>Network communication</li>
+<li>Caching (Redis)</li>
+<li>File storage</li>
+<li>Microservices talking to each other</li>
+</ul>
+<h3 id="where-reflection-fits-in">Where Reflection Fits In<a class="headerlink" href="#where-reflection-fits-in" title="Permanent link">&para;</a></h3>
+<p>At runtime, generic serialization code doesn't know a given object's fields, getters/setters, or annotations in advance. Serialization uses <strong>reflection</strong> to inspect the class structure, read private fields, and call getters/setters dynamically — exactly the "types unknown until runtime" problem reflection exists for.</p>
+<h3 id="why-serialization-is-complicated">Why Serialization Is Complicated<a class="headerlink" href="#why-serialization-is-complicated" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Nested objects</li>
+<li>Lists / Maps</li>
+<li>Null handling</li>
+<li>Custom field names</li>
+<li>Date formats</li>
+<li>Ignoring fields</li>
+<li>Circular references</li>
+</ul>
+<p>That's why we don't hand-write it in real projects — <strong>Jackson</strong> (and libraries like it) does this internally: heavy use of reflection, converting Object ↔ JSON ↔ bytes while honoring annotations.</p>
+<p><strong>Interview gold lines:</strong></p>
+<ul>
+<li>"Serialization converts objects into a transferable format like JSON or bytes."</li>
+<li>"Reflection enables runtime inspection, which serializers use to access fields dynamically."</li>
+<li>"Spring uses Jackson internally for request/response body serialization."</li>
+<li>"We avoid manual serialization due to complexity and performance concerns."</li>
+</ul>
+<h3 id="a-minimal-hand-rolled-serializer">A Minimal Hand-Rolled Serializer<a class="headerlink" href="#a-minimal-hand-rolled-serializer" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">package</span><span class="w"> </span><span class="nn">serialization</span><span class="p">;</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">java.lang.reflect.*</span><span class="p">;</span>
+
+<span class="kd">public</span><span class="w"> </span><span class="kd">class</span> <span class="nc">Serializer</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="kd">public</span><span class="w"> </span><span class="kd">static</span><span class="w"> </span><span class="n">String</span><span class="w"> </span><span class="nf">serialise</span><span class="p">(</span><span class="n">Object</span><span class="w"> </span><span class="n">obj</span><span class="p">)</span><span class="w"> </span><span class="kd">throws</span><span class="w"> </span><span class="n">Exception</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="n">String</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">obj</span><span class="p">.</span><span class="na">getClass</span><span class="p">();</span>
+<span class="w">        </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;:{&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="n">Field</span><span class="o">[]</span><span class="w"> </span><span class="n">fields</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredFields</span><span class="p">();</span>
+<span class="w">        </span><span class="k">for</span><span class="w"> </span><span class="p">(</span><span class="n">Field</span><span class="w"> </span><span class="n">f</span><span class="w"> </span><span class="p">:</span><span class="w"> </span><span class="n">fields</span><span class="p">)</span><span class="w"> </span><span class="p">{</span>
+<span class="w">            </span><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">fieldType</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="na">getType</span><span class="p">();</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">Modifier</span><span class="p">.</span><span class="na">isTransient</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="na">getModifiers</span><span class="p">()))</span><span class="w">   </span><span class="c1">// skip transient fields</span>
+<span class="w">                </span><span class="k">continue</span><span class="p">;</span>
+<span class="w">            </span><span class="n">f</span><span class="p">.</span><span class="na">setAccessible</span><span class="p">(</span><span class="kc">true</span><span class="p">);</span>
+<span class="w">            </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fieldType</span><span class="p">.</span><span class="na">isPrimitive</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">output</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="na">getName</span><span class="p">()</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;:&quot;</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="n">f</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;,&quot;</span><span class="p">;</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="k">if</span><span class="w"> </span><span class="p">(</span><span class="n">fieldType</span><span class="p">.</span><span class="na">isArray</span><span class="p">())</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="c1">// left as an exercise — arrays need their own recursive handling</span>
+<span class="w">            </span><span class="p">}</span><span class="w"> </span><span class="k">else</span><span class="w"> </span><span class="p">{</span>
+<span class="w">                </span><span class="n">output</span><span class="w"> </span><span class="o">+=</span><span class="w"> </span><span class="n">serialise</span><span class="p">(</span><span class="n">f</span><span class="p">.</span><span class="na">get</span><span class="p">(</span><span class="n">obj</span><span class="p">));</span>
+<span class="w">            </span><span class="p">}</span>
+<span class="w">        </span><span class="p">}</span>
+<span class="w">        </span><span class="n">output</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">output</span><span class="p">.</span><span class="na">substring</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="w"> </span><span class="n">output</span><span class="p">.</span><span class="na">length</span><span class="p">()</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="p">)</span><span class="w"> </span><span class="o">+</span><span class="w"> </span><span class="s">&quot;}&quot;</span><span class="p">;</span>
+<span class="w">        </span><span class="k">return</span><span class="w"> </span><span class="n">output</span><span class="p">;</span>
+<span class="w">    </span><span class="p">}</span>
+<span class="p">}</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>serialization.ReportCard:{id:1,serialization.ScienceMarks:
+{phyMarks:0,chemMarks:0,mathMarks:0,sciPercent:0.0}serialization.ArtsMarks:
+{socialSciMarks:0,literatureMarks:0,artsPercent:0.0}totalPercent:0.0}
+</code></pre></div>
+<h3 id="what-a-senior-dev-immediately-guards-against">What a Senior Dev Immediately Guards Against<a class="headerlink" href="#what-a-senior-dev-immediately-guards-against" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Cyclic references (this recursive version would stack-overflow on one)</li>
+<li><code>null</code> handling</li>
+<li>Static fields (should almost always be excluded)</li>
+<li>Transient fields (already handled above)</li>
+<li>Inheritance (<code>getSuperclass()</code> — declared fields alone miss inherited ones)</li>
+<li>Collections / arrays</li>
+<li>Performance (string concatenation in a loop → <code>StringBuilder</code>)</li>
+<li>Stack overflow risk on deep/cyclic structures</li>
+<li>Security concerns of <code>setAccessible(true)</code></li>
+<li>API contract — what format, deterministic field order?</li>
+</ul>
+<h3 id="engineering-insight_3">Engineering Insight<a class="headerlink" href="#engineering-insight_3" title="Permanent link">&para;</a></h3>
+<p>This toy serializer demonstrates <em>why</em> Jackson exists rather than replacing it — every item in the guard-against list above is a real production concern that a hand-rolled reflective serializer has to solve from scratch, and a mature library already has.</p>
+<hr />
+<h2 id="reflection-use-case-2-deserialization-runtime-class-loading">Reflection Use Case 2 — Deserialization &amp; Runtime Class Loading<a class="headerlink" href="#reflection-use-case-2-deserialization-runtime-class-loading" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_3">Engineering Problem<a class="headerlink" href="#engineering-problem_3" title="Permanent link">&para;</a></h3>
+<p>Serialized data is not executable code — it's a byte stream that references a class <strong>by name</strong>. Deserialization needs the actual class definition available at runtime to reconstruct an object; it can't reconstruct behavior it has no class metadata for.</p>
+<h3 id="compile-time-classpath-vs-runtime-classpath">Compile-Time Classpath vs. Runtime Classpath<a class="headerlink" href="#compile-time-classpath-vs-runtime-classpath" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Compile-Time Classpath</th>
+<th>Runtime Classpath</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Used by</td>
+<td>The compiler (<code>javac</code>)</td>
+<td>The JVM</td>
+</tr>
+<tr>
+<td>Needed to</td>
+<td>Compile source code, resolve symbols</td>
+<td>Load classes, deserialize objects, execute bytecode</td>
+</tr>
+<tr>
+<td>Sufficient for deserialization?</td>
+<td><strong>No</strong></td>
+<td><strong>Yes — required</strong></td>
+</tr>
+</tbody>
+</table>
+<p>If the class is missing from the runtime classpath → <code>ClassNotFoundException</code>.</p>
+<h3 id="deserialization-key-flow">Deserialization — Key Flow<a class="headerlink" href="#deserialization-key-flow" title="Permanent link">&para;</a></h3>
+<ol>
+<li>The serialized stream contains the <strong>Fully Qualified Class Name (FQCN)</strong>.</li>
+<li>The JVM tries to load that class via the runtime classpath.</li>
+<li>If found → class loaded, object reconstructed.</li>
+<li>If not found → deserialization fails.</li>
+</ol>
+<h3 id="classforname-dynamic-class-loading"><code>Class.forName()</code> — Dynamic Class Loading<a class="headerlink" href="#classforname-dynamic-class-loading" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;com.example.User&quot;</span><span class="p">);</span>
+</code></pre></div>
+<ul>
+<li>Loads the class at runtime.</li>
+<li>Requires the FQCN, and the class must be present on the runtime classpath.</li>
+<li>Triggers class loading and static initialization.</li>
+</ul>
+<h3 id="creating-an-object-at-runtime-reflection">Creating an Object at Runtime (Reflection)<a class="headerlink" href="#creating-an-object-at-runtime-reflection" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;com.example.User&quot;</span><span class="p">);</span>
+<span class="n">Object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredConstructor</span><span class="p">().</span><span class="na">newInstance</span><span class="p">();</span>
+</code></pre></div>
+<p>Used when the class name is only known at runtime — frameworks, serializers, plugins.</p>
+<p><strong>Deprecated way:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;serialization.ReportCard&quot;</span><span class="p">);</span>
+<span class="n">Object</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">newInstance</span><span class="p">();</span><span class="w">   </span><span class="c1">// deprecated</span>
+</code></pre></div>
+<p><strong>Correct way:</strong></p>
+<div class="highlight"><pre><span></span><code><span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;serialization.ReportCard&quot;</span><span class="p">);</span>
+<span class="n">Constructor</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">constructor</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getConstructor</span><span class="p">();</span>
+<span class="n">Object</span><span class="w"> </span><span class="n">o</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">constructor</span><span class="p">.</span><span class="na">newInstance</span><span class="p">();</span>
+</code></pre></div>
+<h3 id="relation-to-deserialization">Relation to Deserialization<a class="headerlink" href="#relation-to-deserialization" title="Permanent link">&para;</a></h3>
+<p>Deserialization internally uses the class name found in the stream plus the runtime class loader — conceptually the same mechanism as <code>Class.forName(fqcn)</code>. If the class isn't on the runtime classpath, it fails the same way.</p>
+<h3 id="common-interview-errors-to-avoid">Common Interview Errors to Avoid<a class="headerlink" href="#common-interview-errors-to-avoid" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Compile-time classpath ≠ runtime classpath.</li>
+<li>"Class compiled" ≠ "class available at runtime" (the class could be missing from the deployed artifact).</li>
+<li>A serialized object ≠ executable code — it's data describing an object, requiring the class definition separately.</li>
+</ul>
+<p><strong>One-line interview answer:</strong> <em>"Deserialization requires the class to be present on the runtime classpath; the JVM loads it using the fully qualified class name, similar to <code>Class.forName()</code>."</em></p>
+<hr />
+<h2 id="reflection-use-case-3-dependency-injection-spring">Reflection Use Case 3 — Dependency Injection (Spring)<a class="headerlink" href="#reflection-use-case-3-dependency-injection-spring" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_4">Engineering Problem<a class="headerlink" href="#engineering-problem_4" title="Permanent link">&para;</a></h3>
+<p>Sometimes you want exactly one instance of a class to exist for the whole application, with every thread sharing it — and you want the objects that depend on each other wired together without every class hand-writing <code>new SomeDependency()</code> everywhere it's needed, which would hardcode the dependency graph into every constructor.</p>
+<h3 id="definition_4">Definition<a class="headerlink" href="#definition_4" title="Permanent link">&para;</a></h3>
+<p>A <strong>Spring Bean</strong> is an object whose entire lifecycle — creation, dependency injection, scope, destruction — is managed by the Spring container, not by your own code calling <code>new</code>.</p>
+<h3 id="spring-singleton-jvm-singleton">Spring Singleton ≠ JVM Singleton<a class="headerlink" href="#spring-singleton-jvm-singleton" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Spring singleton → <strong>one instance per Spring container</strong>.</li>
+<li>Multiple containers → multiple instances are possible; "singleton" here is scoped to the container, not to the JVM process.</li>
+</ul>
+<p><strong>Interview one-liner:</strong> <em>"In Spring, a singleton bean is a container-managed object where only one instance exists per application context and is shared across all threads."</em></p>
+<div class="highlight"><pre><span></span><code><span class="nd">@Component</span>
+<span class="kd">class</span> <span class="nc">UserService</span><span class="w"> </span><span class="p">{</span><span class="w"> </span><span class="p">}</span>
+</code></pre></div>
+<p><code>@Component</code> marks a class as a Spring bean candidate, so Spring can instantiate and manage its object lifecycle.</p>
+<h3 id="autowiring">Autowiring<a class="headerlink" href="#autowiring" title="Permanent link">&para;</a></h3>
+<p><strong>Autowiring</strong> is Spring's mechanism for automatically resolving and injecting bean dependencies at runtime. If a bean <code>DBAccessor</code> depends on another bean <code>Logger</code>, Spring — using the application context — locates a suitable <code>Logger</code> bean and injects it into <code>DBAccessor</code> (typically via constructor injection, or alternatively field/setter injection).</p>
+<p>The wiring decision is made based on <strong>type first</strong>; if multiple candidates exist, qualifiers or bean names disambiguate. This removes manual object creation (<code>new</code>), keeps classes loosely coupled, and lets Spring control object relationships and lifecycle consistently across the application.</p>
+<h3 id="behind-the-scenes-reflection-graph-resolution">Behind the Scenes — Reflection + Graph Resolution<a class="headerlink" href="#behind-the-scenes-reflection-graph-resolution" title="Permanent link">&para;</a></h3>
+<p>Spring enables autowiring by building a <strong>dependency graph</strong> of bean definitions and resolving it at runtime:</p>
+<ul>
+<li>It uses <strong>reflection</strong> to inspect constructors, fields, and methods (e.g. annotated with <code>@Autowired</code>).</li>
+<li>It builds a <strong>directed graph</strong> where nodes are beans and edges represent dependencies.</li>
+<li>During context initialization, Spring traverses this graph, determines a valid instantiation order via <strong>topological sort</strong>, creates beans accordingly, and injects dependencies via reflection.</li>
+</ul>
+<p>Reflection is used <strong>for inspection and injection</strong>; the graph-based resolution is what ensures correct ordering, detects missing dependencies, and identifies circular dependencies (with specific handling rules).</p>
+<h3 id="engineering-insight_4">Engineering Insight<a class="headerlink" href="#engineering-insight_4" title="Permanent link">&para;</a></h3>
+<p>This splits cleanly into two separate responsibilities: reflection answers "what does this bean need, and how do I set it?", while the dependency graph and topological sort answer "in what order can these beans even be constructed?" Conflating the two would make Spring's core both harder to reason about and harder to test — a clean instance of the same Single-Responsibility reasoning that shows up everywhere else in this course.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="what-problem-does-reflection-actually-solve">What problem does reflection actually solve?<a class="headerlink" href="#what-problem-does-reflection-actually-solve" title="Permanent link">&para;</a></h3>
+<p>It lets code inspect and act on classes, methods, and fields it didn't know about at compile time — needed whenever a class name, method, or field is only knowable at runtime (plugins, serializers, DI containers).</p>
+<h3 id="whats-the-difference-between-getdeclaredfieldsgetdeclaredmethods-and-getfieldsgetmethods">What's the difference between <code>getDeclaredFields()</code>/<code>getDeclaredMethods()</code> and <code>getFields()</code>/<code>getMethods()</code>?<a class="headerlink" href="#whats-the-difference-between-getdeclaredfieldsgetdeclaredmethods-and-getfieldsgetmethods" title="Permanent link">&para;</a></h3>
+<p>The <code>getDeclared*</code> variants return only members declared directly in that class, at any access level, excluding inherited ones. The non-declared variants (<code>getMethods()</code>, <code>getFields()</code>) return all <strong>public</strong> members, including ones inherited from superclasses and interfaces.</p>
+<h3 id="why-doesnt-getsuperclass-return-interfaces">Why doesn't <code>getSuperclass()</code> return interfaces?<a class="headerlink" href="#why-doesnt-getsuperclass-return-interfaces" title="Permanent link">&para;</a></h3>
+<p>Because Java only allows a single superclass — <code>getSuperclass()</code> walks that one chain. Interfaces are a separate relationship, retrieved via <code>cls.getInterfaces()</code>.</p>
+<h3 id="why-does-getdeclaredmethod-find-a-private-method-but-invoke-on-it-throw-illegalaccessexception">Why does <code>getDeclaredMethod()</code> find a private method, but <code>invoke()</code> on it throw <code>IllegalAccessException</code>?<a class="headerlink" href="#why-does-getdeclaredmethod-find-a-private-method-but-invoke-on-it-throw-illegalaccessexception" title="Permanent link">&para;</a></h3>
+<p>Locating a member via reflection is independent of Java's language-level access control — reflection can <em>see</em> a private method, but invoking it still respects <code>private</code> unless access checks are explicitly disabled with <code>setAccessible(true)</code>.</p>
+<h3 id="what-does-setaccessibletrue-actually-do-and-why-is-it-dangerous">What does <code>setAccessible(true)</code> actually do, and why is it dangerous?<a class="headerlink" href="#what-does-setaccessibletrue-actually-do-and-why-is-it-dangerous" title="Permanent link">&para;</a></h3>
+<p>It disables Java's language-level access checks at runtime, allowing invocation of private methods/fields/constructors. It's dangerous because it breaks encapsulation, can expose sensitive data, can violate class invariants, and can throw <code>SecurityException</code> in environments with a <code>SecurityManager</code> or reflection restrictions.</p>
+<h3 id="why-do-primitive-class-literals-like-intclass-exist">Why do primitive class literals like <code>int.class</code> exist?<a class="headerlink" href="#why-do-primitive-class-literals-like-intclass-exist" title="Permanent link">&para;</a></h3>
+<p>Because <code>int</code> isn't a class, but reflective APIs like <code>getDeclaredMethod()</code> only accept <code>Class&lt;?&gt;</code> arguments to describe parameter types — Java provides special JVM-backed <code>Class</code> objects for primitives so a primitive-typed parameter can still be described reflectively.</p>
+<h3 id="why-does-printarrayint-behave-differently-from-printarraystring-when-printarray-is-declared-as-t-void-printarrayt-a">Why does <code>printArray(int[])</code> behave differently from <code>printArray(String[])</code> when <code>printArray</code> is declared as <code>&lt;T&gt; void printArray(T... a)</code>?<a class="headerlink" href="#why-does-printarrayint-behave-differently-from-printarraystring-when-printarray-is-declared-as-t-void-printarrayt-a" title="Permanent link">&para;</a></h3>
+<p>Generics require reference-type elements. <code>int[]</code> is itself a reference type, so Java infers <code>T = int[]</code> and the whole array collapses into a single varargs element. <code>String[]</code>'s elements are already reference types, so it behaves as expected — one varargs element per array entry.</p>
+<h3 id="what-role-does-reflection-play-in-serialization-libraries-like-jackson">What role does reflection play in serialization libraries like Jackson?<a class="headerlink" href="#what-role-does-reflection-play-in-serialization-libraries-like-jackson" title="Permanent link">&para;</a></h3>
+<p>At runtime, a generic serializer doesn't know a given object's fields, getters/setters, or annotations in advance — reflection lets it inspect the class structure and read/write fields dynamically, which is exactly the "unknown until runtime" problem reflection exists to solve.</p>
+<h3 id="why-is-compile-time-classpath-insufficient-for-deserialization">Why is compile-time classpath insufficient for deserialization?<a class="headerlink" href="#why-is-compile-time-classpath-insufficient-for-deserialization" title="Permanent link">&para;</a></h3>
+<p>Because deserialization happens at runtime, using the JVM's runtime classpath to locate and load the class by its fully qualified name from the serialized stream — a class being compiled successfully says nothing about whether it's present in the deployed runtime environment.</p>
+<h3 id="what-does-classforname-do-and-when-would-you-use-it">What does <code>Class.forName()</code> do, and when would you use it?<a class="headerlink" href="#what-does-classforname-do-and-when-would-you-use-it" title="Permanent link">&para;</a></h3>
+<p>It loads a class at runtime given its fully qualified class name, triggering class loading and static initialization — used whenever the class to instantiate is only known at runtime, such as in frameworks, serializers, and plugin systems.</p>
+<h3 id="whats-the-difference-between-a-spring-singleton-and-a-jvm-classic-singleton">What's the difference between a Spring singleton and a JVM (classic) singleton?<a class="headerlink" href="#whats-the-difference-between-a-spring-singleton-and-a-jvm-classic-singleton" title="Permanent link">&para;</a></h3>
+<p>A Spring singleton is scoped to one instance <strong>per Spring application context</strong> — multiple containers in the same JVM can each hold their own instance. A classic JVM singleton is enforced at the class level and is one instance per JVM regardless of any container.</p>
+<h3 id="how-does-spring-resolve-which-bean-to-inject-when-autowiring-by-type">How does Spring resolve which bean to inject when autowiring by type?<a class="headerlink" href="#how-does-spring-resolve-which-bean-to-inject-when-autowiring-by-type" title="Permanent link">&para;</a></h3>
+<p>Type is checked first; if multiple beans of a matching type exist, qualifiers or explicit bean names are used to disambiguate the choice.</p>
+<h3 id="how-does-spring-use-reflection-and-graph-algorithms-together-for-dependency-injection">How does Spring use reflection and graph algorithms together for dependency injection?<a class="headerlink" href="#how-does-spring-use-reflection-and-graph-algorithms-together-for-dependency-injection" title="Permanent link">&para;</a></h3>
+<p>Reflection inspects constructors, fields, and annotated members (e.g. <code>@Autowired</code>) to discover what a bean needs. Separately, Spring builds a directed dependency graph of beans and uses a topological sort to determine a valid instantiation order, detect missing dependencies, and catch circular dependencies — reflection handles the "what," the graph algorithm handles the "in what order."</p>
+<hr />
+<p>❌ If reflection can locate a private method, it can call it too.</p>
+<p>✔ Locating and invoking are separate checks — Java still enforces access control on <code>invoke()</code> unless you explicitly call <code>setAccessible(true)</code>.</p>
+<hr />
+<p>❌ Autoboxing for varargs/reflection calls happens at runtime, right before the method executes.</p>
+<p>✔ Autoboxing happens at <strong>compile time</strong> — by the time the program runs, primitives passed to an <code>Object...</code>-style parameter are already boxed; runtime only ever sees objects, partly due to type erasure.</p>
+<hr />
+<p>❌ A generic varargs method like <code>&lt;T&gt; void f(T... a)</code> treats an <code>int[]</code> argument the same way it treats a <code>String[]</code> argument.</p>
+<p>✔ <code>int[]</code> is itself inferred as <code>T</code>, collapsing the whole array into one element — because generics require the <em>elements</em>, not just the container, to be reference types. <code>String[]</code>'s elements already are reference types, so it behaves as expected.</p>
+<hr />
+<p>❌ If a class compiled successfully, deserialization involving it will always work at runtime.</p>
+<p>✔ Compile-time classpath and runtime classpath are different things — a class missing from the runtime classpath causes <code>ClassNotFoundException</code> during deserialization regardless of whether it compiled fine originally.</p>
+<hr />
+<p>❌ A Spring singleton bean means there's exactly one instance of that class in the whole JVM.</p>
+<p>✔ It means one instance <strong>per Spring application context</strong> — multiple containers in the same JVM can each hold a separate instance.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Reflection            → inspect/act on types unknown at compile time
+Class&lt;T&gt;               → every object&#39;s own metadata, reachable via getClass()
+
+getDeclared*()          → this class only, any access level, no inheritance
+get*() (no &quot;Declared&quot;)  → public only, including inherited members
+
+getDeclaredMethod finds → private methods
+invoke() still enforces → access control, unless setAccessible(true)
+
+setAccessible(true)    → disables access checks; breaks encapsulation;
+                          framework territory, not business logic
+
+int.class               → primitive class literal, needed because int
+                          isn&#39;t itself a Class
+
+Serialization           → object → transferable format (JSON/bytes),
+                          powered by reflection to read structure dynamically
+Deserialization         → needs the class on the RUNTIME classpath,
+                          not just compiled successfully once
+
+Spring Bean              → lifecycle owned by the container, not your code
+Spring singleton         → one instance per container, not per JVM
+Autowiring               → reflection discovers dependencies;
+                            a dependency graph + topological sort
+                            decides instantiation order
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-1-checklist">Stage 2 · Week 1 Checklist<a class="headerlink" href="#stage-2-week-1-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain what problem reflection solves and why it belongs at framework boundaries, not in business logic</li>
+<li>[x] Explain the difference between <code>getDeclared*()</code> and non-declared reflective lookups</li>
+<li>[x] Explain why <code>getDeclaredMethod()</code> can find a private method but <code>invoke()</code> still needs <code>setAccessible(true)</code></li>
+<li>[x] Explain why <code>setAccessible(true)</code> is dangerous, and when it throws <code>SecurityException</code></li>
+<li>[x] Explain why primitive class literals like <code>int.class</code> exist</li>
+<li>[x] Explain why reflection is central to how serialization libraries like Jackson work</li>
+<li>[x] List at least five things a senior engineer would guard against in a hand-rolled reflective serializer</li>
+<li>[x] Explain the difference between compile-time and runtime classpath, and why it matters for deserialization</li>
+<li>[x] Explain the difference between a Spring singleton and a JVM singleton</li>
+<li>[x] Explain how Spring combines reflection with a dependency graph to perform autowiring</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

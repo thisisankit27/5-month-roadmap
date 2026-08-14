@@ -1,0 +1,5152 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/Product%20Engineering/week-4-AI-Assistant/">
+      
+      
+        <link rel="prev" href="../week-3-AI-Assistant/">
+      
+      
+        <link rel="next" href="../../../stage-2/Java/day-1-oop-fundamentals/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Thinking Like a Senior Engineer.v4 - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#thinking-like-a-senior-engineerv4" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Thinking Like a Senior Engineer.v4
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pr-11a-discussion-prompt-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-11a Discussion — Prompt Ownership
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-11a Discussion — Prompt Ownership">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-13-location-now-configurability-later" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #13 — Location Now, Configurability Later
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-4-deleting-a-constraint-without-replacing-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 4 — Deleting a Constraint Without Replacing It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-12a-discussion-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-12a Discussion — Streaming
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-12a Discussion — Streaming">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-real-problem-my-own-contract-not-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Real Problem — My Own Contract, Not the Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-14-streaming-is-a-peer-of-ask-not-a-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #14 — Streaming Is a Peer of ask(), Not a Variant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-15-buffer-and-delay-and-where-it-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #15 — Buffer-and-Delay, and Where It Lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-16-the-flush-boundary-derived-from-the-grammar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #16 — The Flush Boundary, Derived From the Grammar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-17-streamedanswer-because-one-operation-yields-two-things" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #17 — StreamedAnswer, Because One Operation Yields Two Things
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-18-one-place-that-knows-what-an-aimessage-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #18 — One Place That Knows What an AIMessage Is
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-19-the-sanitizer-becomes-pure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #19 — The Sanitizer Becomes Pure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-20-the-typewriter-is-presentation-not-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #20 — The Typewriter Is Presentation, Not Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-trade-off-i-could-not-design-away" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Trade-off I Could Not Design Away
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities-after-pr-12a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities After PR-12a
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-pr-deliberately-did-not-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This PR Deliberately Did Not Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-note-on-authorship" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Note on Authorship
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-12-discussion-state-management-in-brief" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-12 Discussion — State Management (in brief)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-12 Discussion — State Management (in brief)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-values-in-the-wrong-band" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem — Values in the Wrong Band
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-21-derive-dont-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #21 — Derive, Don't Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-22-the-page-is-a-function-of-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #22 — The Page Is a Function of State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-overstatement-i-had-to-withdraw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Overstatement I Had to Withdraw
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-return-value-that-outlived-its-reason" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Return Value That Outlived Its Reason
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-13-discussion-conversation-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-13 Discussion — Conversation Memory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-13 Discussion — Conversation Memory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-23-summarize-dont-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #23 — Summarize, Don't Replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-24-the-summary-feeds-both-consumers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #24 — The Summary Feeds Both Consumers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-25-a-separate-call-deferred-behind-the-stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #25 — A Separate Call, Deferred Behind the Stream
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-26-concatenate-dont-fuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #26 — Concatenate, Don't Fuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-27-guardrails-split-by-consequence-not-by-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #27 — Guardrails Split by Consequence, Not by Direction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-28-where-the-summary-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #28 — Where the Summary Lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-29-two-costs-two-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #29 — Two Costs, Two Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-6-memory-resolves-references-it-does-not-supply-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 6 — Memory Resolves References, It Does Not Supply Facts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities-after-pr-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities After PR-13
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-pr-deliberately-did-not-change_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This PR Deliberately Did Not Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitation-topic-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Limitation — Topic Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-failure-modes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-note-on-authorship_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Note on Authorship
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-14b-discussion-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-14b Discussion — Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-14b Discussion — Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-30-the-unit-that-decided-is-the-unit-that-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #30 — The Unit That Decided Is the Unit That Reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-31-log-decisions-not-inputs-and-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #31 — Log Decisions, Not Inputs and Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-32-the-ambient-thing-is-the-collector-not-an-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #32 — The Ambient Thing Is the Collector, Not an ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-33-the-observer-a-third-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #33 — The Observer, a Third Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-34-retention-is-rotation-not-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #34 — Retention Is Rotation, Not Deletion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-streamlit-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Streamlit Trap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pr-11a-discussion-prompt-ownership" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-11a Discussion — Prompt Ownership
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-11a Discussion — Prompt Ownership">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-13-location-now-configurability-later" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #13 — Location Now, Configurability Later
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-4-deleting-a-constraint-without-replacing-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 4 — Deleting a Constraint Without Replacing It
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-12a-discussion-streaming" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-12a Discussion — Streaming
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-12a Discussion — Streaming">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-real-problem-my-own-contract-not-the-framework" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Real Problem — My Own Contract, Not the Framework
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-14-streaming-is-a-peer-of-ask-not-a-variant" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #14 — Streaming Is a Peer of ask(), Not a Variant
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-15-buffer-and-delay-and-where-it-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #15 — Buffer-and-Delay, and Where It Lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-16-the-flush-boundary-derived-from-the-grammar" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #16 — The Flush Boundary, Derived From the Grammar
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-17-streamedanswer-because-one-operation-yields-two-things" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #17 — StreamedAnswer, Because One Operation Yields Two Things
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-18-one-place-that-knows-what-an-aimessage-is" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #18 — One Place That Knows What an AIMessage Is
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-19-the-sanitizer-becomes-pure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #19 — The Sanitizer Becomes Pure
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-20-the-typewriter-is-presentation-not-policy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #20 — The Typewriter Is Presentation, Not Policy
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-trade-off-i-could-not-design-away" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Trade-off I Could Not Design Away
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities-after-pr-12a" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities After PR-12a
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-pr-deliberately-did-not-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This PR Deliberately Did Not Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-failure-modes" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-note-on-authorship" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Note on Authorship
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-12-discussion-state-management-in-brief" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-12 Discussion — State Management (in brief)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-12 Discussion — State Management (in brief)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-problem-values-in-the-wrong-band" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Problem — Values in the Wrong Band
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-21-derive-dont-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #21 — Derive, Don't Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-22-the-page-is-a-function-of-state" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #22 — The Page Is a Function of State
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-overstatement-i-had-to-withdraw" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Overstatement I Had to Withdraw
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-return-value-that-outlived-its-reason" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Return Value That Outlived Its Reason
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-13-discussion-conversation-memory" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-13 Discussion — Conversation Memory
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-13 Discussion — Conversation Memory">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-23-summarize-dont-replay" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #23 — Summarize, Don't Replay
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-24-the-summary-feeds-both-consumers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #24 — The Summary Feeds Both Consumers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-25-a-separate-call-deferred-behind-the-stream" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #25 — A Separate Call, Deferred Behind the Stream
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-26-concatenate-dont-fuse" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #26 — Concatenate, Don't Fuse
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-27-guardrails-split-by-consequence-not-by-direction" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #27 — Guardrails Split by Consequence, Not by Direction
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-28-where-the-summary-lives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #28 — Where the Summary Lives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-29-two-costs-two-fields" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #29 — Two Costs, Two Fields
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rule-6-memory-resolves-references-it-does-not-supply-facts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rule 6 — Memory Resolves References, It Does Not Supply Facts
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities-after-pr-13" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities After PR-13
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-pr-deliberately-did-not-change_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This PR Deliberately Did Not Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#known-limitation-topic-change" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Known Limitation — Topic Change
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#production-failure-modes_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Production Failure Modes
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#a-note-on-authorship_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        A Note on Authorship
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-14b-discussion-observability" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-14b Discussion — Observability
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-14b Discussion — Observability">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-30-the-unit-that-decided-is-the-unit-that-reports" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #30 — The Unit That Decided Is the Unit That Reports
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-31-log-decisions-not-inputs-and-outputs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #31 — Log Decisions, Not Inputs and Outputs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-32-the-ambient-thing-is-the-collector-not-an-id" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #32 — The Ambient Thing Is the Collector, Not an ID
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-33-the-observer-a-third-contract" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #33 — The Observer, a Third Contract
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-34-retention-is-rotation-not-deletion" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #34 — Retention Is Rotation, Not Deletion
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-streamlit-trap" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Streamlit Trap
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#self-check_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="thinking-like-a-senior-engineerv4">Thinking Like a Senior Engineer.v4<a class="headerlink" href="#thinking-like-a-senior-engineerv4" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Turn a prototype into an application.</p>
+</blockquote>
+<p>Weeks 1–3 built something that works. Week 4 asks the questions that only matter once other
+people use it: how long does the user wait, what does the application remember, what is
+tunable without a redeploy, what happens when a dependency dies, and can anyone but me run it.</p>
+<p>The rule for this week is <strong>one engineering concept per PR</strong>. If a PR needs two sentences to
+say what it taught, it is two PRs.</p>
+<table>
+<thead>
+<tr>
+<th>PR</th>
+<th>Concept</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>11a</strong></td>
+<td>Prompt ownership <em>(carried over from Week 3)</em></td>
+</tr>
+<tr>
+<td><strong>12a</strong></td>
+<td>Asynchronous execution</td>
+</tr>
+<tr>
+<td><strong>12</strong></td>
+<td>State management</td>
+</tr>
+<tr>
+<td><strong>13</strong></td>
+<td>Memory architecture</td>
+</tr>
+<tr>
+<td><strong>14a</strong></td>
+<td>Configuration</td>
+</tr>
+<tr>
+<td><strong>14b</strong></td>
+<td>Observability</td>
+</tr>
+<tr>
+<td><strong>15</strong></td>
+<td>Reliability engineering</td>
+</tr>
+<tr>
+<td><strong>16</strong></td>
+<td>Shipping software</td>
+</tr>
+</tbody>
+</table>
+<p><strong>On the numbering.</strong> Streaming was never in <code>PR-Journey.md</code> — it existed in my Stage-1 plan
+and in the final feature list, but no PR owned it. Inserting it as a new PR-12 would have
+renumbered five PRs already referenced in commit messages and published posts. It became
+<strong>PR-12a</strong> instead. An irregular number costs less than a broken reference.</p>
+<hr />
+<h2 id="pr-11a-discussion-prompt-ownership">PR-11a Discussion — Prompt Ownership<a class="headerlink" href="#pr-11a-discussion-prompt-ownership" title="Permanent link">&para;</a></h2>
+<p>Week 3 closed with this deliberately deferred. It is small, and its whole value is in one
+decision plus one deletion.</p>
+<h3 id="problem-statement">Problem Statement<a class="headerlink" href="#problem-statement" title="Permanent link">&para;</a></h3>
+<p><code>_SYSTEM_PROMPT</code> and <code>_HUMAN_PROMPT</code> were module constants inside <code>generation_service.py</code>.
+That file's job is <strong>composing a chain</strong>. Prompt wording is <strong>content</strong> — it changes when
+answering policy changes, which has nothing to do with how the chain is wired.</p>
+<p>Two reasons to change, one file. That is the same SRP argument PR-10 used to split the prompt
+into system and human messages, applied one level up: not <em>"which message does this text belong
+in"</em> but <em>"which file does this text belong in."</em></p>
+<p>And a live defect was riding along. <strong>Rule 4 — "under 3 sentences" — was still in production.</strong>
+It was a temporary constraint added so my test loop would be fast, moved verbatim during PR-10
+on purpose, and it had been truncating every answer the application produced ever since.</p>
+<hr />
+<h3 id="design-decision-13-location-now-configurability-later">Design Decision #13 — Location Now, Configurability Later<a class="headerlink" href="#design-decision-13-location-now-configurability-later" title="Permanent link">&para;</a></h3>
+<p>The obvious upgrade is to make prompts loadable from a YAML or <code>.env</code> file so a non-engineer
+can change answering policy without a commit. I deliberately did not do that.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Buys</th>
+<th>Costs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Python module</strong> <em>(chosen)</em></td>
+<td>one place to edit; zero new failure modes</td>
+<td>changing a prompt is still a commit and a redeploy</td>
+</tr>
+<tr>
+<td><strong>External file</strong></td>
+<td>policy editable without shipping code</td>
+<td>who loads it, when, and what happens when it is missing or malformed — all new failure modes; a stray <code>{</code> in an unchecked file becomes a runtime template error</td>
+</tr>
+</tbody>
+</table>
+<p>The reason for choosing the smaller change is not caution. It is that <strong>PR-14a owns
+configuration</strong>, and pre-empting it here would have left PR-14a with nothing but a file format
+to pick.</p>
+<p>What PR-11a actually built is a <strong>seam</strong>: a single place where the prompt lives, so that when
+configurability arrives it lands in one file instead of being carved out of <code>generation_service</code>
+under pressure.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Make the change you know is coming <em>cheap</em>. Do not make it <em>early</em>. Building configurability
+before anything needs it is speculative generality; creating the seam it will need is not.</p>
+</blockquote>
+<p><strong>The narrow claim, and why it matters.</strong> My first framing was <em>"PR-14a will only have to touch
+the prompt module."</em> That is not true, and it is the kind of overstatement an interviewer
+catches by reading one line:</p>
+<div class="highlight"><pre><span></span><code><span class="n">_prompt</span> <span class="o">=</span> <span class="n">ChatPromptTemplate</span><span class="o">.</span><span class="n">from_messages</span><span class="p">([</span><span class="o">...</span><span class="p">])</span>   <span class="c1"># built at class-definition time</span>
+<span class="n">_chain</span>  <span class="o">=</span> <span class="p">(</span><span class="o">...</span> <span class="o">|</span> <span class="n">_prompt</span> <span class="o">|</span> <span class="n">_llm</span><span class="p">)</span>                    <span class="c1"># chain compiled at import</span>
+</code></pre></div>
+<p>The prompt is <strong>baked into a chain constructed once, at import</strong>. A runtime-configurable prompt
+cannot be absorbed by the prompt module alone; it has to deal with that eager construction. So
+the honest claim is the narrow one:</p>
+<blockquote>
+<p>PR-11a makes prompt <strong>text</strong> a one-file change. It does not make prompt <strong>behaviour</strong> a
+one-file change.</p>
+</blockquote>
+<p>That remaining problem belongs to PR-14a, and discovering it there is the lesson there.</p>
+<p><strong>Rejected: an accessor function.</strong> <code>get_system_prompt()</code> returning the constant looks like it
+future-proofs the seam. It does not — the chain would still evaluate it once at import, so the
+wrapper buys nothing today while adding indirection. A rejected wrapper you can explain is
+worth more than a wrapper you built.</p>
+<hr />
+<h3 id="rule-4-deleting-a-constraint-without-replacing-it">Rule 4 — Deleting a Constraint Without Replacing It<a class="headerlink" href="#rule-4-deleting-a-constraint-without-replacing-it" title="Permanent link">&para;</a></h3>
+<p>Removing the rule was easy to justify: it was a <em>development</em> artifact, and the application is
+now being judged at production quality.</p>
+<p>But that argument only answers <em>why the rule must go</em>. It says nothing about <em>what the product
+actually wants</em>, and those are two different questions. I initially reached for replacements:</p>
+<table>
+<thead>
+<tr>
+<th>Proposed replacement</th>
+<th>Why it was wrong</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>"Stop when there is no relevant context left"</td>
+<td>Already Rule 2 — and <code>validate_context()</code> enforces it <em>harder</em>, before generation even runs</td>
+</tr>
+<tr>
+<td>A resource / length budget in the prompt</td>
+<td>A prompt rule is a <strong>request</strong> the model may ignore. A token cap is an <strong>enforcement</strong>. If a hard ceiling is wanted, it is <code>num_predict</code> on <code>ChatOllama</code> — a model parameter, therefore PR-14a configuration, not prompt text</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Never write a prompt rule for something the runtime can enforce. Asking the model politely to
+respect a budget is strictly worse than setting the budget.</p>
+</blockquote>
+<p><strong>Decision: no length policy at all.</strong> Not a residue — a choice. Verified afterwards by running
+it: answers did <em>not</em> get longer, because with this chunk size and this model, replies are
+naturally short. The rule had been cutting off answers that were never going to be long anyway.</p>
+<hr />
+<h3 id="interview-takeaway">Interview Takeaway<a class="headerlink" href="#interview-takeaway" title="Permanent link">&para;</a></h3>
+<p><strong>Where do prompts belong in a codebase?</strong></p>
+<blockquote>
+<p>Not next to the code that composes the chain — they change for different reasons. I moved them
+to their own module, which is a seam rather than a feature: making them runtime-configurable
+is a separate concern that belongs with the rest of my configuration work. I'd also be careful
+about the claim — the chain compiles the prompt at import, so moving the text makes <em>text</em> a
+one-file change, not <em>behaviour</em>.</p>
+</blockquote>
+<hr />
+<h2 id="pr-12a-discussion-streaming">PR-12a Discussion — Streaming<a class="headerlink" href="#pr-12a-discussion-streaming" title="Permanent link">&para;</a></h2>
+<h3 id="problem-statement_1">Problem Statement<a class="headerlink" href="#problem-statement_1" title="Permanent link">&para;</a></h3>
+<p>The user watches a spinner for the entire generation.</p>
+<p>The first thing to get right is what streaming does <strong>not</strong> do: it does not make generation
+faster. Total latency is identical. What changes is <strong>time-to-first-token</strong> — the user sees
+progress in a few hundred milliseconds instead of after the whole answer exists.</p>
+<blockquote>
+<p>Streaming is a <strong>perceived</strong> latency fix. Anyone who says it speeds up the model has not
+measured it.</p>
+</blockquote>
+<p>This PR is also the bill coming due for Week 3. PR-10's entire justification was:</p>
+<blockquote>
+<p>Execution modes belong to the composition, not to each step. Because a chain of Runnables is
+itself a Runnable, <code>.stream()</code> applies to the whole pipeline for free.</p>
+</blockquote>
+<p>Now I find out whether that was true. It half was. <code>.stream()</code> did come for free — <strong>the chain
+required zero changes.</strong> What was not free was everything my own architecture had built on the
+assumption that an answer arrives all at once.</p>
+<hr />
+<h3 id="the-real-problem-my-own-contract-not-the-framework">The Real Problem — My Own Contract, Not the Framework<a class="headerlink" href="#the-real-problem-my-own-contract-not-the-framework" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>rag.py — ask() before this PR
+
+  validate_input(query)        → may reject
+  RetrievalService.retrieve()
+  validate_context(...)        → may reject
+  GenerationService.generate_answer()   ← blocks until a whole answer exists
+  validate_output(response)    → may reject          ▲
+  return GenerationResponse                          │
+                                    everything downstream of generation
+                                    assumes a COMPLETE answer
+</code></pre></div>
+<p><code>ask()</code> is typed <code>-&gt; GenerationResponse</code>. A <code>GenerationResponse</code> is a <strong>finished</strong> thing:
+<code>answer</code>, <code>token_usage</code>, <code>finish_reason</code>, <code>latency</code>, <code>sources</code>. Streaming means the answer does
+not exist when I need to start showing it.</p>
+<p>Two consequences, and keeping them separate is what made the design tractable:</p>
+<p><strong>(a) The complete response is still required — it just arrives late.</strong> <code>usage_metadata</code> and
+<code>response_metadata</code> come on the <em>final</em> chunk. Token counts, finish reason, and latency are
+simply not knowable until the stream is over. Streaming does not remove the response object; it
+means the user reads the answer <em>before</em> it exists as a domain object.</p>
+<p><strong>(b) <code>validate_output</code> can no longer reject.</strong> The tokens have been shown. There is no
+un-saying them.</p>
+<p>That second one is the actual subject of this PR.</p>
+<hr />
+<h3 id="core-thoughts-what-i-believed-going-in">Core Thoughts — What I Believed Going In<a class="headerlink" href="#core-thoughts-what-i-believed-going-in" title="Permanent link">&para;</a></h3>
+<p>I believed streaming was a UI change: swap <code>.invoke()</code> for <code>.stream()</code>, hand the generator to
+<code>st.write_stream</code>, done. The demo I wrote to check the metadata question does exactly that in
+25 lines, and it works.</p>
+<p>What that framing misses is that <strong>every output guardrail I built in Week 3 assumed it ran
+before the user saw anything.</strong> Streaming inverts that ordering, and no amount of framework
+support fixes an inverted ordering.</p>
+<p>The correct framing, which took the whole design discussion to reach:</p>
+<blockquote>
+<p>Streaming is not <code>token → screen</code>.
+It is <code>token → policy → screen</code>.</p>
+</blockquote>
+<p>You cannot run policy over data you have already flushed. So something must be held back.</p>
+<hr />
+<h3 id="design-decision-14-streaming-is-a-peer-of-ask-not-a-variant">Design Decision #14 — Streaming Is a Peer of <code>ask()</code>, Not a Variant<a class="headerlink" href="#design-decision-14-streaming-is-a-peer-of-ask-not-a-variant" title="Permanent link">&para;</a></h3>
+<p>Three shapes were possible:</p>
+<table>
+<thead>
+<tr>
+<th>Shape</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ask(query, filters, stream=True)</code></td>
+<td>❌ Returns a <code>GenerationResponse</code> <em>or</em> a generator depending on an argument. Two return types from one signature, so every caller must branch on the flag anyway — the branch moved, it did not disappear. Classic flag-argument smell.</td>
+</tr>
+<tr>
+<td><code>ask()</code> always streams; the blocking path is <code>"".join(...)</code> over it</td>
+<td>❌ Forces a buffering concern onto callers that never asked for one, and makes the simple path pay for the complex one.</td>
+</tr>
+<tr>
+<td><strong><code>ask()</code> and <code>ask_stream()</code> as peers</strong></td>
+<td>✅ Chosen</td>
+</tr>
+</tbody>
+</table>
+<p>Two functions, two honest signatures, one shared prefix.</p>
+<p>The shared prefix — input guardrail, retrieve, context guardrail — was extracted rather than
+duplicated. Two peers copying three steps means two places to edit when input guardrails change,
+and one of them will eventually be missed:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_retrieve_context</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">filters</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">list</span><span class="p">[</span><span class="n">Document</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="n">GenerationResponse</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]:</span>
+</code></pre></div>
+<p><strong>Why a tuple rather than an exception.</strong> A guardrail rejection is an <strong>expected</strong> outcome — the
+system is working correctly when it refuses. Exceptions model the <em>unexpected</em>. Using one here
+would hide the second path from the signature and make <code>ask()</code> read as though it always
+succeeds.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Expected outcomes belong in the return type. Exceptions are for the outcomes you did not plan
+for.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-15-buffer-and-delay-and-where-it-lives">Design Decision #15 — Buffer-and-Delay, and Where It Lives<a class="headerlink" href="#design-decision-15-buffer-and-delay-and-where-it-lives" title="Permanent link">&para;</a></h3>
+<p>If policy must run before text reaches the screen, then text must be held back. The mechanism
+is a <strong>lookahead window</strong>: keep some output behind the live edge so there is always something
+to inspect before it is committed.</p>
+<p>The question that decides the architecture is <em>who owns the window</em>.</p>
+<div class="highlight"><pre><span></span><code>GenerationService  ← owns HOW the model executes      (.stream() vs .invoke())
+rag.py             ← owns WHEN text may reach the user (buffering, flush timing, guardrails)
+app.py             ← owns HOW it looks while arriving  (animation)
+</code></pre></div>
+<p>Buffering is <strong>sequencing policy</strong>, and sequencing is exactly what <code>rag.py</code> already did for the
+blocking path. So <code>GenerationService.stream_answer()</code> returns the raw chunk iterator and knows
+nothing about buffers; <code>rag.py</code> consumes it and decides what escapes.</p>
+<p><strong>A mechanical trap worth recording.</strong> <code>stream_answer</code> must return <em>both</em> the chunk iterator and
+the <code>sources</code> list — the caller needs <code>sources</code> to build the response and the UI needs them to
+resolve <code>[1]</code> to a filename.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">stream_answer</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">user_query</span><span class="p">,</span> <span class="n">retrieved_documents</span><span class="p">):</span>
+    <span class="n">sources</span> <span class="o">=</span> <span class="n">_label_sources</span><span class="p">(</span><span class="n">retrieved_documents</span><span class="p">)</span>
+    <span class="n">chunks</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_chain</span><span class="o">.</span><span class="n">stream</span><span class="p">({</span><span class="s2">&quot;sources&quot;</span><span class="p">:</span> <span class="n">sources</span><span class="p">,</span> <span class="s2">&quot;user_query&quot;</span><span class="p">:</span> <span class="n">user_query</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">sources</span><span class="p">,</span> <span class="n">chunks</span>          <span class="c1"># a plain function that RETURNS an iterator</span>
+</code></pre></div>
+<p>If this method contained a <code>yield</code> anywhere, calling it would return a generator object and
+<code>sources</code> could never be retrieved — it would have to be smuggled out through a mutable
+argument. Because <code>.stream()</code> already hands back an iterator, the method stays a plain function.</p>
+<blockquote>
+<p><strong>A generator function and a function that returns a generator are different things.</strong> The
+first can only ever give you one value.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-16-the-flush-boundary-derived-from-the-grammar">Design Decision #16 — The Flush Boundary, Derived From the Grammar<a class="headerlink" href="#design-decision-16-the-flush-boundary-derived-from-the-grammar" title="Permanent link">&para;</a></h3>
+<p>This is the decision the PR turns on.</p>
+<p>Week 3 already recorded that a marker does not arrive as a marker — it arrives as <code>[</code>, then <code>1</code>,
+then <code>]</code>, possibly in three separate chunks. My first instinct in this PR was to verify
+citations <strong>chunk by chunk</strong>, which quietly contradicted that finding.</p>
+<p>Buffering does not fix it. It makes it <strong>rarer</strong>:</p>
+<div class="highlight"><pre><span></span><code>flush N   : &quot;...dense and sparse retrieval [1&quot;
+flush N+1 : &quot;]. BM25 scores by term frequency [4].&quot;
+</code></pre></div>
+<p><code>strip_unverified_citations</code> matches complete <code>[n]</code> markers. In flush N it sees <code>[1</code> — no match
+— so nothing is stripped, and that text is on the user's screen permanently. It is never
+re-examined.</p>
+<p>Token-by-token this fails almost every time and I would have caught it in five minutes.
+<strong>Buffered, it fails only when a marker straddles a boundary.</strong></p>
+<blockquote>
+<p>A bug that fires one time in thirty is worse than one that fires every time, because it ships.</p>
+</blockquote>
+<p>So the flush point must be <strong>boundary-aware</strong>. My first proposal for the cap was "20 tokens plus
+<code>x</code> where <code>x &lt;= TOP_K</code>." The instinct was right — the wait <em>is</em> bounded — but the number was a
+guess. The better bound comes from the grammar of the thing being protected:</p>
+<blockquote>
+<p>A valid marker is <code>[</code> + digits + <code>]</code>. With <code>TOP_K = 3</code> the longest possible marker is <code>[3]</code> —
+three characters. Past <code>MARKER_MAX = 8</code>, an unmatched <code>[</code> <strong>cannot</strong> be a citation. It is
+ordinary text: <code>[note]</code>, a code sample, footnote syntax.</p>
+</blockquote>
+<p>That turns an unbounded wait into a bound I can state and defend:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_safe_flush_point</span><span class="p">(</span><span class="n">pending</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="n">open_bracket</span> <span class="o">=</span> <span class="n">pending</span><span class="o">.</span><span class="n">rfind</span><span class="p">(</span><span class="s2">&quot;[&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">open_bracket</span> <span class="o">==</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>                            <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">pending</span><span class="p">)</span>   <span class="c1"># nothing to split</span>
+    <span class="k">if</span> <span class="s2">&quot;]&quot;</span> <span class="ow">in</span> <span class="n">pending</span><span class="p">[</span><span class="n">open_bracket</span><span class="p">:]:</span>                 <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">pending</span><span class="p">)</span>   <span class="c1"># already closed</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pending</span><span class="p">)</span> <span class="o">-</span> <span class="n">open_bracket</span> <span class="o">&gt;</span> <span class="n">MARKER_MAX</span><span class="p">:</span>      <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">pending</span><span class="p">)</span>   <span class="c1"># literal text</span>
+    <span class="k">return</span> <span class="n">open_bracket</span>                                                     <span class="c1"># marker in flight</span>
+</code></pre></div>
+<p>Note the last line flushes <strong>everything before</strong> the bracket rather than holding the whole
+buffer. Holding it all would cost time-to-first-token and buy no extra safety.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+When you need a magic number, derive it from the structure you are protecting. A number you
+can explain is a decision; a number that felt right is a liability.</p>
+</blockquote>
+<p>This is the same problem as decoding UTF-8 from a socket: never flush half a multi-byte
+sequence. Here the "sequence" is <code>[</code> … <code>]</code>.</p>
+<p><strong>The coupling this creates must be stated loudly.</strong> Sanitizing per flush is only <em>correct</em>
+because <code>_safe_flush_point</code> guarantees no partial marker is in the slice. The two decisions are
+load-bearing on each other. Anyone who later "simplifies" the boundary rule reintroduces the
+exact defect PR-11c exists to prevent — and reintroduces it in its rare, hard-to-find form.</p>
+<hr />
+<h3 id="design-decision-17-streamedanswer-because-one-operation-yields-two-things">Design Decision #17 — <code>StreamedAnswer</code>, Because One Operation Yields Two Things<a class="headerlink" href="#design-decision-17-streamedanswer-because-one-operation-yields-two-things" title="Permanent link">&para;</a></h3>
+<p>The caller needs the text <em>as it arrives</em> and the finished <code>GenerationResponse</code> <em>afterwards</em>. A
+generator can only deliver the first.</p>
+<p>The common workaround — and the one my own streaming demo used — is a mutable dict the generator
+writes into:</p>
+<div class="highlight"><pre><span></span><code><span class="n">usage_holder</span> <span class="o">=</span> <span class="p">{}</span>                       <span class="c1"># from demo-stream.py</span>
+<span class="o">...</span>
+<span class="n">usage_holder</span><span class="p">[</span><span class="s2">&quot;metadata&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">chunk</span><span class="o">.</span><span class="n">usage_metadata</span>
+</code></pre></div>
+<p>That works, and it is exactly the out-parameter pattern PR-11's Mistake 7 taught me to distrust:
+an invisible contract, where the second value only exists if the caller happens to look in the
+right place at the right time.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StreamedAnswer</span><span class="p">:</span>
+    <span class="n">tokens</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">response</span><span class="p">:</span> <span class="n">GenerationResponse</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+</code></pre></div>
+<p><strong>Consumption contract:</strong> iterate <code>tokens</code> to completion, <em>then</em> read <code>response</code>.</p>
+<p>The neat part is the rejection case. If an input or context guardrail rejects, <code>tokens</code> is the
+empty iterator and <code>response</code> is populated <strong>immediately</strong>. The UI does not branch:</p>
+<div class="highlight"><pre><span></span><code><span class="n">stream</span> <span class="o">=</span> <span class="n">ask_stream</span><span class="p">(</span><span class="n">question</span><span class="p">,</span> <span class="n">filters</span><span class="p">)</span>
+<span class="n">st</span><span class="o">.</span><span class="n">write_stream</span><span class="p">(</span><span class="n">typewriter</span><span class="p">(</span><span class="n">stream</span><span class="o">.</span><span class="n">tokens</span><span class="p">))</span>   <span class="c1"># renders nothing when rejected</span>
+<span class="n">response</span> <span class="o">=</span> <span class="n">stream</span><span class="o">.</span><span class="n">response</span>                   <span class="c1"># the rejection, or the answer</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">response</span><span class="o">.</span><span class="n">success</span><span class="p">:</span> <span class="o">...</span>
+</code></pre></div>
+<p>One code path for "rejected before generation" and "generated successfully" — because a rejected
+request is simply a stream with no tokens in it.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+When a design produces a special case, look for the framing where it stops being special.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-18-one-place-that-knows-what-an-aimessage-is">Design Decision #18 — One Place That Knows What an <code>AIMessage</code> Is<a class="headerlink" href="#design-decision-18-one-place-that-knows-what-an-aimessage-is" title="Permanent link">&para;</a></h3>
+<p><code>generate_answer</code> used to build the <code>GenerationResponse</code> inline. Streaming needs the same
+mapping, from an accumulated chunk instead of a message.</p>
+<p>Duplicating it would have put <code>response_metadata.get("done_reason")</code> in two files — and one of
+them would be <code>rag.py</code>, the orchestration layer, which has no business knowing LangChain's field
+names.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@classmethod</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">build_response</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">message</span><span class="p">,</span> <span class="n">sources</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GenerationResponse</span><span class="p">:</span>
+</code></pre></div>
+<p>Both paths now translate through it. This is <strong>INVARIANT #2 from PR-10</strong> holding under pressure:
+translate framework types into domain types at the boundary you own. The pressure was real —
+inlining six lines in <code>rag.py</code> would have been the shortest diff.</p>
+<p><code>message</code> is allowed to be <code>None</code> (the model produced no chunks at all). That becomes an empty
+answer rather than a crash, because rejecting empty answers is <code>_check_empty_response</code>'s job,
+not this method's. Deciding <em>where</em> a failure is handled is as much a design act as handling it.</p>
+<hr />
+<h3 id="design-decision-19-the-sanitizer-becomes-pure">Design Decision #19 — The Sanitizer Becomes Pure<a class="headerlink" href="#design-decision-19-the-sanitizer-becomes-pure" title="Permanent link">&para;</a></h3>
+<p><code>_strip_unverified_citations(generation_response) -&gt; None</code> took a domain object. The streaming
+path has no domain object yet — it has a <strong>string</strong>.</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">strip_unverified_citations</span><span class="p">(</span><span class="n">text</span><span class="p">,</span> <span class="n">sources</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>      <span class="c1"># pure: text in, text out</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_strip_unverified_citations</span><span class="p">(</span><span class="n">response</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>          <span class="c1"># thin adapter, unchanged call site</span>
+</code></pre></div>
+<p>This is PR-10's <code>_format_documents</code> lesson recurring: <strong>if a function does not need the object,
+it should not take the object.</strong> The pure version is testable with a plain <code>assert</code>, callable
+from both paths, and unaware of <code>GenerationResponse</code> entirely.</p>
+<p><code>validate_output()</code>'s call site did not change, which is the point of the adapter.</p>
+<hr />
+<h3 id="design-decision-20-the-typewriter-is-presentation-not-policy">Design Decision #20 — The Typewriter Is Presentation, Not Policy<a class="headerlink" href="#design-decision-20-the-typewriter-is-presentation-not-policy" title="Permanent link">&para;</a></h3>
+<p>Running it revealed a UX problem the design had not predicted: 20-token flushes land as visible
+bursts. It reads like hiccups.</p>
+<p>There are two ways to fix that, and choosing the wrong one is the interesting part.</p>
+<table>
+<thead>
+<tr>
+<th>Fix</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Lower <code>FLUSH_FLOOR</code> to 1</td>
+<td>✅ Smooth. ❌ Shrinks the policy window to nothing and runs the guardrails once per token.</td>
+</tr>
+<tr>
+<td><strong>Animate in the UI</strong></td>
+<td>✅ Smooth. ✅ Safety window untouched.</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Never weaken a safety mechanism to fix how something looks. The buffer size is a <strong>safety</strong>
+parameter; the render cadence is a <strong>presentation</strong> parameter. Tuning one must not be able to
+degrade the other.</p>
+</blockquote>
+<p>Keeping them in different layers is what makes that guarantee structural rather than a promise.</p>
+<p>The animation paces itself against the model rather than using a fixed delay. It measures how
+long <code>next()</code> blocked — which is exactly how long the model spent producing that block — and
+spreads the block's characters over that interval:</p>
+<div class="highlight"><pre><span></span><code>model slow  →  waited 0.4s for 80 chars  →  ~5ms/char  →  types while the model works
+model fast  →  blocks already queued     →  waited ≈ 0 →  clamps to the 2ms floor, catches up
+</code></pre></div>
+<p>Self-correcting: falling behind means the next block is already waiting, which makes the
+measured wait smaller, which speeds the typing up.</p>
+<p><strong>The subtle part:</strong> the measurement wraps <code>next()</code> specifically, not the whole loop. If it
+included the sleeps, it would be measuring its own typing speed, and the pacing would lock to
+whatever value it happened to start at — a feedback loop that looks like it adapts and does not.</p>
+<hr />
+<h3 id="the-trade-off-i-could-not-design-away">The Trade-off I Could Not Design Away<a class="headerlink" href="#the-trade-off-i-could-not-design-away" title="Permanent link">&para;</a></h3>
+<p>My proposal included: <em>if a validator fails mid-stream, stop, and maybe override what was
+already sent.</em></p>
+<p>That does not hold. Streamlit can clear a placeholder, but:</p>
+<ul>
+<li>the user has already read the text, and</li>
+<li>the moment this is an HTTP API instead of a Streamlit page, <strong>bytes on the wire cannot be
+  recalled</strong>.</li>
+</ul>
+<p>Designing around "we'll overwrite it" builds a safety story that is true only for the current UI
+framework — the exact coupling this project has refused everywhere else.</p>
+<p>The honest statement:</p>
+<blockquote>
+<p><strong>Streaming trades enforceability for perceived latency.</strong> A lookahead window can only catch
+what is decidable <em>within the window</em>. Anything requiring the whole answer cannot be blocked
+once streaming has begun — only flagged afterwards.</p>
+</blockquote>
+<p><strong>Which points somewhere specific.</strong> I wanted a future LLM policy judge to be able to halt the
+stream. Two reasons it cannot:</p>
+<ol>
+<li><strong>Cost.</strong> A judge call per buffer means K extra round-trips on the critical path of the thing
+   streaming exists to make fast. With a local 3B model that is hundreds of milliseconds each —
+   time-to-first-token would end up <em>worse</em> than not streaming.</li>
+<li><strong>Semantics.</strong> "Does this answer comply with policy" is not a question you can ask of 40
+   tokens without a large false-positive rate. It is inherently a whole-answer judgment.</li>
+</ol>
+<blockquote>
+<p>If a check genuinely requires whole-answer judgment, the place to stop a bad response is
+<strong>before generation</strong> — the input guardrails, which already exist. Output-side LLM judging
+belongs off the critical path: logged, sampled, and used to improve the prompt. Not a gate.</p>
+</blockquote>
+<p>That is not a satisfying answer. It is the real one, and being able to say it is worth more in
+an interview than a mechanism that pretends otherwise.</p>
+<hr />
+<h3 id="responsibilities-after-pr-12a">Responsibilities After PR-12a<a class="headerlink" href="#responsibilities-after-pr-12a" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Owns</th>
+<th>Explicitly does NOT own</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>_chain</code></td>
+<td>execution mode (<code>.stream()</code> / <code>.invoke()</code>)</td>
+<td>buffering, guardrails, domain types</td>
+</tr>
+<tr>
+<td><code>stream_answer</code></td>
+<td>starting a stream; labelling sources once</td>
+<td>flush timing, policy</td>
+</tr>
+<tr>
+<td><code>build_response</code></td>
+<td>the only <code>AIMessage → GenerationResponse</code> translation</td>
+<td>when it is called</td>
+</tr>
+<tr>
+<td><code>_retrieve_context</code></td>
+<td>the guard→retrieve→guard prefix shared by both paths</td>
+<td>generation, streaming</td>
+</tr>
+<tr>
+<td><code>_safe_flush_point</code></td>
+<td>where text may be cut without splitting a marker</td>
+<td>when to flush, what to flush</td>
+</tr>
+<tr>
+<td><code>_stream_tokens</code></td>
+<td>buffering, flush timing, per-flush sanitizing, final assembly</td>
+<td>how the model executes; how it looks</td>
+</tr>
+<tr>
+<td><code>strip_unverified_citations</code></td>
+<td>repairing invented markers in text</td>
+<td>rejecting; domain objects</td>
+</tr>
+<tr>
+<td><code>typewriter</code> (<code>app.py</code>)</td>
+<td>render cadence</td>
+<td>content, order, safety</td>
+</tr>
+</tbody>
+</table>
+<p>The line that matters: <strong><code>GenerationService</code> owns how the model executes; <code>rag.py</code> owns when
+text is allowed to reach the user.</strong></p>
+<hr />
+<h3 id="final-architecture">Final Architecture<a class="headerlink" href="#final-architecture" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>app.py
+  stream = ask_stream(question, filters)     ← returns instantly, nothing generated yet
+  st.write_stream(typewriter(stream.tokens)) ← consuming this starts the model
+  response = stream.response                 ← readable only after the stream drains
+        │
+════════╪════════════════════════════════════════════════════════════════════
+        ▼   rag.py — ORDER and TIMING
+┌───────────────────────────────────────────────────────────────────────┐
+│  _retrieve_context()                                                  │
+│     validate_input ─┐                                                 │
+│     retrieve        ├─ rejection? → tokens = empty, response = reject │
+│     validate_context┘                                                 │
+│                                                                       │
+│  ┌── _stream_tokens() ───────────────────────────────────────────┐    │
+│  │  for chunk in chunks:                                         │    │
+│  │      accumulated += chunk       ← metadata rides here         │    │
+│  │      pending     += chunk.content                             │    │
+│  │                                                               │    │
+│  │      if held &lt; FLUSH_FLOOR:   continue        ← FLOOR         │    │
+│  │      safe = _safe_flush_point(pending)        ← BOUNDARY      │    │
+│  │      if safe == 0:            continue                        │    │
+│  │                                                               │    │
+│  │      yield strip_unverified_citations(pending[:safe]) ────────┼──→ UI
+│  │                                                               │    │
+│  │  ── end of stream ──                                          │    │
+│  │  yield strip_unverified_citations(pending)    ← unconditional ┼──→ UI
+│  │  response = build_response(accumulated, sources)              │    │
+│  │  validate_output(response)   ← whole-answer validators, HERE  │    │
+│  └───────────────────────────────────────────────────────────────┘    │
+└───────────────────────────────────────────────────────────────────────┘
+        │
+════════╪════════════════════════════════════════════════════════════════════
+        ▼   generation_service.py — EXECUTION MODE only
+   stream_answer()  → (sources, chunk_iterator)    plain function, not a generator
+   build_response() → GenerationResponse           the only AIMessage → domain mapping
+        │
+        ▼   the PR-10 chain — UNCHANGED
+   RunnableParallel | prompt | llm       .stream() instead of .invoke()
+</code></pre></div>
+<p>The chain required <strong>zero changes</strong>. That is PR-10's claim paying out.</p>
+<hr />
+<h3 id="rejected-alternatives">Rejected Alternatives<a class="headerlink" href="#rejected-alternatives" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Why rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ask(..., stream=True)</code></td>
+<td>Two return types from one signature; callers must branch on the flag anyway</td>
+</tr>
+<tr>
+<td>Yield token-by-token to the UI</td>
+<td>Splits citation markers constantly; a guardrail pass per token</td>
+</tr>
+<tr>
+<td>Verify citations chunk-by-chunk without a boundary rule</td>
+<td>Makes the split-marker leak <em>rarer</em>, not gone — the worst possible outcome for a bug</td>
+</tr>
+<tr>
+<td>Ceiling of <code>20 + x</code> tokens</td>
+<td>The right instinct, but a guessed number. The grammar gives a defensible bound instead</td>
+</tr>
+<tr>
+<td>Hold the entire buffer when a marker is in flight</td>
+<td>Costs time-to-first-token and buys no extra safety over holding only the fragment</td>
+</tr>
+<tr>
+<td>Mutable dict as an out-parameter for the final response</td>
+<td>Invisible contract; the same class of bug as PR-11's Mistake 7</td>
+</tr>
+<tr>
+<td>Run all of <code>validate_output</code> per flush</td>
+<td><code>_check_empty_response</code> is meaningless on a partial answer — "was the answer empty" is only knowable at the end</td>
+</tr>
+<tr>
+<td>Clear the screen when a validator rejects mid-stream</td>
+<td>Only "works" in this UI; an HTTP API cannot un-send bytes. A safety story coupled to a framework</td>
+</tr>
+<tr>
+<td>LLM policy judge per buffer</td>
+<td>K extra round-trips on the critical path; makes TTFT worse than not streaming. Whole-answer judgment cannot gate a stream</td>
+</tr>
+<tr>
+<td>Lower <code>FLUSH_FLOOR</code> to smooth the render</td>
+<td>Fixes a presentation problem by shrinking a safety window</td>
+</tr>
+<tr>
+<td>Buffering inside <code>GenerationService</code></td>
+<td>Buffering is sequencing policy; sequencing belongs to orchestration</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="what-this-pr-deliberately-did-not-change">What This PR Deliberately Did <em>Not</em> Change<a class="headerlink" href="#what-this-pr-deliberately-did-not-change" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>The chain</strong> — untouched. <code>.stream()</code> replaced <code>.invoke()</code> at the call site; nothing in the
+  composition moved.</li>
+<li><strong><code>ask()</code></strong> — retained, behaviour identical. It is the non-streaming peer, still the simplest
+  way to test the pipeline without a UI.</li>
+<li><strong>Guardrail policy</strong> — no rule changed. Only <em>when</em> sanitizing runs, and on what type.</li>
+<li><strong><code>validate_output()</code></strong> — same signature, same call site, same order internally.</li>
+<li><strong>Prompts, <code>CitedSource</code>, retrieval, ingestion</strong> — untouched.</li>
+<li><strong>Nothing new became a Runnable.</strong> INVARIANT #1 holds: buffering, flush timing and guardrails
+  are all plain Python.</li>
+</ul>
+<hr />
+<h3 id="production-failure-modes">Production Failure Modes<a class="headerlink" href="#production-failure-modes" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>A marker straddles a flush boundary.</strong> Handled — <code>_safe_flush_point</code> holds the fragment.
+  This is the failure the whole design exists to prevent.</li>
+<li><strong>An unmatched <code>[</code> that is ordinary text.</strong> Handled — <code>MARKER_MAX</code> releases it after 8
+  characters rather than stalling.</li>
+<li><strong>A marker at the very start of the buffer</strong> (<code>safe == 0</code>). Handled — waits for more tokens.
+  <code>MARKER_MAX</code> guarantees this cannot loop forever.</li>
+<li><strong>The model produces zero chunks.</strong> Handled — <code>build_response(None, …)</code> yields an empty
+  answer, which <code>_check_empty_response</code> then rejects. The failure is handled by its owner.</li>
+<li><strong>A validator rejects after tokens are shown.</strong> <em>Not</em> handled, by design. The error appears
+  below an answer the user has read. Documented as the cost of streaming, not papered over.</li>
+<li><strong>Ollama dies mid-stream.</strong> Not handled — the generator raises inside <code>st.write_stream</code> and
+  Streamlit shows a traceback. Same gap PR-10 logged, still owned by PR-15. Streaming makes it
+  slightly worse: a partial answer is already on screen.</li>
+<li><strong><code>response.answer</code> vs what the user saw.</strong> <code>build_response</code> rebuilds the answer from the
+  <em>raw</em> chunks, so it still contains markers that were stripped from the displayed text.
+  <code>validate_output</code> re-runs the sanitizer over the whole answer, which reconciles them. That
+  second pass is deliberate, not redundant.</li>
+<li><strong>Concurrency.</strong> All streaming state — <code>pending</code>, <code>accumulated</code>, <code>held</code>, the handle — is local
+  to one call. No module-level mutable state was introduced. PR-11's Mistake 7 did not recur.</li>
+</ul>
+<hr />
+<h3 id="engineering-lessons">Engineering Lessons<a class="headerlink" href="#engineering-lessons" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Streaming is a perceived-latency fix, not a throughput fix.</strong> Total time is unchanged.</li>
+<li><strong><code>token → policy → screen</code>, never <code>token → screen</code>.</strong> Policy cannot run over data already
+   flushed.</li>
+<li><strong>A framework giving you <code>.stream()</code> does not give you a streaming architecture.</strong> The chain
+   needed no changes; my own contracts needed all of them.</li>
+<li><strong>Derive magic numbers from the structure they protect.</strong> <code>MARKER_MAX</code> comes from the grammar
+   of a citation, not from taste.</li>
+<li><strong>A rare bug is worse than a constant one.</strong> Buffering without a boundary rule would have
+   made the split-marker leak ship.</li>
+<li><strong>A generator function and a function returning a generator are different things.</strong> One can
+   only ever give you a single value.</li>
+<li><strong>Expected outcomes belong in the return type; exceptions are for the unexpected.</strong></li>
+<li><strong>Never weaken a safety mechanism to fix an appearance problem.</strong> Different concerns, different
+   layers.</li>
+<li><strong>Price any check you put on a critical path</strong> before designing it in.</li>
+<li><strong>Streaming trades enforceability for perceived latency.</strong> Hard blocks belong on the input
+    side; output-side judgment is a flag, not a gate.</li>
+<li><strong>When a design produces a special case, look for the framing where it stops being special.</strong>
+    A rejected request is just a stream with no tokens.</li>
+</ol>
+<hr />
+<h3 id="interview-takeaways">Interview Takeaways<a class="headerlink" href="#interview-takeaways" title="Permanent link">&para;</a></h3>
+<p><strong>What does streaming actually improve?</strong></p>
+<blockquote>
+<p>Perceived latency, not throughput. Total generation time is identical — the user just sees the
+first token in a few hundred milliseconds instead of waiting for the whole answer. If someone
+tells you streaming made their model faster, they measured the wrong thing.</p>
+</blockquote>
+<p><strong>You already had LCEL. Wasn't <code>.stream()</code> free?</strong></p>
+<blockquote>
+<p>The chain genuinely needed zero changes — that was PR-10 paying out. What wasn't free was my
+own architecture. <code>ask()</code> returned a finished domain object, and every output guardrail assumed
+it ran before the user saw anything. Streaming inverts that ordering, and a framework can't fix
+an inverted ordering.</p>
+</blockquote>
+<p><strong>How do you validate output you've already shown the user?</strong></p>
+<blockquote>
+<p>You mostly can't, and pretending otherwise is the mistake. I hold a lookahead window so policy
+runs before text is flushed, but a window only catches what's decidable <em>within</em> the window.
+Anything needing the whole answer can only be flagged afterwards. So hard blocks live on the
+input side, and output-side LLM judging goes off the critical path — logged and sampled, not a
+gate.</p>
+</blockquote>
+<p><strong>Why not just stop the stream when a check fails?</strong></p>
+<blockquote>
+<p>Because "stop" doesn't undo what's already been read, and in an HTTP API the bytes are simply
+gone. Any safety story that depends on clearing a div is coupled to the UI framework. I'd rather
+state the trade-off honestly than build a mechanism that only appears to enforce something.</p>
+</blockquote>
+<p><strong>How did you size the buffer?</strong></p>
+<blockquote>
+<p>Two numbers, and only one of them is a guess. The floor — how many chunks before a flush — is a
+UX judgment I tuned by feel. The ceiling is derived: a citation marker is <code>[</code> + digits + <code>]</code>, so
+with <code>TOP_K = 3</code> the longest is three characters. Past eight, an unmatched bracket can't be a
+marker, so I release it. That turns an unbounded wait into a bound I can defend.</p>
+</blockquote>
+<p><strong>Why is the typewriter animation in the UI instead of just flushing smaller chunks?</strong></p>
+<blockquote>
+<p>Because they're different concerns. Buffer size is a safety parameter — it's the window my
+guardrails get. Render cadence is presentation. Smoothing the animation by shrinking the buffer
+would fix how it looks by degrading what it guarantees. Keeping them in separate layers makes
+that structurally impossible rather than a rule someone has to remember.</p>
+</blockquote>
+<p><strong>Why is <code>ask_stream</code> a separate function instead of a flag on <code>ask</code>?</strong></p>
+<blockquote>
+<p>A flag would mean one signature returning either a response object or a generator, so every
+caller branches on the flag anyway — you've moved the branch, not removed it. Two peers with
+honest signatures, sharing an extracted prefix, costs four lines and reads correctly.</p>
+</blockquote>
+<hr />
+<h3 id="self-check">Self-Check<a class="headerlink" href="#self-check" title="Permanent link">&para;</a></h3>
+<p>Answer these without looking. If any is shaky, the corresponding section above is the fix.</p>
+<ol>
+<li>What does streaming improve, and what does it leave exactly the same?</li>
+<li>Which part of the streaming work was free because of PR-10, and which part was not?</li>
+<li>Why can't <code>validate_output</code> reject once streaming has started?</li>
+<li>Why does buffering <em>not</em> solve the split-citation-marker problem on its own?</li>
+<li>Where does <code>MARKER_MAX = 8</code> come from? Why is that better than picking 20?</li>
+<li>Why is a rare bug worse than a constant one here?</li>
+<li>Why must <code>stream_answer</code> not contain a <code>yield</code>?</li>
+<li>Why is a guardrail rejection a return value rather than an exception?</li>
+<li>Why does a rejected request produce an <em>empty stream</em> rather than a special case in the UI?</li>
+<li>Why is the typewriter animation in <code>app.py</code> and not in <code>rag.py</code>?</li>
+<li>What breaks if someone "simplifies" <code>_safe_flush_point</code>?</li>
+<li>Why can't an LLM policy judge gate a stream — give both reasons.</li>
+</ol>
+<hr />
+<h3 id="biggest-takeaway">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>The chain streamed for free. My contracts did not.</strong></p>
+</blockquote>
+<p>PR-10 promised that adding streaming would not require editing orchestration code, and that
+promise held exactly where it was made: the chain is untouched. What it could never have covered
+is that my own design had a hidden assumption baked into it — that an answer arrives whole, so
+everything after generation may inspect it before the user does.</p>
+<p>Streaming did not break the framework integration. It broke an assumption, and the work of this
+PR was finding where that assumption lived and deciding, one place at a time, what to do about
+it.</p>
+<p>The second lesson is about honesty in design. The most valuable output of this PR is not the
+buffering code — it is the sentence <em>"streaming trades enforceability for perceived latency."</em>
+I could have built something that looked like it enforced policy mid-stream. It would have
+demoed fine and been wrong.</p>
+<hr />
+<h3 id="a-note-on-authorship">A Note on Authorship<a class="headerlink" href="#a-note-on-authorship" title="Permanent link">&para;</a></h3>
+<p>The design decisions in this document are mine, reached through discussion before any code
+existed. The implementation of PR-12a was typed by an AI assistant from that design, at my
+request, after I had committed to the architecture — the boundary rule, the layering, the
+rejection of the mid-stream halt.</p>
+<p>Recording that is deliberate. The defensible claim is <em>"I designed this and can explain every
+trade-off in it,"</em> not <em>"I typed every character."</em> Only the first one survives an interview
+anyway.</p>
+<hr />
+<p><strong>Next:</strong> PR-12 — Chat History, and the concept is <strong>state management</strong>. The first defect is
+already visible: the answer you just watched stream in will vanish the moment you touch any
+other widget on the page.</p>
+<hr />
+<h2 id="pr-12-discussion-state-management-in-brief">PR-12 Discussion — State Management <em>(in brief)</em><a class="headerlink" href="#pr-12-discussion-state-management-in-brief" title="Permanent link">&para;</a></h2>
+<p>Most of this PR is <code>app.py</code>, and UI plumbing does not deserve a long write-up. Three decisions
+in it are not about UI at all, and those are the ones worth keeping.</p>
+<h3 id="the-problem-values-in-the-wrong-band">The Problem — Values in the Wrong Band<a class="headerlink" href="#the-problem-values-in-the-wrong-band" title="Permanent link">&para;</a></h3>
+<p>The answer lived in a local variable inside <code>if st.button("Ask")</code>. Streamlit reruns the whole
+script on <em>any</em> widget interaction, so changing the document filter destroyed an answer an LLM
+call had just been paid for.</p>
+<p>That framing — "the answer disappears" — is the symptom. The cause is that this application had
+<strong>three distinct kinds of state and treated them as one thing</strong>:</p>
+<div class="highlight"><pre><span></span><code>┌─ transient ──────────┐  dies at end of run     the streamed answer, filters
+├─ session ────────────┤  per user, in RAM       conversation history
+└─ persistent / disk ──┘  all users, survives    storage/*.index, metadata_catalog.json
+</code></pre></div>
+<p>Every defect in this PR was a value sitting in the wrong band.</p>
+<h3 id="design-decision-21-derive-dont-store">Design Decision #21 — Derive, Don't Store<a class="headerlink" href="#design-decision-21-derive-dont-store" title="Permanent link">&para;</a></h3>
+<p>The sidebar reports accumulated conversation cost. The obvious implementation is a running
+counter incremented per turn. It is recomputed from the turn list instead, on every run.</p>
+<p>A counter would be a <strong>second copy of a fact the turn list already holds</strong>, and the two would
+disagree the first time history was cleared. Recomputing over a handful of turns is free;
+keeping two sources of truth in sync never is.</p>
+<p>The payoff shows up somewhere unexpected: "Clear Conversation" is a single assignment. Had
+totals been stored separately, that button would have needed to remember to reset them too —
+and one day it would have forgotten.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Prefer deriving to storing. A stored aggregate is a synchronization obligation you take on
+forever, in exchange for arithmetic you were not struggling with.</p>
+</blockquote>
+<h3 id="design-decision-22-the-page-is-a-function-of-state">Design Decision #22 — The Page Is a Function of State<a class="headerlink" href="#design-decision-22-the-page-is-a-function-of-state" title="Permanent link">&para;</a></h3>
+<p>The first version appended the new turn to history at the bottom of the script, and the sidebar
+totals never updated — because the sidebar had rendered near the <em>top</em>, before the state changed.
+Nothing recomputed them, because nothing re-executed.</p>
+<p>The fix is one line, <code>st.rerun()</code> after the append, but the rule it enforces is the entire PR:</p>
+<blockquote>
+<p><strong>THE PAGE IS A FUNCTION OF STATE.</strong>
+Anything rendered before the state changed is stale by definition.</p>
+</blockquote>
+<p>This is also what makes the replay loop correct. History renders from session state on every
+run; only the newest reply is animated. The transition from "being streamed" to "history" <em>is</em>
+the transition from transient state to session state, made visible.</p>
+<h3 id="the-overstatement-i-had-to-withdraw">The Overstatement I Had to Withdraw<a class="headerlink" href="#the-overstatement-i-had-to-withdraw" title="Permanent link">&para;</a></h3>
+<p>I described the upload panel not rendering in a fresh session as <em>"two sources of truth — two
+parts of the app disagree."</em> On re-examination that was too strong, and the correction matters
+more than the original claim.</p>
+<p>No data was wrong. Nothing returned an incorrect answer. The panel is legitimately an upload
+<strong>receipt</strong> — its own expander says <em>"Chunks Indexed This Upload"</em> — and a receipt disappearing
+when you leave is correct behaviour.</p>
+<p>The real, much narrower issue: two of its four metrics (<em>Knowledge Base Size</em>, <em>Vocabulary
+Size</em>) are <strong>corpus</strong> facts trapped inside an upload-scoped branch, so a returning user saw an
+empty uploader while the chat below answered from a fully built index.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Scope each displayed fact to its own lifetime. "How long did this upload take" and "how big is
+my corpus" have different lifetimes; rendering them in one block ties the second's visibility
+to the first's.</p>
+</blockquote>
+<p>Fixed by reading <code>MetadataCatalog.list_documents()</code> once at the top of the page and rendering it
+outside the session-state branch — with the retrieval filters reusing the same list, so the two
+panels are <em>structurally incapable</em> of disagreeing rather than merely currently agreeing.</p>
+<h3 id="a-return-value-that-outlived-its-reason">A Return Value That Outlived Its Reason<a class="headerlink" href="#a-return-value-that-outlived-its-reason" title="Permanent link">&para;</a></h3>
+<p><code>ingest_documents</code> returned the raw embeddings, and <code>app.py</code> cached them in session state and
+never read them. Measured: <strong>~24.8 KB per chunk</strong> as <code>list[list[float]]</code>, so ~24 MB per 1000
+chunks held in per-session RAM for nothing.</p>
+<p>Tracing it explains how it survived. The vectors are <em>consumed</em> at <code>vector_store.store()</code> — from
+that line, the FAISS index on disk <strong>is</strong> the embeddings, in a form built for searching. They
+were returned alongside <code>dimension</code> and <code>elapsed</code> back in PR-4, when the UI showed embedding
+stats and persistence did not exist yet. PR-5 added FAISS and made them redundant. The return
+signature was never revisited.</p>
+<blockquote>
+<p>Nobody removed it because nothing broke. That is exactly why this kind of thing survives.</p>
+</blockquote>
+<p>Removed from the chain, not just from session state — <code>app.py</code> caching it was the symptom;
+returning a consumed value was the defect.</p>
+<hr />
+<h2 id="pr-13-discussion-conversation-memory">PR-13 Discussion — Conversation Memory<a class="headerlink" href="#pr-13-discussion-conversation-memory" title="Permanent link">&para;</a></h2>
+<h3 id="problem-statement_2">Problem Statement<a class="headerlink" href="#problem-statement_2" title="Permanent link">&para;</a></h3>
+<p>PR-12 made the <em>application</em> remember. <strong>The pipeline still did not.</strong> <code>ask_stream()</code> treated
+every question as though it were the first one ever asked.</p>
+<div class="highlight"><pre><span></span><code>You: Tell me about Reciprocal Rank Fusion
+Bot: RRF merges ranked lists by summing 1/(k + rank) for each document… [2][3]
+
+You: What are his skills?
+</code></pre></div>
+<p>The second query contains no name, no topic, nothing distinctive. It gets embedded as-is, and
+BM25 scores it on <em>what</em>, <em>are</em>, <em>his</em>, <em>skills</em>. Three unrelated chunks come back, and a
+confident answer is built on them.</p>
+<p>The trap in this problem is that it looks like one problem and is two. A question has <strong>two
+consumers</strong>, and they need different things:</p>
+<div class="highlight"><pre><span></span><code>&quot;What are his skills?&quot;
+        │
+        ├──→ the RETRIEVER    embeds it, BM25-scores it
+        │                     needs: something that stands alone
+        │
+        └──→ the LLM          reads it alongside &lt;context&gt;
+                              needs: to know who &quot;his&quot; refers to
+</code></pre></div>
+<blockquote>
+<p><strong>The engineering problem is not "the model has no memory."</strong>
+It is: <em>the retriever runs before the prompt exists, so anything given to the model arrives
+too late to affect what was fetched.</em></p>
+</blockquote>
+<hr />
+<h3 id="core-thoughts-what-i-believed-going-in_1">Core Thoughts — What I Believed Going In<a class="headerlink" href="#core-thoughts-what-i-believed-going-in_1" title="Permanent link">&para;</a></h3>
+<p>My first design was: have the generation LLM emit a short summary of the conversation alongside
+its answer, and inject that summary into the next prompt as a <code>&lt;history&gt;</code> tag beside <code>&lt;context&gt;</code>.</p>
+<p>Two things about that are right, and I kept both:</p>
+<ul>
+<li>A <strong>bounded</strong> summary cannot outgrow the context window — no eviction policy needed.</li>
+<li>A <strong>citation-free</strong> summary dissolves the request-scoped-label conflict rather than patching it.</li>
+</ul>
+<p>What it misses is the entire retrieval half. Feed the summary only to the model and the retriever
+still runs on <code>"what are his skills?"</code>. Then one of two things happens, and the second is worse:</p>
+<ol>
+<li>The model obeys Rule 2 and replies <em>"I cannot find the answer in the provided documents."</em>
+   The feature does not work.</li>
+<li>The model answers from the <code>&lt;history&gt;</code> tag, because that text is right there and looks
+   relevant. Now the answer is grounded in a summary rather than in retrieved evidence, <strong>with no
+   citable source.</strong> That is not a RAG system anymore.</li>
+</ol>
+<blockquote>
+<p>Getting the answer to <em>read</em> well and getting the retrieval to <em>be</em> right are separate
+problems. Solving the first and shipping the second broken demos beautifully.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-23-summarize-dont-replay">Design Decision #23 — Summarize, Don't Replay<a class="headerlink" href="#design-decision-23-summarize-dont-replay" title="Permanent link">&para;</a></h3>
+<p>The textbook approach is to pass the last N turns verbatim. Rejected for three reasons that
+compound:</p>
+<table>
+<thead>
+<tr>
+<th>Replaying raw turns</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Unbounded growth</td>
+<td>Needs an eviction policy, and every eviction rule silently discards something a later question might need</td>
+</tr>
+<tr>
+<td>Carries citation markers</td>
+<td><code>[2]</code> means <code>chunking-notes.md</code> in turn one and <code>retrieval-design.pdf</code> in turn three. Request-scoped labels leaking into a cross-turn artifact is precisely the failure <code>CitedSource</code>'s materialized mapping exists to prevent (PR-11, DD #9)</td>
+</tr>
+<tr>
+<td>Carries retrieved context</td>
+<td>Old <code>&lt;context&gt;</code> blocks would dominate the window and confuse attribution</td>
+</tr>
+</tbody>
+</table>
+<p>A rolling summary makes all three go away <strong>by construction</strong> rather than by rule: three
+sentences cannot grow, and a prompt rule forbidding markers means there is nothing to strip.</p>
+<p>The technique has a name — <strong>rolling / progressive summarization</strong>. Its known weakness is worth
+recording: turn 10's summary is summarized from turn 9's, which came from turn 8's. It is a
+tenth-generation copy, and detail degrades. Production systems usually keep the last N turns
+verbatim <em>alongside</em> a summary of everything older. Not built here; noted as the next move if
+fidelity becomes the complaint.</p>
+<hr />
+<h3 id="design-decision-24-the-summary-feeds-both-consumers">Design Decision #24 — The Summary Feeds Both Consumers<a class="headerlink" href="#design-decision-24-the-summary-feeds-both-consumers" title="Permanent link">&para;</a></h3>
+<p>This is the correction that turned a half-design into a design.</p>
+<div class="highlight"><pre><span></span><code>summary ──┬──→ retrieval query   =  summary + &quot;\n&quot; + question
+          │
+          └──→ &lt;history&gt; block in the generation prompt
+</code></pre></div>
+<p>One artifact, two uses. The retrieval half is what makes the feature actually work; the
+generation half is what makes the answer read naturally. Feeding only the second is the
+seductive version, because it demos fine on questions the summary happens to cover.</p>
+<hr />
+<h3 id="design-decision-25-a-separate-call-deferred-behind-the-stream">Design Decision #25 — A Separate Call, Deferred Behind the Stream<a class="headerlink" href="#design-decision-25-a-separate-call-deferred-behind-the-stream" title="Permanent link">&para;</a></h3>
+<p>My original design bundled summary generation into the answer call. Rejected on three
+independent grounds:</p>
+<ol>
+<li><strong>It fights streaming.</strong> The answer streams token by token. A summary emitted by the same
+   call streams into the user's view, and stripping it mid-stream is the split-marker problem
+   again — spanning a whole block instead of three characters.</li>
+<li><strong>It asks for structured output.</strong> PR-11 Design Decision #8 already concluded this model is
+   not reliable at JSON. That conclusion did not stop being true.</li>
+<li><strong>Two responsibilities, one call.</strong> Answering and summarizing have different failure modes,
+   and a failure in either corrupts the other.</li>
+</ol>
+<p>The saving it appeared to buy — <em>"no second LLM call"</em> — was illusory. The second call was not
+removed, it was hidden inside the first one where it could damage the answer.</p>
+<p><strong>So the real question became: where does a second call go without costing time-to-first-token?</strong></p>
+<div class="highlight"><pre><span></span><code>TURN N-1                                    TURN N
+  … stream answer …                           summary already exists  ← free
+  ▶ last token flushed                        validate_input
+  ─────────── critical path ends ───────      retrieve(summary + question)
+  SummarizationService.summarize(…)           stream answer
+  sanitize → validate → accept                ▶ first token
+</code></pre></div>
+<p>The summary produced after turn N−1 is the one turn N consumes. <strong>The read path never generates
+the summary it uses.</strong></p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Move work from read time to write time. Conversation memory is not free — it is a whole extra
+LLM call — but it is paid where nobody is waiting.</p>
+</blockquote>
+<p>That is the same trade a materialized view makes: pay once when the data changes, so every read
+is cheap.</p>
+<p><strong>Precision that matters: this is deferred, not asynchronous.</strong> Streamlit is synchronous and
+single-threaded per session; a real thread has no <code>ScriptRunContext</code> and cannot safely touch
+<code>st.session_state</code>. Calling this "running in the background" would be a lie about the mechanism.
+What is true, and what matters, is that it is <em>off the critical path of every question</em>.</p>
+<hr />
+<h3 id="design-decision-26-concatenate-dont-fuse">Design Decision #26 — Concatenate, Don't Fuse<a class="headerlink" href="#design-decision-26-concatenate-dont-fuse" title="Permanent link">&para;</a></h3>
+<p><code>fusion_service.py</code> already does Reciprocal Rank Fusion over multiple result lists. So the
+tempting design is: retrieve once on the question, once on the summary, and fuse.</p>
+<p>It is wrong, and the reason is the interesting part.</p>
+<blockquote>
+<p><strong>RRF assumes its inputs are comparably-competent rankings of the same information need.</strong></p>
+</blockquote>
+<p>Dense and sparse retrieval over one query satisfy that. Question-only and summary+question do
+not — on a follow-up, the question-only arm is <em>known</em> to be noise. And because RRF scores by
+reciprocal rank, a junk chunk ranked #1 in the bad arm scores about the same as a good chunk
+ranked #1 in the good arm. The result is not mild dilution; it is <strong>noise promoted into the
+top-K at near-equal weight</strong>. Strictly worse than not fusing at all.</p>
+<p>Chosen instead:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">_build_retrieval_query</span><span class="p">(</span><span class="n">summary</span><span class="p">,</span> <span class="n">query</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">summary</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">query</span>
+    <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">summary</span><span class="si">}</span><span class="se">\n</span><span class="si">{</span><span class="n">query</span><span class="si">}</span><span class="s2">&quot;</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Knowing when <em>not</em> to reach for a component you already own is worth more than reaching for it.
+A pattern applied outside its assumptions does damage in the shape of the assumption it broke.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-27-guardrails-split-by-consequence-not-by-direction">Design Decision #27 — Guardrails Split by Consequence, Not by Direction<a class="headerlink" href="#design-decision-27-guardrails-split-by-consequence-not-by-direction" title="Permanent link">&para;</a></h3>
+<p>The summary is model output, generated from documents nobody controls, and it is injected into
+every later prompt. That makes it the one piece of model output that <strong>outlives its request</strong> —
+so a poisoned summary persists across turns instead of dying with one.</p>
+<p>My first instinct was to run <code>validate_input(summary + query)</code>. That has two concrete bugs:</p>
+<p><strong>Bug 1 — the empty check stops working.</strong> <code>_check_empty_query</code> is <code>if not query.strip()</code>. From
+turn 2 onward <code>summary + ""</code> is never empty, so a blank question sails into retrieval.</p>
+<p><strong>Bug 2 — it blames the user for the machine's contamination.</strong> A poisoned summary would reject
+a perfectly innocent question, with a message the user cannot act on, and would keep doing so on
+every subsequent question. A permanently wedged session.</p>
+<p>Both come from one mistake: <strong>one function, two inputs with different trust levels and different
+correct consequences.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Input</th>
+<th>Trust</th>
+<th>Correct consequence</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>the user's question</td>
+<td>untrusted human input</td>
+<td><strong>reject</strong> — they can rephrase</td>
+</tr>
+<tr>
+<td>the conversation summary</td>
+<td>contaminated machine state</td>
+<td><strong>discard the summary</strong> — the user did nothing wrong</td>
+</tr>
+</tbody>
+</table>
+<p>The second row is PR-11c's sanitize-don't-reject decision recurring in a new place: <em>a wrong
+attribution doesn't make the answer wrong</em>, and here, <em>a poisoned memory doesn't make the
+question bad.</em></p>
+<p><strong>Which forced a third module.</strong> Both directions need the identical injection check. Duplicating
+six keywords across <code>input_guardrails.py</code> and <code>output_guardrails.py</code> means adding a phrase to one
+and forgetting the other — a drift bug with a security consequence rather than a cosmetic one.</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># guardrails/text_policy.py</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">contains_injection_attempt</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+</code></pre></div>
+<p>The naming is the design. This is not "input policy" or "output policy" — it answers one
+question with no direction: <em>does this text contain something shaped like an instruction?</em> It
+returns a <strong>bool</strong>, never a domain object, because a function that decided the consequence could
+only ever serve one of its two callers.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Extract the <em>question</em>, not the <em>answer</em>. Shared logic that also decides what to do about
+itself is not shareable.</p>
+</blockquote>
+<p><strong>When a summary fails:</strong> keep the previous one. Memory stops advancing rather than vanishing —
+the conversation retains what it already knew and the user sees nothing go wrong. Clearing it
+instead would turn one bad summary into sudden amnesia mid-conversation.</p>
+<hr />
+<h3 id="design-decision-28-where-the-summary-lives">Design Decision #28 — Where the Summary Lives<a class="headerlink" href="#design-decision-28-where-the-summary-lives" title="Permanent link">&para;</a></h3>
+<p>Two placement questions, and both have a wrong answer that looks reasonable.</p>
+<p><strong>Not on <code>GenerationResponse</code>.</strong> Three reasons:</p>
+<ol>
+<li><strong>Wrong lifetime.</strong> <code>GenerationResponse</code> is <em>the answer to one question</em>. A summary describes
+   <em>the whole conversation</em>.</li>
+<li><strong>The rejection path makes it meaningless.</strong> Guardrails return <code>GenerationResponse</code> objects
+   when they refuse. A summary field would be required-looking and meaningless on half the
+   objects that type produces.</li>
+<li><strong>Wrong timing.</strong> Summarization runs <em>after</em> the stream, when the response is already built.
+   It would have to be mutated late.</li>
+</ol>
+<p>It lives on <code>StreamedAnswer</code> instead — the object that already means <em>"everything this call
+produced"</em>, already has fields filled at different times, and already has a documented
+consumption contract.</p>
+<div class="highlight"><pre><span></span><code><span class="nd">@dataclass</span>
+<span class="k">class</span><span class="w"> </span><span class="nc">StreamedAnswer</span><span class="p">:</span>
+    <span class="n">tokens</span><span class="p">:</span> <span class="n">Iterator</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">response</span><span class="p">:</span> <span class="n">GenerationResponse</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span>              <span class="c1"># PR-13</span>
+    <span class="n">summary_token_usage</span><span class="p">:</span> <span class="nb">dict</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span> <span class="c1"># PR-13</span>
+</code></pre></div>
+<p><code>summary</code> is <strong>seeded with the incoming summary</strong>, so every path that does not produce an
+accepted new one — a guardrail rejection, a failed validation — leaves the caller's memory
+untouched rather than wiping it. The caller's assignment becomes a harmless no-op instead of a
+special case it has to remember to skip.</p>
+<p><strong>Not one per turn.</strong> There is exactly <em>one</em> current summary. Storing a copy on each <code>ChatTurn</code>
+would make "the current one" mean "whichever is in the last element" — meaning implied by list
+position, which is precisely the fragility rejected in PR-11 DD #9 when positional citation
+markers lost to a materialized mapping. It is a single key: <code>st.session_state.conversation_summary</code>.</p>
+<hr />
+<h3 id="design-decision-29-two-costs-two-fields">Design Decision #29 — Two Costs, Two Fields<a class="headerlink" href="#design-decision-29-two-costs-two-fields" title="Permanent link">&para;</a></h3>
+<p>Every turn is now two LLM calls. The sidebar says <em>"Conversation cost."</em> Folding the summary
+call's tokens into <code>response.token_usage</code> would make the per-turn "Prompt Tokens" metric describe
+two different calls at once — and reporting only the answer's tokens would understate the real
+spend by roughly half.</p>
+<p>Either way the instrumentation lies, and PR-11 already recorded why that is the worse failure:</p>
+<blockquote>
+<p>Missing data makes you go and find it. <strong>Misleading data makes you build on it.</strong></p>
+</blockquote>
+<p>So: <code>ChatTurn.summary_token_usage</code>, reported separately as <strong>context upkeep</strong>. Keeping memory is
+a real cost — but it is the cost of maintaining <em>context</em>, not the cost of answering a question,
+and the two sitting side by side is the honest picture of what conversation memory is worth.</p>
+<hr />
+<h3 id="rule-6-memory-resolves-references-it-does-not-supply-facts">Rule 6 — Memory Resolves References, It Does Not Supply Facts<a class="headerlink" href="#rule-6-memory-resolves-references-it-does-not-supply-facts" title="Permanent link">&para;</a></h3>
+<p>The <code>&lt;history&gt;</code> block creates a new way for the system to be wrong: the model can answer <em>from
+memory</em> instead of from retrieved evidence, producing a fluent, confident, <strong>uncitable</strong> answer.</p>
+<div class="highlight"><pre><span></span><code>6. The &lt;history&gt; block is a summary of earlier turns in this conversation. Use it ONLY to
+   understand what the question refers to — for example, who &quot;he&quot; or &quot;it&quot; means. It is not a
+   search result. Never state a fact that appears only in &lt;history&gt;, and never cite it. Every
+   fact in your answer must come from &lt;context&gt;.
+</code></pre></div>
+<p>The block sits <strong>first</strong> in the human message, because it frames the question that follows — and
+<strong>in the human message, never the system message</strong>, by the same reasoning as PR-10 DD #5: it was
+written by a model reading documents we do not control, so it belongs where data lives, not
+where policy lives. Rule 6 is the policy <em>about</em> it; the block itself is quoted material.</p>
+<p>This is a prompt-compliance guarantee, not a hard one. It is the weakest link in the PR, and
+saying so is more useful than pretending otherwise.</p>
+<hr />
+<h3 id="responsibilities-after-pr-13">Responsibilities After PR-13<a class="headerlink" href="#responsibilities-after-pr-13" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Owns</th>
+<th>Explicitly does NOT own</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SummarizationService</code></td>
+<td>producing a summary from (previous summary, Q, A)</td>
+<td>when it runs, whether it is safe to use</td>
+</tr>
+<tr>
+<td><code>text_policy.contains_injection_attempt</code></td>
+<td>the <em>question</em> "is this instruction-shaped?"</td>
+<td>the consequence</td>
+</tr>
+<tr>
+<td><code>validate_summary</code></td>
+<td>whether a summary is fit to inject</td>
+<td>producing one, storing one</td>
+</tr>
+<tr>
+<td><code>sanitize_summary</code></td>
+<td>stripping request-scoped markers out of a cross-turn artifact</td>
+<td>judging</td>
+</tr>
+<tr>
+<td><code>_build_retrieval_query</code></td>
+<td>what retrieval actually searches on</td>
+<td>retrieval strategy</td>
+</tr>
+<tr>
+<td><code>_refresh_summary</code></td>
+<td>sequencing sanitize → validate → accept</td>
+<td>generating, storing</td>
+</tr>
+<tr>
+<td><code>rag.py</code></td>
+<td>order, and deferring the write path behind the stream</td>
+<td>prompt text, summary content</td>
+</tr>
+<tr>
+<td><code>GenerationService</code></td>
+<td>rendering <code>&lt;history&gt;</code> into the prompt</td>
+<td>what history <em>is</em></td>
+</tr>
+<tr>
+<td><code>StreamedAnswer</code></td>
+<td>carrying the new summary out</td>
+<td>storing it</td>
+</tr>
+<tr>
+<td><code>app.py</code></td>
+<td>holding the one current summary; clearing it with the conversation</td>
+<td>generating or validating it</td>
+</tr>
+<tr>
+<td><code>GenerationResponse</code></td>
+<td><em>(unchanged)</em> the answer to one question</td>
+<td>anything conversational</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="final-architecture_1">Final Architecture<a class="headerlink" href="#final-architecture_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>app.py
+   summary = st.session_state.conversation_summary       ← produced last turn
+        │
+        ▼
+rag.ask_stream(question, filters, summary) ──→ StreamedAnswer(summary=summary)
+        │
+        │  ┌─ READ PATH — on the critical path ─────────────────────────┐
+        │  │  validate_input(question)         ← RAW question ONLY      │
+        │  │  retrieve(summary + &quot;\n&quot; + question, TOP_K, filters)       │
+        │  │  validate_context(question, documents)                     │
+        │  │  stream_answer(question, documents, summary)               │
+        │  │      human: &lt;history&gt; … &lt;context&gt; … Question: …            │
+        │  │  ▶ tokens flush to UI                                      │
+        │  │  build_response → validate_output                          │
+        │  └────────────────────────────────────────────────────────────┘
+        │
+        │  ┌─ WRITE PATH — deferred, after the last token ──────────────┐
+        │  │  if response.success:                                      │
+        │  │      candidate, usage = SummarizationService.summarize(…)  │
+        │  │      candidate = sanitize_summary(candidate)               │
+        │  │      if validate_summary(candidate):                       │
+        │  │          handle.summary = candidate                        │
+        │  │      # else: keeps the seeded previous summary             │
+        │  └────────────────────────────────────────────────────────────┘
+        ▼
+app.py
+   st.session_state.conversation_summary = stream.summary   ← one value, replaced
+</code></pre></div>
+<p>Only <strong>successful</strong> turns are summarized. A guardrail rejection has no answer worth remembering,
+and folding <em>"the user asked something we refused"</em> into memory would carry the refusal forward
+into every later prompt.</p>
+<hr />
+<h3 id="rejected-alternatives_1">Rejected Alternatives<a class="headerlink" href="#rejected-alternatives_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Why rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Replay the last N turns verbatim</td>
+<td>Unbounded; carries request-scoped citation markers into a cross-turn artifact; needs an eviction policy</td>
+</tr>
+<tr>
+<td>Summary emitted by the answer call</td>
+<td>Puts summary text in the user's token stream; demands structured output from a 3B model; two responsibilities in one call</td>
+</tr>
+<tr>
+<td>Summary fed only to the LLM</td>
+<td>Retrieval still runs on the bare question. Model then answers from <code>&lt;history&gt;</code> — fluent, confident, <strong>uncitable</strong></td>
+</tr>
+<tr>
+<td>An LLM query-rewrite before retrieval</td>
+<td>Correct, but it sits <em>between</em> the question and the first token — spending back exactly what PR-12a bought</td>
+</tr>
+<tr>
+<td>Retrieve twice (question, summary) and fuse with RRF</td>
+<td>RRF assumes comparably-competent rankings of one information need; the question-only arm is known noise, and reciprocal-rank scoring promotes it into the top-K</td>
+</tr>
+<tr>
+<td><code>validate_input(summary + query)</code></td>
+<td>Breaks the empty-question check from turn 2 onward; rejects the user for machine contamination they cannot fix, wedging the session</td>
+</tr>
+<tr>
+<td>Duplicate the injection regex in both guardrail modules</td>
+<td>Drift bug with a security consequence</td>
+</tr>
+<tr>
+<td>A shared checker that returns <code>GenerationResponse</code></td>
+<td>Would decide the consequence, and the two callers need <em>different</em> consequences</td>
+</tr>
+<tr>
+<td>Summary on <code>GenerationResponse</code></td>
+<td>Wrong lifetime; meaningless on rejection objects; would need late mutation</td>
+</tr>
+<tr>
+<td>A summary copy on every <code>ChatTurn</code></td>
+<td>"Current" would mean "last element" — positional meaning, rejected in PR-11 DD #9</td>
+</tr>
+<tr>
+<td>Summary tokens folded into <code>response.token_usage</code></td>
+<td>Makes a per-turn metric describe two different calls</td>
+</tr>
+<tr>
+<td>Clear the summary when validation fails</td>
+<td>Turns one bad summary into sudden amnesia; keeping the previous one degrades instead</td>
+</tr>
+<tr>
+<td>Threading for "background" summarization</td>
+<td>Streamlit threads have no <code>ScriptRunContext</code> and cannot safely touch session state</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="what-this-pr-deliberately-did-not-change_1">What This PR Deliberately Did <em>Not</em> Change<a class="headerlink" href="#what-this-pr-deliberately-did-not-change_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>The streaming machinery</strong> — <code>_safe_flush_point</code>, <code>FLUSH_FLOOR</code>, <code>MARKER_MAX</code>, the typewriter.
+  Untouched. PR-13 adds a step before and a step after; the middle is exactly PR-12a's.</li>
+<li><strong><code>validate_output()</code></strong> — same signature, same call site, same internal order. The two new
+  summary functions sit beside it, not inside it.</li>
+<li><strong><code>GenerationResponse</code></strong> — not one new field.</li>
+<li><strong>Retrieval strategy</strong> — <code>RetrievalService</code>, RRF, metadata filtering all unchanged. Only the
+  <em>string</em> handed to them changed.</li>
+<li><strong><code>ask()</code></strong> — accepts a summary for parity but does <strong>not</strong> produce one. A caller with no
+  stream to defer behind would pay for summarization synchronously, and that path exists for
+  testing the pipeline without a UI.</li>
+<li><strong><code>CitedSource</code>, ingestion, prompts' rules 1–5</strong> — untouched.</li>
+<li><strong>Nothing new became a Runnable.</strong> INVARIANT #1 still holds.</li>
+</ul>
+<hr />
+<h3 id="known-limitation-topic-change">Known Limitation — Topic Change<a class="headerlink" href="#known-limitation-topic-change" title="Permanent link">&para;</a></h3>
+<p>Accepted deliberately, documented rather than hidden.</p>
+<p>The summary is three sentences; the question is a handful of words. In the concatenated retrieval
+query the summary dominates both the embedding and the BM25 term counts. That is exactly what a
+follow-up needs — and exactly wrong when the user changes subject:</p>
+<div class="highlight"><pre><span></span><code>turns 1–3   chunking strategy and overlap
+turn 4      &quot;what is reciprocal rank fusion?&quot;
+
+retrieval query = [3 sentences about chunk sizes and splitters] + &quot;what is reciprocal rank fusion?&quot;
+</code></pre></div>
+<p>Chunking passages come back for a question about RRF. Clearing the conversation resets it, but
+requiring the user to know that is not a fix.</p>
+<p><strong>Why it was not solved here.</strong> The fix is cheap — embed the question, cosine-compare it against
+the summary, drop the summary below a threshold; the question's vector is computed for the dense
+arm anyway. What it is not is <em>free</em>: it introduces a magic threshold with no data to tune it on,
+and it would make PR-13 teach two concepts instead of one.</p>
+<blockquote>
+<p>A stated limitation reads as judgment. An unstated one reads as an oversight.</p>
+</blockquote>
+<hr />
+<h3 id="production-failure-modes_1">Production Failure Modes<a class="headerlink" href="#production-failure-modes_1" title="Permanent link">&para;</a></h3>
+<ul>
+<li><strong>The model answers from <code>&lt;history&gt;</code> instead of <code>&lt;context&gt;</code>.</strong> Mitigated by Rule 6 only —
+  prompt compliance, not a guarantee. The visible symptom is a fluent follow-up answer carrying
+  <strong>no citations</strong>. Watch for it; it is a prompt problem, not a code problem.</li>
+<li><strong>The summary is poisoned by a retrieved chunk.</strong> Handled — <code>validate_summary</code> rejects it and
+  the previous summary is kept.</li>
+<li><strong>A citation marker leaks into the summary.</strong> Handled — <code>sanitize_summary</code> strips it before
+  validation, so a request-scoped label can never become a cross-turn artifact.</li>
+<li><strong>The user changes topic.</strong> <em>Not</em> handled. Documented above.</li>
+<li><strong>Summary quality degrades over a long conversation.</strong> Expected — each summary is derived from
+  the previous one. Bounded but real. The mitigation, if it becomes a complaint, is keeping the
+  last N turns verbatim alongside the summary.</li>
+<li><strong>The summary call fails (Ollama down) after the answer streamed.</strong> Not handled — it raises
+  after the user already has their answer, so Streamlit shows a traceback <em>below</em> a correct
+  reply. Slightly worse than PR-12a's version of the same gap. Still PR-15's.</li>
+<li><strong>Concurrency.</strong> No new module-level mutable state. The summary is passed in as a parameter and
+  returned on a per-call handle.</li>
+</ul>
+<hr />
+<h3 id="engineering-lessons_1">Engineering Lessons<a class="headerlink" href="#engineering-lessons_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>A problem with two consumers is two problems.</strong> Solving the visible one ships the other
+   broken.</li>
+<li><strong>Move work from read time to write time.</strong> Memory costs a whole extra LLM call; it just does
+   not have to be paid where someone is waiting.</li>
+<li><strong>Deferred is not asynchronous.</strong> Know which one you built, and say that one.</li>
+<li><strong>Bounded by construction beats bounded by rule.</strong> Three sentences cannot outgrow a window; an
+   eviction policy is a rule someone has to get right forever.</li>
+<li><strong>Extract the question, not the answer.</strong> Shared logic that decides its own consequence serves
+   exactly one caller.</li>
+<li><strong>Split guardrails by consequence, not by direction.</strong> Same check, different trust level,
+   different correct outcome.</li>
+<li><strong>Knowing when not to use a component you own</strong> is worth more than using it.</li>
+<li><strong>Seed the output with the input</strong> when a step may legitimately produce nothing — it turns a
+   special case into a no-op.</li>
+<li><strong>Two costs deserve two fields.</strong> An aggregate that hides half the spend is worse than no
+   aggregate.</li>
+<li><strong>A stated limitation is judgment; an unstated one is an oversight.</strong></li>
+</ol>
+<hr />
+<h3 id="interview-takeaways_1">Interview Takeaways<a class="headerlink" href="#interview-takeaways_1" title="Permanent link">&para;</a></h3>
+<p><strong>How does a RAG system handle follow-up questions?</strong></p>
+<blockquote>
+<p>The naive answer is "put the chat history in the prompt", and it's half right. The retriever
+runs <em>before</em> the prompt is built, so history given to the model arrives too late to change
+what was fetched. A question has two consumers with different needs — the retriever needs
+something self-contained, the model needs to resolve references. I maintain one rolling summary
+and feed it to both: prepended to the retrieval query, and injected as a delimited <code>&lt;history&gt;</code>
+block in the prompt.</p>
+</blockquote>
+<p><strong>Doesn't that cost you the time-to-first-token you spent a whole PR buying?</strong></p>
+<blockquote>
+<p>Not if you put it in the right place. The summary a turn consumes was produced at the end of
+the <em>previous</em> turn, after the last token was flushed, while the user was reading. It's the
+same trade a materialized view makes — pay when the data changes so every read is cheap. I'd be
+careful with the word "background" though: Streamlit is synchronous, so it's deferred, not
+asynchronous.</p>
+</blockquote>
+<p><strong>Why summarize instead of keeping the turns?</strong></p>
+<blockquote>
+<p>Three problems collapse into one decision. Raw turns grow unbounded, so you need an eviction
+policy. They carry citation markers, and my markers are request-scoped — <code>[2]</code> means a different
+document each turn, so replaying them corrupts attribution. And they carry old retrieved context
+that would dominate the window. A three-sentence citation-free summary makes all three
+impossible by construction rather than by rule.</p>
+</blockquote>
+<p><strong>You had RRF already. Why not retrieve on both and fuse?</strong></p>
+<blockquote>
+<p>RRF assumes its inputs are comparably-competent rankings of the same information need. On a
+follow-up, the question-only arm is known to be noise — and RRF scores by reciprocal rank, so a
+junk chunk at rank 1 in the bad arm scores about the same as a good chunk at rank 1 in the good
+arm. I'd be promoting noise into the top-K at near-equal weight. Fusion is for two good
+retrievers, not one good and one broken.</p>
+</blockquote>
+<p><strong>The summary comes from your own model reading untrusted documents. How do you handle that?</strong></p>
+<blockquote>
+<p>It's the only model output in the system that outlives its request, so it's the one worth
+checking twice. I don't run it through the input guardrail though — that would break the
+empty-question check and would reject an innocent question because of contamination the user
+can't see or fix, wedging the session. The check itself is shared, in its own module, returning
+a bool; the two callers decide different consequences. Reject the user's question, but <em>discard</em>
+a bad summary and keep the previous one. Memory stops advancing instead of disappearing.</p>
+</blockquote>
+<p><strong>What does conversation memory cost?</strong></p>
+<blockquote>
+<p>Roughly double the LLM calls, and I report it as a separate line rather than folding it into the
+answer's token count — that metric is the cost of answering one question, and merging them would
+hide about half the spend inside a number labelled something else.</p>
+</blockquote>
+<p><strong>What breaks in your design?</strong></p>
+<blockquote>
+<p>Topic change. The summary is three sentences and the question is a few words, so in the
+concatenated retrieval query the summary dominates. Ask about something new on turn four and
+you retrieve chunks about turns one to three. The fix is cheap — cosine-compare the question
+against the summary and drop it below a threshold — but it needs a magic number I have no data
+to tune, so I documented it rather than guessing.</p>
+</blockquote>
+<hr />
+<h3 id="self-check_1">Self-Check<a class="headerlink" href="#self-check_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Why does giving chat history to the model not fix follow-up questions?</li>
+<li>What are the two consumers of a question, and what does each need?</li>
+<li>Name the three problems a rolling summary removes <em>by construction</em>.</li>
+<li>Why is the summary call after the stream rather than before retrieval?</li>
+<li>What is the difference between "deferred" and "asynchronous", and which did you build?</li>
+<li>Why can't you fuse question-only and summary+question results with RRF?</li>
+<li>What two bugs does <code>validate_input(summary + query)</code> introduce?</li>
+<li>Why does <code>contains_injection_attempt</code> return a bool instead of a <code>GenerationResponse</code>?</li>
+<li>Why does a failed summary keep the previous one instead of clearing?</li>
+<li>Why is the summary on <code>StreamedAnswer</code> and not on <code>GenerationResponse</code>?</li>
+<li>Why is there one summary key rather than a summary per <code>ChatTurn</code>?</li>
+<li>What does Rule 6 forbid, and what is the visible symptom when the model ignores it?</li>
+<li>When does this design fail, and what would fixing it cost?</li>
+</ol>
+<hr />
+<h3 id="biggest-takeaway_1">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_1" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Memory is not a feature you add to the model. It is an artifact you maintain between turns.</strong></p>
+</blockquote>
+<p>Every wrong version of this PR treated memory as something handed to the LLM at generation time.
+That framing produces a system that <em>sounds</em> like it remembers and <em>retrieves</em> like it does not —
+and the failure mode is an answer that is fluent, confident, and cannot be cited.</p>
+<p>The version that works treats the summary as a small piece of maintained state with its own
+lifecycle: produced off the critical path, sanitized, validated, stored in exactly one place,
+consumed by two different components for two different reasons, and discarded as a unit when the
+conversation is cleared.</p>
+<p>The second lesson is about where cost goes. Conversation memory is not cheap — it doubles the LLM
+calls. What made it feel free was noticing that the expensive part does not have to happen
+between a question and its answer.</p>
+<hr />
+<h3 id="a-note-on-authorship_1">A Note on Authorship<a class="headerlink" href="#a-note-on-authorship_1" title="Permanent link">&para;</a></h3>
+<p>As with PR-12a: the design decisions here are mine, reached through discussion before any code
+existed — including the ones I got wrong first and had to abandon, which are recorded above as
+Mistakes 14 to 16. The implementation of PR-12, PR-12a, and PR-13 was typed by an AI assistant
+from those designs, after I had committed to the architecture.</p>
+<p>The defensible claim is <em>"I designed this and can explain every trade-off in it"</em> — which is the
+only claim that survives being questioned anyway.</p>
+<hr />
+<p><strong>Next:</strong> PR-14a — Configuration. <code>TOP_K = 3</code> is a module constant, model names are hardcoded,
+and <code>FLUSH_FLOOR</code>, <code>MARKER_MAX</code>, and now the summary's sentence cap have joined them. Every one
+of those is a value someone may need to change without a redeploy.</p>
+<hr />
+<blockquote>
+<p><strong>PR-14a shipped</strong> — eleven settings moved into <code>data/src/config.py</code>, environment variables
+with defaults, failing loudly at import on bad input. The two decisions worth remembering are
+the ones where I refused: <code>MARKER_MAX</code> is <strong>derived</strong> from <code>TOP_K</code> rather than configured
+(letting someone set <code>TOP_K=12</code> with <code>MARKER_MAX=3</code> would silently truncate every two-digit
+citation), and the summary's sentence cap stayed in the prompt because it is a digit inside
+English prose. <em>If a value can be computed from another value, it is not configuration.</em></p>
+</blockquote>
+<hr />
+<h2 id="pr-14b-discussion-observability">PR-14b Discussion — Observability<a class="headerlink" href="#pr-14b-discussion-observability" title="Permanent link">&para;</a></h2>
+<h3 id="problem-statement_3">Problem Statement<a class="headerlink" href="#problem-statement_3" title="Permanent link">&para;</a></h3>
+<p><em>"The answers got worse."</em></p>
+<p>That sentence is unanswerable today, and every plausible cause has a different fix. Retrieval
+could have returned bad chunks. The summary could have dragged the query off-topic. The model
+could have ignored Rule 6 and answered from memory. The question could just have been harder.
+There is nothing to look at that distinguishes them.</p>
+<p>"Add logging" is a chore, not a PR. What makes this one specific is that <strong>the blind spots were
+already written down</strong> — across PR-10 to PR-13, every time something was deferred or accepted
+as a limitation:</p>
+<table>
+<thead>
+<tr>
+<th>Blind spot</th>
+<th>Recorded in</th>
+<th>What it looks like today</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prompt silently drops <code>{context}</code></td>
+<td>PR-10 failure modes</td>
+<td>Fluent answers built on nothing. No exception.</td>
+</tr>
+<tr>
+<td>Model answers from <code>&lt;history&gt;</code></td>
+<td>PR-13, Rule 6</td>
+<td>An answer with <strong>no citation markers</strong></td>
+</tr>
+<tr>
+<td>Topic change drags retrieval</td>
+<td>PR-13 known limitation</td>
+<td>Wrong chunks, plausible answer</td>
+</tr>
+<tr>
+<td>No relevance floor on <code>TOP_K</code></td>
+<td>observed live</td>
+<td>An irrelevant chunk in every result set</td>
+</tr>
+<tr>
+<td>An invented citation is stripped</td>
+<td>PR-11c</td>
+<td><strong>Nothing at all</strong></td>
+</tr>
+<tr>
+<td>A summary is rejected</td>
+<td>PR-13</td>
+<td>Memory silently stops advancing</td>
+</tr>
+</tbody>
+</table>
+<p>The last two are the ones that reframed the PR. PR-11c built a sanitizer that repairs invented
+citation markers, and PR-13 built a validator that rejects poisoned summaries. Both work. Both
+then <strong>throw away the fact that they fired.</strong></p>
+<blockquote>
+<p><strong>Every sanitizer is a quality sensor nobody is reading.</strong>
+The system quietly repairs itself while the signal about <em>why it needed repairing</em> is
+discarded.</p>
+</blockquote>
+<p>So this PR is not "instrument the application." It is "read the sensors already installed."</p>
+<hr />
+<h3 id="design-decision-30-the-unit-that-decided-is-the-unit-that-reports">Design Decision #30 — The Unit That Decided Is the Unit That Reports<a class="headerlink" href="#design-decision-30-the-unit-that-decided-is-the-unit-that-reports" title="Permanent link">&para;</a></h3>
+<p>The choice was between each function logging its own events, and the orchestrator logging the
+flow it can see.</p>
+<p><code>rag.py</code> cannot know that <code>strip_unverified_citations</code> removed a marker labelled <code>[4]</code>. Only
+that function knows. Routing the fact upward so the orchestrator can log it would mean the
+orchestrator has to understand what every guardrail checks — inverting a dependency this
+project has kept pointing the right way since PR-10.</p>
+<p>That is <strong>Information Expert</strong>: the responsibility goes where the knowledge already is.</p>
+<p><strong>The objection worth pre-empting</strong>, because an interviewer will raise it: <em>"PR-10 said guardrails
+are testable with a plain assert and zero framework imports. Now every one of them imports a
+logging framework."</em></p>
+<p>It does not hold, and knowing why matters more than the conclusion. <code>logging</code> is stdlib, inert
+by default, and <strong>does not own control flow</strong>. A function that logs is still a pure function you
+can <code>assert</code> on; nothing about its contract changed. LCEL Runnables were a different case
+because they would own <em>when and how the function executes</em>.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+A dependency that <strong>observes</strong> is not the same as a dependency that <strong>controls</strong>.</p>
+</blockquote>
+<p>The line that does matter: use <code>logging.getLogger(__name__)</code> directly, never a <code>LoggingService</code>
+injected into each component. The second one is real coupling — every service gains a dependency
+to wire and a mock to write, for a concern none of them care about.</p>
+<hr />
+<h3 id="design-decision-31-log-decisions-not-inputs-and-outputs">Design Decision #31 — Log Decisions, Not Inputs and Outputs<a class="headerlink" href="#design-decision-31-log-decisions-not-inputs-and-outputs" title="Permanent link">&para;</a></h3>
+<p>My first instinct was that each method should log what came in and what went out. It is the
+obvious reading of "log at the unit level", and it is wrong here for a reason specific to this
+application.</p>
+<p>Trace what it actually writes to disk:</p>
+<ul>
+<li><code>strip_unverified_citations</code> — its input is <strong>the whole answer</strong></li>
+<li><code>_render_sources</code> — its input is <strong>every retrieved chunk's full text</strong></li>
+<li><code>validate_input</code> — its input is <strong>whatever the user typed</strong></li>
+</ul>
+<p>That is the entire prompt and the entire answer, for every question, in a durable file. This app
+runs over documents somebody uploaded — the corpus in <code>storage/</code> right now is a personal résumé.</p>
+<div class="highlight"><pre><span></span><code>✗  stripped citations: input=&quot;Reciprocal Rank Fusion scores each document by [2][3]…&quot;
+✓  citations.stripped  removed=1  invented=[&#39;4&#39;]  issued=[&#39;1&#39;,&#39;2&#39;,&#39;3&#39;]
+</code></pre></div>
+<p>The second line carries the same diagnostic fact, contains no user content, and — unlike the
+first — is <strong>countable</strong>. "How often does the model invent a citation" is a question about a
+hundred requests, and prose cannot answer it.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Log <strong>shapes, counts, verdicts, and identifiers.</strong> Content only behind a level nobody enables
+by accident.</p>
+</blockquote>
+<p>A second filter came out of the same discussion. "Each unit logs" needs a threshold, because
+<code>_safe_flush_point</code> runs dozens of times per answer and would drown everything. The criterion is
+not <em>"is this a unit"</em> — it is <em>"did something happen a human would want to know about."</em>
+Boundaries crossed and decisions made get logged; mechanisms do not.</p>
+<p>All six blind spots turned out to be boundaries or decisions. None were mechanisms. That is a
+good sign the list was the right list.</p>
+<hr />
+<h3 id="design-decision-32-the-ambient-thing-is-the-collector-not-an-id">Design Decision #32 — The Ambient Thing Is the Collector, Not an ID<a class="headerlink" href="#design-decision-32-the-ambient-thing-is-the-collector-not-an-id" title="Permanent link">&para;</a></h3>
+<p>One question spans retrieval, generation, guardrails, and a summarization call that runs <em>after</em>
+the stream has finished. Reading a flow by adjacency works right up until it doesn't — the
+deferred summary's events can interleave with the next question's.</p>
+<p>The conventional fix is a request ID stamped on every line. My first proposal was
+<code>threading.get_ident()</code> stored in <code>threading.local()</code>, and the storage half of that instinct was
+right: ambient state reachable at any call depth, without every service signature growing an
+argument for a concern none of them have.</p>
+<p>Two things were wrong, and the second is more interesting than the first.</p>
+<p><strong><code>threading.local()</code> is the 1997 version of the idea.</strong> <code>contextvars.ContextVar</code> replaced it
+because threads are <em>reused</em> — Streamlit runs every question in a session on the same
+ScriptRunner thread, so thread-local state leaks into the next turn unless you remember to clear
+it, and forgetting is silent. You get the <em>previous</em> question's context, which looks correct.
+<code>ContextVar</code> hands back a token on <code>set()</code> and restores the previous value on <code>reset()</code>, so
+scoping nests and cannot leak. It is also correct under async, where many coroutines share one
+thread and would all trample a single thread-local.</p>
+<p><strong>But the deeper correction came from choosing the destination first.</strong> Once the events were
+going to an in-app panel rather than to stdout, the ambient thing stopped being an ID:</p>
+<div class="highlight"><pre><span></span><code>stdout logs   →  stamp an ID on every line, re-correlate later by grepping
+in-app trace  →  collect events into the current turn&#39;s list
+</code></pre></div>
+<p>The second <strong>never has a correlation problem to solve</strong>, because events were never mixed. Each
+unit appends to whatever collector it can reach, and the collector it can reach <em>is</em> the request.
+An ID is only necessary when everything lands in one stream and has to be sorted out afterwards.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Before solving a problem, check whether a different framing prevents it. Correlation IDs exist
+to undo mixing. Not mixing is cheaper than un-mixing.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-33-the-observer-a-third-contract">Design Decision #33 — The Observer, a Third Contract<a class="headerlink" href="#design-decision-33-the-observer-a-third-contract" title="Permanent link">&para;</a></h3>
+<p>PR-11c split the output guardrails by contract: <strong>validators</strong> reject, <strong>sanitizers</strong> repair.
+Instrumenting Rule 6 needed something that is neither.</p>
+<p>The visible symptom of the model ignoring Rule 6 — answering from <code>&lt;history&gt;</code> instead of
+<code>&lt;context&gt;</code> — is an answer carrying <strong>no citation markers at all</strong>. Fluent, confident,
+unattributable, and completely fine-looking on screen.</p>
+<p>It cannot be a validator. PR-11's failure modes already recorded that enforcing citation
+<em>presence</em> would mean rejecting valid answers: an uncited answer may still be correct. It cannot
+be a sanitizer either, because there is nothing to repair.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Contract</th>
+<th>Changes the answer?</th>
+<th>Can reject?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Validator</strong></td>
+<td>judges</td>
+<td>no</td>
+<td>yes</td>
+</tr>
+<tr>
+<td><strong>Sanitizer</strong></td>
+<td>repairs</td>
+<td>yes</td>
+<td>no</td>
+</tr>
+<tr>
+<td><strong>Observer</strong></td>
+<td>reports</td>
+<td>no</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<p>So the only honest response to a limit you have decided not to enforce is to <strong>make it
+countable</strong>. If it fires on most turns, Rule 6 is not working and the fix is the prompt, not the
+code — and you now have the evidence to say which.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+When you accept a limitation, instrument it. An accepted limitation with no measurement is
+indistinguishable from an unnoticed bug.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-34-retention-is-rotation-not-deletion">Design Decision #34 — Retention Is Rotation, Not Deletion<a class="headerlink" href="#design-decision-34-retention-is-rotation-not-deletion" title="Permanent link">&para;</a></h3>
+<p>The policy I wanted was "keep a week." The implementation I first described was to scan the file
+daily and erase lines older than seven days.</p>
+<p>That means <strong>rewriting the entire file</strong> every day: read it all, filter, write it back. <code>O(file
+size)</code>, and not atomic — a crash partway through loses the log you were trying to preserve.</p>
+<p>Rotation does the same job in <code>O(1)</code> by changing the <em>unit</em> of retention:</p>
+<div class="highlight"><pre><span></span><code>day 0   app.log
+day 1   app.log  app.log.2026-08-07            ← rename is atomic
+day 8   app.log  … 7 kept …                    ← the oldest FILE is deleted whole
+</code></pre></div>
+<p>You never delete <em>from</em> a file. You delete whole files.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Deleting the front of a sequential file is expensive; deleting a whole file is free. So make
+the unit of retention a file.</p>
+</blockquote>
+<p>That is the same reasoning behind Kafka expiring whole segments instead of compacting records
+out of them, and behind <code>logrotate</code> existing at all.</p>
+<p>Two consequences worth stating rather than discovering later. The rollover check runs <strong>on
+write</strong>, not on a timer — nothing is scheduled and nothing runs while the app is idle. Which
+means retention is really "seven rotations", i.e. roughly seven <em>days of use</em>, not seven calendar
+days. Fine here; not a guarantee.</p>
+<hr />
+<h3 id="the-streamlit-trap">The Streamlit Trap<a class="headerlink" href="#the-streamlit-trap" title="Permanent link">&para;</a></h3>
+<p>Streamlit re-executes the whole script on every interaction. Handler setup that runs per-rerun
+attaches a <strong>second</strong> file handler, then a third — duplicated lines and leaked file descriptors,
+growing for the life of the session.</p>
+<p>The guard that prevents it is one <code>if</code>, and it is load-bearing rather than defensive habit:</p>
+<div class="highlight"><pre><span></span><code><span class="k">if</span> <span class="n">logger</span><span class="o">.</span><span class="n">handlers</span><span class="p">:</span>
+    <span class="k">return</span>
+</code></pre></div>
+<blockquote>
+<p>Configuration in a framework that re-runs your entire program must be idempotent. "It only
+needs to happen once" is a statement about intent, not about how often the code executes.</p>
+</blockquote>
+<hr />
+<h3 id="engineering-lessons_2">Engineering Lessons<a class="headerlink" href="#engineering-lessons_2" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Instrument the blind spots you already documented.</strong> A list written while deferring things
+   is a better instrumentation plan than a fresh survey.</li>
+<li><strong>Every sanitizer is a quality sensor.</strong> If it repairs without reporting, you are losing the
+   signal that told you the model is misbehaving.</li>
+<li><strong>A dependency that observes is not one that controls.</strong> <code>logging</code> does not break framework
+   independence; a <code>LoggingService</code> injected everywhere would.</li>
+<li><strong>Log about the data, not the data.</strong> Counts, verdicts, identifiers, shapes.</li>
+<li><strong>The unit of logging is a decision, not a function.</strong> Mechanisms called dozens of times per
+   request are noise.</li>
+<li><strong>Check whether a different framing prevents the problem</strong> before solving it. Not mixing
+   beats un-mixing.</li>
+<li><strong>An identifier must be unique over the thing it identifies.</strong></li>
+<li><strong>When you accept a limitation, instrument it</strong> — otherwise it is indistinguishable from a bug
+   nobody noticed.</li>
+<li><strong>Make the unit of retention a file</strong>, not a line.</li>
+<li><strong>Configuration must be idempotent</strong> in any framework that re-runs your program.</li>
+<li><strong>Observability is what makes graceful degradation honest.</strong> A degradation nobody can see is
+    just a quality regression.</li>
+</ol>
+<hr />
+<h3 id="interview-takeaways_2">Interview Takeaways<a class="headerlink" href="#interview-takeaways_2" title="Permanent link">&para;</a></h3>
+<p><strong>Logging, metrics, and tracing — what does each answer?</strong></p>
+<blockquote>
+<p>Logs answer "what happened in this one request", metrics answer "what is happening across many",
+and traces answer "how did one request flow through the components, and where did the time go".
+For a single-process app I got most of the value from structured logs with per-turn collection —
+full distributed tracing would have been machinery without a distributed system underneath it.</p>
+</blockquote>
+<p><strong>What do you log in an LLM application, and what must you never log?</strong></p>
+<blockquote>
+<p>The tension is that the most useful thing to log — the full prompt and the answer — is exactly
+what you must not store, because it is the user's documents. So I log <em>about</em> the data rather
+than the data: how many chunks came back and their IDs, how many citation markers were invented
+and which labels, why a guardrail rejected, the length of the query rather than the query.
+Everything countable, nothing quotable.</p>
+</blockquote>
+<p><strong>How would you detect a silent quality regression?</strong></p>
+<blockquote>
+<p>By instrumenting the checks that already repair things quietly. My sanitizer strips citation
+markers the model invented, and before this it did that invisibly — so I had no idea whether it
+fired once a week or on every answer. Same for a rule I decided not to enforce: I can't reject
+an answer for having no citations, because it might still be correct, but I can count how often
+it happens, and if that number climbs the fix is the prompt.</p>
+</blockquote>
+<p><strong>Why a ContextVar rather than passing a request id through?</strong></p>
+<blockquote>
+<p>Threading an ID through every service signature makes every component carry an argument for a
+concern none of them have. But the more interesting answer is that once I decided the events
+were collected per turn rather than emitted into one stream, I didn't need an ID at all — the
+ContextVar holds the collector itself, so events are never mixed and there is nothing to
+correlate. Correlation IDs exist to undo mixing.</p>
+</blockquote>
+<p><strong>Why not <code>threading.local()</code>?</strong></p>
+<blockquote>
+<p>Threads get reused, so state leaks into the next request unless you clear it, and forgetting is
+silent — you'd get the previous request's context, which looks correct. ContextVar's set/reset
+token pair makes that impossible. It's also the one that survives going async, where many
+coroutines share a thread and would all overwrite a single thread-local.</p>
+</blockquote>
+<p><strong>How do you stop a log file filling the disk?</strong></p>
+<blockquote>
+<p>Rotation, not truncation. Deleting old lines from a file means rewriting the whole file, which
+is O(size) and not atomic. Rotating makes the unit of retention a file, so renaming is atomic
+and dropping the oldest is free regardless of how big it got — the same reason Kafka expires
+whole segments rather than compacting records out of them.</p>
+</blockquote>
+<hr />
+<h3 id="self-check_2">Self-Check<a class="headerlink" href="#self-check_2" title="Permanent link">&para;</a></h3>
+<ol>
+<li>Why is "add logging" not a sufficient description of this PR?</li>
+<li>What is an Information Expert argument for unit-level logging?</li>
+<li>Why does importing <code>logging</code> into a guardrail not violate the PR-10 boundary — and what would?</li>
+<li>What is wrong with logging a function's inputs and outputs <em>in this application specifically</em>?</li>
+<li>Which functions should not be logged at all, and what is the criterion?</li>
+<li>Why is a thread id unusable as a request id here?</li>
+<li>What does the ContextVar hold, and why does that remove the need for a request id entirely?</li>
+<li>Name the three contracts in the output guardrails module and what each may do.</li>
+<li>Why can "the answer has no citations" not be a validator?</li>
+<li>Why is deleting old lines from a log file the wrong mechanism for a retention policy?</li>
+<li>What breaks if <code>configure_logging()</code> is not idempotent?</li>
+</ol>
+<hr />
+<h3 id="biggest-takeaway_2">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_2" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>The instrumentation was already decided. I just hadn't read it.</strong></p>
+</blockquote>
+<p>Every event this PR emits corresponds to something an earlier PR had already identified and then
+deliberately let go — a limitation accepted, a check that repairs silently, a rule enforced only
+by prompt compliance. The work was not deciding <em>what</em> to watch. It was noticing that a system
+which quietly fixes itself is a system that is quietly telling you something, and nobody was
+listening.</p>
+<p>The second lesson is about honesty. PR-15 leans on this directly: graceful degradation is only
+defensible if the degradation is observable. Falling back to dense-only retrieval without a signal
+is not resilience — it is a quality regression you chose.</p>
+<hr />
+<p><strong>Next:</strong> PR-15 — Reliability Engineering. Ollama going down is still a traceback rendered
+underneath the user's own question.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

@@ -1,0 +1,4265 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/Product%20Engineering/week-2-AI-Assistent/">
+      
+      
+        <link rel="prev" href="../week-1-AI-Assistant/">
+      
+      
+        <link rel="next" href="../week-3-AI-Assistant/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Thinking Like a Senior Engineer.v2 - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#thinking-like-a-senior-engineerv2" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Thinking Like a Senior Engineer.v2
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pr-7-discussion-hybrid-search-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-7 Discussion — Hybrid Search Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-7 Discussion — Hybrid Search Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-architectural-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Architectural Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-1-separate-index-construction-from-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #1 — Separate Index Construction from Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-2-name-the-abstraction-after-its-responsibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #2 — Name the Abstraction After Its Responsibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-3-fusion-is-not-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #3 — Fusion Is Not Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-4-configuration-declares-intent-runtime-verifies-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #4 — Configuration Declares Intent; Runtime Verifies Reality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-terminology-correction-that-changed-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Terminology Correction That Changed the Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-8-discussion-metadata-catalog-metadata-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-8 Discussion — Metadata Catalog &amp; Metadata Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-8 Discussion — Metadata Catalog &amp; Metadata Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-1-what-a-metadata-catalog-is-and-is-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #1 — What a Metadata Catalog Is (and Is Not)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-2-metadata-does-not-belong-in-the-vector-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #2 — Metadata Does Not Belong in the Vector Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-3-no-documentmetadata-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #3 — No DocumentMetadata Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-4-metadata-is-assigned-as-early-as-possible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #4 — Metadata Is Assigned as Early as Possible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-5-the-ui-speaks-display-names-the-backend-speaks-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #5 — The UI Speaks Display Names; the Backend Speaks IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-6-filtering-is-its-own-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #6 — Filtering Is Its Own Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-pr-deliberately-did-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This PR Deliberately Did Not Do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-principles-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Principles Learned
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-catalog-unlocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Catalog Unlocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-9-discussion-validation-pipeline-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-9 Discussion — Validation Pipeline (Guardrails)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-9 Discussion — Validation Pipeline (Guardrails)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-architectural-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Architectural Shift
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-1-a-guardrail-answers-one-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #1 — A Guardrail Answers One Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-2-every-stage-may-terminate-the-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #2 — Every Stage May Terminate the Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-3-one-response-contract-not-two" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #3 — One Response Contract, Not Two
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-three-validation-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Validation Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-4-validation-lives-outside-the-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #4 — Validation Lives Outside the Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensibility-the-real-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensibility — The Real Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Self-Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-week-2-left-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Week 2 Left the Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Java/day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-2/Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#pr-7-discussion-hybrid-search-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-7 Discussion — Hybrid Search Architecture
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-7 Discussion — Hybrid Search Architecture">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#first-architectural-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        First Architectural Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-1-separate-index-construction-from-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #1 — Separate Index Construction from Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-2-name-the-abstraction-after-its-responsibility" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #2 — Name the Abstraction After Its Responsibility
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-3-fusion-is-not-retrieval" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #3 — Fusion Is Not Retrieval
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-4-configuration-declares-intent-runtime-verifies-reality" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #4 — Configuration Declares Intent; Runtime Verifies Reality
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-terminology-correction-that-changed-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Terminology Correction That Changed the Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#responsibilities" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Responsibilities
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-8-discussion-metadata-catalog-metadata-filtering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-8 Discussion — Metadata Catalog &amp; Metadata Filtering
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-8 Discussion — Metadata Catalog &amp; Metadata Filtering">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#core-thoughts-what-i-believed-going-in_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Core Thoughts — What I Believed Going In
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-1-what-a-metadata-catalog-is-and-is-not" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #1 — What a Metadata Catalog Is (and Is Not)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-2-metadata-does-not-belong-in-the-vector-store" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #2 — Metadata Does Not Belong in the Vector Store
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-3-no-documentmetadata-class" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #3 — No DocumentMetadata Class
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-4-metadata-is-assigned-as-early-as-possible" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #4 — Metadata Is Assigned as Early as Possible
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-5-the-ui-speaks-display-names-the-backend-speaks-ids" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #5 — The UI Speaks Display Names; the Backend Speaks IDs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-6-filtering-is-its-own-service" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #6 — Filtering Is Its Own Service
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#retrieval-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Retrieval Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-this-pr-deliberately-did-not-do" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What This PR Deliberately Did Not Do
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#architecture-principles-learned" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Architecture Principles Learned
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-the-catalog-unlocks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What the Catalog Unlocks
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pr-9-discussion-validation-pipeline-guardrails" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        PR-9 Discussion — Validation Pipeline (Guardrails)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="PR-9 Discussion — Validation Pipeline (Guardrails)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#problem-statement_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Problem Statement
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-architectural-shift" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Architectural Shift
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-1-a-guardrail-answers-one-question" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #1 — A Guardrail Answers One Question
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-2-every-stage-may-terminate-the-request" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #2 — Every Stage May Terminate the Request
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-3-one-response-contract-not-two" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #3 — One Response Contract, Not Two
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-three-validation-layers" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Validation Layers
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#design-decision-4-validation-lives-outside-the-services" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Design Decision #4 — Validation Lives Outside the Services
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#extensibility-the-real-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Extensibility — The Real Test
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#final-architecture_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Final Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#rejected-alternatives_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Rejected Alternatives
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-lessons_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Lessons
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#interview-takeaways_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Takeaways
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#biggest-takeaway_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Biggest Takeaway
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#self-check" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Self-Check
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Self-Check">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#where-week-2-left-the-architecture" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Where Week 2 Left the Architecture
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="thinking-like-a-senior-engineerv2">Thinking Like a Senior Engineer.v2<a class="headerlink" href="#thinking-like-a-senior-engineerv2" title="Permanent link">&para;</a></h1>
+<blockquote>
+<p>Week 1 built a RAG pipeline that worked.
+Week 2 asks whether it would survive contact with production.</p>
+</blockquote>
+<p>Three PRs, and not one of them adds a feature a user would ask for by name. PR-7 makes
+retrieval work for the queries embeddings are bad at. PR-8 gives the corpus an identity the
+system can reason about. PR-9 gives the pipeline permission to refuse.</p>
+<p>The question running underneath all three:</p>
+<blockquote>
+<p>Where does this responsibility actually belong — and what happens when the thing it
+depends on isn't there?</p>
+</blockquote>
+<hr />
+<h2 id="pr-7-discussion-hybrid-search-architecture">PR-7 Discussion — Hybrid Search Architecture<a class="headerlink" href="#pr-7-discussion-hybrid-search-architecture" title="Permanent link">&para;</a></h2>
+<blockquote>
+<p><strong>Goal</strong>
+Upgrade an educational RAG system into a production-style retrieval system by introducing
+Hybrid Search, without sacrificing clean architecture or separation of concerns.</p>
+</blockquote>
+<h3 id="problem-statement">Problem Statement<a class="headerlink" href="#problem-statement" title="Permanent link">&para;</a></h3>
+<p>Retrieval was <strong>dense only</strong>.</p>
+<div class="highlight"><pre><span></span><code>Question
+    │
+    ▼
+EmbeddingService
+    │
+    ▼
+VectorStore.search()
+    │
+    ▼
+Top-K Chunks
+</code></pre></div>
+<p>This works well when the user's wording and the document's wording differ but the <em>meaning</em>
+matches:</p>
+<blockquote>
+<p>"How do I reset my password?"</p>
+</blockquote>
+<p>It struggles the moment the characters themselves are the query.</p>
+<table>
+<thead>
+<tr>
+<th>Query kind</th>
+<th>Example</th>
+<th>What it actually needs</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Semantic question</td>
+<td>"How do I reset my password?"</td>
+<td>similarity of meaning</td>
+</tr>
+<tr>
+<td>Error code</td>
+<td><code>ORA-00942</code>, <code>HHH000104</code></td>
+<td>exact keyword match</td>
+</tr>
+<tr>
+<td>Invoice / reference ID</td>
+<td><code>INV-2026-1001</code></td>
+<td>exact keyword match</td>
+</tr>
+<tr>
+<td>Product SKU</td>
+<td>catalogue identifiers</td>
+<td>exact keyword match</td>
+</tr>
+</tbody>
+</table>
+<p>These queries require <strong>keyword matching, not semantic similarity</strong>. One retrieval mode was
+being asked to serve two fundamentally different kinds of question.</p>
+<blockquote>
+<p><strong>The engineering problem is not "retrieval quality is low."</strong>
+It is: <em>a single retrieval strategy is answering two different classes of query.</em></p>
+</blockquote>
+<hr />
+<h3 id="core-thoughts-what-i-believed-going-in">Core Thoughts — What I Believed Going In<a class="headerlink" href="#core-thoughts-what-i-believed-going-in" title="Permanent link">&para;</a></h3>
+<p>My starting position: <em>hybrid search is a retrieval change — add a second retriever, merge
+the results, done.</em></p>
+<p>That is wrong, and it is wrong in the way that costs the most time later. <strong>Retrieval can
+only query what ingestion has already built.</strong> A sparse retriever with no sparse index is
+not a degraded feature, it is a missing one.</p>
+<p>So hybrid search changes <strong>both</strong> pipelines:</p>
+<ul>
+<li>the ingestion pipeline, which must now build more than one index</li>
+<li>the retrieval pipeline, which must now query and combine more than one index</li>
+</ul>
+<h3 id="first-architectural-insight">First Architectural Insight<a class="headerlink" href="#first-architectural-insight" title="Permanent link">&para;</a></h3>
+<p>Hybrid Search is not another search algorithm. It is a <strong>second indexing pipeline</strong>.</p>
+<p><strong>Before — one index, one path:</strong></p>
+<div class="highlight"><pre><span></span><code>Document
+    │
+    ▼
+Embedding
+    │
+    ▼
+Dense Index
+</code></pre></div>
+<p><strong>After — one document, two representations:</strong></p>
+<div class="highlight"><pre><span></span><code>                Document
+                    │
+        ┌───────────┴───────────┐
+        ▼                       ▼
+   Embedding            Lexical Processing
+        │                       │
+        ▼                       ▼
+  Dense Index          Sparse (Lexical) Index
+</code></pre></div>
+<p>Ingestion becomes responsible for building <strong>multiple indexes</strong>, not one.</p>
+<hr />
+<h3 id="design-decision-1-separate-index-construction-from-retrieval">Design Decision #1 — Separate Index Construction from Retrieval<a class="headerlink" href="#design-decision-1-separate-index-construction-from-retrieval" title="Permanent link">&para;</a></h3>
+<p>Index construction and retrieval are two different responsibilities with two different
+<strong>lifecycles</strong>:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>When it runs</th>
+<th>How often</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Index Construction</td>
+<td>when documents are ingested</td>
+<td>once per document</td>
+</tr>
+<tr>
+<td>Retrieval</td>
+<td>when a user asks a question</td>
+<td>every request</td>
+</tr>
+</tbody>
+</table>
+<p>Anything whose lifecycle differs this sharply does not belong in the same component.</p>
+<p><strong>Indexing pipeline:</strong></p>
+<div class="highlight"><pre><span></span><code>              Chunks
+                 │
+                 ▼
+              Indexer
+                 │
+         ┌───────┴───────┐
+         ▼               ▼
+   DenseIndexer    SparseIndexer
+         │               │
+         ▼               ▼
+   Dense Index     Sparse Index
+</code></pre></div>
+<p><code>DenseIndexer</code> generates embeddings and builds the dense index. <code>SparseIndexer</code> builds the
+lexical index and prepares the data sparse retrieval will need.</p>
+<p><strong>Retrieval pipeline:</strong></p>
+<div class="highlight"><pre><span></span><code>              Question
+                 │
+                 ▼
+          RetrievalService
+                 │
+         ┌───────┴───────┐
+         ▼               ▼
+  DenseRetriever   SparseRetriever
+         │               │
+         └───────┬───────┘
+                 ▼
+           FusionService
+                 │
+                 ▼
+         Ranked Documents
+</code></pre></div>
+<p>The RAG pipeline never learns whether retrieval was dense, sparse, or hybrid. It writes one
+line and nothing else:</p>
+<div class="highlight"><pre><span></span><code><span class="n">documents</span> <span class="o">=</span> <span class="n">retriever</span><span class="o">.</span><span class="n">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">)</span>
+</code></pre></div>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Components that run on different lifecycles should not live in the same class.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-2-name-the-abstraction-after-its-responsibility">Design Decision #2 — Name the Abstraction After Its Responsibility<a class="headerlink" href="#design-decision-2-name-the-abstraction-after-its-responsibility" title="Permanent link">&para;</a></h3>
+<p>The retrieval entry point was first called a <strong>Strategy Selector</strong>. It was renamed to
+<strong>RetrievalService</strong>, and the rename was not cosmetic.</p>
+<p>"StrategySelector" names an <em>implementation detail</em> — that internally there is a strategy,
+and something selects it. If tomorrow the choice becomes a config lookup, a capability
+check, or a fixed default, the name becomes a lie while the class is still correct.</p>
+<p>"RetrievalService" names the <strong>responsibility</strong>: retrieve documents. Dense, sparse, or
+hybrid is an internal decision the orchestrator is never entitled to know.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Name a class by what it is responsible for, not by how it currently works. Implementations
+change; responsibilities are what you designed around.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-3-fusion-is-not-retrieval">Design Decision #3 — Fusion Is Not Retrieval<a class="headerlink" href="#design-decision-3-fusion-is-not-retrieval" title="Permanent link">&para;</a></h3>
+<p>The obvious design gives <code>HybridRetriever</code> three jobs: run dense retrieval, run sparse
+retrieval, then fuse the two result sets.</p>
+<p>That is a Single Responsibility Principle violation waiting to become a God Class. Ranking
+and retrieving change for entirely different reasons.</p>
+<div class="highlight"><pre><span></span><code>   Dense Retriever      Sparse Retriever
+          │                     │
+          └──────────┬──────────┘
+                     ▼
+              Fusion Service
+                     │
+                     ▼
+               Final Ranking
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>Why it follows from the split</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Easier testing</td>
+<td>fusion can be tested on fixed result sets, with no index and no query</td>
+</tr>
+<tr>
+<td>Easier experimentation</td>
+<td>swap the ranking algorithm without touching retrieval</td>
+</tr>
+<tr>
+<td>Room for future algorithms</td>
+<td>Reciprocal Rank Fusion (RRF), Weighted Fusion, Relative Score Fusion (RSF), Cross-Encoder re-ranking</td>
+</tr>
+<tr>
+<td>No God Class</td>
+<td><code>HybridRetriever</code> never accumulates ranking logic it can't shed</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Retrieving candidates and ranking candidates are separate concerns. Do not fuse them into
+one class simply because they run next to each other.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-4-configuration-declares-intent-runtime-verifies-reality">Design Decision #4 — Configuration Declares Intent; Runtime Verifies Reality<a class="headerlink" href="#design-decision-4-configuration-declares-intent-runtime-verifies-reality" title="Permanent link">&para;</a></h3>
+<p>Both indexing and retrieval read the same application configuration, so the two halves can
+never disagree about what the system is supposed to be:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">retrieval</span><span class="p">:</span>
+<span class="w">    </span><span class="nt">dense</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+<span class="w">    </span><span class="nt">sparse</span><span class="p">:</span><span class="w"> </span><span class="l l-Scalar l-Scalar-Plain">true</span>
+</code></pre></div>
+<p>That is necessary but not sufficient. Configuration expresses <strong>desired capability</strong>, not
+<strong>actual capability</strong>. The retriever must still verify which indexes exist.</p>
+<div class="highlight"><pre><span></span><code>Configuration says: Hybrid Enabled
+            │
+            ▼
+Sparse index actually present?
+            │
+            ├── yes ──►  Dense + Sparse ──►  Fusion
+            │
+            └── no  ──►  Fall back to Dense Retrieval
+</code></pre></div>
+<p>Production systems should <strong>degrade gracefully rather than fail</strong>. A missing sparse index
+should cost retrieval quality, not availability.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Configuration is a statement of intent. Never treat it as proof that the resource exists.</p>
+</blockquote>
+<hr />
+<h3 id="the-terminology-correction-that-changed-the-architecture">The Terminology Correction That Changed the Architecture<a class="headerlink" href="#the-terminology-correction-that-changed-the-architecture" title="Permanent link">&para;</a></h3>
+<p>The design originally referred to a <strong>BM25 Store</strong> and a <strong>BM25 Index</strong>. That naming is
+wrong, and it is wrong at the architectural layer where wrong names become permanent.</p>
+<p><strong>BM25 is a ranking algorithm.</strong> It is not a storage format and not an architectural
+component. Naming a component after it bakes today's implementation into the structure of
+the system.</p>
+<table>
+<thead>
+<tr>
+<th>Wrong (implementation-named)</th>
+<th>Right (responsibility-named)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>BM25 Store</td>
+<td>Sparse Index</td>
+</tr>
+<tr>
+<td>BM25 Index</td>
+<td>Lexical Index</td>
+</tr>
+<tr>
+<td>BM25Retriever</td>
+<td>Sparse Retriever</td>
+</tr>
+</tbody>
+</table>
+<p>The payoff is direct: replacing BM25 with <strong>SPLADE</strong>, or any other sparse retrieval
+technique, changes one implementation and zero architectural components.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+An architecture that survives implementation changes was named at the right level of
+abstraction. If swapping a library forces you to rename a component, the name was wrong.</p>
+</blockquote>
+<hr />
+<h3 id="responsibilities">Responsibilities<a class="headerlink" href="#responsibilities" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Component</th>
+<th>Owns</th>
+<th>Explicitly does NOT own</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>DenseIndexer</code></td>
+<td>generating embeddings, constructing dense indexes</td>
+<td>retrieval, persistence decisions</td>
+</tr>
+<tr>
+<td><code>SparseIndexer</code></td>
+<td>lexical indexing, token statistics</td>
+<td>ranking, retrieval</td>
+</tr>
+<tr>
+<td><code>RetrievalService</code></td>
+<td>selecting retrieval strategy, orchestrating retrieval</td>
+<td>ranking fusion, prompt generation</td>
+</tr>
+<tr>
+<td><code>DenseRetriever</code></td>
+<td>dense similarity search</td>
+<td>fusion, filtering</td>
+</tr>
+<tr>
+<td><code>SparseRetriever</code></td>
+<td>lexical retrieval</td>
+<td>fusion, filtering</td>
+</tr>
+<tr>
+<td><code>FusionService</code></td>
+<td>combining multiple retrieval result sets</td>
+<td>performing retrieval</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="final-architecture">Final Architecture<a class="headerlink" href="#final-architecture" title="Permanent link">&para;</a></h3>
+<p><strong>Ingestion:</strong></p>
+<div class="highlight"><pre><span></span><code>              Loader
+                 │
+                 ▼
+              Chunker
+                 │
+                 ▼
+              Indexer
+                 │
+         ┌───────┴───────┐
+         ▼               ▼
+   DenseIndexer    SparseIndexer
+         │               │
+         ▼               ▼
+   Dense Repo      Sparse Repo
+</code></pre></div>
+<p><strong>Query:</strong></p>
+<div class="highlight"><pre><span></span><code>              Question
+                 │
+                 ▼
+          RetrievalService
+                 │
+         ┌───────┴───────┐
+         ▼               ▼
+  DenseRetriever   SparseRetriever
+         │               │
+         └───────┬───────┘
+                 ▼
+           FusionService
+                 │
+                 ▼
+          Retrieved Chunks
+                 │
+                 ▼
+          GenerationService
+                 │
+                 ▼
+                LLM
+</code></pre></div>
+<hr />
+<h3 id="rejected-alternatives">Rejected Alternatives<a class="headerlink" href="#rejected-alternatives" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Why rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Change only the retrieval layer</td>
+<td>Sparse indexes must exist before retrieval can use them; ingestion has to change first</td>
+</tr>
+<tr>
+<td><code>HybridRetriever</code> that retrieves <em>and</em> fuses</td>
+<td>Merges two reasons to change into one class; becomes a God Class as fusion algorithms multiply</td>
+</tr>
+<tr>
+<td>Name the component <code>StrategySelector</code></td>
+<td>Names an implementation detail rather than a responsibility</td>
+</tr>
+<tr>
+<td>Name the layer after BM25</td>
+<td>Bakes a ranking algorithm into the architecture; blocks SPLADE and other sparse techniques</td>
+</tr>
+<tr>
+<td>Trust configuration alone</td>
+<td>Config states desired capability, not actual capability; a missing index would crash instead of degrading</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="engineering-lessons">Engineering Lessons<a class="headerlink" href="#engineering-lessons" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Hybrid Search is not a new search method — it is a new indexing pipeline.</strong> The
+   retrieval change is the visible half of a two-sided change.</li>
+<li><strong>Building indexes and querying indexes are different responsibilities.</strong> Their
+   lifecycles differ, so their components should too.</li>
+<li><strong>Name classes by responsibility, not implementation.</strong> <code>RetrievalService</code> over
+   <code>StrategySelector</code>.</li>
+<li><strong>Fusion is a separate concern.</strong> Do not mix retrieval with ranking.</li>
+<li><strong>Configuration defines desired behaviour; the application must still validate runtime
+   capability.</strong></li>
+<li><strong>A stable architecture survives implementation changes.</strong> Replacing BM25 with SPLADE
+   should change the <code>SparseRetriever</code> and nothing above it.</li>
+</ol>
+<hr />
+<h3 id="interview-takeaways">Interview Takeaways<a class="headerlink" href="#interview-takeaways" title="Permanent link">&para;</a></h3>
+<p><strong>Why isn't dense retrieval sufficient?</strong></p>
+<blockquote>
+<p>Dense retrieval matches meaning, which is exactly right for questions like "how do I reset
+my password" where wording differs but the concept matches. It is the wrong tool for exact
+lexical queries — error codes, invoice numbers, SKUs — where the user wants the literal
+token, not something semantically nearby. Those need keyword matching.</p>
+</blockquote>
+<p><strong>Why does Hybrid Search require ingestion changes?</strong></p>
+<blockquote>
+<p>Because retrieval can only query indexes that already exist. A sparse retriever needs a
+sparse index, and that index is built at ingestion time. Hybrid Search is a second
+indexing pipeline first and a second retriever second.</p>
+</blockquote>
+<p><strong>Why separate indexing from retrieval?</strong></p>
+<blockquote>
+<p>They have independent lifecycles. Index construction runs once when documents are
+ingested; retrieval runs on every question. Components with different lifecycles change
+for different reasons and belong in different classes.</p>
+</blockquote>
+<p><strong>Why introduce a RetrievalService?</strong></p>
+<blockquote>
+<p>So the orchestrator depends on one stable contract — <code>retrieve(query)</code> — rather than on
+which retrieval strategy is currently in use. Whether the answer came from dense, sparse,
+or hybrid retrieval is an internal decision.</p>
+</blockquote>
+<p><strong>Why is Fusion a separate service?</strong></p>
+<blockquote>
+<p>Retrieving candidates and ranking candidates change for different reasons. Keeping fusion
+separate makes it testable against fixed result sets, lets ranking algorithms be swapped
+independently, and stops <code>HybridRetriever</code> from accumulating responsibilities it can never
+give back.</p>
+</blockquote>
+<p><strong>Why is BM25 an implementation detail rather than an architectural concern?</strong></p>
+<blockquote>
+<p>BM25 is a ranking algorithm, not a storage layer. The architectural component is a
+<em>sparse retriever</em> over a <em>sparse index</em>. Naming it after BM25 would mean that adopting
+SPLADE required renaming architecture instead of replacing one implementation.</p>
+</blockquote>
+<p><strong>Why should the RAG orchestrator not know which retrieval strategy is used?</strong></p>
+<blockquote>
+<p>Because the strategy can change for reasons the orchestrator has no stake in — a config
+flag, a missing index, a new fusion algorithm. If the orchestrator knew, every one of
+those would become an orchestration change.</p>
+</blockquote>
+<hr />
+<h3 id="biggest-takeaway">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Hybrid Search looked like a retrieval feature. It was an ingestion redesign.</strong></p>
+</blockquote>
+<p>The lasting result of PR-7 is not that lexical queries work. It is that the system now has a
+place to put a <em>second</em> way of finding things — and a third, when one is needed — without
+the orchestrator, the generation layer, or the UI learning about it.</p>
+<hr />
+<h2 id="pr-8-discussion-metadata-catalog-metadata-filtering">PR-8 Discussion — Metadata Catalog &amp; Metadata Filtering<a class="headerlink" href="#pr-8-discussion-metadata-catalog-metadata-filtering" title="Permanent link">&para;</a></h2>
+<h3 id="problem-statement_1">Problem Statement<a class="headerlink" href="#problem-statement_1" title="Permanent link">&para;</a></h3>
+<p>After PR-7 the system could retrieve semantically <strong>and</strong> lexically. It still searched the
+<strong>entire knowledge base</strong> on every question.</p>
+<div class="highlight"><pre><span></span><code>          User Question
+                │
+                ▼
+        Retrieval Service
+                │
+                ▼
+      Dense + Sparse Retrieval
+                │
+                ▼
+             Fusion
+</code></pre></div>
+<p>Real systems rarely search everything. Users restrict searches to specific files,
+departments, projects, date ranges, authors, or pages.</p>
+<p>The retrievers could not support any of that, because they had no knowledge of:</p>
+<ul>
+<li>which documents exist</li>
+<li>which documents the user selected</li>
+<li>which metadata belongs to which document</li>
+</ul>
+<p>And the UI was worse off: once indexing completed, <strong>the uploaded files were forgotten</strong>.
+Nothing in the system could answer "what is in the knowledge base?"</p>
+<blockquote>
+<p><strong>The engineering problem is not "we need filters."</strong>
+It is: <em>the system has no representation of its own corpus.</em></p>
+</blockquote>
+<hr />
+<h3 id="core-thoughts-what-i-believed-going-in_1">Core Thoughts — What I Believed Going In<a class="headerlink" href="#core-thoughts-what-i-believed-going-in_1" title="Permanent link">&para;</a></h3>
+<p>The framing I started with was <em>add a filter argument to retrieval</em>. That treats a missing
+architectural layer as a missing parameter.</p>
+<p>The real conclusion was that an entire layer was absent:</p>
+<blockquote>
+<p><strong>Metadata Catalog</strong> — the source of truth for the knowledge base.</p>
+</blockquote>
+<p>Without it, the UI asks "what documents exist?" and there is no component whose job it is to
+answer. With it, the UI stops guessing and starts asking:</p>
+<div class="highlight"><pre><span></span><code>UI  ──►  MetadataCatalog.list_documents()
+                    │
+                    ▼
+            Spring.pdf
+            Docker.pdf
+            Java.pdf
+</code></pre></div>
+<hr />
+<h3 id="design-decision-1-what-a-metadata-catalog-is-and-is-not">Design Decision #1 — What a Metadata Catalog Is (and Is Not)<a class="headerlink" href="#design-decision-1-what-a-metadata-catalog-is-and-is-not" title="Permanent link">&para;</a></h3>
+<p>A Metadata Catalog stores information <strong>about the corpus</strong>, never the contents of the
+documents themselves.</p>
+<table>
+<thead>
+<tr>
+<th>Stores</th>
+<th>Does not store</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>document identity and display name</td>
+<td>embeddings</td>
+</tr>
+<tr>
+<td>source path and upload time</td>
+<td>vectors</td>
+</tr>
+<tr>
+<td>chunk counts and corpus-level facts</td>
+<td>chunks</td>
+</tr>
+<tr>
+<td></td>
+<td>sparse/BM25 indexes</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;document_id&quot;</span><span class="p">:</span> <span class="s2">&quot;doc_001&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;display_name&quot;</span><span class="p">:</span> <span class="s2">&quot;Spring Boot Guide.pdf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;source&quot;</span><span class="p">:</span> <span class="s2">&quot;/uploads/spring.pdf&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;uploaded_at&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;chunk_count&quot;</span><span class="p">:</span> <span class="mi">42</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>Its responsibilities are narrow and finite:</p>
+<ul>
+<li>register newly uploaded documents into the catalog</li>
+<li>persist the catalog to disk</li>
+<li>load the catalog from storage</li>
+<li>list available documents</li>
+<li>find document metadata by document ID <em>(future)</em></li>
+<li>delete document metadata <em>(future)</em></li>
+</ul>
+<p>Critically, the catalog <strong>does not generate metadata</strong>. It indexes and persists metadata that
+already exists on the loaded documents. It knows nothing about retrieval, BM25, FAISS,
+embeddings, or prompting.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+A component that persists a fact and a component that produces that fact are two
+responsibilities. Conflating them is how storage layers grow business logic.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-2-metadata-does-not-belong-in-the-vector-store">Design Decision #2 — Metadata Does Not Belong in the Vector Store<a class="headerlink" href="#design-decision-2-metadata-does-not-belong-in-the-vector-store" title="Permanent link">&para;</a></h3>
+<p>The tempting shortcut is to keep document information inside the vector store, since it is
+already storing something per chunk.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Optimised for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Vector Store</td>
+<td>vector similarity search</td>
+</tr>
+<tr>
+<td>Metadata Catalog</td>
+<td>document / corpus management</td>
+</tr>
+</tbody>
+</table>
+<p>These are different responsibilities with different access patterns. Separating them keeps
+each storage engine focused on what it is good at, and keeps corpus management alive even if
+the vector store is rebuilt or swapped.</p>
+<hr />
+<h3 id="design-decision-3-no-documentmetadata-class">Design Decision #3 — No <code>DocumentMetadata</code> Class<a class="headerlink" href="#design-decision-3-no-documentmetadata-class" title="Permanent link">&para;</a></h3>
+<p>A dedicated <code>DocumentMetadata</code> type was considered and rejected.</p>
+<p>It would have wrapped a dictionary, added no behaviour, and been used by exactly one class.
+That is <strong>YAGNI</strong> — "You Aren't Gonna Need It" — abstraction added for its own sake.</p>
+<div class="highlight"><pre><span></span><code>src
+│
+├── catalog
+│     metadata_catalog.py
+</code></pre></div>
+<p>One class was enough.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+An abstraction with one caller and no behaviour is not an abstraction. It is indirection.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-4-metadata-is-assigned-as-early-as-possible">Design Decision #4 — Metadata Is Assigned as Early as Possible<a class="headerlink" href="#design-decision-4-metadata-is-assigned-as-early-as-possible" title="Permanent link">&para;</a></h3>
+<p>The first proposal let the Metadata Catalog <em>generate</em> document metadata. That is the wrong
+owner.</p>
+<p>The <strong>Document Loader</strong> is the first component that knows:</p>
+<ul>
+<li>which uploaded file produced these documents</li>
+<li>the display name</li>
+<li>the logical identity of the document</li>
+</ul>
+<p>So the loader assigns <code>document_id</code> and <code>display_name</code>. The catalog persists what the loader
+already established. Chunking then inherits document metadata and contributes only what it
+owns — <code>chunk_index</code> and <code>chunk_id</code>.</p>
+<div class="highlight"><pre><span></span><code>            Uploaded Files
+                  │
+                  ▼
+        Document Loader (Factory)
+                  │
+                  ▼
+        Assign Document Metadata
+          ├── document_id
+          └── display_name
+                  │
+                  ▼
+        MetadataCatalog.register()
+          (persist catalog only)
+                  │
+                  ▼
+           Chunking Engine
+                  │
+                  ▼
+        Inject Chunk Metadata
+          ├── chunk_index
+          └── chunk_id
+                  │
+                  ▼
+           Indexer Service
+                  │
+          ┌───────┴───────┐
+          ▼               ▼
+   EmbeddingService   BM25Indexer
+          │               │
+          ▼               ▼
+    Dense Store      Sparse Store
+</code></pre></div>
+<p>Every chunk now carries:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span>
+    <span class="s2">&quot;document_id&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;display_name&quot;</span><span class="p">:</span> <span class="s2">&quot;...&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;chunk_index&quot;</span><span class="p">:</span> <span class="o">...</span><span class="p">,</span>
+    <span class="s2">&quot;chunk_id&quot;</span><span class="p">:</span> <span class="o">...</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>That metadata is reused unchanged for the rest of the pipeline.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Metadata should be created by the layer that first <em>knows</em> it, and every layer downstream
+should only add what it uniquely owns.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-5-the-ui-speaks-display-names-the-backend-speaks-ids">Design Decision #5 — The UI Speaks Display Names; the Backend Speaks IDs<a class="headerlink" href="#design-decision-5-the-ui-speaks-display-names-the-backend-speaks-ids" title="Permanent link">&para;</a></h3>
+<p>Filtering by filename was the first design. It was replaced, for a reason that is a
+one-example argument:</p>
+<div class="highlight"><pre><span></span><code>HR/Policy.pdf
+Finance/Policy.pdf
+</code></pre></div>
+<p><strong>Filenames are not guaranteed to be unique.</strong> Document IDs are.</p>
+<p>So the UI displays one thing and sends another:</p>
+<div class="highlight"><pre><span></span><code>☑ Spring Boot Guide.pdf
+☑ Docker Guide.pdf
+☐ Java Notes.pdf
+
+        display_name
+             │
+             ▼
+        document_id
+             │
+             ▼
+          filters
+             │
+             ▼
+     Retrieval Service
+</code></pre></div>
+<div class="highlight"><pre><span></span><code><span class="n">filters</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;document_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;doc_001&quot;</span><span class="p">,</span> <span class="s2">&quot;doc_002&quot;</span><span class="p">]</span>
+<span class="p">}</span>
+</code></pre></div>
+<p>The backend never depends on filenames.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Human-readable labels are a presentation concern. Identity is a backend concern. Never let
+the two be the same value.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-6-filtering-is-its-own-service">Design Decision #6 — Filtering Is Its Own Service<a class="headerlink" href="#design-decision-6-filtering-is-its-own-service" title="Permanent link">&para;</a></h3>
+<p>Three designs were considered:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Shape</th>
+<th>Verdict</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>A</strong></td>
+<td>Question → Filter → Retriever</td>
+<td>rejected</td>
+</tr>
+<tr>
+<td><strong>B</strong></td>
+<td>Question → Retriever → Filter</td>
+<td>rejected</td>
+</tr>
+<tr>
+<td><strong>C</strong></td>
+<td>Each retriever's results → Metadata Filtering → Fusion</td>
+<td><strong>chosen</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Rather than embedding filtering logic inside each retriever, a dedicated
+<code>MetadataFilteringService</code> was extracted.</p>
+<div class="highlight"><pre><span></span><code>   Dense Retriever          Sparse Retriever
+          │                        │
+          ▼                        ▼
+  Metadata Filtering       Metadata Filtering
+          │                        │
+          └───────────┬────────────┘
+                      ▼
+                FusionService
+</code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RetrievalService</code> stays an orchestrator</td>
+<td>it delegates filtering instead of implementing it</td>
+</tr>
+<tr>
+<td>Retrievers stay focused</td>
+<td><code>DenseRetriever</code> and <code>SparseRetriever</code> only retrieve</td>
+</tr>
+<tr>
+<td>Filtering has one implementation</td>
+<td>DRY — the rule is not duplicated per retriever</td>
+</tr>
+<tr>
+<td>Future filters are cheap</td>
+<td>pages, authors, departments, tags change exactly one file</td>
+</tr>
+</tbody>
+</table>
+<p>The retrieval contract grew by one argument, and nothing else in the system moved:</p>
+<div class="highlight"><pre><span></span><code><span class="c1"># Before</span>
+<span class="n">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">top_k</span><span class="p">)</span>
+
+<span class="c1"># After</span>
+<span class="n">retrieve</span><span class="p">(</span><span class="n">query</span><span class="p">,</span> <span class="n">top_k</span><span class="p">,</span> <span class="n">filters</span><span class="p">)</span>
+</code></pre></div>
+<hr />
+<h3 id="retrieval-architecture">Retrieval Architecture<a class="headerlink" href="#retrieval-architecture" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>                      UI
+                       │
+                       ▼
+           Multi Select Documents
+               (display_name)
+                       │
+                       ▼
+            Selected document_ids
+                       │
+                       ▼
+                    rag.py
+                       │
+                       ▼
+              RetrievalService
+                       │
+              ┌────────┴────────┐
+              ▼                 ▼
+        DenseRetriever    SparseRetriever
+              │                 │
+              ▼                 ▼
+      Raw Dense Results   Raw Sparse Results
+              └────────┬────────┘
+                       ▼
+           MetadataFilteringService
+                       │
+                       ▼
+                 FusionService
+                       │
+                       ▼
+                Ranked Documents
+                       │
+                       ▼
+              GenerationService
+                       │
+                       ▼
+                 LLM Response
+</code></pre></div>
+<p><strong><code>GenerationService</code> never changes. Only retrieval becomes filter-aware.</strong> That is precisely
+what a layered architecture is supposed to buy you.</p>
+<hr />
+<h3 id="what-this-pr-deliberately-did-not-do">What This PR Deliberately Did <em>Not</em> Do<a class="headerlink" href="#what-this-pr-deliberately-did-not-do" title="Permanent link">&para;</a></h3>
+<p>PR-8 does <strong>not</strong> implement natural-language filtering. A query like:</p>
+<div class="highlight"><pre><span></span><code>Search only Spring.pdf
+</code></pre></div>
+<p>is not interpreted. The UI sends structured filters, and that is the whole scope.</p>
+<p>Later, an LLM can translate natural language into exactly the structure that already exists:</p>
+<div class="highlight"><pre><span></span><code><span class="p">{</span><span class="s2">&quot;document_ids&quot;</span><span class="p">:</span> <span class="p">[</span><span class="s2">&quot;doc_001&quot;</span><span class="p">]}</span>
+</code></pre></div>
+<p>This is why the roadmap says <strong>Self-query Preparation</strong> and not <strong>Self-query Retrieval</strong>.
+The groundwork is the deliverable; the interpretation layer is a separate PR.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Building the structured contract first is what makes the natural-language layer a small
+change later. Reversing the order makes both hard.</p>
+</blockquote>
+<hr />
+<h3 id="rejected-alternatives_1">Rejected Alternatives<a class="headerlink" href="#rejected-alternatives_1" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Why rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Store document info inside the Vector Store</td>
+<td>Vector stores are optimised for similarity search, not corpus management</td>
+</tr>
+<tr>
+<td>A <code>DocumentMetadata</code> class</td>
+<td>Wraps a dict, adds no behaviour, has one caller — YAGNI</td>
+</tr>
+<tr>
+<td>Metadata Catalog generates metadata</td>
+<td>The loader is the first component that knows document identity; the catalog should only persist</td>
+</tr>
+<tr>
+<td>Filter by filename</td>
+<td>Filenames are not unique (<code>HR/Policy.pdf</code> vs <code>Finance/Policy.pdf</code>)</td>
+</tr>
+<tr>
+<td>Filtering inside each retriever</td>
+<td>Duplicates the rule per retriever; every new filter type changes multiple files</td>
+</tr>
+<tr>
+<td>Filter before retrieval (Option A)</td>
+<td>Filtering is a decision about <em>retrieved candidates</em>, not a pre-retrieval step</td>
+</tr>
+<tr>
+<td>Natural-language filters in PR-8</td>
+<td>Structured filters must exist before anything can translate into them</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="architecture-principles-learned">Architecture Principles Learned<a class="headerlink" href="#architecture-principles-learned" title="Permanent link">&para;</a></h3>
+<p><strong>Metadata is not retrieval.</strong> Metadata management deserves its own layer, with its own
+persistence and its own lifecycle.</p>
+<p><strong>Storage engines have different purposes.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Store</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Dense Store</td>
+<td>similarity search</td>
+</tr>
+<tr>
+<td>Sparse Store</td>
+<td>keyword search</td>
+</tr>
+<tr>
+<td>Metadata Catalog</td>
+<td>corpus management</td>
+</tr>
+</tbody>
+</table>
+<p>Different storage, different responsibility.</p>
+<p><strong>Stable IDs are fundamental.</strong> Everything operates on <code>document_id</code>; filenames are for
+humans only.</p>
+<p><strong>Filtering is business logic, not storage.</strong> A vector store's job is returning <em>similar</em>
+documents. Deciding which of those are <em>eligible</em> is an application rule. Keeping that rule
+out of the storage engine is what lets the storage engine be replaced.</p>
+<p><strong>Layered architecture pays off exactly here.</strong> Metadata filtering extended the retrieval
+layer only:</p>
+<div class="highlight"><pre><span></span><code>UI  →  RAG  →  Retrieval  →  Fusion  →  Generation
+                   ▲
+                   └── the only layer PR-8 touched
+</code></pre></div>
+<hr />
+<h3 id="what-the-catalog-unlocks">What the Catalog Unlocks<a class="headerlink" href="#what-the-catalog-unlocks" title="Permanent link">&para;</a></h3>
+<p>The Metadata Catalog makes each of these a small change rather than a redesign: deleting
+documents, updating documents, page/author/department filtering, self-query retrieval,
+corpus statistics, a knowledge-base dashboard, and incremental indexing.</p>
+<hr />
+<h3 id="interview-takeaways_1">Interview Takeaways<a class="headerlink" href="#interview-takeaways_1" title="Permanent link">&para;</a></h3>
+<p><strong>Why introduce a Metadata Catalog instead of storing everything in the Vector Store?</strong></p>
+<blockquote>
+<p>Vector stores are optimised for similarity search; catalogs are optimised for corpus
+management. Separating them follows the Single Responsibility Principle and keeps retrieval
+independent of document management — the catalog survives a vector store rebuild or swap.</p>
+</blockquote>
+<p><strong>Why should the UI send document IDs instead of filenames?</strong></p>
+<blockquote>
+<p>Filenames are not guaranteed to be unique — <code>HR/Policy.pdf</code> and <code>Finance/Policy.pdf</code> are
+two documents with one name. Document IDs are stable and unique, so filtering is never
+ambiguous. The display name stays a presentation concern.</p>
+</blockquote>
+<p><strong>Why does the Metadata Catalog run before chunking?</strong></p>
+<blockquote>
+<p>Chunking needs a stable <code>document_id</code> so every chunk it produces can inherit correct
+document metadata. Assign identity at the loader, persist it in the catalog, and every
+downstream stage adds only the metadata it owns.</p>
+</blockquote>
+<p><strong>Why isn't filtering implemented inside each retriever, or inside RetrievalService?</strong></p>
+<blockquote>
+<p>Inside each retriever it would be duplicated, so every new filter type — pages, authors,
+departments, tags — would change several files. Inside <code>RetrievalService</code> it would turn an
+orchestrator into an implementer. A dedicated <code>MetadataFilteringService</code> gives the rule one
+home, leaves retrievers focused on retrieval, and keeps <code>RetrievalService</code> coordinating.</p>
+</blockquote>
+<p><strong>Why does the Metadata Catalog not generate metadata?</strong></p>
+<blockquote>
+<p>Because the Document Loader is the first component that knows which uploaded file produced
+which documents, and what the document should be called. Producing a fact and persisting a
+fact are different responsibilities.</p>
+</blockquote>
+<hr />
+<h3 id="biggest-takeaway_1">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_1" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>Metadata filtering is not a retrieval feature. It is a corpus management problem.</strong></p>
+</blockquote>
+<p>The lasting result of PR-8 is a system that knows what it contains. Filters were the visible
+outcome; the source of truth was the actual deliverable — and it is the reason deletion,
+dashboards, and self-query retrieval are now incremental rather than architectural work.</p>
+<hr />
+<h2 id="pr-9-discussion-validation-pipeline-guardrails">PR-9 Discussion — Validation Pipeline (Guardrails)<a class="headerlink" href="#pr-9-discussion-validation-pipeline-guardrails" title="Permanent link">&para;</a></h2>
+<h3 id="problem-statement_2">Problem Statement<a class="headerlink" href="#problem-statement_2" title="Permanent link">&para;</a></h3>
+<p>Up to PR-8, the pipeline was built around one assumption: <strong>every request should be
+processed.</strong> Retrieve, generate, return.</p>
+<p>Production AI systems must also answer a prior question:</p>
+<blockquote>
+<p>Should this request continue through the pipeline at all?</p>
+</blockquote>
+<p>An empty question, a prompt injection attempt, an empty retrieval result, or an empty model
+response are all cases where continuing costs money, latency, or safety, and produces
+nothing worth returning.</p>
+<p>The naive fix is a scatter of <code>if</code> checks in <code>rag.py</code>, the services, and the UI. PR-9 rejects
+that and makes guardrails <strong>first-class architectural components</strong>.</p>
+<hr />
+<h3 id="the-architectural-shift">The Architectural Shift<a class="headerlink" href="#the-architectural-shift" title="Permanent link">&para;</a></h3>
+<p><strong>Before:</strong></p>
+<div class="highlight"><pre><span></span><code>Question
+    │
+    ▼
+Retrieval
+    │
+    ▼
+Generation
+</code></pre></div>
+<p><strong>After:</strong></p>
+<div class="highlight"><pre><span></span><code>Question
+    │
+    ▼
+Input Guardrails
+    │
+    ▼
+Retrieval
+    │
+    ▼
+Context Guardrails
+    │
+    ▼
+Generation
+    │
+    ▼
+Output Guardrails
+    │
+    ▼
+Response
+</code></pre></div>
+<p>The pipeline now validates <strong>before</strong>, <strong>during</strong>, and <strong>after</strong> generation.</p>
+<hr />
+<h3 id="design-decision-1-a-guardrail-answers-one-question">Design Decision #1 — A Guardrail Answers One Question<a class="headerlink" href="#design-decision-1-a-guardrail-answers-one-question" title="Permanent link">&para;</a></h3>
+<p>A guardrail is <strong>not</strong> responsible for talking to the user. It does not render an error, pick
+a message colour, or decide what Streamlit shows. It answers exactly one question:</p>
+<blockquote>
+<p>"Should this request continue?"</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>Answer</th>
+<th>What happens</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>No</td>
+<td>return a structured response explaining why</td>
+</tr>
+<tr>
+<td>Yes</td>
+<td>the pipeline proceeds normally</td>
+</tr>
+</tbody>
+</table>
+<p>This is what keeps validation independent of the UI. The same guardrail works behind a
+Streamlit page, an HTTP API, or a batch job.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+A validator decides; it does not present. The moment a validator formats output for a
+specific UI, it stops being reusable.</p>
+</blockquote>
+<hr />
+<h3 id="design-decision-2-every-stage-may-terminate-the-request">Design Decision #2 — Every Stage May Terminate the Request<a class="headerlink" href="#design-decision-2-every-stage-may-terminate-the-request" title="Permanent link">&para;</a></h3>
+<p>Guardrails are not advisory. Each one has the authority to end the request.</p>
+<div class="highlight"><pre><span></span><code>Question
+    │
+    ▼
+Input Guardrails
+    │
+    ├── Validation Failed? ──►  Return Response
+    │
+    ▼
+Retrieval
+    │
+    ▼
+Context Guardrails
+    │
+    ├── Validation Failed? ──►  Return Response
+    │
+    ▼
+Generation
+    │
+    ▼
+Output Guardrails
+    │
+    ├── Validation Failed? ──►  Return Response
+    │
+    ▼
+Final Response
+</code></pre></div>
+<p>This is the <strong>Early Exit Pattern</strong>, and the orchestrator (<code>rag.py</code>) does nothing more than
+coordinate the stages.</p>
+<hr />
+<h3 id="design-decision-3-one-response-contract-not-two">Design Decision #3 — One Response Contract, Not Two<a class="headerlink" href="#design-decision-3-one-response-contract-not-two" title="Permanent link">&para;</a></h3>
+<p>The obvious design introduces a separate <code>GuardrailResult</code> type alongside
+<code>GenerationResponse</code>. It was rejected.</p>
+<p>Every stage returns the <strong>same</strong> object:</p>
+<div class="highlight"><pre><span></span><code>GenerationResponse
+</code></pre></div>
+<p>Whether generation succeeds, validation fails, or context is missing, the caller receives one
+type. No <code>isinstance</code> checks, no union types, no branching in the UI on which shape came
+back.</p>
+<p><code>GenerationResponse</code> therefore evolved from <em>"the result of a successful generation"</em> into
+<em>"the result of the entire request lifecycle"</em>, gaining three fields:</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>success</code></td>
+<td>did the request complete normally</td>
+</tr>
+<tr>
+<td><code>reason</code></td>
+<td>machine-readable cause when it did not</td>
+</tr>
+<tr>
+<td><code>message</code></td>
+<td>human-readable explanation</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>Successful request              Blocked request
+────────────────────            ─────────────────────────────────
+success = true                  success = false
+answer  = &quot;...&quot;                 reason  = &quot;EMPTY_QUERY&quot;
+                                message = &quot;Please enter a question.&quot;
+</code></pre></div>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+A stable API contract is worth more than an expressive one. One return type that covers
+every outcome beats several precise types the caller must discriminate between.</p>
+</blockquote>
+<hr />
+<h3 id="the-three-validation-layers">The Three Validation Layers<a class="headerlink" href="#the-three-validation-layers" title="Permanent link">&para;</a></h3>
+<p>Validation responsibilities naturally occur at different stages, each asking a different
+question:</p>
+<table>
+<thead>
+<tr>
+<th>Stage</th>
+<th>Runs</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Input</td>
+<td>before retrieval</td>
+<td>Is the question valid?</td>
+</tr>
+<tr>
+<td>Context</td>
+<td>after retrieval</td>
+<td>Is the retrieved knowledge sufficient?</td>
+</tr>
+<tr>
+<td>Output</td>
+<td>after generation</td>
+<td>Is the generated response acceptable?</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Input Guardrails</strong> prevent invalid requests from entering the pipeline at all.</p>
+<ul>
+<li>Today: Empty Question, Prompt Injection Detection</li>
+<li>Later: maximum length, language detection, PII detection, profanity, rate limiting</li>
+</ul>
+<p><strong>Context Guardrails</strong> decide whether retrieval produced enough to generate from.</p>
+<ul>
+<li>Today: Empty Retrieval</li>
+<li>Later: semantic relevance validation, confidence threshold, a helper LLM for context
+  verification</li>
+</ul>
+<p><strong>Output Guardrails</strong> validate generated responses before the user ever sees them.</p>
+<ul>
+<li>Today: Empty Response</li>
+<li>Later: groundedness verification, safety classification, hallucination detection, citation
+  verification</li>
+</ul>
+<p>Separating these keeps each validator focused on one responsibility — and makes it obvious
+where a new check belongs.</p>
+<hr />
+<h3 id="design-decision-4-validation-lives-outside-the-services">Design Decision #4 — Validation Lives Outside the Services<a class="headerlink" href="#design-decision-4-validation-lives-outside-the-services" title="Permanent link">&para;</a></h3>
+<p><code>GenerationService</code> is responsible for <strong>generation</strong>. <code>RetrievalService</code> is responsible for
+<strong>retrieval</strong>. Neither should decide whether processing continues.</p>
+<p>If a service could halt the pipeline, it would own two responsibilities: doing its job, and
+policing the request. Guardrails keep the second one out.</p>
+<p><code>rag.py</code> becomes the orchestration layer and owns only sequencing:</p>
+<ol>
+<li>run Input Guardrails</li>
+<li>coordinate Retrieval</li>
+<li>run Context Guardrails</li>
+<li>coordinate Generation</li>
+<li>run Output Guardrails</li>
+<li>return the final response</li>
+</ol>
+<p>Business logic stays distributed across specialised services; <code>rag.py</code> holds none of it.</p>
+<blockquote>
+<p><strong>Engineering Principle</strong>
+Orchestration is a responsibility in its own right. A class that coordinates should not
+also compute.</p>
+</blockquote>
+<hr />
+<h3 id="extensibility-the-real-test">Extensibility — The Real Test<a class="headerlink" href="#extensibility-the-real-test" title="Permanent link">&para;</a></h3>
+<p>Adding a new validator requires exactly three things:</p>
+<ol>
+<li>implement the validator</li>
+<li>register it in the corresponding guardrail</li>
+<li><em>nothing else</em></li>
+</ol>
+<p>No change to Retrieval. No change to Generation. No change to the orchestration order. That
+is the Open/Closed Principle stated as a diff size.</p>
+<hr />
+<h3 id="final-architecture_1">Final Architecture<a class="headerlink" href="#final-architecture_1" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>                User Question
+                      │
+                      ▼
+              Input Guardrails
+              ├── Empty Query
+              └── Prompt Injection
+                      │
+                      ▼
+              Retrieval Service
+                      │
+                      ▼
+             Context Guardrails
+              ├── Empty Retrieval
+              └── Relevance (Future)
+                      │
+                      ▼
+             Generation Service
+                      │
+                      ▼
+              Output Guardrails
+              ├── Empty Response
+              ├── Safety (Future)
+              └── Groundedness (Future)
+                      │
+                      ▼
+             GenerationResponse
+                      │
+                      ▼
+                 Streamlit UI
+</code></pre></div>
+<hr />
+<h3 id="rejected-alternatives_2">Rejected Alternatives<a class="headerlink" href="#rejected-alternatives_2" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Alternative</th>
+<th>Why rejected</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>A separate <code>GuardrailResult</code> type</td>
+<td>Forces every caller to discriminate between return types; destroys a stable API contract</td>
+</tr>
+<tr>
+<td>Validation inside <code>RetrievalService</code> / <code>GenerationService</code></td>
+<td>Gives each service a second responsibility — doing its job and policing the request</td>
+</tr>
+<tr>
+<td>Guardrails that render user-facing errors</td>
+<td>Couples validation to the UI; the same guardrail could not serve an API or a batch job</td>
+</tr>
+<tr>
+<td>A single validation step before the pipeline</td>
+<td>Context and output problems only become visible <em>after</em> retrieval and generation</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="engineering-lessons_1">Engineering Lessons<a class="headerlink" href="#engineering-lessons_1" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Deciding whether to process a request is itself a responsibility.</strong> It deserves
+   components, not scattered <code>if</code> statements.</li>
+<li><strong>A validator decides; it does not present.</strong> That separation is what keeps guardrails
+   UI-independent.</li>
+<li><strong>Early Exit is a pipeline pattern.</strong> Every stage gets the authority to end the request
+   and return a complete response.</li>
+<li><strong>One response contract beats several precise ones.</strong> <code>GenerationResponse</code> covers success,
+   rejection, and failure alike.</li>
+<li><strong>Validation concerns are stage-specific.</strong> Input, context, and output ask three different
+   questions and must not be collapsed into one check.</li>
+<li><strong>Extensibility is measured by diff size.</strong> A new validator touches one file and one
+   registration.</li>
+</ol>
+<hr />
+<h3 id="interview-takeaways_2">Interview Takeaways<a class="headerlink" href="#interview-takeaways_2" title="Permanent link">&para;</a></h3>
+<p><strong>Why are guardrails architectural components rather than checks inside the services?</strong></p>
+<blockquote>
+<p>Because "should this request continue" is a separate responsibility from retrieval and
+generation. If <code>GenerationService</code> could halt the pipeline it would own two reasons to
+change. Guardrails keep validation policy in dedicated components and leave each service
+focused on one transformation.</p>
+</blockquote>
+<p><strong>Why does everything return <code>GenerationResponse</code> instead of a dedicated guardrail type?</strong></p>
+<blockquote>
+<p>To keep the API contract stable. Whether the request succeeded, was blocked at input, or
+failed on missing context, the caller receives one type with <code>success</code>, <code>reason</code>, and
+<code>message</code>. The UI never branches on which shape came back.</p>
+</blockquote>
+<p><strong>Why three guardrail layers instead of one?</strong></p>
+<blockquote>
+<p>They answer different questions at different times. Input validation asks whether the
+question is valid, and can run before any cost is incurred. Context validation asks whether
+retrieval produced enough to answer from — knowable only after retrieval. Output validation
+asks whether the generated answer is acceptable — knowable only after generation.</p>
+</blockquote>
+<p><strong>Why shouldn't a guardrail talk to the user?</strong></p>
+<blockquote>
+<p>Because it would couple validation to one interface. A guardrail returns a structured
+decision; whichever front end is attached decides how to display it. The same guardrail
+then works behind Streamlit, an HTTP API, or a batch job.</p>
+</blockquote>
+<p><strong>How much changes when you add a new validator?</strong></p>
+<blockquote>
+<p>One new validator implementation and one registration in the relevant guardrail. Retrieval,
+Generation, and the orchestration order are untouched — that is the Open/Closed Principle
+expressed as a diff.</p>
+</blockquote>
+<hr />
+<h3 id="biggest-takeaway_2">Biggest Takeaway<a class="headerlink" href="#biggest-takeaway_2" title="Permanent link">&para;</a></h3>
+<blockquote>
+<p><strong>PR-9 turned a RAG pipeline into a request-processing pipeline.</strong></p>
+</blockquote>
+<p>Instead of blindly retrieving and generating, the application now validates every stage of
+the request lifecycle before allowing execution to continue — while maintaining a clean
+separation of responsibilities. That is much closer to how production AI systems actually
+coordinate validation, retrieval, generation, and response handling.</p>
+<hr />
+<h2 id="self-check">Self-Check<a class="headerlink" href="#self-check" title="Permanent link">&para;</a></h2>
+<p>Answer these without looking. If any is shaky, the corresponding section above is the fix.</p>
+<ol>
+<li>Why does adding a sparse retriever force a change to the <em>ingestion</em> pipeline?</li>
+<li>What is wrong with the name <code>StrategySelector</code>, and what is right about <code>RetrievalService</code>?</li>
+<li>Why is BM25 an implementation detail rather than an architectural component?</li>
+<li>Configuration says hybrid retrieval is enabled, but the sparse index is missing. What
+   should happen, and why?</li>
+<li>What does a Metadata Catalog store, and what does it deliberately not store?</li>
+<li>Why does the Document Loader assign <code>document_id</code> rather than the Metadata Catalog?</li>
+<li>Give the one-line argument against filtering by filename.</li>
+<li>Why was <code>MetadataFilteringService</code> extracted instead of filtering inside each retriever?</li>
+<li>Why does the roadmap say "Self-query Preparation" rather than "Self-query Retrieval"?</li>
+<li>Why does a blocked request return <code>GenerationResponse</code> instead of a <code>GuardrailResult</code>?</li>
+<li>Why can't context validation happen at the same time as input validation?</li>
+<li>Name the one thing each of PR-7, PR-8, and PR-9 changed about <em>where a responsibility
+    lives</em> — not about what the user sees.</li>
+</ol>
+<hr />
+<h3 id="where-week-2-left-the-architecture">Where Week 2 Left the Architecture<a class="headerlink" href="#where-week-2-left-the-architecture" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Question
+   │
+   ▼ Input Guardrails      ← PR-9
+   │
+   ▼ RetrievalService      ← PR-7 (dense + sparse + fusion)
+   │      └── MetadataFilteringService   ← PR-8
+   │
+   ▼ Context Guardrails    ← PR-9
+   │
+   ▼ GenerationService
+   │
+   ▼ Output Guardrails     ← PR-9
+   │
+   ▼ GenerationResponse
+</code></pre></div>
+<p>Three PRs, zero new features in the product sense, and a pipeline that can now be extended at
+every stage without editing the stages around it.</p>
+<hr />
+<p><strong>Next:</strong> PR-10 — LCEL composition in the generation layer, and the question of what a
+framework should and should not be allowed to own.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

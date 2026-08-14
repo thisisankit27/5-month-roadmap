@@ -1,0 +1,3163 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Network/day-2-dns-advanced-practical/">
+      
+      
+        <link rel="prev" href="../day-1-dns-fundamentals/">
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>DNS in Practice: Propagation, Routing, Security & Deployment - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#dns-in-practice-propagation-routing-security-deployment" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              DNS in Practice: Propagation, Routing, Security &amp; Deployment
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Java/day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ttl-propagation-planning-a-change-not-just-understanding-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TTL &amp; Propagation — Planning a Change, Not Just Understanding It
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TTL &amp; Propagation — Planning a Change, Not Just Understanding It">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-actually-happening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Actually Happening
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-practical-playbook-for-a-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Practical Playbook for a Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trade-off-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-off Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-apexroot-domain-problem-cname-flattening-alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Apex/Root Domain Problem — CNAME Flattening &amp; ALIAS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Apex/Root Domain Problem — CNAME Flattening &amp; ALIAS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-workarounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Workarounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-deliverability-spf-dkim-dmarc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email Deliverability — SPF, DKIM, DMARC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Email Deliverability — SPF, DKIM, DMARC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-three-records-what-each-proves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Records, What Each Proves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters-for-a-full-stack-engineer-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters for a Full-Stack Engineer Specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dnssec-authenticity-not-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNSSEC — Authenticity, Not Encryption
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNSSEC — Authenticity, Not Encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-dnssec-actually-adds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What DNSSEC Actually Adds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-based-load-balancing-failover-geo-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS-Based Load Balancing, Failover &amp; Geo-Routing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNS-Based Load Balancing, Failover &amp; Geo-Routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-isnt-just-use-a-load-balancer-instead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Isn't "Just Use a Load Balancer" Instead
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wildcard-split-horizon-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wildcard &amp; Split-Horizon DNS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Wildcard &amp; Split-Horizon DNS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wildcard-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wildcard DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-horizon-split-brain-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Split-Horizon (Split-Brain) DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-a-domain-to-hosting-the-full-stack-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting a Domain to Hosting — The Full-Stack Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connecting a Domain to Hosting — The Full-Stack Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-dns-01-matters-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why DNS-01 Matters Specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-does-dns-propagation-take-time-and-how-do-you-plan-around-it-for-a-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does "DNS propagation" take time, and how do you plan around it for a migration?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-you-put-a-cname-on-the-apex-domain-and-how-do-platforms-work-around-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't you put a CNAME on the apex domain, and how do platforms work around it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-spf-dkim-and-dmarc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between SPF, DKIM, and DMARC?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-dnssec-actually-protect-against-and-what-does-it-not-protect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does DNSSEC actually protect against, and what does it not protect?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-dns-based-load-balancing-differ-from-a-traditional-load-balancer-and-why-use-both" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does DNS-based load balancing differ from a traditional load balancer, and why use both?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-issuing-a-wildcard-tls-certificate-require-the-dns-01-challenge-specifically-not-http-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does issuing a wildcard TLS certificate require the DNS-01 challenge specifically, not HTTP-01?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-split-horizon-dns-and-why-would-you-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's split-horizon DNS and why would you use it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-2-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 2 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#ttl-propagation-planning-a-change-not-just-understanding-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        TTL &amp; Propagation — Planning a Change, Not Just Understanding It
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="TTL &amp; Propagation — Planning a Change, Not Just Understanding It">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-actually-happening" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's Actually Happening
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-practical-playbook-for-a-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Practical Playbook for a Migration
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trade-off-table" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-off Table
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#the-apexroot-domain-problem-cname-flattening-alias" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Apex/Root Domain Problem — CNAME Flattening &amp; ALIAS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="The Apex/Root Domain Problem — CNAME Flattening &amp; ALIAS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-workarounds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Workarounds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#email-deliverability-spf-dkim-dmarc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Email Deliverability — SPF, DKIM, DMARC
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Email Deliverability — SPF, DKIM, DMARC">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-three-records-what-each-proves" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Three Records, What Each Proves
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters-for-a-full-stack-engineer-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters for a Full-Stack Engineer Specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dnssec-authenticity-not-encryption" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNSSEC — Authenticity, Not Encryption
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNSSEC — Authenticity, Not Encryption">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-dnssec-actually-adds" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What DNSSEC Actually Adds
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#trade-offs" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Trade-offs
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dns-based-load-balancing-failover-geo-routing" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        DNS-Based Load Balancing, Failover &amp; Geo-Routing
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="DNS-Based Load Balancing, Failover &amp; Geo-Routing">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-strategies" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Strategies
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-isnt-just-use-a-load-balancer-instead" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Isn't "Just Use a Load Balancer" Instead
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#wildcard-split-horizon-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wildcard &amp; Split-Horizon DNS
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Wildcard &amp; Split-Horizon DNS">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#wildcard-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Wildcard DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#split-horizon-split-brain-dns" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Split-Horizon (Split-Brain) DNS
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#connecting-a-domain-to-hosting-the-full-stack-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Connecting a Domain to Hosting — The Full-Stack Checklist
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Connecting a Domain to Hosting — The Full-Stack Checklist">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-dns-01-matters-specifically" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why DNS-01 Matters Specifically
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-does-dns-propagation-take-time-and-how-do-you-plan-around-it-for-a-migration" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does "DNS propagation" take time, and how do you plan around it for a migration?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-cant-you-put-a-cname-on-the-apex-domain-and-how-do-platforms-work-around-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why can't you put a CNAME on the apex domain, and how do platforms work around it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-spf-dkim-and-dmarc" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between SPF, DKIM, and DMARC?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-dnssec-actually-protect-against-and-what-does-it-not-protect" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does DNSSEC actually protect against, and what does it not protect?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#how-does-dns-based-load-balancing-differ-from-a-traditional-load-balancer-and-why-use-both" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How does DNS-based load balancing differ from a traditional load balancer, and why use both?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-does-issuing-a-wildcard-tls-certificate-require-the-dns-01-challenge-specifically-not-http-01" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why does issuing a wildcard TLS certificate require the DNS-01 challenge specifically, not HTTP-01?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-split-horizon-dns-and-why-would-you-use-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's split-horizon DNS and why would you use it?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-2-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 2 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="dns-in-practice-propagation-routing-security-deployment">DNS in Practice: Propagation, Routing, Security &amp; Deployment<a class="headerlink" href="#dns-in-practice-propagation-routing-security-deployment" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+Day 1 covered how DNS is structured and resolved. This chapter is about the decisions a full-stack engineer actually makes with that structure: how to migrate a domain without an outage, why the apex domain fights with CNAME and what to do about it, how DNS gets weaponized for load balancing and geo-routing, how email deliverability and TLS certificates depend on DNS records, and how DNS gets misused for internal-vs-external routing. This is the layer where DNS knowledge turns into "why did production break for four hours after that deploy."</p>
+</blockquote>
+<hr />
+<h2 id="ttl-propagation-planning-a-change-not-just-understanding-it">TTL &amp; Propagation — Planning a Change, Not Just Understanding It<a class="headerlink" href="#ttl-propagation-planning-a-change-not-just-understanding-it" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<p>"DNS propagation" sounds like something that happens <em>to</em> you, passively, over ambiguous "24–48 hours." In reality it's a direct, predictable consequence of TTL and caching (Day 1) — and it's something you can and should plan around before a migration, not discover mid-incident.</p>
+<h3 id="whats-actually-happening">What's Actually Happening<a class="headerlink" href="#whats-actually-happening" title="Permanent link">&para;</a></h3>
+<p>When you change a record, the <strong>authoritative nameserver</strong> updates immediately. What takes time is every recursive resolver around the world that had the <strong>old</strong> value cached, honoring its <strong>old</strong> TTL before it re-queries. There is no global "push" — it's a pull model, gated by however long ago each resolver last cached the answer and what TTL it was told.</p>
+<div class="highlight"><pre><span></span><code>You change the A record at t=0
+        │
+        ▼
+Authoritative server: updated instantly
+        │
+        ▼
+Resolver A (cached 5 min ago, TTL 3600s)  → still serves OLD value for ~55 more minutes
+Resolver B (cache just expired)            → re-queries NOW, gets NEW value immediately
+Resolver C (never queried before)          → gets NEW value immediately
+</code></pre></div>
+<h3 id="the-practical-playbook-for-a-migration">The Practical Playbook for a Migration<a class="headerlink" href="#the-practical-playbook-for-a-migration" title="Permanent link">&para;</a></h3>
+<ol>
+<li><strong>Before the change</strong>, lower the TTL on the record you're about to touch (e.g. from 3600s to 300s or 60s), and wait for at least the <em>old</em> TTL's duration — so every cached copy expires and gets replaced with the new low-TTL version.</li>
+<li><strong>Make the actual change</strong> — now any resolver picking up the new value will only cache it for the short TTL.</li>
+<li><strong>After confirming the migration is stable</strong>, raise the TTL back to a normal value (e.g. an hour or a day) to reduce query load on your DNS host.</li>
+</ol>
+<h3 id="trade-off-table">Trade-off Table<a class="headerlink" href="#trade-off-table" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>TTL</th>
+<th>Pros</th>
+<th>Cons</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Low</strong> (60–300s)</td>
+<td>Fast propagation of future changes, quick failover</td>
+<td>More queries hit your DNS host (cost at scale), slightly higher per-lookup latency for cache misses</td>
+</tr>
+<tr>
+<td><strong>High</strong> (3600s+)</td>
+<td>Fewer queries, better caching performance</td>
+<td>Slow to propagate changes — a mistake or needed failover takes longer to take effect everywhere</td>
+</tr>
+</tbody>
+</table>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>This is the exact same reasoning as cache invalidation anywhere in a system — "how do I safely change a value that's cached downstream with a TTL I don't control the moment of expiry for." The fix is always the same shape: shrink the cache window <em>before</em> the change, make the change, then widen it back out once stable. If you've tuned a CDN cache header or a browser <code>Cache-Control</code> max-age before a deploy, you've already done this pattern.</p>
+<hr />
+<h2 id="the-apexroot-domain-problem-cname-flattening-alias">The Apex/Root Domain Problem — CNAME Flattening &amp; ALIAS<a class="headerlink" href="#the-apexroot-domain-problem-cname-flattening-alias" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<p>Recap from Day 1: a CNAME must be the <em>only</em> record at that name, but the apex domain (<code>example.com</code>, no subdomain) needs NS, MX, TXT, and other records simultaneously. Yet modern hosting platforms (Vercel, Netlify, load balancers) give you a <em>hostname</em> to point at (<code>cname.vercel-dns.com</code>), not a stable IP — CNAMEs are exactly what you'd want to use, except you can't, at the apex.</p>
+<h3 id="the-workarounds">The Workarounds<a class="headerlink" href="#the-workarounds" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Approach</th>
+<th>How it works</th>
+<th>Who offers it</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>ALIAS / ANAME record</strong></td>
+<td>A provider-specific record type that <em>looks</em> like a CNAME to you, but the DNS host resolves it to an A record behind the scenes before answering — so it's spec-legal at the apex</td>
+<td>Route 53 (as "Alias"), many modern DNS hosts</td>
+</tr>
+<tr>
+<td><strong>CNAME flattening</strong></td>
+<td>The DNS host itself performs the CNAME lookup at query time and returns a flattened A/AAAA answer, functionally the same outcome as ALIAS</td>
+<td>Cloudflare</td>
+</tr>
+<tr>
+<td><strong>Static A record to a fixed IP</strong></td>
+<td>If the target service publishes a stable IP (some platforms do, for exactly this reason), just use a plain A record</td>
+<td>Varies by platform</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Practical pattern for most projects:</strong> put the <code>www</code> subdomain as a CNAME to the platform's hostname (fully spec-legal, subdomains have no such restriction), and either redirect the apex to <code>www</code>, or use your DNS host's ALIAS/flattening feature to point the apex at the same target directly.</p>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p>This is a workaround layered <em>below</em> the protocol, not a change to it — the DNS host is doing the CNAME resolution work at answer-time so the wire protocol still only ever sees a valid A/AAAA record. It's the same shape as an ORM doing eager-loading to hide N+1 queries from the caller: the constraint at the low level didn't change, a layer above absorbed the complexity.</p>
+<hr />
+<h2 id="email-deliverability-spf-dkim-dmarc">Email Deliverability — SPF, DKIM, DMARC<a class="headerlink" href="#email-deliverability-spf-dkim-dmarc" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>Anyone can send an email claiming to be <code>from: you@example.com</code> — SMTP has no built-in sender verification. Without DNS-based proof of legitimacy, receiving mail servers (Gmail, Outlook) have no way to distinguish your real transactional email (password resets, invoices) from spoofed spam, and increasingly just reject or spam-folder anything unverified.</p>
+<h3 id="the-three-records-what-each-proves">The Three Records, What Each Proves<a class="headerlink" href="#the-three-records-what-each-proves" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Record</th>
+<th>Type</th>
+<th>Proves</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>SPF</strong> (Sender Policy Framework)</td>
+<td>TXT</td>
+<td><em>Which mail servers are allowed to send mail claiming to be from this domain</em> — a list of authorized sending IPs/hosts</td>
+</tr>
+<tr>
+<td><strong>DKIM</strong> (DomainKeys Identified Mail)</td>
+<td>TXT (public key)</td>
+<td><em>The email wasn't tampered with in transit</em> — the sending server signs the message with a private key; the receiver verifies against the public key published in DNS</td>
+</tr>
+<tr>
+<td><strong>DMARC</strong> (Domain-based Message Authentication, Reporting &amp; Conformance)</td>
+<td>TXT</td>
+<td><em>What to do if SPF/DKIM fail</em> — a policy (<code>none</code> / <code>quarantine</code> / <code>reject</code>) plus a reporting address for who to notify about failures</td>
+</tr>
+</tbody>
+</table>
+<div class="highlight"><pre><span></span><code>Incoming mail claiming to be from example.com
+        │
+        ▼
+Receiving server checks SPF   → is the sending IP authorized for example.com?
+        │
+        ▼
+Receiving server checks DKIM  → does the signature verify against the published public key?
+        │
+        ▼
+Receiving server applies DMARC policy → both failed? reject / quarantine / allow, per your policy
+</code></pre></div>
+<h3 id="why-this-matters-for-a-full-stack-engineer-specifically">Why This Matters for a Full-Stack Engineer Specifically<a class="headerlink" href="#why-this-matters-for-a-full-stack-engineer-specifically" title="Permanent link">&para;</a></h3>
+<p>Any transactional email flow (SES, SendGrid, Postmark, Google Workspace) requires you to add these exact TXT/CNAME records to your DNS zone during setup — this is the single most common "why are my emails going to spam" root cause, and it's a DNS configuration problem, not a code problem.</p>
+<h3 id="engineering-insight_2">Engineering Insight<a class="headerlink" href="#engineering-insight_2" title="Permanent link">&para;</a></h3>
+<p>SPF/DKIM/DMARC is a real-world example of <strong>defense in depth applied to a broadcast protocol with no built-in auth</strong>: SPF checks the transport-level sender, DKIM checks message integrity via signature, DMARC defines the enforcement policy and feedback loop. No single record is sufficient alone — SPF alone breaks under forwarding, DKIM alone doesn't say what to do on failure — the three compose into one verification story.</p>
+<hr />
+<h2 id="dnssec-authenticity-not-encryption">DNSSEC — Authenticity, Not Encryption<a class="headerlink" href="#dnssec-authenticity-not-encryption" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_3">Engineering Problem<a class="headerlink" href="#engineering-problem_3" title="Permanent link">&para;</a></h3>
+<p>Plain DNS responses are unsigned and unauthenticated — a resolver has no cryptographic way to know a response actually came from the real authoritative server and wasn't forged or tampered with in transit (<strong>DNS cache poisoning / spoofing</strong>). An attacker who can inject a fake response can redirect a domain's traffic anywhere, including to a phishing clone or an intercepting mail server.</p>
+<h3 id="what-dnssec-actually-adds">What DNSSEC Actually Adds<a class="headerlink" href="#what-dnssec-actually-adds" title="Permanent link">&para;</a></h3>
+<p>DNSSEC adds a <strong>chain of cryptographic signatures</strong>, mirroring the DNS hierarchy itself: the root signs the TLD's key, the TLD signs the domain's key, the domain signs its own records. A validating resolver can walk that chain and confirm the answer is authentic and unmodified.</p>
+<p><strong>Important distinction:</strong> DNSSEC provides <strong>authenticity and integrity</strong> — proof the answer is genuine and unaltered. It does <strong>not</strong> provide <strong>confidentiality</strong> — DNS queries and answers under DNSSEC are still plaintext, visible to anyone observing the traffic (that's a separate concern, addressed by DNS-over-HTTPS/DNS-over-TLS, a different mechanism entirely).</p>
+<h3 id="trade-offs">Trade-offs<a class="headerlink" href="#trade-offs" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Benefit</th>
+<th>Cost</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Prevents cache-poisoning/spoofing attacks on your domain's records</td>
+<td>Adds operational complexity (key rotation, signing)</td>
+</tr>
+<tr>
+<td>Enables trust chains other systems build on (e.g. some CAA/cert-issuance policies)</td>
+<td>Slightly larger DNS responses; misconfiguration can cause total resolution failure (a broken signature chain makes the domain unresolvable, not just insecure)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="engineering-insight_3">Engineering Insight<a class="headerlink" href="#engineering-insight_3" title="Permanent link">&para;</a></h3>
+<p>DNSSEC is the DNS-layer analogue of TLS certificate chains — a hierarchy of signatures where each level vouches for the next, rooted in one trust anchor (the DNS root, analogous to a root CA). The "authenticity ≠ confidentiality" distinction is worth internalizing generally: plenty of security mechanisms provide one without the other, and conflating them is a common interview trap.</p>
+<hr />
+<h2 id="dns-based-load-balancing-failover-geo-routing">DNS-Based Load Balancing, Failover &amp; Geo-Routing<a class="headerlink" href="#dns-based-load-balancing-failover-geo-routing" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_4">Engineering Problem<a class="headerlink" href="#engineering-problem_4" title="Permanent link">&para;</a></h3>
+<p>A single A record pointing at one IP means one server, one region, one point of failure. Before you reach for a dedicated load balancer, DNS itself already provides several routing strategies — because "return a different answer depending on context" was already the core operation DNS performs.</p>
+<h3 id="the-strategies">The Strategies<a class="headerlink" href="#the-strategies" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Strategy</th>
+<th>How it works</th>
+<th>Use case</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Round-robin DNS</strong></td>
+<td>Multiple A records for one name; resolver returns them in rotating order</td>
+<td>Crude load distribution across identical servers — no health awareness</td>
+</tr>
+<tr>
+<td><strong>Weighted routing</strong></td>
+<td>Multiple targets, traffic split by configured percentage</td>
+<td>Canary releases, gradual migrations (e.g. 5% to new infra)</td>
+</tr>
+<tr>
+<td><strong>Latency-based routing</strong></td>
+<td>Returns the target with the lowest measured latency from the querying resolver's region</td>
+<td>Multi-region deployments optimizing for user-perceived speed</td>
+</tr>
+<tr>
+<td><strong>GeoDNS / geolocation routing</strong></td>
+<td>Returns different records based on the querier's geographic location</td>
+<td>Serving region-specific content, or data-residency compliance</td>
+</tr>
+<tr>
+<td><strong>Failover routing</strong></td>
+<td>Health-checks the primary target; automatically returns the backup if the primary fails checks</td>
+<td>High-availability setups without an active load balancer in front</td>
+</tr>
+<tr>
+<td><strong>Anycast</strong></td>
+<td>The <em>same</em> IP address is announced from multiple physical locations at the BGP routing layer; network routing (not DNS) sends the client to the nearest one</td>
+<td>How root DNS servers and CDNs (Cloudflare, Fastly) achieve global low latency from one IP</td>
+</tr>
+</tbody>
+</table>
+<h3 id="why-this-isnt-just-use-a-load-balancer-instead">Why This Isn't "Just Use a Load Balancer" Instead<a class="headerlink" href="#why-this-isnt-just-use-a-load-balancer-instead" title="Permanent link">&para;</a></h3>
+<p>DNS-based routing operates <strong>before</strong> any connection is established — the client doesn't even know which IP to connect to yet. A load balancer, by contrast, sits in the request path <em>after</em> DNS resolution, in front of an already-chosen IP. They're complementary, not competing: DNS routing picks which <strong>region/cluster</strong>, a load balancer distributes <strong>within</strong> that cluster. Large-scale systems typically use both — GeoDNS/latency routing to the nearest region, then a regional load balancer across that region's servers.</p>
+<h3 id="engineering-insight_4">Engineering Insight<a class="headerlink" href="#engineering-insight_4" title="Permanent link">&para;</a></h3>
+<p>This is load balancing pushed to the earliest possible layer of the request lifecycle — deciding "where" before a single packet is sent to the actual service, rather than after. The same instinct — fail fast, decide early, cheaper the earlier you decide — shows up throughout distributed systems design (schema validation before a DB round-trip, auth checks before business logic runs).</p>
+<hr />
+<h2 id="wildcard-split-horizon-dns">Wildcard &amp; Split-Horizon DNS<a class="headerlink" href="#wildcard-split-horizon-dns" title="Permanent link">&para;</a></h2>
+<h3 id="wildcard-dns">Wildcard DNS<a class="headerlink" href="#wildcard-dns" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>*.example.com  →  A record / target
+</code></pre></div>
+<p>A wildcard record matches <strong>any</strong> subdomain that doesn't have its own explicit record — <code>anything.example.com</code>, <code>foo.example.com</code> all resolve to the same target. Common for multi-tenant SaaS (<code>tenant-a.example.com</code>, <code>tenant-b.example.com</code> all routing to the same app, which then reads the <code>Host</code> header to determine the tenant) and for wildcard TLS certificates that need to cover unpredictable subdomain names.</p>
+<p><strong>Trade-off:</strong> convenient for dynamic subdomain provisioning, but it also means a typo'd or unintended subdomain silently resolves instead of failing loudly (<code>NXDOMAIN</code>) — which can be a security or debugging surprise (e.g. it can defeat some subdomain-takeover detection tooling that expects to see <code>NXDOMAIN</code> for unregistered names).</p>
+<h3 id="split-horizon-split-brain-dns">Split-Horizon (Split-Brain) DNS<a class="headerlink" href="#split-horizon-split-brain-dns" title="Permanent link">&para;</a></h3>
+<p>The same domain name resolves to <strong>different answers depending on who's asking</strong> — typically, internal company network clients get an internal/private IP, while external clients get the public-facing IP. Implemented by running two separate authoritative zones (internal DNS servers vs public-facing ones) for the same name.</p>
+<p><strong>Use case:</strong> an internal admin dashboard at <code>admin.example.com</code> that should route to a private VPC IP for employees on the corporate network, but shouldn't even be discoverable (or should hit a different, more restricted endpoint) from the public internet.</p>
+<hr />
+<h2 id="connecting-a-domain-to-hosting-the-full-stack-checklist">Connecting a Domain to Hosting — The Full-Stack Checklist<a class="headerlink" href="#connecting-a-domain-to-hosting-the-full-stack-checklist" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_5">Engineering Problem<a class="headerlink" href="#engineering-problem_5" title="Permanent link">&para;</a></h3>
+<p>This is where all the above concepts land for a working project: you have a domain, you have an app deployed somewhere (Vercel, Netlify, EC2 + a load balancer, S3 + CloudFront), and you need the domain to actually route to it <em>and</em> be servable over HTTPS.</p>
+<h3 id="the-flow">The Flow<a class="headerlink" href="#the-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>1. Deploy the app → hosting platform gives you a target (an IP, or a CNAME-able hostname)
+2. Add DNS records in your zone:
+      - apex (example.com)  → ALIAS/ANAME/flattened-CNAME or A record, per Day 2&#39;s apex workaround
+      - www.example.com     → CNAME to the platform&#39;s hostname
+3. Platform (or you, via Let&#39;s Encrypt/ACME) issues a TLS certificate for the domain
+      - HTTP-01 challenge: platform serves a file at a well-known path, proving control over the domain via the web server
+      - DNS-01 challenge: you add a specific TXT record proving control over the DNS zone itself
+        (required for wildcard certs, since there&#39;s no single HTTP path that proves ownership of *.example.com)
+4. TTL/propagation window (Day 2&#39;s first section) before the change is universally visible
+</code></pre></div>
+<h3 id="why-dns-01-matters-specifically">Why DNS-01 Matters Specifically<a class="headerlink" href="#why-dns-01-matters-specifically" title="Permanent link">&para;</a></h3>
+<p><strong>HTTP-01</strong> proves you control the <em>web server</em> at that name. <strong>DNS-01</strong> proves you control the <em>DNS zone</em> — which is the only way to prove ownership of a name that has no running web server yet, or to issue a <strong>wildcard certificate</strong> (<code>*.example.com</code>), since a wildcard can't be proven by serving a file at one specific hostname's path. This is why automated cert tools (<code>certbot</code>, ACME clients) support a "DNS provider plugin" — they need API access to your DNS host to programmatically add the proof TXT record.</p>
+<h3 id="engineering-insight_5">Engineering Insight<a class="headerlink" href="#engineering-insight_5" title="Permanent link">&para;</a></h3>
+<p>Domain-to-hosting setup is really the composition of everything in these two notes: record types (Day 1) solving apex-vs-subdomain routing (this note's ALIAS section), TTL/propagation timing your cutover safely, and DNS-01 validation reusing the same "prove you control this zone" trust model that DNSSEC and SPF/DKIM/DMARC all rely on — DNS keeps getting reused as a low-friction, universally-checkable proof-of-ownership channel, not just a name-to-IP lookup.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="why-does-dns-propagation-take-time-and-how-do-you-plan-around-it-for-a-migration">Why does "DNS propagation" take time, and how do you plan around it for a migration?<a class="headerlink" href="#why-does-dns-propagation-take-time-and-how-do-you-plan-around-it-for-a-migration" title="Permanent link">&para;</a></h3>
+<p>Propagation delay is just cached-TTL expiry across many independent resolvers — there's no global push, only pull with a cache lifetime. The safe pattern is: lower the TTL well before the change, wait out the old TTL so all cached copies expire, make the change, then raise the TTL back once stable.</p>
+<h3 id="why-cant-you-put-a-cname-on-the-apex-domain-and-how-do-platforms-work-around-it">Why can't you put a CNAME on the apex domain, and how do platforms work around it?<a class="headerlink" href="#why-cant-you-put-a-cname-on-the-apex-domain-and-how-do-platforms-work-around-it" title="Permanent link">&para;</a></h3>
+<p>A CNAME must be the only record at that name, but the apex needs NS/MX/TXT records simultaneously. DNS hosts work around it with an ALIAS/ANAME record or CNAME flattening — the host resolves the target to an A/AAAA record behind the scenes so the wire response is still spec-legal.</p>
+<h3 id="whats-the-difference-between-spf-dkim-and-dmarc">What's the difference between SPF, DKIM, and DMARC?<a class="headerlink" href="#whats-the-difference-between-spf-dkim-and-dmarc" title="Permanent link">&para;</a></h3>
+<p>SPF authorizes which mail servers may send on the domain's behalf. DKIM cryptographically signs messages so tampering can be detected. DMARC defines the enforcement policy (reject/quarantine/allow) when SPF or DKIM checks fail, plus a reporting mechanism. They're complementary — none alone is sufficient.</p>
+<h3 id="what-does-dnssec-actually-protect-against-and-what-does-it-not-protect">What does DNSSEC actually protect against, and what does it not protect?<a class="headerlink" href="#what-does-dnssec-actually-protect-against-and-what-does-it-not-protect" title="Permanent link">&para;</a></h3>
+<p>It protects against cache poisoning/spoofing by adding a cryptographic signature chain mirroring the DNS hierarchy, proving a response is authentic and unmodified. It does not provide confidentiality — queries and answers remain plaintext; that's addressed separately by DNS-over-HTTPS/TLS.</p>
+<h3 id="how-does-dns-based-load-balancing-differ-from-a-traditional-load-balancer-and-why-use-both">How does DNS-based load balancing differ from a traditional load balancer, and why use both?<a class="headerlink" href="#how-does-dns-based-load-balancing-differ-from-a-traditional-load-balancer-and-why-use-both" title="Permanent link">&para;</a></h3>
+<p>DNS routing decides which region/cluster to send a client to <em>before</em> any connection is made, at resolution time. A load balancer sits after resolution, distributing traffic within an already-chosen cluster. Large systems typically use both: GeoDNS/latency routing to the nearest region, then a load balancer within it.</p>
+<h3 id="why-does-issuing-a-wildcard-tls-certificate-require-the-dns-01-challenge-specifically-not-http-01">Why does issuing a wildcard TLS certificate require the DNS-01 challenge specifically, not HTTP-01?<a class="headerlink" href="#why-does-issuing-a-wildcard-tls-certificate-require-the-dns-01-challenge-specifically-not-http-01" title="Permanent link">&para;</a></h3>
+<p>HTTP-01 proves control of a single web server at one hostname's path — it can't prove ownership of an unbounded set of subdomains. DNS-01 proves control of the DNS zone itself by requiring a specific TXT record, which is the only way to prove ownership of <code>*.example.com</code> as a whole.</p>
+<h3 id="whats-split-horizon-dns-and-why-would-you-use-it">What's split-horizon DNS and why would you use it?<a class="headerlink" href="#whats-split-horizon-dns-and-why-would-you-use-it" title="Permanent link">&para;</a></h3>
+<p>The same domain name resolves to different answers depending on the requester — e.g. internal employees get a private VPC IP, external clients get the public IP (or nothing). Used for internal tools/admin panels that should be reachable on the corporate network without being fully public.</p>
+<hr />
+<p>❌ DNS propagation is an unpredictable waiting period you just have to tolerate.</p>
+<p>✔ It's a direct, plannable consequence of TTL — lower the TTL before a change, wait out the old cache window, then change, then raise it back.</p>
+<hr />
+<p>❌ DNSSEC encrypts DNS traffic so no one can see your queries.</p>
+<p>✔ DNSSEC proves authenticity/integrity (the answer is genuine and unmodified) — it does not provide confidentiality; queries stay plaintext.</p>
+<hr />
+<p>❌ SPF alone is enough to stop email spoofing of your domain.</p>
+<p>✔ SPF only authorizes sending IPs — it breaks under mail forwarding and says nothing about message tampering or enforcement. DKIM (integrity) and DMARC (enforcement policy) are both needed alongside it.</p>
+<hr />
+<p>❌ A load balancer and DNS-based routing solve the same problem, so you only need one.</p>
+<p>✔ DNS routing picks a region/cluster before a connection exists; a load balancer distributes within a cluster after resolution. They compose — most large systems use both.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>TTL/propagation      → pull-based cache expiry, not a push
+                        migration playbook: lower TTL → wait → change → raise TTL
+
+Apex + CNAME conflict → CNAME must be sole record at a name; apex needs NS/MX/TXT too
+                        fix: ALIAS/ANAME or CNAME flattening (DNS host resolves it for you)
+
+Email auth            → SPF (who can send) + DKIM (integrity, signed) + DMARC (enforcement policy)
+                        none alone is sufficient — defense in depth
+
+DNSSEC                 → authenticity/integrity via signature chain mirroring the DNS hierarchy
+                          NOT confidentiality (queries still plaintext)
+
+DNS-based routing      → round-robin / weighted / latency-based / GeoDNS / failover / anycast
+                          decides destination BEFORE a connection exists — complements, not
+                          replaces, a load balancer
+
+Wildcard DNS            → *.example.com catches unmatched subdomains — convenient, but hides
+                            typos/unintended names that would otherwise NXDOMAIN
+
+Split-horizon DNS       → same name, different answer depending on who&#39;s asking
+                            (internal vs external resolvers)
+
+HTTP-01 vs DNS-01        → HTTP-01 proves control of a web server at one path
+                            DNS-01 proves control of the whole zone — required for wildcard certs
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-2-checklist">Stage 2 · Week 2 Checklist<a class="headerlink" href="#stage-2-week-2-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain why DNS propagation happens and design a safe TTL-lowering playbook for a migration</li>
+<li>[x] Explain why the apex domain can't be a CNAME, and name at least one workaround</li>
+<li>[x] Explain what SPF, DKIM, and DMARC each individually prove, and why all three are needed together</li>
+<li>[x] Explain what DNSSEC protects against and explicitly what it does NOT provide</li>
+<li>[x] Name at least four DNS-based routing strategies and when each is appropriate</li>
+<li>[x] Explain why DNS-based routing and a load balancer are complementary, not redundant</li>
+<li>[x] Explain what a wildcard DNS record is, and one downside of using it</li>
+<li>[x] Explain split-horizon DNS and a real use case for it</li>
+<li>[x] Explain why a wildcard TLS certificate requires the DNS-01 challenge instead of HTTP-01</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

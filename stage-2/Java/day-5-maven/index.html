@@ -1,0 +1,3037 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-2/Java/day-5-maven/">
+      
+      
+        <link rel="prev" href="../day-4-reflection/">
+      
+      
+        <link rel="next" href="../day-6-ioc-di-spring/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>Maven: Build Automation & Dependency Management - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#maven-build-automation-dependency-management" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              Maven: Build Automation &amp; Dependency Management
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-2-lcel/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/AI%20Learning/LCEL/day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../stage-1/Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_3_1" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-dependency-management-is-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Dependency Management Is Needed
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Dependency Management Is Needed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-maven-actually-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Maven Actually Does
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Maven Actually Does">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dependency-management-the-primary-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dependency Management — the Primary Value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-build-automation-the-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Build Automation — the Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-standard-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Standard Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pomxml-anatomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pom.xml Anatomy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-maven-resolves-a-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Maven Resolves a Dependency
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Maven Resolves a Dependency">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-a-locally-installed-project-as-a-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a Locally Installed Project as a Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-senior-level-corrections-worth-remembering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Senior-Level Corrections Worth Remembering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-can-go-wrong-version-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Can Go Wrong — Version Conflicts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Can Go Wrong — Version Conflicts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solutions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-scopes-compile-runtime-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Scopes — Compile, Runtime, Test
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Scopes — Compile, Runtime, Test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-compile-time-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default — Compile-Time Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runtime-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        runtime Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-runtime-scope-jdbc-driver-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use runtime Scope — JDBC Driver Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-make-everything-compile-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Just Make Everything compile Scope?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        test Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-isnt-copy-pasting-code-or-manually-adding-jars-a-sustainable-dependency-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why isn't copy-pasting code or manually adding JARs a sustainable dependency strategy?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-maven-just-a-dependency-downloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is Maven just a dependency downloader?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-running-mvn-package-actually-execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does running mvn package actually execute?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-mvnrepositorycom-and-maven-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between mvnrepository.com and Maven Central?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-resolving-a-dependency-does-maven-check-the-local-repo-or-a-remote-repo-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When resolving a dependency, does Maven check the local repo or a remote repo first?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#given-a-diamond-dependency-conflict-how-does-maven-decide-which-version-of-a-transitively-shared-library-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Given a diamond dependency conflict, how does Maven decide which version of a transitively-shared library to use?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-senior-level-fix-for-recurring-version-conflicts-across-a-multi-module-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the senior-level fix for recurring version conflicts across a multi-module project?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-compile-scope-and-runtime-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between compile scope and runtime scope?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-declare-every-dependency-with-compile-scope-to-be-safe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not just declare every dependency with compile scope, to be safe?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-test-scope-guarantee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does test scope guarantee?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-dependency-management-is-needed" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Dependency Management Is Needed
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Why Dependency Management Is Needed">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-maven-actually-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Maven Actually Does
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Maven Actually Does">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#1-dependency-management-the-primary-value" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        1. Dependency Management — the Primary Value
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#2-build-automation-the-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        2. Build Automation — the Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#3-standard-project-structure" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        3. Standard Project Structure
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pomxml-anatomy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        pom.xml Anatomy
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#how-maven-resolves-a-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        How Maven Resolves a Dependency
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="How Maven Resolves a Dependency">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#the-flow" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Flow
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#using-a-locally-installed-project-as-a-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Using a Locally Installed Project as a Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#two-senior-level-corrections-worth-remembering" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Two Senior-Level Corrections Worth Remembering
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-can-go-wrong-version-conflicts" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Can Go Wrong — Version Conflicts
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="What Can Go Wrong — Version Conflicts">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#resolution-rule" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Resolution Rule
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#solutions" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Solutions
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#dependency-scopes-compile-runtime-test" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Dependency Scopes — Compile, Runtime, Test
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Dependency Scopes — Compile, Runtime, Test">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#default-compile-time-dependency" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Default — Compile-Time Dependency
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runtime-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        runtime Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-to-use-runtime-scope-jdbc-driver-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When to Use runtime Scope — JDBC Driver Example
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-make-everything-compile-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Just Make Everything compile Scope?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#test-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        test Scope
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#why-isnt-copy-pasting-code-or-manually-adding-jars-a-sustainable-dependency-strategy" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why isn't copy-pasting code or manually adding JARs a sustainable dependency strategy?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-maven-just-a-dependency-downloader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is Maven just a dependency downloader?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-running-mvn-package-actually-execute" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does running mvn package actually execute?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-mvnrepositorycom-and-maven-central" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between mvnrepository.com and Maven Central?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-resolving-a-dependency-does-maven-check-the-local-repo-or-a-remote-repo-first" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When resolving a dependency, does Maven check the local repo or a remote repo first?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#given-a-diamond-dependency-conflict-how-does-maven-decide-which-version-of-a-transitively-shared-library-to-use" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Given a diamond dependency conflict, how does Maven decide which version of a transitively-shared library to use?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-senior-level-fix-for-recurring-version-conflicts-across-a-multi-module-project" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the senior-level fix for recurring version conflicts across a multi-module project?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#whats-the-difference-between-compile-scope-and-runtime-scope" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What's the difference between compile scope and runtime scope?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-declare-every-dependency-with-compile-scope-to-be-safe" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not just declare every dependency with compile scope, to be safe?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-does-test-scope-guarantee" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What does test scope guarantee?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#stage-2-week-1-checklist" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Stage 2 · Week 1 Checklist
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="maven-build-automation-dependency-management">Maven: Build Automation &amp; Dependency Management<a class="headerlink" href="#maven-build-automation-dependency-management" title="Permanent link">&para;</a></h1>
+<hr />
+<blockquote>
+<p><strong>Goal of this Chapter</strong>
+This is not "here's the <code>pom.xml</code> tags." Maven exists because manually managing JARs doesn't scale past a handful of dependencies — the goal is to understand <em>which</em> problem each Maven mechanism (coordinates, the local repo, the lifecycle, scopes, <code>dependencyManagement</code>) solves, so version conflicts and scope choices stop looking like magic and start looking like predictable consequences of how dependency resolution actually works.</p>
+</blockquote>
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>Maven is a build automation and dependency management tool — it resolves a project's declared dependencies (and their transitive dependencies) from a repository, and drives the project through a fixed, cumulative lifecycle of phases from compilation to deployment.</strong></p>
+<hr />
+<h2 id="why-dependency-management-is-needed">Why Dependency Management Is Needed<a class="headerlink" href="#why-dependency-management-is-needed" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<p>Before a tool manages dependencies for you, there are exactly two manual options, and both break down fast:</p>
+<p><strong>1. Copy-paste code</strong> — no versioning, no upgrade path, unmaintainable the moment the pasted code needs a fix upstream.</p>
+<p><strong>2. Add external JARs manually</strong> — now <em>you</em> manage dependency-of-dependency relationships by hand, version conflicts have no automated resolution, and you're managing classpath hell directly.</p>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p>Both manual approaches fail for the same underlying reason: they conflate "I need this code" with "I need to personally track every version and transitive requirement of this code." Maven's entire value proposition is separating those two concerns.</p>
+<hr />
+<h2 id="what-maven-actually-does">What Maven Actually Does<a class="headerlink" href="#what-maven-actually-does" title="Permanent link">&para;</a></h2>
+<p>Maven is <strong>not</strong> just a dependency downloader — it's a <strong>build + dependency management tool</strong>, with three core purposes.</p>
+<h3 id="1-dependency-management-the-primary-value">1. Dependency Management — the Primary Value<a class="headerlink" href="#1-dependency-management-the-primary-value" title="Permanent link">&para;</a></h3>
+<p>You declare dependencies in <code>pom.xml</code>. Maven:</p>
+<ul>
+<li>downloads them,</li>
+<li>downloads their <strong>transitive dependencies</strong> (dependencies of your dependencies),</li>
+<li>adds everything to the compile / test / runtime classpath, as appropriate.</li>
+</ul>
+<h3 id="2-build-automation-the-lifecycle">2. Build Automation — the Lifecycle<a class="headerlink" href="#2-build-automation-the-lifecycle" title="Permanent link">&para;</a></h3>
+<p>Maven follows a fixed lifecycle:</p>
+<div class="highlight"><pre><span></span><code>clean → validate → compile → test → package → verify → install → deploy
+</code></pre></div>
+<p>Each phase has a defined responsibility and runs plugins behind the scenes:</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>compile</code></td>
+<td>Compiles source code</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>Runs unit tests</td>
+</tr>
+<tr>
+<td><code>package</code></td>
+<td>Creates the JAR/WAR</td>
+</tr>
+<tr>
+<td><code>install</code></td>
+<td>Puts the artifact in the <strong>local</strong> repo</td>
+</tr>
+<tr>
+<td><code>deploy</code></td>
+<td>Pushes the artifact to a <strong>remote</strong> repo</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Phases are cumulative, not isolated.</strong> Running <code>mvn package</code> doesn't run <em>only</em> <code>package</code> — Maven automatically runs everything before it too:</p>
+<div class="highlight"><pre><span></span><code>mvn package  →  validate → compile → test → package
+</code></pre></div>
+<h3 id="3-standard-project-structure">3. Standard Project Structure<a class="headerlink" href="#3-standard-project-structure" title="Permanent link">&para;</a></h3>
+<p>Maven enforces a fixed layout:</p>
+<div class="highlight"><pre><span></span><code>src/main/java
+src/test/java
+target/
+</code></pre></div>
+<p>This buys tooling consistency, CI/CD compatibility, and zero-configuration builds — any Maven-aware tool knows where to look without project-specific setup.</p>
+<p><strong>One-line interview summary:</strong> <em>"Maven automates dependency management and the entire build lifecycle — compiling, testing, packaging, and deploying — using a standard project structure and declarative configuration."</em></p>
+<hr />
+<h2 id="pomxml-anatomy"><code>pom.xml</code> Anatomy<a class="headerlink" href="#pomxml-anatomy" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;groupId&gt;</span>org.ppa<span class="nt">&lt;/groupId&gt;</span>
+<span class="nt">&lt;artifactId&gt;</span>MyFirstMavenProject<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+
+<span class="nt">&lt;dependencies&gt;</span>
+<span class="w">    </span><span class="nt">&lt;dependency&gt;</span>
+<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.jsoup<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>jsoup<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;version&gt;</span>1.10.2<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;dependency&gt;</span>
+<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>junit<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>junit<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;version&gt;</span>3.8.1<span class="nt">&lt;/version&gt;</span>
+<span class="w">        </span><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencies&gt;</span>
+</code></pre></div>
+<ul>
+<li><code>groupId</code>, <code>artifactId</code>, <code>version</code> → uniquely identify <strong>your own project</strong> (<code>org.ppa:MyFirstMavenProject:1.0-SNAPSHOT</code>).</li>
+<li><code>&lt;dependencies&gt;</code> → lists the external libraries your project needs.</li>
+<li><code>org.jsoup:jsoup:1.10.2</code> → Maven downloads the <code>jsoup</code> JAR, <strong>including its transitive dependencies</strong>, and adds it to the compile/runtime classpath.</li>
+<li><code>junit:junit:3.8.1</code> with <code>&lt;scope&gt;test&lt;/scope&gt;</code> → available only during testing, not in the production build.</li>
+</ul>
+<p><strong>Key point:</strong> Maven automatically downloads the required JARs (which contain compiled <code>.class</code> files) into the local repository and adds them to the appropriate classpath. You can directly import and use these libraries in code — no manual JAR handling needed.</p>
+<hr />
+<h2 id="how-maven-resolves-a-dependency">How Maven Resolves a Dependency<a class="headerlink" href="#how-maven-resolves-a-dependency" title="Permanent link">&para;</a></h2>
+<h3 id="the-flow">The Flow<a class="headerlink" href="#the-flow" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>You add a dependency
+        │
+        ▼
+Maven searches the Central Maven Repository (repo.maven.apache.org/maven2)
+        │
+        ▼
+Downloads the .JAR, stores it on your system
+        │
+        ▼
+Local Maven Repo (avoids re-downloading for every project on the machine)
+</code></pre></div>
+<p><strong>Remote Maven Repo</strong> — for artifacts not available publicly. A URL (remote server) or file-system path is configured in Maven's <code>&lt;repository&gt;</code> settings; only allowed projects can access it.</p>
+<p><strong>Local repo:</strong> <code>%User%\.m2\</code></p>
+<p>The <code>groupId</code>'s dots become folder-level separators within <code>.m2</code>:</p>
+<div class="highlight"><pre><span></span><code>org.jsoup:jsoup:1.10.2  →  org/jsoup/jsoup/1.10.2/
+</code></pre></div>
+<h3 id="using-a-locally-installed-project-as-a-dependency">Using a Locally Installed Project as a Dependency<a class="headerlink" href="#using-a-locally-installed-project-as-a-dependency" title="Permanent link">&para;</a></h3>
+<p>Once a project (<code>dependencyProject</code>) is built with <code>mvn install</code>, its <code>.JAR</code> lands in the local repo. Another project (<code>MyFirstMavenProject</code>) can import it exactly like any external library:</p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;groupId&gt;</span>org.ppa<span class="nt">&lt;/groupId&gt;</span>
+<span class="nt">&lt;artifactId&gt;</span>MyFirstMavenProject<span class="nt">&lt;/artifactId&gt;</span>
+<span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+
+<span class="nt">&lt;dependencies&gt;</span>
+<span class="w">    </span><span class="nt">&lt;dependency&gt;</span>
+<span class="w">        </span><span class="nt">&lt;groupId&gt;</span>org.ppa<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;artifactId&gt;</span>dependencyProject<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">        </span><span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencies&gt;</span>
+</code></pre></div>
+<p><code>dependencyProject</code>'s methods are now usable — it's already compiled and installed as a <code>.JAR</code> in the local repo.</p>
+<p><strong>One-line interview summary:</strong> <em>"Maven resolves dependencies using coordinates, downloads JARs from remote repositories into the local <code>.m2</code> cache, and automatically adds them to the project classpath."</em></p>
+<h3 id="two-senior-level-corrections-worth-remembering">Two Senior-Level Corrections Worth Remembering<a class="headerlink" href="#two-senior-level-corrections-worth-remembering" title="Permanent link">&para;</a></h3>
+<ol>
+<li><code>mvnrepository.com</code> is <strong>not</strong> Maven Central — it's only a catalog/search UI. The actual default repository Maven downloads from is <code>https://repo.maven.apache.org/maven2</code>.</li>
+<li>Dependency resolution always checks the <strong>local repo first</strong>, before reaching out to any remote repository.</li>
+</ol>
+<hr />
+<h2 id="what-can-go-wrong-version-conflicts">What Can Go Wrong — Version Conflicts<a class="headerlink" href="#what-can-go-wrong-version-conflicts" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<p>Given a project <code>P</code> that depends (transitively) on the same library <code>C</code> through two different paths, at two different versions, which version should actually be used?</p>
+<div class="highlight"><pre><span></span><code>P → B → X → C(v1.0)      [C&#39;s depth: 3]
+P → A → C(v2.0)          [C&#39;s depth: 2]   ← this one wins
+</code></pre></div>
+<h3 id="resolution-rule">Resolution Rule<a class="headerlink" href="#resolution-rule" title="Permanent link">&para;</a></h3>
+<p>Maven represents project dependencies as a <strong>Directed Acyclic Graph (DAG)</strong> and resolves conflicts by depth: the <code>C</code> found at the <strong>lower depth (closer to the root)</strong> wins.</p>
+<p>If both paths reach <code>C</code> at the <strong>same depth</strong>, the dependency declared <strong>first in <code>pom.xml</code></strong> wins:</p>
+<div class="highlight"><pre><span></span><code><span class="cm">&lt;!-- P → B → C(v1.0)</span>
+<span class="cm">     P → A → C(v2.0)</span>
+<span class="cm">     Same depth → declaration order decides --&gt;</span>
+<span class="nt">&lt;dependencies&gt;</span>
+<span class="w">    </span><span class="nt">&lt;dependency&gt;</span>B<span class="nt">&lt;/dependency&gt;</span><span class="w">   </span><span class="cm">&lt;!-- this C(v1.0) wins --&gt;</span>
+<span class="w">    </span><span class="nt">&lt;dependency&gt;</span>A<span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencies&gt;</span>
+</code></pre></div>
+<p><strong>So declaration order only matters when there's an actual depth-tie conflict.</strong></p>
+<p>To force a specific version, import <code>C</code> directly into <code>P</code> at depth 1 — least depth wins, so a direct declaration always overrides a transitive one. This isn't foolproof on its own, though.</p>
+<h3 id="solutions">Solutions<a class="headerlink" href="#solutions" title="Permanent link">&para;</a></h3>
+<p><strong>1. Ask the dependency owner.</strong> The real fix for a genuine conflict is asking the owner of <code>C</code> to publish a version whose functionality serves both callers, then forcing that version via least-depth import.</p>
+<p><strong>2. <code>dependencyManagement</code> — the senior-level best practice.</strong></p>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependencyManagement&gt;</span>
+<span class="w">    </span><span class="nt">&lt;dependencies&gt;</span>
+<span class="w">        </span><span class="nt">&lt;dependency&gt;</span>
+<span class="w">            </span><span class="nt">&lt;groupId&gt;</span>C<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;artifactId&gt;</span>C<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">            </span><span class="nt">&lt;version&gt;</span>v2.0<span class="nt">&lt;/version&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/dependencies&gt;</span>
+<span class="nt">&lt;/dependencyManagement&gt;</span>
+</code></pre></div>
+<p>This centralizes version control for a dependency across an entire multi-module project, rather than relying on depth/declaration-order tie-breaking scattered across POMs — heavily used in large projects.</p>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p>Maven represents project dependencies as a Directed Acyclic Graph and resolves them by performing topological ordering to determine build order; it detects and rejects circular dependencies to ensure a valid build sequence. Depth-based conflict resolution is really just a deterministic tie-breaking rule layered on top of that same graph structure.</p>
+<hr />
+<h2 id="dependency-scopes-compile-runtime-test">Dependency Scopes — Compile, Runtime, Test<a class="headerlink" href="#dependency-scopes-compile-runtime-test" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>Not every dependency your project needs at runtime is one your source code directly references — and not every dependency needed for testing belongs in the shipped artifact. Treating all dependencies identically either bloats the compile classpath with things the compiler never touches, or ships test-only tooling into production.</p>
+<h3 id="default-compile-time-dependency">Default — Compile-Time Dependency<a class="headerlink" href="#default-compile-time-dependency" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependencies&gt;</span>
+<span class="w">    </span><span class="nt">&lt;dependency&gt;</span>
+<span class="w">        </span>...
+<span class="w">    </span><span class="nt">&lt;/dependency&gt;</span>
+<span class="nt">&lt;/dependencies&gt;</span>
+</code></pre></div>
+<p>With no <code>&lt;scope&gt;</code> specified, this is a <strong>compile-time dependency</strong> by default — the compiler loads it directly into the compile-time classpath.</p>
+<h3 id="runtime-scope"><code>runtime</code> Scope<a class="headerlink" href="#runtime-scope" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>org.ppa<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>dependencyProject<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;version&gt;</span>1.0-SNAPSHOT<span class="nt">&lt;/version&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p>A runtime-scoped dependency <strong>cannot be discovered by the compiler</strong>, but the JVM can still work with it — typically because it's loaded dynamically via reflection (<code>Class.forName(...)</code>) rather than referenced directly by a compile-time symbol.</p>
+<div class="highlight"><pre><span></span><code><span class="c1">// DependencyCheck.checker();  // ✘ Cannot resolve symbol &#39;DependencyCheck&#39; — no compile-time reference</span>
+
+<span class="n">Class</span><span class="o">&lt;?&gt;</span><span class="w"> </span><span class="n">cls</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">Class</span><span class="p">.</span><span class="na">forName</span><span class="p">(</span><span class="s">&quot;org.ppa.DependencyCheck&quot;</span><span class="p">);</span>
+<span class="n">Method</span><span class="w"> </span><span class="n">m</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredMethod</span><span class="p">(</span><span class="s">&quot;checked&quot;</span><span class="p">);</span>
+<span class="n">Object</span><span class="w"> </span><span class="n">obj</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">cls</span><span class="p">.</span><span class="na">getDeclaredConstructor</span><span class="p">().</span><span class="na">newInstance</span><span class="p">();</span>
+<span class="n">m</span><span class="p">.</span><span class="na">invoke</span><span class="p">(</span><span class="n">obj</span><span class="p">);</span>
+</code></pre></div>
+<p>This is the same reflective loading mechanism as <a href="../day-4-reflection/">Class loading and dynamic instantiation</a> — <code>runtime</code> scope exists precisely for dependencies your code reaches through reflection instead of a direct import.</p>
+<h3 id="when-to-use-runtime-scope-jdbc-driver-example">When to Use <code>runtime</code> Scope — JDBC Driver Example<a class="headerlink" href="#when-to-use-runtime-scope-jdbc-driver-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;dependency&gt;</span>
+<span class="w">    </span><span class="nt">&lt;groupId&gt;</span>mysql<span class="nt">&lt;/groupId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;artifactId&gt;</span>mysql-connector-java<span class="nt">&lt;/artifactId&gt;</span>
+<span class="w">    </span><span class="nt">&lt;scope&gt;</span>runtime<span class="nt">&lt;/scope&gt;</span>
+<span class="nt">&lt;/dependency&gt;</span>
+</code></pre></div>
+<p><strong>Why runtime?</strong> Your code uses:</p>
+<div class="highlight"><pre><span></span><code><span class="n">Connection</span><span class="w"> </span><span class="n">con</span><span class="w"> </span><span class="o">=</span><span class="w"> </span><span class="n">DriverManager</span><span class="p">.</span><span class="na">getConnection</span><span class="p">(...);</span>
+</code></pre></div>
+<p>You never directly write <code>new com.mysql.cj.jdbc.Driver()</code>. The driver is loaded dynamically at runtime, required when the app actually runs, but not needed for compilation at all — a textbook runtime dependency.</p>
+<h3 id="why-not-just-make-everything-compile-scope">Why Not Just Make Everything <code>compile</code> Scope?<a class="headerlink" href="#why-not-just-make-everything-compile-scope" title="Permanent link">&para;</a></h3>
+<p>You could — but it makes the compile classpath unnecessarily large, creates tighter coupling than the code actually has, reduces build clarity, and makes dependency management messier over time. <code>runtime</code> scope keeps the compile-time classpath clean and dependencies minimal and intentional — a dependency's scope should reflect how the code actually uses it, not just "does the project need this at all."</p>
+<p><strong>Interview one-liner:</strong> <em>"Runtime scope is used for dependencies required during execution but not directly referenced in source code, such as JDBC drivers or logging implementations."</em></p>
+<h3 id="test-scope"><code>test</code> Scope<a class="headerlink" href="#test-scope" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="nt">&lt;scope&gt;</span>test<span class="nt">&lt;/scope&gt;</span>
+</code></pre></div>
+<p>Not added to the compile-time classpath at all — only available to unit testing frameworks during the <code>test</code> phase.</p>
+<h3 id="engineering-insight_2">Engineering Insight<a class="headerlink" href="#engineering-insight_2" title="Permanent link">&para;</a></h3>
+<p>Scopes are Maven's way of encoding <em>when</em> and <em>how</em> a dependency is actually needed — compile-time symbol resolution, JVM-only dynamic loading, or test-only tooling — instead of treating "is a dependency" as a single undifferentiated category.</p>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="why-isnt-copy-pasting-code-or-manually-adding-jars-a-sustainable-dependency-strategy">Why isn't copy-pasting code or manually adding JARs a sustainable dependency strategy?<a class="headerlink" href="#why-isnt-copy-pasting-code-or-manually-adding-jars-a-sustainable-dependency-strategy" title="Permanent link">&para;</a></h3>
+<p>Copy-pasting has no versioning or upgrade path and becomes unmaintainable. Manually adding JARs forces you to track transitive dependencies, resolve version conflicts, and manage the classpath by hand — Maven exists to automate exactly this.</p>
+<h3 id="is-maven-just-a-dependency-downloader">Is Maven just a dependency downloader?<a class="headerlink" href="#is-maven-just-a-dependency-downloader" title="Permanent link">&para;</a></h3>
+<p>No — it's a build automation tool as much as a dependency manager. It also enforces a fixed lifecycle (<code>validate → compile → test → package → verify → install → deploy</code>) and a standard project structure.</p>
+<h3 id="what-does-running-mvn-package-actually-execute">What does running <code>mvn package</code> actually execute?<a class="headerlink" href="#what-does-running-mvn-package-actually-execute" title="Permanent link">&para;</a></h3>
+<p>Every phase up to and including <code>package</code> — <code>validate → compile → test → package</code> — because Maven's lifecycle phases are cumulative, not isolated.</p>
+<h3 id="whats-the-difference-between-mvnrepositorycom-and-maven-central">What's the difference between <code>mvnrepository.com</code> and Maven Central?<a class="headerlink" href="#whats-the-difference-between-mvnrepositorycom-and-maven-central" title="Permanent link">&para;</a></h3>
+<p><code>mvnrepository.com</code> is only a search catalog. The actual default repository Maven downloads artifacts from is <code>https://repo.maven.apache.org/maven2</code>.</p>
+<h3 id="when-resolving-a-dependency-does-maven-check-the-local-repo-or-a-remote-repo-first">When resolving a dependency, does Maven check the local repo or a remote repo first?<a class="headerlink" href="#when-resolving-a-dependency-does-maven-check-the-local-repo-or-a-remote-repo-first" title="Permanent link">&para;</a></h3>
+<p>The local repo (<code>.m2</code>) is checked first — remote repositories are only contacted if the artifact isn't already cached locally.</p>
+<h3 id="given-a-diamond-dependency-conflict-how-does-maven-decide-which-version-of-a-transitively-shared-library-to-use">Given a diamond dependency conflict, how does Maven decide which version of a transitively-shared library to use?<a class="headerlink" href="#given-a-diamond-dependency-conflict-how-does-maven-decide-which-version-of-a-transitively-shared-library-to-use" title="Permanent link">&para;</a></h3>
+<p>It picks the version found at the <strong>lowest depth</strong> in the dependency graph (closer to the root project). If two paths reach the conflicting dependency at the same depth, the one declared <strong>first</strong> in <code>pom.xml</code> wins.</p>
+<h3 id="whats-the-senior-level-fix-for-recurring-version-conflicts-across-a-multi-module-project">What's the senior-level fix for recurring version conflicts across a multi-module project?<a class="headerlink" href="#whats-the-senior-level-fix-for-recurring-version-conflicts-across-a-multi-module-project" title="Permanent link">&para;</a></h3>
+<p><code>&lt;dependencyManagement&gt;</code> — it centralizes the version for a given dependency in one place, instead of relying on depth/declaration-order tie-breaking scattered across POMs.</p>
+<h3 id="whats-the-difference-between-compile-scope-and-runtime-scope">What's the difference between compile scope and runtime scope?<a class="headerlink" href="#whats-the-difference-between-compile-scope-and-runtime-scope" title="Permanent link">&para;</a></h3>
+<p>Compile scope is on the compile-time classpath — the compiler can directly resolve symbols from it. Runtime scope is not visible to the compiler at all, but is available to the JVM when the application actually runs — typical for dependencies accessed via reflection rather than a direct import, like a JDBC driver.</p>
+<h3 id="why-not-just-declare-every-dependency-with-compile-scope-to-be-safe">Why not just declare every dependency with compile scope, to be safe?<a class="headerlink" href="#why-not-just-declare-every-dependency-with-compile-scope-to-be-safe" title="Permanent link">&para;</a></h3>
+<p>Because it bloats the compile classpath with things the compiler never actually touches, creates coupling that doesn't reflect how the code is really used, and makes dependency intent harder to read. Scope should describe <em>how</em> a dependency is used, not just whether it's needed at all.</p>
+<h3 id="what-does-test-scope-guarantee">What does <code>test</code> scope guarantee?<a class="headerlink" href="#what-does-test-scope-guarantee" title="Permanent link">&para;</a></h3>
+<p>That the dependency is available only to test code and testing frameworks during the <code>test</code> phase — it's excluded from the compile-time classpath and never ships in the production artifact.</p>
+<hr />
+<p>❌ Maven's main job is downloading JARs.</p>
+<p>✔ Downloading and resolving dependencies is the <em>primary</em> value, but Maven equally owns the build lifecycle (compile/test/package/install/deploy) and enforces a standard project structure.</p>
+<hr />
+<p>❌ <code>mvnrepository.com</code> is Maven's official default repository.</p>
+<p>✔ It's just a searchable catalog. The actual default repository is <code>repo.maven.apache.org/maven2</code>.</p>
+<hr />
+<p>❌ Declaration order in <code>pom.xml</code> always determines which version of a conflicting transitive dependency wins.</p>
+<p>✔ Depth in the dependency graph decides first — least depth wins. Declaration order is only the tie-breaker when two conflicting paths reach the same depth.</p>
+<hr />
+<p>❌ A <code>runtime</code>-scope dependency means "not really needed."</p>
+<p>✔ It means "needed by the JVM at execution time, but not referenced by a compile-time symbol" — often because it's loaded reflectively, like a JDBC driver. It's just as required as a compile-scope dependency, only accessed differently.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>Maven                    → build automation + dependency management,
+                            not just a JAR downloader
+
+Lifecycle                → clean → validate → compile → test → package
+                            → verify → install → deploy
+                            (cumulative — running a later phase runs
+                            every phase before it too)
+
+Resolution order          → local repo (.m2) first, then remote
+
+Version conflict           → least depth wins;
+                              same depth → first declared in pom.xml wins
+dependencyManagement       → centralizes version control, senior-level fix
+
+compile scope (default)   → compiler loads it into compile-time classpath
+runtime scope              → JVM-only, typically reflection-loaded
+                              (e.g. JDBC drivers)
+test scope                 → test phase only, never in the shipped artifact
+</code></pre></div>
+<hr />
+<h2 id="stage-2-week-1-checklist">Stage 2 · Week 1 Checklist<a class="headerlink" href="#stage-2-week-1-checklist" title="Permanent link">&para;</a></h2>
+<ul>
+<li>[x] Explain why manual JAR management doesn't scale, and what Maven automates instead</li>
+<li>[x] Explain the Maven lifecycle and why phases are cumulative</li>
+<li>[x] Explain the difference between the Maven Central catalog site and the actual default repository</li>
+<li>[x] Explain why the local repo is always checked before a remote repo</li>
+<li>[x] Explain how Maven resolves a version conflict between two transitive dependencies at different depths</li>
+<li>[x] Explain when <code>dependencyManagement</code> is the right tool over ad-hoc version forcing</li>
+<li>[x] Explain the difference between compile, runtime, and test scope, with a concrete example of each</li>
+<li>[x] Explain why a JDBC driver is a textbook runtime-scope dependency</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>

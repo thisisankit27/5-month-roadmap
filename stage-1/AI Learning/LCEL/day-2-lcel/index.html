@@ -1,0 +1,3705 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Public engineering notes on AI, Backend, System Design and Building in Public.">
+      
+      
+      
+        <link rel="canonical" href="https://archive.vibethroughcode.com/stage-1/AI%20Learning/LCEL/day-2-lcel/">
+      
+      
+        <link rel="prev" href="../day-1-engineering-foundation/">
+      
+      
+        <link rel="next" href="../day-3-prompt-engineering/">
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../../assets/favicon.ico">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>LCEL: LangChain Expression Language - Vibe Through Code Archive</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Inter:300,300i,400,400i,700,700i%7CJetBrains+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Inter";--md-code-font:"JetBrains Mono"}</style>
+      
+    
+    
+      <link rel="stylesheet" href="../../../../stylesheets/extra.css">
+    
+    <script>__md_scope=new URL("../../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#lcel-langchain-expression-language" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+  
+
+<header class="md-header md-header--shadow" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../../.." title="Vibe Through Code Archive" class="md-header__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Vibe Through Code Archive
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              LCEL: LangChain Expression Language
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: light)" data-md-color-scheme="default" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="m17.75 4.09-2.53 1.94.91 3.06-2.63-1.81-2.63 1.81.91-3.06-2.53-1.94L12.44 4l1.06-3 1.06 3zm3.5 6.91-1.64 1.25.59 1.98-1.7-1.17-1.7 1.17.59-1.98L15.75 11l2.06-.05L18.5 9l.69 1.95zm-2.28 4.95c.83-.08 1.72 1.1 1.19 1.85-.32.45-.66.87-1.08 1.27C15.17 23 8.84 23 4.94 19.07c-3.91-3.9-3.91-10.24 0-14.14.4-.4.82-.76 1.27-1.08.75-.53 1.93.36 1.85 1.19-.27 2.86.69 5.83 2.89 8.02a9.96 9.96 0 0 0 8.02 2.89m-1.64 2.02a12.08 12.08 0 0 1-7.8-3.47c-2.17-2.19-3.33-5-3.49-7.82-2.81 3.14-2.7 7.96.31 10.98 3.02 3.01 7.84 3.12 10.98.31"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="(prefers-color-scheme: dark)" data-md-color-scheme="slate" data-md-color-primary="black" data-md-color-accent="green"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 7a5 5 0 0 1 5 5 5 5 0 0 1-5 5 5 5 0 0 1-5-5 5 5 0 0 1 5-5m0 2a3 3 0 0 0-3 3 3 3 0 0 0 3 3 3 3 0 0 0 3-3 3 3 0 0 0-3-3m0-7 2.39 3.42C13.65 5.15 12.84 5 12 5s-1.65.15-2.39.42zM3.34 7l4.16-.35A7.2 7.2 0 0 0 5.94 8.5c-.44.74-.69 1.5-.83 2.29zm.02 10 1.76-3.77a7.131 7.131 0 0 0 2.38 4.14zM20.65 7l-1.77 3.79a7.02 7.02 0 0 0-2.38-4.15zm-.01 10-4.14.36c.59-.51 1.12-1.14 1.54-1.86.42-.73.69-1.5.83-2.29zM12 22l-2.41-3.44c.74.27 1.55.44 2.41.44.82 0 1.63-.17 2.37-.44z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+
+<nav class="md-nav md-nav--primary" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../../.." title="Vibe Through Code Archive" class="md-nav__button md-logo" aria-label="Vibe Through Code Archive" data-md-component="logo">
+      
+  <img src="../../../../assets/logo.png" alt="logo">
+
+    </a>
+    Vibe Through Code Archive
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/thisisankit27/5-month-roadmap" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    🏠 Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--section md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2" id="__nav_2_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 1
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 1
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../project-stage-1/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Project: Knowledge Assistant
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2" id="__nav_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    AI Learning
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_2_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    AI Learning
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_1" id="__nav_2_2_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Deepen RAG
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Deepen RAG
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-1-chunking-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Chunking in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-2-embeddings-in-rag/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Embeddings in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-3-vector-databases/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Vector Databases in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-4-retrieval/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Retrieval in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Deepen-RAG/day-5-generation-parameters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Generation Parameters
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_2_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_2" id="__nav_2_2_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search + Guradrails
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_2_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Hybrid Search + Guradrails
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hybrid%20Search%20%2B%20Guradrails/day-1-hybrid-search/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Hybrid Search
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hybrid%20Search%20%2B%20Guradrails/day-2-metadata/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Metadata in RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hybrid%20Search%20%2B%20Guradrails/day-3-guardrails/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Guardrails in AI &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../Hybrid%20Search%20%2B%20Guradrails/day-4-standard-outputs/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Structured Outputs in LLMs &amp; RAG
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--active md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_2_2_3" checked>
+        
+          
+          <label class="md-nav__link" for="__nav_2_2_3" id="__nav_2_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="3" aria-labelledby="__nav_2_2_3_label" aria-expanded="true">
+          <label class="md-nav__title" for="__nav_2_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    LCEL
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-1-engineering-foundation/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: Engineering Foundations
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+    
+  
+  
+  
+    <li class="md-nav__item md-nav__item--active">
+      
+      <input class="md-nav__toggle md-toggle" type="checkbox" id="__toc">
+      
+      
+        
+      
+      
+        <label class="md-nav__link md-nav__link--active" for="__toc">
+          
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+          <span class="md-nav__icon md-icon"></span>
+        </label>
+      
+      <a href="./" class="md-nav__link md-nav__link--active">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    LCEL: LangChain Expression Language
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+      
+        
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-was-lcel-introduced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Was LCEL Introduced?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runnable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runnable
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runnable">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crisp-definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-a-python-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Just a Python Callable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-an-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why an Interface?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runnable-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runnable Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runnable-responsibility-single-responsibility-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runnable Responsibility (Single Responsibility Principle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runnablelambda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RunnableLambda
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RunnableLambda">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-wrap-a-python-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Wrap a Python Function?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-should-business-logic-stay-outside-runnablelambda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Should Business Logic Stay Outside RunnableLambda?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-order-how-lcel-decides-what-runs-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Order: How LCEL Decides What Runs When
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Execution Order: How LCEL Decides What Runs When">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequential-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequential Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-execution-independent-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Execution (Independent Branches)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-rules-generalized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Two Rules, Generalized
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runnablepassthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RunnablePassthrough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RunnablePassthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-preserve-the-original-input-what-breaks-without-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Preserve the Original Input? What Breaks Without It?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runnableparallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RunnableParallel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RunnableParallel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-problems-become-parallelizable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Problems Become Parallelizable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-retrieval-and-conversation-history-be-fetched-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can Retrieval and Conversation History Be Fetched Together?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipe-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipe Operator (|)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipe Operator (|)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-this-more-maintainable-than-nested-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Is This More Maintainable Than Nested Calls?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Parser
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Parser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-parsing-belongs-outside-the-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Parsing Belongs Outside the LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt Composition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prompt Composition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompts-as-runnables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompts as Runnables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lcel-vs-traditional-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LCEL vs Traditional Chains
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-lcel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is LCEL?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-runnable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Runnable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-use-a-python-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not just use a Python Callable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-runnable-an-interface-rather-than-a-base-class-with-default-behavior-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is Runnable an interface rather than a base class with default behavior only?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-design-pattern-does-runnablelambda-resemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What design pattern does RunnableLambda resemble?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-should-you-avoid-putting-logic-inside-runnablelambda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When should you avoid putting logic inside RunnableLambda?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-problem-does-runnablepassthrough-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What problem does RunnablePassthrough solve?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-runnableparallel-about-multithreading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is RunnableParallel about multithreading?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-retrieval-and-conversation-history-be-fetched-in-runnableparallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can Retrieval and Conversation History be fetched in RunnableParallel?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-the-pipe-operator-more-maintainable-than-nested-function-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is the pipe operator more maintainable than nested function calls?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-shouldnt-the-llm-parse-its-own-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why shouldn't the LLM parse its own output?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-prompt-templates-considered-runnables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are Prompt Templates considered Runnables?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-interview-traps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Interview Traps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-3-prompt-engineering/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Prompt Engineering
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../day-4-streaming/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Streaming
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_2_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_2_3" id="__nav_2_3_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Product Engineering
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_2_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_2_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Product Engineering
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Product%20Engineering/week-1-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v1
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Product%20Engineering/week-2-AI-Assistent/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v2
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Product%20Engineering/week-3-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v3
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../Product%20Engineering/week-4-AI-Assistant/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Thinking Like a Senior Engineer.v4
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+    
+    
+      
+        
+        
+      
+    
+    
+    <li class="md-nav__item md-nav__item--section md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3" >
+        
+          
+          <label class="md-nav__link" for="__nav_3" id="__nav_3_label" tabindex="">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Stage 2
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_3_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Stage 2
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_1" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_1" id="__nav_3_1_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_1_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_1">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Java
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-1-oop-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Access Control, Static, Final &amp; Polymorphism
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-2-inheritance-composition/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java OOP: Constructor Chaining, Abstract Classes &amp; Composition over Inheritance
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-3-exception-handling/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Exception Handling: Propagation, Cleanup &amp; Design
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-4-reflection/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Java Reflection: Runtime Introspection, Serialization &amp; Dependency Injection
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-5-maven/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Maven: Build Automation &amp; Dependency Management
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-6-ioc-di-spring/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring IoC: Dependency Injection, Containers, Beans &amp; Autowiring
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-7-config-events/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring: Circular Beans, Config Beans, Profiles &amp; Application Events
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-8-spring-mvc/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: HTTP, Servlets, Controllers &amp; DispatcherServlet Internals
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Java/day-9-handler-mapping-adapters/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Spring MVC: Building Custom HandlerMapping, HandlerAdapter &amp; Return Value Handlers
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    
+    
+    
+    
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+          
+        
+        <input class="md-nav__toggle md-toggle md-toggle--indeterminate" type="checkbox" id="__nav_3_2" >
+        
+          
+          <label class="md-nav__link" for="__nav_3_2" id="__nav_3_2_label" tabindex="0">
+            
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Network
+  
+
+    
+  </span>
+  
+  
+
+            <span class="md-nav__icon md-icon"></span>
+          </label>
+        
+        <nav class="md-nav" data-md-level="2" aria-labelledby="__nav_3_2_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_3_2">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Network
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Network/day-1-dns-fundamentals/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS Fundamentals: Domains, Records &amp; Resolution
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../../stage-2/Network/day-2-dns-advanced-practical/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    DNS in Practice: Propagation, Routing, Security &amp; Deployment
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#crisp-definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#why-was-lcel-introduced" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Was LCEL Introduced?
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runnable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runnable
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Runnable">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#crisp-definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Crisp Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-a-python-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Not Just a Python Callable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-an-interface" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why an Interface?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runnable-lifecycle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runnable Lifecycle
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#common-methods" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Methods
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#runnable-responsibility-single-responsibility-principle" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Runnable Responsibility (Single Responsibility Principle)
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runnablelambda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RunnableLambda
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RunnableLambda">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-wrap-a-python-function" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Wrap a Python Function?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-should-business-logic-stay-outside-runnablelambda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When Should Business Logic Stay Outside RunnableLambda?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#code-example" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Code Example:
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#execution-order-how-lcel-decides-what-runs-when" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Execution Order: How LCEL Decides What Runs When
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Execution Order: How LCEL Decides What Runs When">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#sequential-execution" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Sequential Execution
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#parallel-execution-independent-branches" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Parallel Execution (Independent Branches)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#the-two-rules-generalized" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        The Two Rules, Generalized
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runnablepassthrough" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RunnablePassthrough
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RunnablePassthrough">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-preserve-the-original-input-what-breaks-without-it" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Preserve the Original Input? What Breaks Without It?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#runnableparallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        RunnableParallel
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="RunnableParallel">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#definition_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Definition
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-problems-become-parallelizable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What Problems Become Parallelizable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-retrieval-and-conversation-history-be-fetched-together" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can Retrieval and Conversation History Be Fetched Together?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#pipe-operator" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Pipe Operator (|)
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Pipe Operator (|)">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-it-does" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What It Does
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-this-more-maintainable-than-nested-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Is This More Maintainable Than Nested Calls?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#output-parser" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Output Parser
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Output Parser">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-parsing-belongs-outside-the-llm" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why Parsing Belongs Outside the LLM
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#benefits" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Benefits
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#engineering-insight_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Insight
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#prompt-composition" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompt Composition
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Prompt Composition">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#engineering-problem_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Engineering Problem
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#prompts-as-runnables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Prompts as Runnables
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-this-matters" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why This Matters
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#lcel-vs-traditional-chains" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        LCEL vs Traditional Chains
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#interview-qa" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Interview Q&amp;A
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Interview Q&amp;A">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#what-is-lcel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is LCEL?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-is-a-runnable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What is a Runnable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-not-just-use-a-python-callable" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why not just use a Python Callable?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-runnable-an-interface-rather-than-a-base-class-with-default-behavior-only" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is Runnable an interface rather than a base class with default behavior only?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-design-pattern-does-runnablelambda-resemble" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What design pattern does RunnableLambda resemble?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#when-should-you-avoid-putting-logic-inside-runnablelambda" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        When should you avoid putting logic inside RunnableLambda?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#what-problem-does-runnablepassthrough-solve" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What problem does RunnablePassthrough solve?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#is-runnableparallel-about-multithreading" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Is RunnableParallel about multithreading?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#can-retrieval-and-conversation-history-be-fetched-in-runnableparallel" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Can Retrieval and Conversation History be fetched in RunnableParallel?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-is-the-pipe-operator-more-maintainable-than-nested-function-calls" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why is the pipe operator more maintainable than nested function calls?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-shouldnt-the-llm-parse-its-own-output" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why shouldn't the LLM parse its own output?
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#why-are-prompt-templates-considered-runnables" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Why are Prompt Templates considered Runnables?
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#common-interview-traps" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Common Interview Traps
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#what-you-should-remember-forever" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        What You Should Remember Forever
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="lcel-langchain-expression-language">LCEL: LangChain Expression Language<a class="headerlink" href="#lcel-langchain-expression-language" title="Permanent link">&para;</a></h1>
+<hr />
+<h2 id="crisp-definition">Crisp Definition<a class="headerlink" href="#crisp-definition" title="Permanent link">&para;</a></h2>
+<p><strong>LCEL (LangChain Expression Language)</strong> is LangChain's declarative syntax for composing AI components — prompts, models, retrievers, parsers — into a single pipeline using the <code>|</code> operator.</p>
+<p>Every component that participates in this pipeline implements one common interface: <strong>Runnable</strong>.</p>
+<p>Think of LCEL as:</p>
+<ul>
+<li>SQL for databases</li>
+<li>Java Streams for collections</li>
+<li>Unix pipes for shell commands</li>
+</ul>
+<p>...applied to AI workflows.</p>
+<hr />
+<h2 id="why-was-lcel-introduced">Why Was LCEL Introduced?<a class="headerlink" href="#why-was-lcel-introduced" title="Permanent link">&para;</a></h2>
+<p>Early LangChain relied on specialized helper classes:</p>
+<ul>
+<li><code>LLMChain</code></li>
+<li><code>SequentialChain</code></li>
+<li><code>RetrievalQA</code></li>
+<li><code>StuffDocumentsChain</code></li>
+</ul>
+<p>Fine for simple apps. But as systems grew, developers needed streaming, async execution, parallel execution, tracing, and reusable components — and a new helper class per workflow doesn't scale.</p>
+<div class="highlight"><pre><span></span><code>Imperative Code → Helper Chains → LCEL → LangGraph
+</code></pre></div>
+<p>Each stage fixed the previous stage's rigidity. LangGraph later added cycles/state for agentic control flow — LCEL itself is for <strong>acyclic, composable pipelines</strong>.</p>
+<blockquote>
+<p><strong>Interview Insight</strong> — Don't answer "LCEL uses Runnable." Answer: <em>"Helper chains became rigid as pipelines grew. LCEL replaced them with one standard composable interface, trading some directness of control for reusability, streaming, and observability."</em></p>
+</blockquote>
+<hr />
+<h2 id="runnable">Runnable<a class="headerlink" href="#runnable" title="Permanent link">&para;</a></h2>
+<h3 id="crisp-definition_1">Crisp Definition<a class="headerlink" href="#crisp-definition_1" title="Permanent link">&para;</a></h3>
+<p><strong>Runnable</strong> is the standard execution contract in LangChain. Anything that takes an input, does work, and produces an output can be a Runnable — a prompt, a model, a retriever, a parser, or your own function.</p>
+<div class="highlight"><pre><span></span><code>Input → Runnable → Output
+</code></pre></div>
+<p>Because every component honors the same contract, components can be connected in any combination.</p>
+<h3 id="why-not-just-a-python-callable">Why Not Just a Python <code>Callable</code>?<a class="headerlink" href="#why-not-just-a-python-callable" title="Permanent link">&para;</a></h3>
+<p>A plain Python object with <code>__call__</code> also "takes input, returns output" — so why invent Runnable?</p>
+<p>Because <code>__call__</code> only standardizes <em>one</em> thing: synchronous single-shot invocation. It says nothing about:</p>
+<table>
+<thead>
+<tr>
+<th>Requirement</th>
+<th><code>__call__</code> alone</th>
+<th>Runnable</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Batch execution</td>
+<td>Not defined</td>
+<td><code>batch()</code></td>
+</tr>
+<tr>
+<td>Streaming partial output</td>
+<td>Not defined</td>
+<td><code>stream()</code></td>
+</tr>
+<tr>
+<td>Async execution</td>
+<td>Not defined</td>
+<td><code>ainvoke()</code>, <code>astream()</code></td>
+</tr>
+<tr>
+<td>Composition via <code>\|</code></td>
+<td>Not defined</td>
+<td><code>__or__</code> implemented</td>
+</tr>
+<tr>
+<td>Tracing / callbacks / config propagation</td>
+<td>Not defined</td>
+<td><code>RunnableConfig</code> threaded through every call</td>
+</tr>
+<tr>
+<td>Retries, fallbacks</td>
+<td>Not defined</td>
+<td><code>.with_retry()</code>, <code>.with_fallbacks()</code></td>
+</tr>
+</tbody>
+</table>
+<p>If LangChain had used bare callables, every one of these would need to be bolted on separately for every component. Runnable bundles them into one interface so that a prompt, an LLM, and a parser all expose identical capabilities.</p>
+<h3 id="why-an-interface">Why an Interface?<a class="headerlink" href="#why-an-interface" title="Permanent link">&para;</a></h3>
+<p>LangChain wants a <code>Prompt</code>, a <code>Retriever</code>, an <code>LLM</code>, and a <code>Parser</code> to all behave predictably — same method names, same execution styles — regardless of what they do internally. An interface enforces that without special-case code per component.</p>
+<h3 id="runnable-lifecycle">Runnable Lifecycle<a class="headerlink" href="#runnable-lifecycle" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code>Input → invoke() → Output
+Input → batch()  → [Output, Output, ...]
+Input → stream() → Output chunk, Output chunk, ...
+</code></pre></div>
+<p>The methods aren't the point — <strong>the point is that every Runnable exposes the same execution model.</strong></p>
+<h3 id="common-methods">Common Methods<a class="headerlink" href="#common-methods" title="Permanent link">&para;</a></h3>
+<p>Don't memorize these. Understand the responsibility each one solves.</p>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Responsibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>invoke()</code></td>
+<td>Run once, synchronously</td>
+</tr>
+<tr>
+<td><code>batch()</code></td>
+<td>Run many inputs, possibly in parallel</td>
+</tr>
+<tr>
+<td><code>stream()</code></td>
+<td>Yield output incrementally</td>
+</tr>
+<tr>
+<td><code>ainvoke()</code></td>
+<td>Async version of <code>invoke()</code></td>
+</tr>
+<tr>
+<td><code>astream()</code></td>
+<td>Async version of <code>stream()</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="runnable-responsibility-single-responsibility-principle">Runnable Responsibility (Single Responsibility Principle)<a class="headerlink" href="#runnable-responsibility-single-responsibility-principle" title="Permanent link">&para;</a></h3>
+<p>A Runnable should do <strong>one job</strong>. A pipeline of small Runnables (prompt formatting → retrieval → generation → parsing) is preferable to one giant Runnable doing everything — it stays testable, replaceable, and composable.</p>
+<hr />
+<h2 id="runnablelambda">RunnableLambda<a class="headerlink" href="#runnablelambda" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem">Engineering Problem<a class="headerlink" href="#engineering-problem" title="Permanent link">&para;</a></h3>
+<p>Your codebase already has business logic:</p>
+<div class="highlight"><pre><span></span><code><span class="k">def</span><span class="w"> </span><span class="nf">clean_question</span><span class="p">(</span><span class="n">question</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="o">...</span>
+</code></pre></div>
+<p>Do you rewrite it as a custom LangChain component? No — that's wasted, and duplicated, effort.</p>
+<h3 id="definition">Definition<a class="headerlink" href="#definition" title="Permanent link">&para;</a></h3>
+<p><code>RunnableLambda</code> adapts an existing Python function into the Runnable contract, without touching the function itself.</p>
+<div class="highlight"><pre><span></span><code>Python Function → RunnableLambda → LCEL Pipeline
+</code></pre></div>
+<h3 id="why-wrap-a-python-function">Why Wrap a Python Function?<a class="headerlink" href="#why-wrap-a-python-function" title="Permanent link">&para;</a></h3>
+<p>Because LCEL pipelines only compose Runnables. <code>RunnableLambda</code> is the bridge that lets existing, untouched business logic participate in a <code>|</code> chain.</p>
+<h3 id="when-should-business-logic-stay-outside-runnablelambda">When Should Business Logic <em>Stay Outside</em> RunnableLambda?<a class="headerlink" href="#when-should-business-logic-stay-outside-runnablelambda" title="Permanent link">&para;</a></h3>
+<table>
+<thead>
+<tr>
+<th>Good fit inside <code>RunnableLambda</code></th>
+<th>Keep outside <code>RunnableLambda</code></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Formatting</td>
+<td>Large business workflows</td>
+</tr>
+<tr>
+<td>Validation</td>
+<td>Domain logic / rules engines</td>
+</tr>
+<tr>
+<td>Small transformations</td>
+<td>Anything needing its own tests independent of LangChain</td>
+</tr>
+<tr>
+<td>Pre/post-processing</td>
+<td>Orchestration logic that shouldn't be coupled to LCEL</td>
+</tr>
+</tbody>
+</table>
+<p><code>RunnableLambda</code> should <strong>connect</strong> business logic, not <strong>own</strong> it. If the lambda body grows past a few lines of glue code, that's a signal the logic belongs in a service/domain layer, called <em>from</em> the lambda.</p>
+<h3 id="code-example">Code Example:<a class="headerlink" href="#code-example" title="Permanent link">&para;</a></h3>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableLambda</span><span class="p">,</span> <span class="n">RunnablePassthrough</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.prompts</span><span class="w"> </span><span class="kn">import</span> <span class="n">PromptTemplate</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.output_parsers</span><span class="w"> </span><span class="kn">import</span> <span class="n">StrOutputParser</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">langchain_openai</span><span class="w"> </span><span class="kn">import</span> <span class="n">ChatOpenAI</span>
+
+<span class="c1"># 1. Define custom Python functions (Pure, single-purpose functions)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">count_words</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calculates word count of input string.&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="n">text</span><span class="o">.</span><span class="n">split</span><span class="p">())</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">add_metadata</span><span class="p">(</span><span class="n">word_count</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Formats the word count into a structured summary dict.&quot;&quot;&quot;</span>
+    <span class="n">status</span> <span class="o">=</span> <span class="s2">&quot;Verbose&quot;</span> <span class="k">if</span> <span class="n">word_count</span> <span class="o">&gt;</span> <span class="mi">50</span> <span class="k">else</span> <span class="s2">&quot;Concise&quot;</span>
+    <span class="k">return</span> <span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">word_count</span><span class="p">,</span> <span class="s2">&quot;category&quot;</span><span class="p">:</span> <span class="n">status</span><span class="p">}</span>
+
+
+<span class="c1"># 2. Wrap them into Runnables</span>
+<span class="c1"># Option A: Explicit wrapping</span>
+<span class="n">word_counter</span> <span class="o">=</span> <span class="n">RunnableLambda</span><span class="p">(</span><span class="n">count_words</span><span class="p">)</span>
+
+<span class="c1"># Option B: Implicit wrapping (LCEL automatically wraps functions passed via `|`)</span>
+<span class="c1"># `RunnableLambda(add_metadata)` happens under the hood!</span>
+
+
+<span class="c1"># 3. Build a pipeline with LCEL</span>
+<span class="n">prompt</span> <span class="o">=</span> <span class="n">PromptTemplate</span><span class="o">.</span><span class="n">from_template</span><span class="p">(</span><span class="s2">&quot;Summarize this topic in 2 sentences: </span><span class="si">{topic}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">ChatOpenAI</span><span class="p">(</span><span class="n">model</span><span class="o">=</span><span class="s2">&quot;gpt-4o-mini&quot;</span><span class="p">,</span> <span class="n">temperature</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">parser</span> <span class="o">=</span> <span class="n">StrOutputParser</span><span class="p">()</span>
+
+<span class="c1"># Chain: Generate summary -&gt; Count words -&gt; Add metadata classification</span>
+<span class="n">chain</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">prompt</span> 
+    <span class="o">|</span> <span class="n">model</span> 
+    <span class="o">|</span> <span class="n">parser</span> 
+    <span class="o">|</span> <span class="n">word_counter</span>          <span class="c1"># Custom function 1</span>
+    <span class="o">|</span> <span class="n">add_metadata</span>          <span class="c1"># Custom function 2 (implicitly wrapped)</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Execute using standard Runnable methods</span>
+<span class="n">result</span> <span class="o">=</span> <span class="n">chain</span><span class="o">.</span><span class="n">invoke</span><span class="p">({</span><span class="s2">&quot;topic&quot;</span><span class="p">:</span> <span class="s2">&quot;Quantum Computing&quot;</span><span class="p">})</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">result</span><span class="p">)</span>
+<span class="c1"># Output: {&#39;length&#39;: 28, &#39;category&#39;: &#39;Concise&#39;}</span>
+</code></pre></div>
+<h3 id="execution-order-how-lcel-decides-what-runs-when">Execution Order: How LCEL Decides What Runs When<a class="headerlink" href="#execution-order-how-lcel-decides-what-runs-when" title="Permanent link">&para;</a></h3>
+<p>Execution order is determined strictly by <strong>data dependencies</strong> — which component needs another's output — not by how the code happens to be written. When you chain Runnables with <code>|</code>, LCEL builds a <strong>Directed Acyclic Graph (DAG)</strong> under the hood, not just a flat sequence of calls.</p>
+<h4 id="sequential-execution">Sequential Execution<a class="headerlink" href="#sequential-execution" title="Permanent link">&para;</a></h4>
+<p>For the chain above, every stage's input <em>is</em> the previous stage's output, so execution is strictly left-to-right:</p>
+<div class="highlight"><pre><span></span><code>[Input Dict]
+     │
+     ▼
+prompt        → fills the template   → PromptValue
+     │
+     ▼
+model         → calls the LLM        → AIMessage
+     │
+     ▼
+parser        → extracts the string  → str
+     │
+     ▼
+word_counter  → counts words         → int
+     │
+     ▼
+add_metadata  → classifies the count → dict
+     │
+     ▼
+[Final Output]
+</code></pre></div>
+<p>Internally this is a <code>RunnableSequence</code>: Component B cannot start until Component A returns, because A's return value is B's only input.</p>
+<h4 id="parallel-execution-independent-branches">Parallel Execution (Independent Branches)<a class="headerlink" href="#parallel-execution-independent-branches" title="Permanent link">&para;</a></h4>
+<p>Sequential order is just the default for <code>|</code>. When a pipeline branches — via a dict or <code>RunnableParallel</code> — LCEL runs every branch that depends on the <em>same</em> upstream output <strong>concurrently</strong>, then waits for all of them before continuing:</p>
+<div class="highlight"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">langchain_core.runnables</span><span class="w"> </span><span class="kn">import</span> <span class="n">RunnableParallel</span><span class="p">,</span> <span class="n">RunnablePassthrough</span>
+
+<span class="n">branches</span> <span class="o">=</span> <span class="n">RunnableParallel</span><span class="p">(</span>
+    <span class="n">word_count</span><span class="o">=</span><span class="n">word_counter</span><span class="p">,</span>
+    <span class="n">original_text</span><span class="o">=</span><span class="n">RunnablePassthrough</span><span class="p">(),</span>
+<span class="p">)</span>
+
+<span class="n">chain</span> <span class="o">=</span> <span class="n">prompt</span> <span class="o">|</span> <span class="n">model</span> <span class="o">|</span> <span class="n">parser</span> <span class="o">|</span> <span class="n">branches</span>
+</code></pre></div>
+<div class="highlight"><pre><span></span><code>              parser output (str)
+                      │
+            ┌─────────┴─────────┐
+            ▼                   ▼
+       word_counter         Passthrough
+            │                   │
+            ▼                   ▼
+        int (count)         str (original)
+            └─────────┬─────────┘
+                       ▼
+        {&quot;word_count&quot;: ..., &quot;original_text&quot;: ...}
+</code></pre></div>
+<p><code>word_counter</code> and <code>Passthrough</code> both depend only on <code>parser</code>'s output, not on each other's — so LCEL has no reason to serialize them. It runs both, waits for both to resolve, and merges the results into a single dict before the next sequential step.</p>
+<h4 id="the-two-rules-generalized">The Two Rules, Generalized<a class="headerlink" href="#the-two-rules-generalized" title="Permanent link">&para;</a></h4>
+<ul>
+<li><strong>Sequence Rule</strong> — Runnables joined by <code>|</code> (a <code>RunnableSequence</code>) always run left-to-right; each one waits for the previous one's output.</li>
+<li><strong>Graph Rule</strong> — Runnables joined inside a dict / <code>RunnableParallel</code> run concurrently whenever neither depends on the other's output, and the pipeline waits for all of them before proceeding.</li>
+</ul>
+<p>This is exactly why LCEL is <em>declarative</em>: you never write "run these two in parallel, then join." You describe the shape of the dependencies, and LCEL's DAG scheduling decides how to execute it.</p>
+<h3 id="engineering-insight">Engineering Insight<a class="headerlink" href="#engineering-insight" title="Permanent link">&para;</a></h3>
+<p><code>RunnableLambda</code> is the <strong>Adapter Pattern</strong> — it adapts an existing interface (a plain function) to a new one (Runnable), without modifying the original.</p>
+<hr />
+<h2 id="runnablepassthrough">RunnablePassthrough<a class="headerlink" href="#runnablepassthrough" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_1">Engineering Problem<a class="headerlink" href="#engineering-problem_1" title="Permanent link">&para;</a></h3>
+<p>Multiple downstream steps sometimes need the <em>original</em> input, not a transformed version of it:</p>
+<div class="highlight"><pre><span></span><code>Question → Retriever → Prompt
+</code></pre></div>
+<p>Both the retriever and the final prompt need the raw question. Without a mechanism to preserve it, you end up manually threading the same variable through every step, which quickly becomes brittle wiring.</p>
+<h3 id="definition_1">Definition<a class="headerlink" href="#definition_1" title="Permanent link">&para;</a></h3>
+<p><code>RunnablePassthrough</code> forwards its input unchanged so it stays available to any branch that needs it:</p>
+<div class="highlight"><pre><span></span><code>Question ─────────────► Prompt
+    │
+    └──────────► Retriever
+</code></pre></div>
+<h3 id="why-preserve-the-original-input-what-breaks-without-it">Why Preserve the Original Input? What Breaks Without It?<a class="headerlink" href="#why-preserve-the-original-input-what-breaks-without-it" title="Permanent link">&para;</a></h3>
+<p>Without it, developers end up:</p>
+<ul>
+<li>copying the same variable into multiple places manually</li>
+<li>recomputing values that were already available upstream</li>
+<li>tightly coupling steps together, since each step must know what the next one needs</li>
+</ul>
+<p><code>RunnablePassthrough</code> removes this duplication by design — it performs <strong>no transformation</strong>; its only job is forwarding data. This matters most inside <code>RunnableParallel</code>, where one branch retrieves documents and another needs the untouched question for the final prompt.</p>
+<h3 id="engineering-insight_1">Engineering Insight<a class="headerlink" href="#engineering-insight_1" title="Permanent link">&para;</a></h3>
+<p>Pure Pipeline Pattern — a stage that passes data through unmodified so parallel branches don't have to reconstruct it.</p>
+<hr />
+<h2 id="runnableparallel">RunnableParallel<a class="headerlink" href="#runnableparallel" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_2">Engineering Problem<a class="headerlink" href="#engineering-problem_2" title="Permanent link">&para;</a></h3>
+<p>Some operations don't depend on each other at all:</p>
+<div class="highlight"><pre><span></span><code>Retrieve Documents
+Retrieve Conversation History
+</code></pre></div>
+<p>Running them one after another wastes latency for no reason.</p>
+<h3 id="definition_2">Definition<a class="headerlink" href="#definition_2" title="Permanent link">&para;</a></h3>
+<p><code>RunnableParallel</code> declares that a set of Runnables can execute simultaneously, each receiving the same input:</p>
+<div class="highlight"><pre><span></span><code>                Question
+                   │
+        ┌──────────┼──────────┐
+        ▼          ▼          ▼
+    Retriever    History    Metadata
+        │          │          │
+        └──────────┼──────────┘
+                   ▼
+             Merge Results
+</code></pre></div>
+<p>Notice: you never create threads yourself. You <strong>declare independence</strong>; the runtime decides how to execute it (LangChain uses a thread pool for sync code, <code>asyncio.gather</code> under async).</p>
+<h3 id="what-problems-become-parallelizable">What Problems Become Parallelizable?<a class="headerlink" href="#what-problems-become-parallelizable" title="Permanent link">&para;</a></h3>
+<p>Any set of operations that share an input but don't depend on each other's output:</p>
+<ul>
+<li>Retrieve documents</li>
+<li>Retrieve conversation history</li>
+<li>Fetch user profile</li>
+<li>Load metadata / permissions</li>
+</ul>
+<h3 id="can-retrieval-and-conversation-history-be-fetched-together">Can Retrieval and Conversation History Be Fetched Together?<a class="headerlink" href="#can-retrieval-and-conversation-history-be-fetched-together" title="Permanent link">&para;</a></h3>
+<p><strong>Yes.</strong> Both need the original question as input, but neither needs the other's output — that's exactly the independence <code>RunnableParallel</code> is for. Combine it with <code>RunnablePassthrough</code> when the final prompt also needs the raw question alongside both results.</p>
+<h3 id="engineering-insight_2">Engineering Insight<a class="headerlink" href="#engineering-insight_2" title="Permanent link">&para;</a></h3>
+<p><code>RunnableParallel</code> is not "manual multithreading" — it's a <strong>declaration of independence</strong> between steps. The runtime owns the execution strategy.</p>
+<hr />
+<h2 id="pipe-operator">Pipe Operator (<code>|</code>)<a class="headerlink" href="#pipe-operator" title="Permanent link">&para;</a></h2>
+<h3 id="what-it-does">What It Does<a class="headerlink" href="#what-it-does" title="Permanent link">&para;</a></h3>
+<p>The <code>|</code> operator composes Runnables into a pipeline, where each stage's output becomes the next stage's input:</p>
+<div class="highlight"><pre><span></span><code>Prompt | LLM | Parser
+</code></pre></div>
+<h3 id="why-is-this-more-maintainable-than-nested-calls">Why Is This More Maintainable Than Nested Calls?<a class="headerlink" href="#why-is-this-more-maintainable-than-nested-calls" title="Permanent link">&para;</a></h3>
+<p>Without composition:</p>
+<div class="highlight"><pre><span></span><code><span class="n">parser</span><span class="p">(</span><span class="n">llm</span><span class="p">(</span><span class="n">prompt</span><span class="p">(</span><span class="o">...</span><span class="p">)))</span>
+</code></pre></div>
+<p>Nested calls read inside-out, get harder to modify as depth grows, and hide the actual data flow. With LCEL:</p>
+<div class="highlight"><pre><span></span><code>Prompt → LLM → Parser
+</code></pre></div>
+<p>The pipeline reads top-to-bottom in execution order — adding, removing, or reordering a stage is a one-line change instead of a nesting-depth change.</p>
+<h3 id="engineering-insight_3">Engineering Insight<a class="headerlink" href="#engineering-insight_3" title="Permanent link">&para;</a></h3>
+<p>The pipe operator is just another implementation of the <strong>Pipeline Pattern</strong>, same idea as Unix pipes (<code>cat | grep | sort</code>) or Java Streams (<code>.filter().map().collect()</code>).</p>
+<hr />
+<h2 id="output-parser">Output Parser<a class="headerlink" href="#output-parser" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_3">Engineering Problem<a class="headerlink" href="#engineering-problem_3" title="Permanent link">&para;</a></h3>
+<p>LLMs generate text. Applications need structured data:</p>
+<div class="highlight"><pre><span></span><code>&quot;The customer&#39;s priority is High.&quot;   →   {&quot;priority&quot;: &quot;High&quot;}
+</code></pre></div>
+<p>Should the LLM parse its own output? No.</p>
+<h3 id="why-parsing-belongs-outside-the-llm">Why Parsing Belongs Outside the LLM<a class="headerlink" href="#why-parsing-belongs-outside-the-llm" title="Permanent link">&para;</a></h3>
+<p>Two different responsibilities:</p>
+<div class="highlight"><pre><span></span><code>LLM     → generate text
+Parser  → convert text into structured data
+</code></pre></div>
+<p>Keeping them separate follows <strong>Single Responsibility Principle</strong> and <strong>Separation of Concerns</strong>. It also means the parser can be swapped, tested, and validated independently of the model — and reused across different prompts/models that produce the same output shape.</p>
+<h3 id="benefits">Benefits<a class="headerlink" href="#benefits" title="Permanent link">&para;</a></h3>
+<ul>
+<li>Reusable parsers across chains</li>
+<li>Independently testable</li>
+<li>Structured, validated outputs (e.g. via Pydantic)</li>
+<li>Cleaner failure modes (a parsing error is distinguishable from a generation error)</li>
+</ul>
+<h3 id="engineering-insight_4">Engineering Insight<a class="headerlink" href="#engineering-insight_4" title="Permanent link">&para;</a></h3>
+<p>The Output Parser is a translator between the LLM's unstructured language and the rest of the application's structured data needs.</p>
+<hr />
+<h2 id="prompt-composition">Prompt Composition<a class="headerlink" href="#prompt-composition" title="Permanent link">&para;</a></h2>
+<h3 id="engineering-problem_4">Engineering Problem<a class="headerlink" href="#engineering-problem_4" title="Permanent link">&para;</a></h3>
+<p>A prompt isn't just a string — it's a template that accepts variables and produces formatted instructions. If it can't participate in the pipeline like everything else, it becomes a special case.</p>
+<h3 id="prompts-as-runnables">Prompts as Runnables<a class="headerlink" href="#prompts-as-runnables" title="Permanent link">&para;</a></h3>
+<p>A Prompt Template satisfies the Runnable contract:</p>
+<div class="highlight"><pre><span></span><code>Variables → Prompt Template → Formatted Prompt
+</code></pre></div>
+<p>So it <em>is</em> a Runnable — which means it supports composition, streaming, tracing, and testing exactly like the LLM or parser next to it in the chain.</p>
+<div class="highlight"><pre><span></span><code>Question → Prompt Template → Formatted Prompt → LLM
+</code></pre></div>
+<h3 id="why-this-matters">Why This Matters<a class="headerlink" href="#why-this-matters" title="Permanent link">&para;</a></h3>
+<p>A prompt is no longer "just a string interpolation step" — it's an executable, composable component, tested and versioned the same way as any other stage in the pipeline.</p>
+<hr />
+<h2 id="lcel-vs-traditional-chains">LCEL vs Traditional Chains<a class="headerlink" href="#lcel-vs-traditional-chains" title="Permanent link">&para;</a></h2>
+<table>
+<thead>
+<tr>
+<th>Traditional Chains</th>
+<th>LCEL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Specialized helper classes</td>
+<td>Generic composition</td>
+</tr>
+<tr>
+<td>Hard to extend</td>
+<td>Easy to extend</td>
+</tr>
+<tr>
+<td>Less reusable</td>
+<td>Highly reusable</td>
+</tr>
+<tr>
+<td>Manual streaming</td>
+<td>Native streaming</td>
+</tr>
+<tr>
+<td>Manual async</td>
+<td>Native async</td>
+</tr>
+<tr>
+<td>Manual parallel execution</td>
+<td><code>RunnableParallel</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="interview-qa">Interview Q&amp;A<a class="headerlink" href="#interview-qa" title="Permanent link">&para;</a></h2>
+<h3 id="what-is-lcel">What is LCEL?<a class="headerlink" href="#what-is-lcel" title="Permanent link">&para;</a></h3>
+<p>LangChain's declarative language for composing Runnables into pipelines using the <code>|</code> operator — the AI-workflow equivalent of Unix pipes or SQL.</p>
+<h3 id="what-is-a-runnable">What is a Runnable?<a class="headerlink" href="#what-is-a-runnable" title="Permanent link">&para;</a></h3>
+<p>The standard execution contract in LangChain: anything with <code>invoke</code>/<code>batch</code>/<code>stream</code> (and async equivalents) that takes an input and produces an output.</p>
+<h3 id="why-not-just-use-a-python-callable">Why not just use a Python <code>Callable</code>?<a class="headerlink" href="#why-not-just-use-a-python-callable" title="Permanent link">&para;</a></h3>
+<p><code>__call__</code> only standardizes single synchronous invocation. It says nothing about batching, streaming, async, retries, tracing, or <code>|</code>-composition — all of which Runnable defines as part of one shared contract.</p>
+<h3 id="why-is-runnable-an-interface-rather-than-a-base-class-with-default-behavior-only">Why is Runnable an interface rather than a base class with default behavior only?<a class="headerlink" href="#why-is-runnable-an-interface-rather-than-a-base-class-with-default-behavior-only" title="Permanent link">&para;</a></h3>
+<p>So heterogeneous components — prompts, retrievers, LLMs, parsers — can all be composed and executed identically, without the framework special-casing each type.</p>
+<h3 id="what-design-pattern-does-runnablelambda-resemble">What design pattern does RunnableLambda resemble?<a class="headerlink" href="#what-design-pattern-does-runnablelambda-resemble" title="Permanent link">&para;</a></h3>
+<p>The Adapter Pattern — it adapts an existing function to the Runnable interface without modifying it.</p>
+<h3 id="when-should-you-avoid-putting-logic-inside-runnablelambda">When should you avoid putting logic inside RunnableLambda?<a class="headerlink" href="#when-should-you-avoid-putting-logic-inside-runnablelambda" title="Permanent link">&para;</a></h3>
+<p>When the logic is a full business workflow rather than glue code — that belongs in a service/domain layer, invoked <em>from</em> the lambda, not written inside it.</p>
+<h3 id="what-problem-does-runnablepassthrough-solve">What problem does RunnablePassthrough solve?<a class="headerlink" href="#what-problem-does-runnablepassthrough-solve" title="Permanent link">&para;</a></h3>
+<p>It forwards the original input unchanged so multiple downstream branches (e.g. a retriever and the final prompt) can use it without manual duplication.</p>
+<h3 id="is-runnableparallel-about-multithreading">Is RunnableParallel about multithreading?<a class="headerlink" href="#is-runnableparallel-about-multithreading" title="Permanent link">&para;</a></h3>
+<p>No — it's a declaration that operations are independent. The runtime, not the developer, decides how to execute them concurrently.</p>
+<h3 id="can-retrieval-and-conversation-history-be-fetched-in-runnableparallel">Can Retrieval and Conversation History be fetched in RunnableParallel?<a class="headerlink" href="#can-retrieval-and-conversation-history-be-fetched-in-runnableparallel" title="Permanent link">&para;</a></h3>
+<p>Yes — both depend only on the original question, not on each other's output.</p>
+<h3 id="why-is-the-pipe-operator-more-maintainable-than-nested-function-calls">Why is the pipe operator more maintainable than nested function calls?<a class="headerlink" href="#why-is-the-pipe-operator-more-maintainable-than-nested-function-calls" title="Permanent link">&para;</a></h3>
+<p>It makes data flow read top-to-bottom in execution order instead of inside-out, so adding/removing/reordering a stage is a local edit, not a restructuring of nested calls.</p>
+<h3 id="why-shouldnt-the-llm-parse-its-own-output">Why shouldn't the LLM parse its own output?<a class="headerlink" href="#why-shouldnt-the-llm-parse-its-own-output" title="Permanent link">&para;</a></h3>
+<p>Generation and parsing are different responsibilities. Separating them (Single Responsibility Principle) makes the parser reusable, independently testable, and its failures distinguishable from generation failures.</p>
+<h3 id="why-are-prompt-templates-considered-runnables">Why are Prompt Templates considered Runnables?<a class="headerlink" href="#why-are-prompt-templates-considered-runnables" title="Permanent link">&para;</a></h3>
+<p>Because they take variables and produce a formatted output — satisfying the same contract as any other pipeline stage, which lets them be composed, streamed, and traced identically.</p>
+<hr />
+<h2 id="common-interview-traps">Common Interview Traps<a class="headerlink" href="#common-interview-traps" title="Permanent link">&para;</a></h2>
+<p>❌ LCEL is just syntax sugar for the <code>|</code> operator.</p>
+<p>✔ The operator is incidental. LCEL's actual contribution is the Runnable contract — the standard execution interface underneath.</p>
+<hr />
+<p>❌ RunnableParallel means "runs on multiple threads."</p>
+<p>✔ It declares independence between steps. Whether that becomes threads, async tasks, or something else is the runtime's decision.</p>
+<hr />
+<p>❌ RunnableLambda is where business logic should live.</p>
+<p>✔ It should call business logic, not contain it — large logic inside a lambda couples your domain code to LangChain.</p>
+<hr />
+<p>❌ RunnablePassthrough transforms data.</p>
+<p>✔ It deliberately performs zero transformation — its only job is preserving the original input for later stages.</p>
+<hr />
+<p>❌ The LLM should return structured JSON directly, so no parser is needed.</p>
+<p>✔ Even when a model can emit JSON, keeping a separate parser/validator step is what makes failures diagnosable and the pipeline testable independent of the model.</p>
+<hr />
+<h2 id="what-you-should-remember-forever">What You Should Remember Forever<a class="headerlink" href="#what-you-should-remember-forever" title="Permanent link">&para;</a></h2>
+<div class="highlight"><pre><span></span><code>LCEL is not about the pipe operator.
+LCEL is not about Runnables themselves.
+
+LCEL exists to answer one engineering question:
+
+&quot;How do we build large, composable AI systems
+without a specialized helper class for every workflow?&quot;
+</code></pre></div>
+<p>Runnable is the standard contract. LCEL is the language for composing Runnables. Everything else — <code>RunnableLambda</code>, <code>RunnablePassthrough</code>, <code>RunnableParallel</code>, the pipe operator, output parsers, prompt composition — is a consequence of those two ideas.</p>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+          <button type="button" class="md-top md-icon" data-md-component="top" hidden>
+  
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M13 20h-2V8l-5.5 5.5-1.42-1.42L12 4.16l7.92 7.92-1.42 1.42L13 8z"/></svg>
+  Back to top
+</button>
+        
+      </main>
+      
+        <footer class="md-footer">
+
+    <div class="md-footer-meta md-typeset">
+
+        <div style="
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 28px 16px;
+      text-align: center;
+      color: var(--md-default-fg-color--light);
+      line-height: 1.8;
+    ">
+
+            <h3 style="margin:0; color:var(--md-default-fg-color);">
+                Vibe Through Code Archive
+            </h3>
+
+            <p style="margin:6px 0 18px;">
+                Building Software.
+                <span style="color:#2BFF88;">One Commit Closer.</span>
+            </p>
+
+            <p style="margin:0 0 18px;">
+                🌐
+                <a href="https://www.vibethroughcode.com" target="_blank" rel="noopener noreferrer">
+                    www.vibethroughcode.com
+                </a>
+            </p>
+
+            <p style="margin:0;">
+                <a href="https://github.com/thisisankit27/5-month-roadmap" target="_blank">GitHub ↗</a>
+                &nbsp;•&nbsp;
+                <a href="https://youtube.com/@VibeThroughCode" target="_blank">YouTube ↗</a>
+            </p>
+
+            <p style="margin-top:18px; font-size:.8rem;">
+                © 2026 Vibe Through Code
+            </p>
+
+        </div>
+
+    </div>
+
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../../..", "features": ["navigation.instant", "navigation.tracking", "navigation.expand", "navigation.top", "navigation.sections", "content.code.copy", "content.code.annotate", "search.highlight", "search.suggest"], "search": "../../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+        <script src="../../../../assets/javascripts/word-bubbles.js"></script>
+      
+    
+  </body>
+</html>
